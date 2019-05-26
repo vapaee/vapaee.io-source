@@ -7,7 +7,7 @@
             </div>
         </div>
         <div class="col-sm-12" *ngFor="let scope of user_orders">
-            <label class="cursor-pointer" routerLink="{{'/exchange/trade/' + scope.table}}">
+            <label class="cursor-pointer" (click)="selectTable(scope.table)">
                 {{local.string.table | titlecase}} {{getSymbols(scope.table)}}
             </label>
             <div class="row">

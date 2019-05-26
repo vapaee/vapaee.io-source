@@ -575,7 +575,7 @@ export class VapaeeService {
                 var now = new Date();
                 var hora = 1000 * 60 * 60;
                 var hour = Math.floor(now.getTime()/hora);
-                console.log("->", hour);
+                // console.log("->", hour);
                 var last_block = null;
                 var last_hour = null;
                 for (var i in this.scopes[scope].block) {
@@ -826,8 +826,8 @@ export class VapaeeService {
         var result = null;
         aux = this.waitReady.then(async _ => {
             var summary = await this.fetchSummary(scope);
-            // console.log(scope, "---------------------------------------------------");
-            // console.log("Summary crudo:", summary.rows);
+            // if(scope=="olive.tlos")console.log(scope, "---------------------------------------------------");
+            // if(scope=="olive.tlos")console.log("Summary crudo:", summary.rows);
 
             this.scopes[scope] = this.auxAssertScope(scope);
             this.scopes[scope].summary = {
@@ -841,8 +841,8 @@ export class VapaeeService {
             var now_sec: number = Math.floor(now.getTime() / 1000);
             var now_hour: number = Math.floor(now_sec / 3600);
             var start_hour = now_hour - 23;
-            // console.log("now_hour:", now_hour);
-            // console.log("start_hour:", start_hour);
+            // if(scope=="olive.tlos")console.log("now_hour:", now_hour);
+            // if(scope=="olive.tlos")console.log("start_hour:", start_hour);
 
             // proceso los datos crudos 
             var ZERO_TLOS = "0.00000000 TLOS";
@@ -851,13 +851,21 @@ export class VapaeeService {
             var last_hh = 0;
             for (var i=0; i<summary.rows.length; i++) {
                 var hh = summary.rows[i].hour;
-                crude[hh] = summary.rows[i];
-                if (last_hh < hh && hh < start_hour) {
-                    last_hh = hh;
-                    price = summary.rows[i].price;
+                if (summary.rows[i].label == "lastone") {
+                    // price = summary.rows[i].price;
+                } else {
+                    crude[hh] = summary.rows[i];
+                    if (last_hh < hh && hh < start_hour) {
+                        last_hh = hh;
+                        price = summary.rows[i].price;
+                        // if(scope=="olive.tlos")console.log("hh:", hh, "last_hh:", last_hh, "price:", price);
+                    }    
                 }
+                /*
+                */
             }
-            // console.log("crude:", crude);
+            // if(scope=="olive.tlos")console.log("crude:", crude);
+            // if(scope=="olive.tlos")console.log("price:", price);
 
             // genero una entrada por cada una de las últimas 24 horas
             var last_24h = {};
@@ -866,7 +874,6 @@ export class VapaeeService {
             for (var i=0; i<24; i++) {
                 var current = start_hour+i;
                 var current_date = new Date(current * 3600 * 1000);
-                // console.log("current_date:", current_date.toISOString());
                 last_24h[current] = crude[current] || {
                     label: this.auxGetLabelForHour(current % 24),
                     price: price,
@@ -874,6 +881,7 @@ export class VapaeeService {
                     date: current_date.toISOString().split(".")[0],
                     hour: current
                 };
+                // if(scope=="olive.tlos")console.log("current_date:", current_date.toISOString(), current, last_24h[current]);
                 price = last_24h[current].price;
                 var vol = new Asset(last_24h[current].volume, this);
                 volume.amount = volume.amount.plus(vol.amount);
@@ -894,21 +902,21 @@ export class VapaeeService {
             }            
             var percent = Math.floor(ratio * 10000) / 100;
 
-            // console.log("last_24h:", [last_24h]);
-            // console.log("first:", first.toString(8));
-            // console.log("last:", last.toString(8));
-            // console.log("diff:", diff.toString(8));
-            // console.log("percent:", percent);
-            // console.log("ratio:", ratio);
-            // console.log("volume:", volume.str);
+            // if(scope=="olive.tlos")console.log("last_24h:", [last_24h]);
+            // if(scope=="olive.tlos")console.log("first:", first.toString(8));
+            // if(scope=="olive.tlos")console.log("last:", last.toString(8));
+            // if(scope=="olive.tlos")console.log("diff:", diff.toString(8));
+            // if(scope=="olive.tlos")console.log("percent:", percent);
+            // if(scope=="olive.tlos")console.log("ratio:", ratio);
+            // if(scope=="olive.tlos")console.log("volume:", volume.str);
 
             this.scopes[scope].summary.price = last;
             this.scopes[scope].summary.percent_str = (isNaN(percent) ? 0 : percent) + "%";
             this.scopes[scope].summary.percent = isNaN(percent) ? 0 : percent;
             this.scopes[scope].summary.volume = volume;
 
-            // console.log("Summary final:", this.scopes[scope].summary);
-            // console.log("---------------------------------------------------");
+            // if(scope=="olive.tlos")console.log("Summary final:", this.scopes[scope].summary);
+            // if(scope=="olive.tlos")console.log("---------------------------------------------------");
             this.feed.setLoading("summary."+scope, false);
             return summary;
         });
@@ -1086,7 +1094,7 @@ export class VapaeeService {
     private fetchBlockHistory(scope:string, page:number = 0, pagesize:number = 25): Promise<TableResult> {
         var pages = this.getBlockHistoryTotalPagesFor(scope, pagesize);
         var id = page*pagesize;
-        console.log("VapaeeService.fetchBlockHistory(", scope, ",",page,",",pagesize,"): id:", id, "pages:", pages);
+        // console.log("VapaeeService.fetchBlockHistory(", scope, ",",page,",",pagesize,"): id:", id, "pages:", pages);
         if (page < pages) {
             if (this.scopes[scope].block["id-" + id]) {
                 var result:TableResult = {more:false,rows:[]};
@@ -1101,15 +1109,15 @@ export class VapaeeService {
                 }
                 if (result.rows.length == pagesize) {
                     // we have the complete page in memory
-                    console.log("VapaeeService.fetchHistory(", scope, ",",page,",",pagesize,"): result:", result.rows.map(({ id }) => id));
+                    // console.log("VapaeeService.fetchHistory(", scope, ",",page,",",pagesize,"): result:", result.rows.map(({ id }) => id));
                     return Promise.resolve(result);
                 }                
             }
         }
 
         return this.utils.getTable("blockhistory", {scope:scope, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
-            console.log("**************");
-            console.log("block History crudo:", result);
+            // console.log("**************");
+            // console.log("block History crudo:", result);
             this.scopes[scope] = this.auxAssertScope(scope);
             this.scopes[scope].block = this.scopes[scope].block || {}; 
             // console.log("this.scopes[scope].block:", this.scopes[scope].block);
@@ -1126,8 +1134,8 @@ export class VapaeeService {
                 }
                 this.scopes[scope].block["id-" + block.id] = block;
             }   
-            console.log("block History final:", this.scopes[scope].block);
-            console.log("-------------");
+            // console.log("block History final:", this.scopes[scope].block);
+            // console.log("-------------");
             return result;
         });
     }    

@@ -18,6 +18,7 @@ export class VpePanelUserOrdersComponent implements OnChanges {
     @Input() public userorders: Map<string,UserOrders>;
     @Output() onClickRow: EventEmitter<{type:string, row:OrderRow}> = new EventEmitter();
     @Output() onClickPrice: EventEmitter<{type:string, row:OrderRow}> = new EventEmitter();
+    @Output() onTableSelected: EventEmitter<string> = new EventEmitter();
     c_loading: {[scope_id:string]:boolean};
     error:string;
     constructor(
@@ -25,6 +26,10 @@ export class VpePanelUserOrdersComponent implements OnChanges {
         public local: LocalStringsService
     ) {
         this.c_loading = {};
+    }
+
+    selectTable(scope:string) {
+        this.onTableSelected.next(scope);
     }
 
     ngOnChanges() {

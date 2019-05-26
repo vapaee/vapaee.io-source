@@ -16,7 +16,7 @@
 
         <div class="col-sm-12">
             <div class="pull-right" [hidden]="hideuser || !vapaee.logged">
-                <small class="text-muted cursor-pointer" [routerLink]="'/exchange/account/' + vapaee.current.name">
+                <small class="text-muted cursor-pointer" (click)="clickOnAccount()">
                     {{local.string.LoggedAs}} '{{vapaee.logged}}'
                 </small>
             </div>            
@@ -29,11 +29,12 @@
                     <tr [hidden]="!deposits || deposits.length > 0"><td>
                         <div class="col-sm-12 margin-top text-center text-danger">
                             <label>{{local.string.thesnodeps}}</label>
-                        </div>                        
+                        </div>
                     </td></tr>
                     <tr
                         [ngClass]="{'active-on-hover':actions}"
                         *ngFor="let deposit of deposits">
+                        
                         <td>
                             <div (click)="withdrawForm(deposit)" [ngClass]="{'cursor-pointer': actions}">
                                 <img [src]="deposit.token.logo" style="width: 20px; height: 20px; margin-top:-1px">
@@ -55,6 +56,7 @@
                                 </div>
                             </div>                            
                         </td>
+                        
                     </tr>
                 </tbody>
             </table>

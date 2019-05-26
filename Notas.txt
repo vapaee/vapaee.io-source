@@ -44,6 +44,8 @@ cleos push action revelation21 open '["user1.jc", "4,HEART", "user1.jc"]' -p use
 
 ----------------------- VERSIONES DE VAPAÉE DEX --------------------
 
+
+
 - Premium
   - Crítico
     - Responsive PWA
@@ -91,11 +93,13 @@ cleos push action revelation21 open '["user1.jc", "4,HEART", "user1.jc"]' -p use
       - Mostrar mensajes de error!
       - tirar errores en consola
       - verificar si el usuario no tiene Telos mainnet en la wallet.
-    - Estoy agregando listener al evento de onresize pero no los estoy sacando. Se acumulan y degradan la performance, mal.
+    + Estoy agregando listener al evento de onresize pero no los estoy sacando. Se acumulan y degradan la performance, mal.
   - wishlist
     - en el panel-order-editor poder cancelar más de uno por vez  
     - adaptar la letra del WP para mostrar los úntos que están hechos y los que faltan
-    - pasar todo el código a un nuevo repositorio dedicado a Vapaée DEX
+    + pasar todo el código a un nuevo repositorio dedicado a Vapaée DEX
+    - cambiar el algoritmo que calcula el summary y basarlo en el blockhistory.
+    - cachear el blockhistoy.
       
 - Deluxe
   - Página del Token X (title, description, link, contacts, transaction history, top N holders)
@@ -292,8 +296,8 @@ telosmain push action vapaeetokens order '["viterbotelos", "buy", "5.00000000 ED
 ---------------------------------------------------------------------
 -- Mainnet ----------------------------------------------------------
 ---------------------------------------------------------------------
-cd /var/www/eosio-angular-app/contracts/vapaeetokens
-deploy_contracts; telosmain set contract vapaeetokens $PWD -p vapaeetokens@active
+cd /var/www/vapaee.io-source/contracts/vapaeetokens
+vapaeetokens; telosmain set contract vapaeetokens $PWD -p vapaeetokens@active
 telosmain set account permission vapaeetokens active '{"threshold": 1,"keys": [{"key": "EOS8MPwGHuGSHSfBp3HAWsrHDotAqp9ZPShBvNcGDpcmNNa5h8y1Q","weight": 1}],"accounts": [{"permission":{"actor":"vapaeetokens","permission":"eosio.code"},"weight":1}]}' owner -p vapaeetokens
 telosmain push action vapaeetokens addtoken '["eosio.token","TLOS",4,"vapaeetokens"]' -p vapaeetokens@active
 telosmain push action vapaeetokens create '["vapaeetokens","500000000.0000 CNT"]' -p vapaeetokens@active
@@ -326,8 +330,7 @@ telosmain push action vapaeetokens hotfix '[10, "user33333333"]' -p vapaeetokens
 telosmain push action vapaeetokens hotfix '[10, "vapaeetokens"]' -p vapaeetokens@active
 
 
-telosmain push action vapaeetokens hotfix '[0, "eee.tlos"]' -p vapaeetokens@active
-
+telosmain push action vapaeetokens hotfix '[3, "foflexitytls","62.1000 AAA"]' -p vapaeetokens@active
 
 
 

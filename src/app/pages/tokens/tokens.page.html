@@ -5,6 +5,6 @@
         </div>
     </div>
 
-    <vpe-panel-tokens-card-deck [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
+    <vpe-panel-tokens-card-deck (tradeToken)="tradeToken($event)" [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
 
 </div>

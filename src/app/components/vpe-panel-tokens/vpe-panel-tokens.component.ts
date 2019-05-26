@@ -16,8 +16,8 @@ export class VpePanelTokensComponent implements OnChanges {
 
     @Input() public tokens: Token[];
     @Input() public scopes: TableMap;
-    token_filter:string;
-    
+    @Output() selectToken: EventEmitter<string> = new EventEmitter();
+    token_filter:string;   
     
     constructor(
         public vapaee: VapaeeService,
@@ -47,6 +47,10 @@ export class VpePanelTokensComponent implements OnChanges {
             volume: this.vapaee.zero_telos.clone()
         }, scope ? scope.summary : {});
         return _summary;
+    }
+
+    clockOnToken(scope:string) {
+        this.selectToken.next(scope);
     }
     
 

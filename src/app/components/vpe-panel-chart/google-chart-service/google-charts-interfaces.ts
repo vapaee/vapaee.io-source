@@ -22,6 +22,7 @@ export interface GoogleChartInterface {
   options?: object;
   dataTable?: any;
   opt_firstRowIsData?: boolean;
+  opt_onresize?: boolean;
   formatters?: FormatterInterface[];
   component?: GoogleChartComponentInterface;
 }

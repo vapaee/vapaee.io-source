@@ -2,6 +2,8 @@ import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { VapaeeService, Asset } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
+import { VpeComponentsService } from '../vpe-components.service';
+import { Subscriber } from 'rxjs';
 
 
 @Component({
@@ -25,6 +27,10 @@ export class VpePanelWalletComponent implements OnChanges {
 
     @Output() confirmDeposit: EventEmitter<any> = new EventEmitter();
     @Output() confirmWithdraw: EventEmitter<any> = new EventEmitter();
+    @Output() gotoAccount: EventEmitter<void> = new EventEmitter();
+
+    
+    
     public deposit: Asset;
     public withdraw: Asset;
     public alert_msg:string;
@@ -41,6 +47,7 @@ export class VpePanelWalletComponent implements OnChanges {
         this.alert_msg = "";
         this.deposit = new Asset();
         this.withdraw = new Asset();
+        
     }
 
     get get_fake_tlos_balance() {
@@ -76,6 +83,8 @@ export class VpePanelWalletComponent implements OnChanges {
         }
         return this._nonfake_balances;
     }
+
+      
 
     depositForm(asset:Asset) {
         this.alert_msg = "";
@@ -149,6 +158,10 @@ export class VpePanelWalletComponent implements OnChanges {
 
     onChange() {
         
+    }
+
+    clickOnAccount() {
+        this.gotoAccount.next();
     }
 
     onConfirmWithdraw() {

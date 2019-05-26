@@ -216,5 +216,13 @@ export class TradePage implements OnInit, OnDestroy {
             }
             this.loading = false;
         });        
-    }    
+    }
+
+    gotoAccount() {
+        this.app.navigate('/exchange/account/' + this.vapaee.current.name);
+    }
+
+    selectToken(scope: string) {
+        this.app.navigate('/exchange/trade/' + scope);
+    }
 }

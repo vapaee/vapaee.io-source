@@ -48,7 +48,7 @@ show_table() {
     table=$3
 
     echo "--------- $code::$table($scope) -------------------------------------------------"
-    cleos $NET get table $code $scope $table -l 50
+    cleos $NET get table $code $scope $table -l 100
 }
 
 show_table vapaeetokens vapaeetokens tokens

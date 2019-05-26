@@ -118,4 +118,9 @@ export class AccountPage implements OnInit, OnDestroy {
         });        
     }
 
+    navigateToTable(event) {
+        console.log("-------------->", event);
+        this.app.navigate('/exchange/trade/' + event)
+    }
+
 }

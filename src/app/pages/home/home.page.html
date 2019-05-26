@@ -6,9 +6,9 @@
         <div>Tokens Exchange - Telos DEX</div>
     </div>    
     <div class="container margin-top text-xs text-muted text-center">
-        <div>BASIC (v1.1.0)</div>
+        <div>BASIC (v1.1.1)</div>
     </div>    
 </div>
 <div class="container margin-top">
-    <vpe-panel-tokens-card-deck [limit]="3" [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
+    <vpe-panel-tokens-card-deck (tradeToken)="tradeToken($event)" [limit]="3" [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
 </div>

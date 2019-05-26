@@ -26,8 +26,8 @@
 
     <div class="row">
         <div class="col-sm-4 col-md-3  col-padding-right">
-            <vpe-panel-tokens [tokens]="tokens" [scopes]="scopes"></vpe-panel-tokens>
-            <vpe-panel-wallet [deposits]="deposits" [balances]="balances" (confirmWithdraw)="onWalletConfirmWithdraw($event)" (confirmDeposit)="onWalletConfirmDeposit($event)" [error]="error" [loading]="loading" [actions]="true"></vpe-panel-wallet>
+            <vpe-panel-tokens [tokens]="tokens" [scopes]="scopes" (selectToken)="selectToken($event)"></vpe-panel-tokens>
+            <vpe-panel-wallet [deposits]="deposits" [balances]="balances" (confirmWithdraw)="onWalletConfirmWithdraw($event)" (confirmDeposit)="onWalletConfirmDeposit($event)" (gotoAccount)="gotoAccount()" [error]="error" [loading]="loading" [actions]="true"></vpe-panel-wallet>
         </div>
         <div class="col-sm-8 col-md-9 col-padding-left">
             <vpe-panel-chart [data]="chartData"></vpe-panel-chart>

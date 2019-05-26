@@ -1,4 +1,10 @@
 declare var google: any;
+var OnResizeHandlerSelf: GoogleChartComponent;
+var OnResizeHandler: EventListenerObject = {
+  handleEvent(evt: Event): void {
+    OnResizeHandlerSelf.onResize(evt);
+  }
+}
 
 import {
   Component,
@@ -8,7 +14,8 @@ import {
   Input,
   Output,
   SimpleChanges,
-  EventEmitter
+  EventEmitter,
+  OnDestroy
 } from '@angular/core';
 
 import { GoogleChartsLoaderService } from '../google-charts-loader.service';
@@ -25,13 +32,14 @@ import {
   ChartMouseWheelEvent
 } from './chart-mouse-event';
 import { ChartHTMLTooltip } from './chart-html-tooltip';
+import { e } from '@angular/core/src/render3';
 
 @Component({
   selector: 'google-chart',
   template: '<div></div>',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GoogleChartComponent implements OnChanges, GoogleChartComponentInterface {
+export class GoogleChartComponent implements OnChanges, OnDestroy, GoogleChartComponentInterface {
 
   @Input() public data: GoogleChartInterface;
   private innerdata: GoogleChartInterface;
@@ -61,8 +69,11 @@ export class GoogleChartComponent implements OnChanges, GoogleChartComponentInte
   private el: ElementRef;
   private loaderService: GoogleChartsLoaderService;
 
+  private instance_id:number;
+
   public constructor(el: ElementRef,
                      loaderService: GoogleChartsLoaderService) {
+    this.instance_id = Math.floor(Math.random() * 1000);
     this.el = el;
     this.loaderService = loaderService;
     this.chartSelect = new EventEmitter();
@@ -79,6 +90,10 @@ export class GoogleChartComponent implements OnChanges, GoogleChartComponentInte
     this.mouseWheelOneTime = new EventEmitter();
   }
 
+  public ngOnDestroy(): void {
+    this.unregisterChartEvents();
+  }
+
   public ngOnChanges(changes: SimpleChanges): void {
     // console.log("GoogleChartComponent.ngOnChanges()", changes, [this.data.dataTable]);
     if (!this.wrapper) {
@@ -92,6 +107,7 @@ export class GoogleChartComponent implements OnChanges, GoogleChartComponentInte
             dataTable:this.data.dataTable,
             chartType: this.data.chartType,
             opt_firstRowIsData: this.data.opt_firstRowIsData,
+            opt_onresize: this.data.opt_onresize,
             options: this.data.options,
             formatters: this.data.formatters
           }
@@ -124,7 +140,7 @@ export class GoogleChartComponent implements OnChanges, GoogleChartComponentInte
     }    
   }
 
-  public redraw(dataTable:any[] = null, options = null): void {
+  public redraw(dataTable:any[] = null, options:any = null): void {
     // console.log("GoogleChartComponent.redraw()", dataTable);
     this.innerdata.options = options || this.innerdata.options;
     this.innerdata.dataTable = dataTable || this.innerdata.dataTable;
@@ -291,7 +307,41 @@ export class GoogleChartComponent implements OnChanges, GoogleChartComponentInte
     google.visualization.events.removeAllListeners(this.wrapper);
   }
 
+  onResize(e:any) { // e:any
+    console.log("RESIZE", this.instance_id);
+    this.redraw(this.data.dataTable);
+  }
+
+  private unregisterChartEvents() {
+    // console.log("GoogleChartComponent.unregisterChartEvents() ----------- ");
+    this.regUnregOnResizeEvent(false);
+    this.unregisterEvents()
+  }
+
+  private regUnregOnResizeEvent(doit:boolean) {
+    OnResizeHandlerSelf = this;
+    if (doit) {
+      if((<any>window)['attachEvent']) {
+        (<any>window)['attachEvent']('onresize', OnResizeHandler);
+      }
+      else if(window['addEventListener']) {
+          window['addEventListener']('resize', OnResizeHandler);
+          // console.log("window['addEventListener']('resize', OnResizeHandler);", this.instance_id);         
+      }
+    } else {
+      if((<any>window)['detachEvent']) {
+        (<any>window)['detachEvent']('onresize', OnResizeHandler);
+      }
+      else if(window['removeEventListener']) {
+          window.removeEventListener('resize', OnResizeHandler);
+          // console.log("window.removeEventListener('resize', OnResizeHandler,false);", this.instance_id);
+      }
+    }
+  }
+
+
   private registerChartEvents(): void {
+    // console.log("GoogleChartComponent.registerChartEvents() ----------- ");
     const chart = this.wrapper.getChart();
     // console.log("*******************************************************");
     // console.log(google);
@@ -300,9 +350,9 @@ export class GoogleChartComponent implements OnChanges, GoogleChartComponentInte
     
     // https://stackoverflow.com/a/26067800/2274525
     var self = this;
-    function MouseWheelHandler(e) {
+    function MouseWheelHandler(_e: { wheelDelta: any; detail: number; stopPropagation: () => void; stopImmediatePropagation: () => void; preventDefault: () => void; }) {
         // cross-browser wheel delta
-        var e = window.event || e; // old IE support
+        var e = <any>window.event || _e; // old IE support
         var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
         self.mouseWheel.emit({delta:delta});
         
@@ -319,7 +369,8 @@ export class GoogleChartComponent implements OnChanges, GoogleChartComponentInte
           e.preventDefault();
         }
         return false;
-    }    
+    }
+    
     if(this.mouseWheel.observers.length > 0) {
         var myitem = chart.container;
         if (myitem.addEventListener) {
@@ -333,20 +384,10 @@ export class GoogleChartComponent implements OnChanges, GoogleChartComponentInte
         }     
     }
 
-    // resize event
-    if(window["attachEvent"]) {
-        window["attachEvent"]('onresize', (e) => {
-          console.log("RESIZE");
-          this.redraw(this.data.dataTable);
-        });
+    // resize event   
+    if (this.innerdata.opt_onresize) {
+      this.regUnregOnResizeEvent(true);
     }
-    else if(window["addEventListener"]) {
-        window["addEventListener"]('resize', (e) => {
-          console.log("RESIZE");
-          this.redraw(this.data.dataTable);
-        });
-    }
-    
     
     this.cli = chart.getChartLayoutInterface ? chart.getChartLayoutInterface() : null;
     if(this.mouseOver.observers.length > 0) {

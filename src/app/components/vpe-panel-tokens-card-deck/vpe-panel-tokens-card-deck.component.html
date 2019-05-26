@@ -40,7 +40,8 @@
                                         class="btn disabled btn-primary btn-sm margin-top">trade</span>                            
                                     <span [hidden]="token.symbol == 'TLOS'"
                                         class="btn btn-primary btn-sm margin-top"
-                                        routerLink="{{'/exchange/trade/'+token.symbol.toLowerCase()+'.tlos'}}">trade</span>
+                                        (click)="goToTradeToken(token)"
+                                        >trade</span>
                                 </div>
                             </div>
                         </div>

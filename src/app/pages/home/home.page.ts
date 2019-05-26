@@ -34,4 +34,8 @@ export class HomePage implements OnInit, OnDestroy {
     get tokens(): Token[] {
         return this.vapaee.tokens;
     }
+
+    tradeToken(token:Token) {
+        this.app.navigate('/exchange/trade/'+token.symbol.toLowerCase()+'.tlos');
+    }
 }

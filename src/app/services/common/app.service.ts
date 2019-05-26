@@ -5,6 +5,20 @@ import { DomService } from './dom.service';
 import { Subject } from 'rxjs';
 import { Network } from '../scatter.service';
 
+export interface Device {
+    fullhd?:boolean, // >= 1600px
+    full?:boolean,   // >= 1200px
+    big?:boolean,    // < 1200px
+    normal?:boolean, // < 992px
+    medium?:boolean, // < 768px
+    small?:boolean,  // < 576px
+    tiny?:boolean,   // < 420px
+    portrait?:boolean,
+    wide?:boolean,
+    height?:number,
+    width?: number,
+    class?: string
+}
 
 @Injectable({
     providedIn: 'root'
@@ -12,11 +26,12 @@ import { Network } from '../scatter.service';
 export class AppService {
     public path: string;
     public onStateChange:Subject<string> = new Subject();
+    public onWindowResize:Subject<Device> = new Subject();
     // router : Router;
     // route : ActivatedRoute;
     state : string;
     prev_state : string = "none";
-    device: {big?:boolean, small?:boolean, tiny?:boolean, portrait?:boolean, wide?:boolean, height?:number, width?: number} = {};
+    device: Device = {};
     loading: boolean;
     countdown: number;
 
@@ -101,37 +116,67 @@ export class AppService {
     }
 
     onWindowsResize() {
-        console.error("onWindowsResize()");
+        this.device.fullhd = false;
+        this.device.full = false;
+        this.device.big = false;
+        this.device.normal = false;
+        this.device.medium = false;
         this.device.small = false;
         this.device.tiny = false;
         this.device.height = window.innerHeight;
         this.device.width = window.innerWidth;
-        var w = window.innerWidth;
-        var h = window.innerHeight;
+        this.device.class = "";
+        var w = this.device.width;
+        var h = this.device.height;
 
         if (w / h > 1) {
             this.device.portrait = false;
             this.device.wide = true;
+            this.device.class += "wide ";
+
+            if (1600 <= w) {
+                this.device.fullhd = true;
+                this.device.class += "fullhd ";
+            }
+
+            if (1200 <= w && w < 1600) {
+                this.device.full = true;
+                this.device.class += "full ";
+            }
+
+            if (992 <= w && w < 1200) {
+                this.device.big = true;
+                this.device.class += "big ";
+            }
+
+            if (768 <= w && w < 992) {
+                this.device.normal = true;
+                this.device.class += "normal ";
+            }
+
+            if (576 <= w && w < 768) {
+                this.device.medium = true;
+                this.device.class += "medium ";
+            }
+
+            if (420 <= w && w < 576) {
+                this.device.small = true;
+                this.device.class += "small ";
+            }
+
+            if (w < 420) {
+                this.device.tiny = true;
+                this.device.class += "tiny ";
+            }
+
         } else {
             this.device.portrait = true;
             this.device.wide = false;
+            this.device.class += "portrait ";
         }
-
-        if (this.device.portrait && h < 700) {
-            this.device.small = true;
-        }
-
-        if (this.device.wide && w < 800) {
-            this.device.small = true;
-        }
-        
-        if ( w < 650 || h < 700) {
-            this.device.small = true;
-        }
-        
-        if ( w < 560 || h < 650) {
-            this.device.tiny = true;
-        }        
+        // console.log("onWindowsResize()", this.device);
+        this.device.class = this.device.class.trim();
+        this.onWindowResize.next(this.device);
     }
 
     navigatePrefix(prefix:string){
