@@ -29,6 +29,7 @@ import { TradePage } from './pages/trade/trade.page';
 import { TokensPage } from './pages/tokens/tokens.page';
 import { AccountPage } from './pages/account/account.page';
 import { NotFoundPage } from './pages/not-found/not-found.page';
+import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { NotFoundPage } from './pages/not-found/not-found.page';
         TokensPage,
         AccountPage,
         NotFoundPage,
+        ComingSoonPage,
         AppComponent,
         LoadingOverall,
     ],
