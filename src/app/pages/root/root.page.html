@@ -1,0 +1,51 @@
+<nav class="navbar vpe-background-navbar drop-shadow navbar-expand-lg navbar-dark bg-primary" (click)="collapseMenu()">
+    <div class="container">
+        <a class="navbar-brand" href="http://cardsandtokens.com" target="_blank">
+            <img src="/assets/img/cards-and-tokens.png" alt="" class="cnt-logo">
+        </a>        
+        
+        <div class="flex-grow-1">
+            <div class="fb-like-container">
+                <!--div class="fb-like fb_iframe_widget" data-href="https://www.facebook.com/cardsandtokens" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false" fb-xfbml-state="rendered" fb-iframe-plugin-query="action=like&amp;app_id=294648343906769&amp;container_width=0&amp;href=https%3A%2F%2Fwww.facebook.com%2Fcardsandtokens&amp;layout=button_count&amp;locale=es_LA&amp;sdk=joey&amp;share=true&amp;show_faces=false"><span style="vertical-align: bottom; width: 100px; height: 20px;"><iframe name="f7e211683f293c" width="1000px" height="1000px" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" allow="encrypted-media" title="fb:like Facebook Social Plugin" src="https://www.facebook.com/v2.5/plugins/like.php?action=like&amp;app_id=294648343906769&amp;channel=https%3A%2F%2Fstaticxx.facebook.com%2Fconnect%2Fxd_arbiter%2Fr%2F__Bz3h5RzMx.js%3Fversion%3D42%23cb%3Dfdbcae6fad0228%26domain%3Dpresale.cardsandtokens.com%26origin%3Dhttp%253A%252F%252Fpresale.cardsandtokens.com%252Ff2aab638e0f2e3%26relation%3Dparent.parent&amp;container_width=0&amp;href=https%3A%2F%2Fwww.facebook.com%2Fcardsandtokens&amp;layout=button_count&amp;locale=en_US&amp;sdk=joey&amp;share=false&amp;show_faces=false" style="border: none; visibility: visible; width: 100px; height: 20px;" class=""></iframe></span></div-->
+            </div>
+        </div>
+
+        <button class="navbar-toggler margin-xs" id="toggle-btn" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>        
+
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item" [ngClass]="{active: app.stateStartsWith('home')}">
+                    <a class="nav-link" routerLink="{{'/exchange/home'}}" >{{local.string.Home}}</a>
+                </li>
+                <li class="nav-item" [ngClass]="{active: app.stateStartsWith('tokens')}">
+                    <a class="nav-link" [routerLink]="'/exchange/tokens'" >{{local.string.Tokens}}</a>
+                </li>
+                <li class="nav-item" [ngClass]="{active: app.stateStartsWith('trade')}">
+                    <a class="nav-link" routerLink="{{'/exchange/trade/cnt.tlos'}}" >{{local.string.Trade}}</a>
+                </li>
+                <li class="nav-item" [ngClass]="{active: app.stateStartsWith('account')}">
+                    <a class="nav-link" [routerLink]="'/exchange/account/' + vapaee.current.name" >{{local.string.Account}}</a>
+                </li>
+                <li class="nav-item" [ngClass]="{active: app.stateStartsWith('wp')}">
+                    <a class="nav-link" [routerLink]="'/exchange/wp'" >WP</a>
+                </li>
+               <!-- 
+                <li class="nav-item">
+                    <a class="nav-link cursor-pointer" (click)="debug()">DEBUG</a>
+                </li>
+                -->
+                <li class="nav-item dropdown" ngbDropdown>
+                    <a ngbDropdownToggle class="nav-link dropdown-toggle cursor-pointer" data-toggle="dropdown" id="language">{{local.string.Language}} <span class="caret"></span></a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="language">
+                        <span class="cursor-pointer dropdown-item" (click)="local.setLocal('en_US'); debug();">English</span>
+                        <span class="cursor-pointer dropdown-item" (click)="local.setLocal('es_ES'); debug();">Español</span>
+                        <span class="cursor-pointer dropdown-item" (click)="local.setLocal('pt_BR'); debug();">Português</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<router-outlet></router-outlet>

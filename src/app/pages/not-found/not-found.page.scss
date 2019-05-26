@@ -1,0 +1,12 @@
+:host {
+    display: flex;
+    height: 100vh;
+    background-color: black;
+    color: white;
+}
+.flex-center.flex-column {
+    flex-grow: 1;
+}
+.animated {
+    animation-delay: 1s;
+}

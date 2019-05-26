@@ -1,0 +1,121 @@
+body, html {
+    height: 100vh;
+    background-color: #000;
+    color: #fff;
+    overflow: hidden;
+}
+
+body.wp {
+    // overflow: auto;
+    // height: unset;
+}
+
+.text-title {
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+}
+
+.text-subtitle {
+    font-size: 18px;
+    // font-weight: bold;
+    color: white;
+}
+
+i.tiny {
+    font-size: 10px;
+}
+
+.bg-dark table.table {
+    color: white;
+}
+
+hr.line {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    border-top: 1px solid rgba(0,0,0,0.5);
+    border-bottom: 1px solid rgba(255,255,255,0.5);
+}
+
+
+div.text-lg span.spinner-border {
+    margin-bottom: 5px;
+}
+
+
+.vpe-background-jumbotron {
+    background: #1b211f;
+    background: -moz-linear-gradient(top, #1b211f 0%, #2a332a 100%);
+    background: -webkit-linear-gradient(top, #1b211f 0%,#2a332a 100%);
+    background: linear-gradient(to bottom, #1b211f 0%,#2a332a 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1b211f', endColorstr='#2a332a',GradientType=0 );
+}
+
+div.card.vpe-background-card {
+    background: #1b211f;
+    background: -moz-linear-gradient(top, #1b211f 0%, #2a332a 100%);
+    background: -webkit-linear-gradient(top, #1b211f 0%,#2a332a 100%);
+    background: linear-gradient(to bottom, #1b211f 0%,#2a332a 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1b211f', endColorstr='#2a332a',GradientType=0 );
+}
+
+div.card div.card-header.vpe-background-card-header {
+    /*
+    background: #2a332a;
+    background: -moz-linear-gradient(top, #2a332a 0%, #2a332a 100%);
+    background: -webkit-linear-gradient(top, #2a332a 0%,#2a332a 100%);
+    background: linear-gradient(to bottom, #2a332a 0%,#2a332a 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a332a', endColorstr='#2a332a',GradientType=0 );
+    */
+
+    background: #2a332a;
+    background: -moz-linear-gradient(top, #2a332a 0%, #2a332a 100%);
+    background: -webkit-linear-gradient(top, #2a332a 0%,#2a332a 100%);
+    background: linear-gradient(to bottom, #2a332a 0%,#3a413a 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a332a', endColorstr='#2a332a',GradientType=0 );
+}
+
+div.card div.card-body.vpe-background-card-body {
+    background: #383d37;
+    background: -moz-linear-gradient(top, #383d37 0%, #2f352f 100%);
+    background: -webkit-linear-gradient(top, #383d37 0%,#2f352f 100%);
+    background: linear-gradient(to bottom, #383d37 0%,#2f352f 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#383d37', endColorstr='#2f352f',GradientType=0 );
+}
+
+nav.navbar.vpe-background-navbar {
+    /*
+    background: #1b211f;
+    background: -moz-linear-gradient(top, #1b211f 0%, #2a332a 69%, #313a2b 100%);
+    background: -webkit-linear-gradient(top, #1b211f 0%,#2a332a 69%,#313a2b 100%);
+    background: linear-gradient(to bottom, #1b211f 0%,#2a332a 69%,#313a2b 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1b211f', endColorstr='#313a2b',GradientType=0 );
+    */
+    /*
+    background: #2a332a;
+    background: -moz-linear-gradient(top, #2a332a 0%, #3c423b 100%);
+    background: -webkit-linear-gradient(top, #2a332a 0%,#3c423b 100%);
+    background: linear-gradient(to bottom, #2a332a 0%,#3c423b 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a332a', endColorstr='#3c423b',GradientType=0 );
+    */
+    background: #383d37;
+    background: -moz-linear-gradient(top, #383d37 0%, #2f352f 100%);
+    background: -webkit-linear-gradient(top, #383d37 0%,#2f352f 100%);
+    background: linear-gradient(to bottom, #383d37 0%,#2f352f 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#383d37', endColorstr='#2f352f',GradientType=0 );
+}
+
+div.card.vpe-background-panel {
+    background: #1f211f;
+    background: -moz-linear-gradient(top, #1f211f 0%, #1a1c1a 100%);
+    background: -webkit-linear-gradient(top, #1f211f 0%,#1a1c1a 100%);
+    background: linear-gradient(to bottom, #1f211f 0%,#2d302d 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1f211f', endColorstr='#1a1c1a',GradientType=0 );
+}
+
+label.title.vpe-background-panel-title {
+    background: #2a332a;
+    background: -moz-linear-gradient(top, #2a332a 0%, #2a332a 100%);
+    background: -webkit-linear-gradient(top, #2a332a 0%,#2a332a 100%);
+    background: linear-gradient(to bottom, #3a423a 0%,#545a54 100%);
+}

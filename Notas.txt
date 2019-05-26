@@ -1,0 +1,442 @@
+-- TODO --
+- publicación hablando de los Fakes que me quieren embaucar.
+- contactar a Loius Thomas: https://louisthomas.co.uk/contact/
+- Gráfica del DEX
+  - corregir bugs de la gráfica
+    - cuando hay un rezise de pantalla, la gráfica debe redibujarse
+- ponerle un timeout a el botón de loguearse poque a veces el Scatter no presenta el loguin a la primera.
+- sacar los textos y botones de tokens falsos
++ tengo que agregar una entrada más a la tabla tablesummary que tenga los datos de la última hora
+  - tengo que hacer una función que me permita obtener rápido el blocke de la última hora (calculando si corresponden el volumen, los máximos y mínimos).
+- ajustar los tamaños de los fancy-scroll para que el último item se vea por la mitad (y se entienda que continúa)
+
+
+
+
+
+
+
+
+
+
+- confirmar los tokens:
+telosmain push action vapaeetokens updatetoken '["QBE", "Qubicles", "https://fenero.io/qubicles", "/assets/logos/qbe.png", "/assets/logos/qbe-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["TLOSDAC", "TelosDAC", "https://telosdac.io/", "/assets/logos/telosdac.png", "/assets/logos/telosdac-lg.png",true]' -p vapaeetokens@active
+  confirmados:
+telosmain push action vapaeetokens updatetoken '["EDNA", "EDNA", "https://github.com/EDNA-LIFE", "/assets/logos/edna.png", "/assets/logos/edna-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["TEACH", "Teachology", "http://teachology.io", "/assets/logos/teach.svg", "/assets/logos/teach-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["ROBO", "Proxibots", "https://proxibots.io", "/assets/logos/proxibots.png", "/assets/logos/proxibots-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["TLOS", "Telos", "https://telosfoundation.io", "/assets/logos/telos.png", "/assets/logos/telos-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["CNT", "Cards & Tokens", "http://cardsandtokens.com", "/assets/logos/cnt.svg", "/assets/logos/cnt-lg.svg",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["ACORN", "Acorn", "http://acorns.fun", "/assets/logos/acorn.svg", "/assets/logos/acorn-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["HEART", "Beatitude", "https://steemit.com/@steemchurch", "/assets/logos/beautitude.png", "/assets/logos/beautitude-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["OLIVE", "Olive", "http://democratic.money/olive", "/assets/logos/olive.png", "/assets/logos/olive-lg.png",true]' -p vapaeetokens@active
+
+
+
+
+
+
+
+------- HEART ------
+cleos push action revelation21 open '["kate", "4,HEART", "kate"]' -p kate@active
+cleos push action revelation21 open '["user1.jc", "4,HEART", "user1.jc"]' -p user1.jc@active
+
+----------------------- VERSIONES DE VAPAÉE DEX --------------------
+
+- Premium
+  - Crítico
+    - Responsive PWA
+      - hay que hacer un evento (onResize) que los paneles se puedan suscribir para repintarse sólos
+      - Cada panel debería poder calcular el área que le toca desplegarse y ponerse una clase SIZE
+      - cada panel debería desplegarse teniendo en cuenta el área que tiene para hacerlo (basado en la clase SIZE)
+      - el alto del panel "Token List" debería igualar el alto de panel "Chart"
+      - Diseño para celulares:
+        - Token List: debe convertirse en un Combobox
+        - Wallet: debe convertirse en un Botón (--> account)
+        - Header mucho más chico
+        - Gráfico: with 100%, height 40%
+        - Order Form: dos modos:
+          - Info: (por defecto) se muestra la cantidad de órdenes propias y botón para desplegar (cambiar de modo)
+          - full: se ve todo el formulario para crear una orden.
+            - Botón que dice: mostrar órdenes propias.
+            - lista de órdenes propias por defecto están ocultas
+        Order Book: mostrar sólo 4 (2 de cada uno). Botón de expandir
+        Historial normal. Botón de expandir
+  - Choto
+    - agregarle la versión en el HOME page. Abajo del subtítulo con letra chica
+    - Wallet Panel (USD):
+      - Combobox sup-derecha (a la derecha del título) para elegir si expresar todo en USD, TLOS, EUR, EOS, etc...
+      - Botón a la derecha del título "Depositos" que diga "withdraw" que si lo tocás switchea a "back to prices"
+      - Botón a la derecha del título "Balances" que diga "deposit" que si lo tocás switchea a "back to prices" (sincronizado con el btn anterior)
+      - A la derecha de cada depósito o balance poner el precio e USD. Si el botón anterior lo precionan, ponemos un botón que dice "withdraw"/"deposit"
+    - Total balance en USD en el header del account bien a la derecha, abajo de los botones de login
+    - correr el botón "logout" bien a la derecha del account header
+    - Agregar max y min de las últimas 24h
+    - Activity feedback: how many users, transactions per day, deposits, withdraws, earnings
+    - agregar y testear que funcione la wallet lynxs 
+  - detalles:
+    - recordar la elección del idioma (coockie)
+    - resaltar el botón del navbar del WP
+    - cambiar el ícono de Beatitude (HEART)
+    - hacer que el uso de la ruedita sobre el chart avance más rápido cuanto más atrás en el tiempo se vaya.
+    - poder hacer click en la cantidad de TLOS que tengo y que se llenen los campos para generar una orden de compra la mas grande que pueda pagar.
+  - bugs chotos
+    - la cantidad de órdenes de compra total se muestra siempre: 0 órdenes - 0.0000 TLOS
+    - que no se muestren los paneles de recursos ni balance cuando no está logueado y con resolución baja
+    - en el panel-order-editor el loading de los cancels no se corresponden bien. (se mezclan compras con ventas)
+  - bugs jodidos
+    - revisar el listado de ordenes propias dentro del panel-order-editor porque muestra cualquiera a veces
+    - revisar el botón de login.
+      - Mostrar mensajes de error!
+      - tirar errores en consola
+      - verificar si el usuario no tiene Telos mainnet en la wallet.
+    - Estoy agregando listener al evento de onresize pero no los estoy sacando. Se acumulan y degradan la performance, mal.
+  - wishlist
+    - en el panel-order-editor poder cancelar más de uno por vez  
+    - adaptar la letra del WP para mostrar los úntos que están hechos y los que faltan
+    - pasar todo el código a un nuevo repositorio dedicado a Vapaée DEX
+      
+- Deluxe
+  - Página del Token X (title, description, link, contacts, transaction history, top N holders)
+  - Specific Token interaction: transfer, open, claim.
+  - Crear / Registrar / Actualizar tu propio Token (estandar)
+  - Timezone: que el usuario elija su timezone para mostrar mejor los horarios de las transacciones en el historial
+  - Invertir currency / comodity
+  - Events: Contract propagate events to participants and the apps that owns the tokens involved
+  - Skins
+
+- Golden
+  - Auctioning
+  - Vapaee Token / Pasive Income
+  - More skins
+  - Proper source code delivery / Documentation
+  - Help / video tutorials
+
+- Next (posibles nombres: Telos)
+  - iframe. Poder pegar en tu página un sneepet (html iframe) con parámetros para cargar una página del sitio
+    - token: mostrar datos del token
+    - trade: permitor ver la gráfica y poder comprar o vender
+    - account: mostrar la billetera del usuario
+  - cualquiera puede subir una skin (ejemplo una empresa X)
+  - exportar widgets y componentes para que otros puedan importar en su web o app, total o parcialmente los serivios de Vapaée DEX
+    - cotizaciones: widget que muestra la cotización de una lista de monedas en una moneda en particular
+    - convertir: el widget convierte el token X a Y generando érdenes de compra al precio actual.
+    - gráfica: historial de una moneda en particular.
+
+
+- bugs conocidos:
+  - al comprar más de una fila te calcula mal el costo total porque debería tener encuenta los diferentes niveles de precios
+  - hay que desuscribir al usuario que ya no tiene depósitos y no se hace: depusers
+  - los valores cuando son muy pequeños y tienen 8 dígitos de decimal aparecen expresados en potencias de e-10. No debe pasar!!
+  - si el usuario no tiene el network Telos mainnet seteado no le salta el pop de login con scatter no hay mensaje de error-
+  - el en el form de orders aparece la cantidad de TLOS que tenés. Si le hacés click debería intentar comprar todo lo posible con esa plata pero no hace nada.
+  - Si hay un deal en la trade page, hay que reordenar los tokens por vol-24h porque puede pasar que la última transacción te cambie el orden.
+  - cuando no estás logueado se ven los paneles de resources en /exchange/account cuando estás en baja resolución y no deberían mostrarse
+  - el loading del botón de vender (en trade page) no para de girar nunca a pesar de que la transacción se haga con éxito.
+  - en el order editor cuando tenés el precio en cero no te deja apretar el botón de vender pero no te avisa que está mal
+  - Estando logueado y mirando un market donde tengo órdenes, si estas son vendidas, desaparecen de la lista de órdenes pero la lista peronal de mis órdenes sigue sin actualizarse.
+  - página trade. si obtenés un error y cambiás de token, el mensaje de error persiste. Habría que limpiar de errores si se cambia el token/market.
+
+- lista de erores que devuelve la blockchain:
+ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 3050003, "name": "eosio_assert_message_exception", "what": "eosio_assert_message assertion failure", "details": [ { "message": "assertion failure with message: comparison of assets with different symbols is not allowed", "file": "wasm_interface.cpp", "line_number": 964, "method": "eosio_assert" } ] } }
+
+
+
+
+-- descripción --
+    - página del Token X:
+      - título, web link, contract name
+      - precio, (col, max, min) 24h
+      - current supply
+      - telegram gourps (project & contacts)
+      - history completo (paginado)
+      - top 100 token holders list (ordenado por quien tiene más)
+{
+  "app":"Vapaée - Telos DEX"
+  "with appkey":"appkey:1611268022122023418913243788219221212391992462042413559152218171"
+}
+--------------------------
+{
+  "app": "Vapaée - Telos DEX",
+  "with appkey": "4c7dbd7d49439e146032e2aa7f791e79bc90c9a39033d42d91bb012fa20327c7"
+}
+{
+  "app": "Vapaée - Telos DEX",
+  "with key": "ac3b9f0f651eb9d7c906555ee2ac1a581600a29c9358a4173609dba87446fdd5",
+  "using network": [
+    {
+      "blockchain": "eos",
+      "chainId": "4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11"
+    }
+  ]
+}
+
+// { "voter" : "viterbotelos", "ballot_id" : 16, "direction" : 1 }
+telosmain push action eosio.trail castvote '["viterbotelos",16,1]' -p viterbotelos
+telosmain get table eosio.trail viterbotelos votereceipts -l 40
+
+
+
+Leer esto luego:
+https://cryptodaily.co.uk/2019/04/liberland-initiates-decentralized-autonomous-government-with-eosio
+
+
+telosmain push action vapaeetokens updatetoken '["VIITA", "Viitasphere", "https://viitasphere.com", "/assets/logos/viitasphere.png", "/assets/logos/viitasphere-lg.png",false]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["VIICT", "Viitasphere", "https://viitasphere.com", "/assets/logos/viitasphere.png", "/assets/logos/viitasphere-lg.png",false]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["BOX", "Board Game Box", "http://bgbox.com", "/assets/logos/box.png", "/assets/logos/box-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["VPE", "Vapaée", "https://vapaee.io", "/assets/logos/vapaee.png", "/assets/logos/vapaee-lg.png",true]' -p vapaeetokens@active
+
+-- ocultar tokens verdaderos --
+telosmain push action vapaeetokens updatetoken '["TLOS", "Telos", "https://telosfoundation.io", "/assets/logos/telos.png", "/assets/logos/telos-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["QBE", "Qubicles", "https://fenero.io/qubicles", "/assets/logos/qbe.png", "/assets/logos/qbe-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["ACORN", "Acorn", "http://acorns.fun", "/assets/logos/acorn.svg", "/assets/logos/acorn-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["EDNA", "EDNA", "https://github.com/EDNA-LIFE", "/assets/logos/edna.png", "/assets/logos/edna-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["TEACH", "Teachology", "http://teachology.io", "/assets/logos/teach.svg", "/assets/logos/teach-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["ROBO", "Proxibots", "https://proxibots.io", "/assets/logos/proxibots.png", "/assets/logos/proxibots-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["CNT", "Cards & Tokens", "http://cardsandtokens.com", "/assets/logos/cnt.svg", "/assets/logos/cnt-lg.svg",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["OLIVE", "Olive", "http://democratic.money/olive", "/assets/logos/olive.png", "/assets/logos/olive-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["HEART", "Beatitude", "https://steemit.com/@steemchurch", "/assets/logos/beautitude.png", "/assets/logos/beautitude-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["TLOSDAC", "TelosDAC", "https://telosdac.io/", "/assets/logos/telosdac.png", "/assets/logos/telosdac-lg.png",true]' -p vapaeetokens@active
+
+
+telosmain push action vapaeetokens addtoken '["revelation21","HEART",4,"revelation21"]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["HEART", "Beatitude", "https://steemit.com/@steemchurch", "/assets/logos/beautitude.png", "/assets/logos/beautitude-lg.png",false]' -p vapaeetokens@active
+
+telosmain push action vapaeetokens addtoken '["telosdacdrop","TLOSDAC",4,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["TLOSDAC", "TelosDAC", "https://telosdac.io/", "/assets/logos/telosdac.png", "/assets/logos/telosdac-lg.png", false]' -p vapaeetokens@active
+
+-- creo los tokens falsos --
+telosmain push action vapaeetokens create '["vapaeetokens","100000000.0000 AAA"]' -p vapaeetokens@active
+telosmain push action vapaeetokens create '["vapaeetokens","100000000.0000 BBB"]' -p vapaeetokens@active
+telosmain push action vapaeetokens create '["vapaeetokens","100000000.0000 CCC"]' -p vapaeetokens@active
+telosmain push action vapaeetokens create '["vapaeetokens","100000000.0000 DDD"]' -p vapaeetokens@active
+telosmain push action vapaeetokens create '["vapaeetokens","100000000.0000 EEE"]' -p vapaeetokens@active
+telosmain push action vapaeetokens create '["vapaeetokens","100000000.0000 FFF"]' -p vapaeetokens@active
+
+-- registro los tokens falsos como validados --
+telosmain push action vapaeetokens updatetoken '["AAA", "A Token", "https://vapaee.io", "/assets/logos/fake_a_token.png", "/assets/logos/fake_a_token.png", true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["BBB", "B Token", "https://vapaee.io", "/assets/logos/fake_b_token.png", "/assets/logos/fake_b_token.png", true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["CCC", "C Token", "https://vapaee.io", "/assets/logos/fake_c_token.png", "/assets/logos/fake_c_token.png", true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["DDD", "D Token", "https://vapaee.io", "/assets/logos/fake_d_token.png", "/assets/logos/fake_d_token.png", true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["EEE", "E Token", "https://vapaee.io", "/assets/logos/fake_e_token.png", "/assets/logos/fake_e_token.png", true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["FFF", "F Token", "https://vapaee.io", "/assets/logos/fake_f_token.png", "/assets/logos/fake_f_token.png", true]' -p vapaeetokens@active
+
+-- agrego el issuer everyone a los tokens falsos --
+telosmain push action vapaeetokens addissuer '["everyone", "AAA"]' -p vapaeetokens@active
+telosmain push action vapaeetokens addissuer '["everyone", "BBB"]' -p vapaeetokens@active
+telosmain push action vapaeetokens addissuer '["everyone", "CCC"]' -p vapaeetokens@active
+telosmain push action vapaeetokens addissuer '["everyone", "DDD"]' -p vapaeetokens@active
+telosmain push action vapaeetokens addissuer '["everyone", "EEE"]' -p vapaeetokens@active
+telosmain push action vapaeetokens addissuer '["everyone", "FFF"]' -p vapaeetokens@active
+
+-- haciendo que el TLOS sea falso --
+telosmain push action vapaeetokens create '["vapaeetokens","10000000000.0000 TLOS"]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["TLOS", "Telos FAKE", "https://vapaee.io", "/assets/logos/telos-fake.png", "/assets/logos/telos-fake.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens addissuer '["everyone", "TLOS"]' -p vapaeetokens@active
+
+
+
+-- creating some orders --
+telosmain push action vapaeetokens order '["viterbotelos", "buy", "10.00000000 BBB", "0.00490000 TLOS"]' -p viterbotelos@active
+telosmain push action vapaeetokens order '["viterbotelos", "sell", "10.00000000 BBB", "0.00690000 TLOS"]' -p viterbotelos@active
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- TODO NEXT !! --
+- después de generar cualquier cambio en la blockchain hay que refrescar los recursos del usuario (RAM)
+- el withdraw tiene que convertir en earnings todo monto menor a 0.0001 y sacárselo del usuario.
+
+
+
+-- TODO (futuro) vapaeetokens --
+- Subasta: Implementar en el contrato la Subasta
+  - tengo que poder vender M (de los N XXX tokens depositados) cada T tiempo al mejor postor que page con ZZZ, hasta agotar stock.
+    auction1(owner, receiver, "N.0000 XXX", "ZZZ", "M.0000 XXX", interval_time)
+    auction2(owner, receiver, "N.0000 XXX", "ZZZ", total_time)
+    doauction(): ejecuta el primer auction si está vencido. lo puede ejecutar cualqueira.
+  - Table auction: scope contract
+    {
+        uint64_t id;
+        name owner;
+        name receiver;
+        asset portion;      // XXX to sell each interval
+        asset remaining;    // XXX
+        asset collected;    // ZZZ
+        uint64_t interval;  // interval time
+        uint64_t next;      // next expire time
+        uint64_t timer;     // last timer expire time
+    }
+  - ajustar el htransfer para que se fije si hay algún auction para ejecutar.
+    - Se fija en la tabla de auctions ordenando por next.
+    - Si el primero ya está vencido, lo ejecuta y agenda el siguiente si no está agendado ya.
+    - si el primero no está vencido, se fija si está agendado comparando timer con next.
+      Si timer < next => reagendar y actualizar timer
+
+cleos push action vapaeetokens order '["bob", "buy", "1.00000000 EDNA", "0.42000000 TLOS"]' -p bob
+telosmain push action vapaeetokens order '["viterbotelos", "buy", "5.00000000 EDNA", "0.00047800 TLOS"]' -p viterbotelos
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+-- Mainnet ----------------------------------------------------------
+---------------------------------------------------------------------
+cd /var/www/eosio-angular-app/contracts/vapaeetokens
+deploy_contracts; telosmain set contract vapaeetokens $PWD -p vapaeetokens@active
+telosmain set account permission vapaeetokens active '{"threshold": 1,"keys": [{"key": "EOS8MPwGHuGSHSfBp3HAWsrHDotAqp9ZPShBvNcGDpcmNNa5h8y1Q","weight": 1}],"accounts": [{"permission":{"actor":"vapaeetokens","permission":"eosio.code"},"weight":1}]}' owner -p vapaeetokens
+telosmain push action vapaeetokens addtoken '["eosio.token","TLOS",4,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens create '["vapaeetokens","500000000.0000 CNT"]' -p vapaeetokens@active
+telosmain push action vapaeetokens setsnapshot '["snapshots.tf",1,"CNT",0,0,10000,0,"CNT Token Airdrop - Cards & Tokens - http://cardsandtokens.com"]' -p vapaeetokens@active
+
+telosmain set contract boardgamebox $PWD -p boardgamebox@active
+--
+telosmain push action vapaeetokens hotfix '[20, "aaa.tlos"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "bbb.tlos"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "ccc.tlos"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "ddd.tlos"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "eee.tlos"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "fff.tlos"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "aaa.tlos"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "bbb.tlos"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "ccc.tlos"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "ddd.tlos"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "eee.tlos"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "fff.tlos"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "tlos.aaa"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "tlos.bbb"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "tlos.ccc"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "tlos.ddd"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "tlos.eee"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[20, "tlos.fff"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[10, "viterbotelos"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[10, "user11111111"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[10, "user22222222"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[10, "user33333333"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[10, "vapaeetokens"]' -p vapaeetokens@active
+
+
+telosmain push action vapaeetokens hotfix '[0, "eee.tlos"]' -p vapaeetokens@active
+
+
+
+
+echo "-- register CNT --" 
+telosmain push action vapaeetokens updatetoken '["CNT", "Cards & Tokens", "http://cardsandtokens.com", "/assets/logos/cnt.svg", "/assets/logos/cnt-lg.svg", true]' -p vapaeetokens@active
+echo "-- register TLOS --" 
+telosmain push action vapaeetokens updatetoken '["TLOS", "Telos", "https://telosfoundation.io", "/assets/logos/telos.png", "/assets/logos/telos-lg.png", true]' -p vapaeetokens@active
+echo "-- register QBE --" 
+telosmain push action vapaeetokens updatetoken '["QBE", "Qubicles", "https://fenero.io/qubicles", "/assets/logos/qbe.png", "/assets/logos/qbe-lg.png", true]' -p vapaeetokens@active
+echo "-- register ACORN --" 
+telosmain push action vapaeetokens updatetoken '["ACORN", "ACORN", "http://acorns.fun", "/assets/logos/acorn.svg", "/assets/logos/acorn-lg.png", true]' -p vapaeetokens@active
+echo "-- register EDNA --" 
+telosmain push action vapaeetokens updatetoken '["EDNA", "EDNA", "https://github.com/EDNA-LIFE", "/assets/logos/edna.png", "/assets/logos/edna-lg.png", true]' -p vapaeetokens@active
+echo "-- register TEACH --" 
+telosmain push action vapaeetokens updatetoken '["TEACH", "Teachology", "http://teachology.io", "/assets/logos/teach.svg", "/assets/logos/teach-lg.png", true]' -p vapaeetokens@active
+echo "-- register ROBO --" 
+telosmain push action vapaeetokens updatetoken '["ROBO", "Proxibots", "https://proxibots.io", "/assets/logos/proxibots.png", "/assets/logos/proxibots-lg.png", true]' -p vapaeetokens@active
+
+telosmain push action vapaeetokens addtoken '["vapaeetokens","CNT",4,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens addtoken '["eosio.token","TLOS",4,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens addtoken '["qubicletoken","QBE",4,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens addtoken '["acornaccount","ACORN",4,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens addtoken '["oliveaccount","OLIVE",4,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens addtoken '["revelation21","HEART",4,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens addtoken '["ednazztokens","EDNA",4,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens addtoken '["teachology14","TEACH",4,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens addtoken '["proxibotstkn","ROBO",4,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens addtoken '["telosdacdrop","TLOSDAC",4,"vapaeetokens"]' -p vapaeetokens@active
+
+telosmain push action vapaeetokens updatetoken '["TLOS", "Telos", "https://telosfoundation.io", "/assets/logos/telos.png", "/assets/logos/telos-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["QBE", "Qubicles", "https://fenero.io/qubicles", "/assets/logos/qbe.png", "/assets/logos/qbe-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["ACORN", "Acorn", "http://acorns.fun", "/assets/logos/acorn.svg", "/assets/logos/acorn-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["EDNA", "EDNA", "https://github.com/EDNA-LIFE", "/assets/logos/edna.png", "/assets/logos/edna-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["TEACH", "Teachology", "http://teachology.io", "/assets/logos/teach.svg", "/assets/logos/teach-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["ROBO", "Proxibots", "https://proxibots.io", "/assets/logos/proxibots.png", "/assets/logos/proxibots-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["CNT", "Cards & Tokens", "http://cardsandtokens.com", "/assets/logos/cnt.svg", "/assets/logos/cnt-lg.svg",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["OLIVE", "Olive", "http://democratic.money/olive", "/assets/logos/olive.png", "/assets/logos/olive-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["HEART", "Beatitude", "https://steemit.com/@steemchurch", "/assets/logos/beautitude.png", "/assets/logos/beautitude-lg.png",true]' -p revelation21@active
+telosmain push action vapaeetokens updatetoken '["TLOSDAC", "TelosDAC", "https://telosdac.io/", "/assets/logos/telosdac.png", "/assets/logos/telosdac-lg.png",true]' -p vapaeetokens@active
+
+
+
+
+echo "-- register VIITA --" 
+telosmain push action vapaeetokens addtoken '["viitasphere1","VIITA",4,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["VIITA", "Viitasphere", "https://viitasphere.com", "/assets/logos/viitasphere.png", "/assets/logos/viitasphere-lg.png", true]' -p vapaeetokens@active
+echo "-- register VIICT --" 
+telosmain push action vapaeetokens addtoken '["viitasphere1","VIICT",0,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["VIICT", "Viitasphere", "https://viitasphere.com", "/assets/logos/viitasphere.png", "/assets/logos/viitasphere-lg.png", false]' -p vapaeetokens@active
+
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+-- Testnet ----------------------------------------------------------
+---------------------------------------------------------------------
+cd /var/www/eosio-angular-app/contracts/vapaeetokens
+telostest set contract vapaeetokens $PWD -p vapaeetokens@active
+telostest push action vapaeetokens addtoken '["eosio.token","TLOS",4,"vapaeetokens"]' -p vapaeetokens@active
+telostest push action vapaeetokens create '["vapaeetokens","500000000.0000 CNT"]' -p vapaeetokens@active
+telostest push action vapaeetokens setsnapshot '["setsnapshot",1,"CNT",0,0,10000,0,"CNT Token Airdrop - Cards & Tokens - http://cardsandtokens.com"]' -p vapaeetokens@active
+
+
+
+
+-------- TELOS SNAPSHOTS --------
+telostest get table snapsnapsnap 1 snapshots --lower viterbotelos
+telosmain get table snapshots.tf 1 snapshots --lower viterbotelos
+cleos --url https://telos.eos.barcelona get table snapshots.tf 1 snapshots --lower geytinzygige
+
+ 
+
+Phaser con Angular para videojuegos
+https://github.com/weichen2046/phaser3-angular6-helloworld
+
+
+
+-- TODO futuro (contrato BG-BOX) ---
+--------- Casos de uso Basico (BG-BOX) -----------
+-- All --
+- Register author 
+
+-- APPs --
+- Registro de una app (app_name, inventory, deposit)   // C&T
+- Registro de un item Spec                   // Card, Envelop, Box
+- Registro de container Spec                 // Album, Envelop, Box
+
+-- Publisher --
+- Registro de un Item Asset                  // openmic-w107-orrslaw-not-sorry: publicación de una carta específica
+- Registro de un Container Asset             // openmic-100-weeks: publicación de un album concreto
+- Issue copies of an Item Asset              // Crea N copias de una carta, que se sumarán al supply existente sin pasar de un máximo
+
+-- User --
+-- Swap units places (container / position)  // move cards in the inventory or album
+-- use container                             // issues an instance of Container Asset
+-- transfer units                            // give cards to someone else
+
+
+Las aplicaciones deben ser registradas dando el account del contrato inteligente que cumple con un api para poder avisarle cada evento.
+De esta manera el BG-Box se encarga con las reglas de Items y Containers Genéricos mientras que el el handler se encarga de reglas más específicas de la app.
+Por ejemplo, se pueden exigir comisiones por cada evento, cumplir con mínimos o máximos, disparar otras acciones como cobrar impuesto, etc.
+
+
+--------- Casos de uso Medio (BG-BOX) -----------
+-- market 
+  -- order units                               // creates an order to buy or sell any amount of owning copies of the same card
+  -- cancel order                              // cancel previously created order
+-- multiple authorship
+  - hacer otra tabla donde el scope sea el user y que ahi se diga cuanto tiene cada usuario de authorship de cada item.
+    por lo general vos podés hacer una carta y para esa carta va a decir que vos tenés el 100% y el resto del mundo 0%.
+    pero pueden haber varias partes productoras de un mismo contenido y se arregla de antemano dividir el authorship en partes A% B% y C% dependiendo de la participación de cada uno.
+  - cada vez que hay una compra o venta de un item con multimple authorship hay que dividir las ganancias respentado los porcentajes A% B% y C%

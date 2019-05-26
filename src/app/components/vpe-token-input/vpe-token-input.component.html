@@ -1,0 +1,49 @@
+<div class="input-group" [hidden]="button">
+    <input
+        type="text"
+        class="form-control form-control-sm"
+        [ngClass]="{'disabled': disabled}"
+        (ngModelChange)="onChange(ctrl,$event)"
+        (blur)="onBlur(ctrl,$event)"
+        #ctrl="ngModel"
+        [(ngModel)]="text"
+        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46"
+        placeholder="{{placeholder}}"
+    >
+    <div class="input-group-append">
+        <span class="input-group-text form-control-sm padding-xs">{{asset ? asset.token.symbol : ' '}}</span>
+    </div>
+</div>
+
+<div class="input-group" [hidden]="!button">
+    <input
+        type="text"
+        class="form-control form-control-sm"
+        [ngClass]="{'disabled': disabled}"
+        (ngModelChange)="onChange(ctrl,$event)"
+        (blur)="onBlur(ctrl,$event)"
+        #ctrl="ngModel"
+        [(ngModel)]="text"
+        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46"
+        placeholder="{{placeholder}}"
+        (keyup.enter)="onEnter()"
+    >
+    <div class="input-group-append">
+        <span class="input-group-text form-control-sm padding-xs">{{asset ? asset.token.symbol : ' '}}</span>
+        <button [hidden]="!button" class="action btn btn-sm btn-primary" type="button" (click)="onEnter()">
+            <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
+            {{button | titlecase}}
+        </button>
+    </div>
+
+    <div class="input-group margin-top" [hidden]="!error">
+        <div class="alert alert-danger" role="alert">
+            <div class="pull-right">
+                <button type="button" class="close text-white" data-dismiss="alert" aria-label="Close" (click)="error = null">
+                    <i class="material-icons" style="font-size: 100%;">cancel</i>
+                </button>                
+            </div>
+            {{error}}
+        </div>
+    </div>    
+</div>

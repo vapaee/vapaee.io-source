@@ -1,0 +1,175 @@
+<vpe-panel [hideheader]="hideheader" [title]="local.string.wallet">
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="text-lg text-center">{{title | titlecase}}</div>
+        </div>
+
+        <div class="col-sm-12" [hidden]="vapaee.logged || hideuser">
+            <div class="pull-right margin-top">
+                <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
+                    <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('login') && !vapaee.feed.loading('log-state')"></span>
+                    {{local.string.LoginWScOrSq}}
+                </span>
+            </div>
+        </div>
+
+        <div class="col-sm-12">
+            <div class="pull-right" [hidden]="hideuser || !vapaee.logged">
+                <small class="text-muted cursor-pointer" [routerLink]="'/exchange/account/' + vapaee.current.name">
+                    {{local.string.LoggedAs}} '{{vapaee.logged}}'
+                </small>
+            </div>            
+            <div class="text-md">
+                {{local.string.deposits | titlecase}}
+                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('deposits')"></span>
+            </div>
+            <table class="table complete margin-top">
+                <tbody>
+                    <tr [hidden]="!deposits || deposits.length > 0"><td>
+                        <div class="col-sm-12 margin-top text-center text-danger">
+                            <label>{{local.string.thesnodeps}}</label>
+                        </div>                        
+                    </td></tr>
+                    <tr
+                        [ngClass]="{'active-on-hover':actions}"
+                        *ngFor="let deposit of deposits">
+                        <td>
+                            <div (click)="withdrawForm(deposit)" [ngClass]="{'cursor-pointer': actions}">
+                                <img [src]="deposit.token.logo" style="width: 20px; height: 20px; margin-top:-1px">
+                                {{deposit.toString(8)}}
+                                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('deposits')"></span>
+                            </div>
+                            <div class="row" [hidden]="deposit.token.symbol != withdraw.token.symbol">
+                                <div class="col-sm-12 margin-top">
+                                    <label>{{local.string.withdraw | titlecase}}</label>
+                                    <vpe-token-input
+                                        [(asset)]="withdraw"
+                                        (valueChange)="onChange($event)"
+                                        (valueEnter)="onConfirmWithdraw($event)"
+                                        precision="4"
+                                        [button]="local.string.withdraw"
+                                        [loading]="loading"
+                                        [error]="error"
+                                        placeholder="{{local.string.withdraw | titlecase}}"></vpe-token-input>
+                                </div>
+                            </div>                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        
+        <div class="col-sm-12" [hidden]="hasNoFake()">
+            <div class="text-md">
+                {{local.string.faketokens | titlecase}}
+                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('balances')"></span>
+            </div>
+            <table class="table complete margin-top">
+                <tbody>
+                    <tr [hidden]="!get_fake_balances || (get_fake_balances.length > 0 && get_fake_tlos_balance.amount.toNumber() > 0)"><td>
+                        <div class="col-sm-12 margin-top text-center text-danger">
+                            <label [hidden]="get_fake_balances.length > 0">{{local.string.thesnofaket}}</label>
+                            <label [hidden]="get_fake_balances.length == 0">{{local.string.thesnofaketelos}}</label>
+
+                            <div [hidden]="!vapaee.logged">
+                                <div class="pull-right col-sm-6" [hidden]="get_fake_tlos_balance.amount.toNumber() > 0">
+                                    <span class="btn btn-sm btn-primary" (click)="freeFakeTelos()">
+                                        <span class="spinner-border spinner-border-sm" [hidden]="!loading_fake_tlos"></span>
+                                        {{local.string.getfftelos }}
+                                    </span>
+                                </div>
+
+                                <div class="pull-right col-sm-6" [hidden]="!get_fake_balances || get_fake_balances.length > 0">
+                                    <span class="btn btn-sm btn-secondary" (click)="freeFakeTokens()">
+                                        <span class="spinner-border spinner-border-sm" [hidden]="!loading_fake"></span>
+                                        {{local.string.getfftokens | titlecase}}
+                                    </span>
+                                </div>
+                            </div>                            
+                        </div>                        
+                    </td></tr>                    
+                    <tr 
+                        [ngClass]="{'active-on-hover':actions}"
+                        [hidden]="balance.amount.toNumber() == 0"
+                        *ngFor="let balance of get_fake_balances"
+                        >
+                        <td>
+                            <div (click)="depositForm(balance)" [ngClass]="{'cursor-pointer': actions}">
+                                <img [src]="balance.token.logo" style="width: 20px; height: 20px; margin-top:-1px">
+                                {{balance.toString()}}
+                                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('balances-'+balance.token.contract) && !vapaee.feed.loading('token-stat-'+balance.token.symbol)"></span>
+                            </div>
+                            <div class="row" [hidden]="balance.token.symbol != deposit.token.symbol">
+                                <div class="col-sm-12 margin-top">
+                                    <label>{{local.string.deposit | titlecase}}</label>
+                                    <vpe-token-input
+                                        [(asset)]="deposit"
+                                        (valueChange)="onChange($event)"
+                                        (valueEnter)="onConfirmDeposit($event)"
+                                        precision="4"
+                                        [button]="local.string.deposit"
+                                        [loading]="loading"
+                                        [error]="error"
+                                        placeholder="{{local.string.deposit | titlecase}}"></vpe-token-input>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="col-sm-12">
+            <div class="text-md">
+                {{local.string.balances | titlecase}}
+                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('balances')"></span>
+            </div>
+            <div class="alert alert-info" [hidden]="!alert_msg">
+                <div class="pull-right">
+                    <button type="button" class="close text-white" (click)="alert_msg = null">
+                        <i class="material-icons" style="font-size: 100%;">cancel</i>
+                    </button>                
+                </div>
+                {{alert_msg}}
+            </div>    
+            <table class="table complete margin-top">
+                <tbody>
+                    <tr 
+                        [ngClass]="{'active-on-hover':actions}"
+                        [hidden]="balance.amount.toNumber() == 0"
+                        *ngFor="let balance of get_non_fake_balances"
+                        >
+                        <td>
+                            <div (click)="depositForm(balance)" [ngClass]="{'cursor-pointer': actions}">
+                                <div class="pull-right">
+                                    <span class="btn btn-sm btn-primary" [hidden]="deposit.token.symbol != 'SYS'">{{local.string.deposit | titlecase}}</span>
+                                </div>                                
+                                <img [src]="balance.token.logo" style="width: 20px; height: 20px; margin-top:-1px">
+                                {{balance.toString()}}
+                                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('balances-'+balance.token.contract) && !vapaee.feed.loading('token-stat-'+balance.token.symbol)"></span>
+                            </div>
+                            <div class="row" [hidden]="balance.token.symbol != deposit.token.symbol">
+                                <div class="col-sm-12 margin-top">
+                                    <label>{{local.string.deposit | titlecase}}</label>
+                                    <vpe-token-input
+                                        [(asset)]="deposit"
+                                        (valueChange)="onChange($event)"
+                                        (valueEnter)="onConfirmDeposit($event)"
+                                        precision="4"
+                                        [button]="local.string.deposit"
+                                        [loading]="loading"
+                                        [error]="error"
+                                        placeholder="{{local.string.deposit | titlecase}}"></vpe-token-input>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>        
+
+    </div>
+</vpe-panel>

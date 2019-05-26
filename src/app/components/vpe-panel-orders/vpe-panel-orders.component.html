@@ -1,0 +1,74 @@
+<vpe-panel [title]="local.string.orders">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row margin-top">
+                <div class="col-sm-12">
+                    <div class="pull-right">
+                        <span class="text-muted">
+                            {{headers.sell ? headers.sell.orders : 0}} {{local.string.orders}} -
+                            {{headers.sell.total ? headers.sell.total.toString() : ""}}
+                        </span>
+                    </div>
+                    {{local.string.sell_orders | titlecase}}
+                    <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('sellorders')"></span>
+                </div>
+            </div>
+            <div class="row margin-top">
+                <div class="nowrap text-bold text-sm col-sm-3 col-padding-right padding-left-lg">{{local.string.price | titlecase}}</div>
+                <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-right col-padding-left">{{local.string.amount | titlecase}}</div>
+                <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-right col-padding-left">{{local.string.total | titlecase}}</div>
+                <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-left padding-right-lg">{{local.string.sum | titlecase}}</div>
+            </div>
+            <div class="row margin-top">
+                <div class="col-sm-12">
+                    <perfect-scrollbar style="max-height: 300px; max-width: 100%">
+                        <div class="row margin-bottom danger active-on-hover cursor-pointer" 
+                            [ngClass]="{'owner':row.owners[vapaee.account.name]}"
+                            *ngFor="let row of orders.sell"
+                        >
+                            <div class="nowrap col-sm-3 col-padding-right text-danger padding-left-lg" (click)="clickPrice('sell', row)">{{row.price.valueToString(8)}}</div>
+                            <div class="nowrap col-sm-3 text-right col-padding-right col-padding-left" (click)="clickRow('sell', row)">{{row.total.valueToString(8)}}</div>
+                            <div class="nowrap col-sm-3 text-right col-padding-right col-padding-left" (click)="clickRow('sell', row)">{{row.telos.valueToString()}}</div>
+                            <div class="nowrap col-sm-3 text-right padding-right-lg" (click)="clickRow('sell', row)">{{row.sumtelos.valueToString()}}</div>
+                        </div>
+                    </perfect-scrollbar>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="row margin-top">
+                <div class="col-sm-12">
+                    <div class="pull-right">
+                        <span class="text-muted">
+                            {{headers.buy ? headers.buy.orders : 0}} {{local.string.orders}} -
+                            {{headers.buy.total ? headers.buy.total.toString() : ""}}
+                        </span>
+                    </div>
+                    {{local.string.buy_orders | titlecase}}
+                    <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('buyorders')"></span>
+                </div>
+            </div>
+            <div class="row margin-top">
+                <div class="nowrap text-bold text-sm col-sm-3 col-padding-right padding-left-lg">{{local.string.price | titlecase}}</div>
+                <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-right col-padding-left">{{local.string.amount | titlecase}}</div>
+                <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-right col-padding-left">{{local.string.total | titlecase}}</div>
+                <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-left padding-right-lg">{{local.string.sum | titlecase}}</div>
+            </div>
+            <div class="row margin-top">
+                <div class="col-sm-12">
+                    <perfect-scrollbar style="max-height: 300px; max-width: 100%">
+                        <div class="row margin-bottom success active-on-hover cursor-pointer"
+                            [ngClass]="{'owner':row.owners[vapaee.account.name]}"
+                            *ngFor="let row of orders.buy"
+                        >
+                            <div class="nowrap col-sm-3 col-padding-right text-success padding-left-lg" (click)="clickPrice('buy', row)">{{row.price.valueToString(8)}}</div>    
+                            <div class="nowrap col-sm-3 text-right col-padding-right col-padding-left" (click)="clickRow('buy', row)">{{row.total.valueToString(8)}}</div>
+                            <div class="nowrap col-sm-3 text-right col-padding-right col-padding-left" (click)="clickRow('buy', row)">{{row.telos.valueToString()}}</div>
+                            <div class="nowrap col-sm-3 text-right padding-right-lg " (click)="clickRow('buy', row)">{{row.sumtelos.valueToString()}}</div>
+                        </div>
+                    </perfect-scrollbar>
+                </div>
+            </div>
+        </div>
+    </div>
+</vpe-panel>

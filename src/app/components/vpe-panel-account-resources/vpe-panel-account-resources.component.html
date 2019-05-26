@@ -1,0 +1,68 @@
+<vpe-panel [hideheader]="hideheader" [title]="local.string.resources">
+    <div class="row">
+        <div class="col-sm-12" >
+            <div class="pull-right">
+                <span class="btn btn-sm btn-primary" (click)="current_mode = !current_mode">
+                    <i class="material-icons" [hidden]="current_mode">autorenew</i>
+                    <i class="material-icons" [hidden]="!current_mode">cached</i>
+                </span>
+            </div>            
+            <div class="text-lg text-center" [hidden]="!title">
+                {{title | titlecase}}
+                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('account')"></span>
+            </div>
+        </div>    
+    </div>    
+
+    <div class="row" [ngClass]="{'d-none':!current_mode}">
+        <div class="col">
+            <div class="text-md margin-top">RAM <span class="text-xs color-grey">{{current.data.ram_limit.percentStr}} available</span></div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar" [ngStyle]="{'width': current.data.ram_limit.percentStr}"></div>
+            </div>
+            <div class="text-sm text-center">RAM used - {{current.data.ram_limit.used}} Bytes / {{current.data.ram_limit.max}} Bytes</div>
+            <div class="text-md margin-top">NET <span class="text-xs color-grey">{{current.data.net_limit.percentStr}} available</span></div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar" [ngStyle]="{'width': current.data.net_limit.percentStr}"></div>
+            </div>
+            <div class="text-sm text-center">NET used - {{current.data.net_limit.used}} Bytes / {{current.data.net_limit.max}} Bytes</div>
+            <div class="text-md margin-top">CPU <span class="text-xs color-grey">{{current.data.cpu_limit.percentStr}} available</span></div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar" [ngStyle]="{'width': current.data.cpu_limit.percentStr}"></div>
+            </div>
+            <div class="text-sm text-center">CPU used - {{current.data.cpu_limit.used}} µs / {{current.data.cpu_limit.max}} µs</div>
+        </div>
+    </div>
+
+
+    <div class="row" [ngClass]="{'d-none':current_mode}">
+        <div class="col col-padding-right">
+            <div class="text-md margin-top">RAM <span class="text-xs color-grey">{{current.data.ram_limit.percentStr}} available</span></div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar" [ngStyle]="{'width': current.data.ram_limit.percentStr}"></div>
+            </div>
+            <div class="text-muted text-xs margin-top-xs text-center">{{current.data.ram_limit.max}} Bytes</div>
+        </div>
+        <div class="col col-padding-left col-padding-right">
+            <div class="text-md margin-top">NET <span class="text-xs color-grey">{{current.data.net_limit.percentStr}} available</span></div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar" [ngStyle]="{'width': current.data.net_limit.percentStr}"></div>
+            </div>
+            <div class="text-muted text-xs margin-top-xs text-center">{{current.data.net_limit.max}} Bytes</div>
+        </div>
+        <div class="col col-padding-left">
+            <div class="text-md margin-top">CPU <span class="text-xs color-grey">{{current.data.cpu_limit.percentStr}} available</span></div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar" [ngStyle]="{'width': current.data.cpu_limit.percentStr}"></div>
+            </div>
+            <div class="text-muted text-xs margin-top-xs text-center">{{current.data.cpu_limit.max}} µs</div>
+        </div>
+    </div> 
+
+</vpe-panel>

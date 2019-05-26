@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <style>
+body[loading] div[loader] {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}    
+body[loading] div[loader] div[inner] {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}    
+body[loading] div[loader] div[inner] .lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+body[loading] div[loader] div[inner] .lds-ellipsis div {
+  position: absolute;
+  top: 27px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #fff;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+body[loading] div[loader] div[inner] .lds-ellipsis div:nth-child(1) {
+  left: 6px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+body[loading] div[loader] div[inner] .lds-ellipsis div:nth-child(2) {
+  left: 6px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+body[loading] div[loader] div[inner] .lds-ellipsis div:nth-child(3) {
+  left: 26px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+body[loading] div[loader] div[inner] .lds-ellipsis div:nth-child(4) {
+  left: 45px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(19px, 0);
+  }
+}
+
+  </style>
+<head>
+    <meta property="og:type" content="website">
+    <meta property="path" content="">
+    <meta property="og:url" content="https://vapaee.io">
+    <meta property="og:title" content="Vapaée - Telos DEX">
+    <meta property="og:site_name" content="Vapaée - Telos DEX">
+    <meta property="og:image" content="https://vapaee.io/assets/img/vapaee.io-DEX.png">
+    <meta property="og:image:width" content="269">
+    <meta property="og:image:height" content="500">
+    <meta property="fb:app_id" content="1658698094394840">
+    <meta property="og:locale" content="en_us">
+    <meta property="og:description" content="Decentralized Cryptocurrency Exchange over Telos Blockchain">
+
+  <meta charset="utf-8">
+  <title>Vapaée.io - Telos DEX</title>
+  <base href="/">
+  <script>
+    if (location.protocol !== "https:" && location.host == "vapaee.io") { location.protocol = "https:"; }
+  </script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="/assets/img/vapaee16.png">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body loading="true">
+  <div loader><div inner><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div></div>
+  <app-root></app-root>
+  
+</body>
+</html>

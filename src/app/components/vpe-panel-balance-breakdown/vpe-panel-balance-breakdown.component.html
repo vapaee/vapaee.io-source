@@ -1,0 +1,20 @@
+<vpe-panel [hideheader]="hideheader" [title]="local.string.balbreak">
+    <div class="row">
+        <div class="col-sm-12" [hidden]="!title">
+            <div class="text-lg text-center">
+                {{title | titlecase}}
+                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('account')"></span>
+            </div>
+        </div>                
+        <div class="col-sm-12">
+            <table class="table right-aligned margin-top">
+                <tbody>
+                    <tr><td>Available:</td><td>{{current.data.core_liquid_balance}}</td></tr>
+                    <tr><td>Refunding:</td><td>{{current.data.refund_request.total}}</td></tr>
+                    <tr><td>CPU Staked:</td><td>{{current.data.total_resources.cpu_weight}}</td></tr>
+                    <tr><td>NET Staked:</td><td>{{current.data.total_resources.net_weight}}</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</vpe-panel>

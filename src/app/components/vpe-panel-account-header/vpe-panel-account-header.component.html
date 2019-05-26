@@ -1,0 +1,71 @@
+<div class="card text-white bg-dark margin-top">
+    <div class="card-header vpe-background-card-header">
+        <div class="row">
+            <div class="col-sm-auto col-padding-right">
+                <identicon-comp [value]="current.name"></identicon-comp>
+            </div>
+            <div class="col col-padding-left">
+                <div [ngClass]="{'d-none':vapaee.loginState != 'no-scatter'}">
+                    <div class="pull-right text-center" [hidden]="!current.data.total_balance">
+                        <span class="btn btn-sm btn-primary" (click)="scatter.connectApp()">
+                            <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('log-state')"></span>
+                            {{local.string.retry | titlecase}}
+                        </span><br>
+                        <span>{{local.string.noWallet}}</span>
+                    </div>
+                </div>
+                <div [ngClass]="{'d-none':vapaee.loginState != 'no-logged'}">
+                    <div class="pull-right text-center"  [hidden]="!current.data.total_balance">
+                        <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
+                            <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('login') && !vapaee.feed.loading('log-state')"></span>
+                            {{local.string.LoginWScOrSq}}
+                        </span>
+                        <br>
+                        <span>{{local.string.NotLogged}}</span>
+                    </div>
+                </div>
+                <div class="text-xl">
+                    {{current.name}}
+                    <span [ngClass]="{'d-none':!vapaee.logged}">
+                        <span class="btn btn-sm btn-primary margin-left" (click)="vapaee.logout()">
+                            <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('logout') && !vapaee.feed.loading('log-state')"></span> 
+                            <span> {{local.string.logout}} </span>
+                        </span>
+                    </span>
+                </div>
+
+<!--div [hidden]="!vapaee.logged">
+    <div class="pull-right">
+        <span class="btn btn-sm btn-primary" (click)="freeFakeTokens()">
+            <span class="spinner-border spinner-border-sm" [hidden]="!loading_fake"></span>
+            {{local.string.getfftokens | titlecase}}
+        </span>
+    </div>
+</div--> 
+                <div [ngClass]="{'d-none':vapaee.loginState != 'no-scatter'}" [hidden]="current.data.total_balance">
+                    <div class="pull-right text-center">
+                        <span class="btn btn-sm btn-primary" (click)="scatter.connectApp()">
+                            <span class="spinner-border spinner-border-sm" [hidden]="!scatter.feed.loading('connect')"></span>
+                            {{local.string.retry | titlecase}}
+                        </span>
+                    </div>
+                    <span>{{local.string.noWallet}}</span>
+                </div>
+                <div [ngClass]="{'d-none':vapaee.loginState != 'no-logged'}" [hidden]="current.data.total_balance">
+                    <div class="pull-right text-center">
+                        <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
+                            <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('login') && !vapaee.feed.loading('log-state')"></span>
+                            {{local.string.LoginWScOrSq}}
+                        </span>
+                    </div>
+                    <span>{{local.string.NotLogged}}</span>
+                </div>
+                <div class="text-md nowrap" [hidden]="!current.data.total_balance">
+                    <small>total balance: </small>
+                    <span class="text-md color-green"> {{current.data.total_balance}} </span>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>

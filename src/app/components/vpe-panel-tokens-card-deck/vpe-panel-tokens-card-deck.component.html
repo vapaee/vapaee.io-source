@@ -1,0 +1,53 @@
+<vpe-panel [hideheader]="hideheader" [hidebackground]="hidebackground" [title]="local.string.tokens">
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="text-lg text-center">{{title | titlecase}}</div>
+        </div>
+
+        <div class="col-sm-12">
+            <div class="card-deck">
+                <div class="row" style="flex-grow: 1;">
+                    <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let token of get_tokens; let i=index">
+                        <div class="card token-card text-white bg-dark margin-top" *ngIf="i<limit">
+                            <div class="card-body vpe-background-card-body">
+                                <h4 class="card-title">
+                                    <div class="pull-right" [hidden]="token.symbol == 'TLOS'">
+                                        <div
+                                            class="nowrap text-right"
+                                            [ngClass]="{'text-success': summary(token.scope).percent > 0, 'text-danger': summary(token.scope).percent < 0, 'text-muted': summary(token.scope).percent  == 0}"
+                                        >
+                                            <small><b>{{summary(token.scope).percent_str}}</b></small>
+                                        </div>
+                                    </div>                            
+                                    <img style="height:20px; width: 20px; margin-top:-3px" [src]="token.logo">
+                                    {{token.appname}}
+                                </h4>
+                                <div class="card-text">
+                                    <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('token-stat-'+token.symbol) && !vapaee.feed.loading('summary.'+token.scope)"></span>
+                                    <span class="nowrap"> {{token.stat ? token.stat.max_supply : ('0 ' + token.symbol)}} </span>
+                                    <br>
+                                    <a [href]="token.website" target="_blank"><small class="text-muted">{{token.website}} &nbsp;</small></a><br>
+                                </div>
+                                <div>
+                                    <div class="pull-right" [hidden]="token.symbol == 'TLOS'">
+                                        <div class="nowrap text-right">
+                                            <small class="text-muted">{{local.string.price}}: </small> <small>{{summary(token.scope).price.valueToString(4)}}  {{summary(token.scope).price.token.symbol}}</small><br>
+                                            <small class="text-muted">{{local.string.volume}}: {{summary(token.scope).volume.valueToString(4)}}  {{summary(token.scope).volume.token.symbol}}</small>
+                                        </div>
+                                    </div>
+                                    <span [hidden]="token.symbol != 'TLOS'"
+                                        class="btn disabled btn-primary btn-sm margin-top">trade</span>                            
+                                    <span [hidden]="token.symbol == 'TLOS'"
+                                        class="btn btn-primary btn-sm margin-top"
+                                        routerLink="{{'/exchange/trade/'+token.symbol.toLowerCase()+'.tlos'}}">trade</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</vpe-panel>

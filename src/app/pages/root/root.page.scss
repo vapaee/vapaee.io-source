@@ -1,0 +1,29 @@
+:host {
+    display: block;
+    height: 100%;
+}
+.cnt-logo {
+    height: 37px;
+}
+
+// some minor fixes
+.fb-like-container {
+    margin-top: 5px;
+}
+.navbar-brand {
+    border-right-width: 0px;
+}
+.navbar-brand {
+    padding: 5px 20px 5px 10px;
+}
+
+.navbar {
+    z-index: 10;
+    background: rgb(58,58,58);
+    background: -moz-linear-gradient(top, rgba(58,58,58,1) 0%, rgba(84,84,84,1) 100%);
+    background: -webkit-linear-gradient(top, rgba(58,58,58,1) 0%,rgba(84,84,84,1) 100%);
+    background: linear-gradient(to bottom, rgba(58,58,58,1) 0%,rgba(84,84,84,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3a3a3a', endColorstr='#545454',GradientType=0 );    
+}
+
+

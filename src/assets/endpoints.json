@@ -1,0 +1,110 @@
+{
+    "eos": {
+        "name": "EOS",
+        "symbol": "EOS",
+        "explorer": "https://www.bloks.io",
+        "chainId":"aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906",
+        "endpoints": [{
+            "protocol":"https",
+            "host":"nodes.get-scatter.com",
+            "port":443
+        },
+        {
+            "protocol":"https",
+            "host":"mainnet.genereos.io",
+            "port":443
+            
+        },
+        {
+            "protocol":"https",
+            "host":"api.eosnewyork.io",
+            "port":443
+            
+        },
+        {
+            "protocol":"https",
+            "host":"api.eosn.io",
+            "port":443
+            
+        }]
+    }, 
+    "telos": {
+        "name": "TELOS",
+        "symbol": "TLOS",
+        "explorer": "http://mainnet.telosfoundation.io",
+        "chainId":"4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11",
+        "endpoints":[
+        {
+            "protocol":"https",
+            "host":"telos.eos.barcelona",
+            "port":443
+        },
+        {
+            "protocol":"https",
+            "host":"telos.caleos.io",
+            "port":443
+        }]
+    },
+    "telos-testnet": {
+        "name": "TELOS TestNet",
+        "symbol": "TLOS",
+        "explorer": "https://monitor.telosfoundation.io",
+        "chainId":"335e60379729c982a6f04adeaad166234f7bf5bf1191252b8941783559aec33e",
+        "endpoints":[
+        {
+            "protocol":"https",
+            "host":"testnet.telos.caleos.io",
+            "port":443
+        },
+        {
+            "protocol":"http2",
+            "host":"api.telosmadrid.io",
+            "port":443
+        }]
+    },
+    "jungle-testnet": {
+        "name": "Jungle Testnet",
+        "symbol": "EOS",
+        "chainId": "e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473",
+        "endpoints":[{
+            "protocol":"https",
+            "host":"jungle.eosio.cr",
+            "port":443
+        },
+        {
+            "protocol":"https",
+            "host":"junglenodes.eosmetal.io",
+            "port":443
+        }]
+    },
+    "kylin-testnet": {
+        "name": "Kylin Testnet",
+        "symbol": "EOS",
+        "chainId": "5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191",
+        "endpoints":[{
+            "protocol":"https",
+            "host":"api.kylin-testnet.eospace.io",
+            "port":443
+        },
+        {
+            "protocol":"https",
+            "host":"api-kylin.eosasia.one",
+            "port":443
+        },
+        {
+            "protocol":"https",
+            "host": "api-kylin.eoslaomao.com",
+            "port": 443
+        }]
+    },
+    "local": {
+        "name": "Localnet",
+        "symbol": "TLOS",
+        "chainId": "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f",
+        "endpoints":[{
+            "protocol":"http",
+            "host":"127.0.0.1",
+            "port":8888
+        }]
+    }
+}

@@ -1,0 +1,12 @@
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
+div.owner.danger {
+    background-color: #796e6e61;
+}
+
+div.owner.success {
+    background-color: #6e796e61;
+}

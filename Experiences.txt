@@ -1,0 +1,90 @@
+-- Contar sonre el problema que tuve de permisos con inline actions a otros contratos --
+    - los inline actions de un contrato al mismo contrato funcan bien de una
+    - ara los inline actions entre dos contratos el contrato emisor debe tener el permiso "eosio.code"
+-- los inline actions no se ejecutan "inline" sino que se ejecutan al terminar la ejecusión de la acción actual
+    - es un error mandar una inline action (desde A a B) y querer ver los resultados de dicha invocación (a B) dentro del mismo código (de A) porque B no ejecutó aun.
+-- Dos acciones consecutivas se ejecutan e el orden que fueron llamadas (era esperable)
+-- alargar el ktimeout de la wallet de keosd para trabajar más cómodo
+-- es cómodo crear algunos scripts para automaticar ciertas ineracciones con la blockchain que de otro sería muy tedioso como:
+    - visualizar tablas
+    - resetear el estado de la blockchain
+-- al deployar me sorprendió que necesité x10 veces más de RAM de lo que pesa el archivo original!!!
+   vapaeetokens.wasm 37Kb, pero fueron 374Kb de RAM
+   boardgamebox.wasm 201Kb, pero 2Mb de RAM
+   - account boardgamebox has insufficient ram; needs 2022497 bytes has 1964380 bytes
+-- Al mandar actiones en linea sucede que no se generan errores de typo en tiempo de compilación.
+   basicamentye podés mandar cualquier cantidad de parámetros de cualquier typo pero explota en tiempo de ejecusión.
+   hay que verificar cantidad y typo de cada parámetro.
+    ej: 
+    // el siguiente mensaje en linea da error por el array de caracteres "airdrop"
+    action(
+        permission_level{owner,"active"_n},
+        get_self(),
+        "issue"_n,
+        std::make_tuple(owner, quantity, "airdrop")
+    ).send();
+    // lo correcto sería
+    action(
+        permission_level{owner,"active"_n},
+        get_self(),
+        "issue"_n,
+        std::make_tuple(owner, quantity, string("airdrop"))
+    ).send();
+-- confundir get con find. el get te devuelve un objeto, mientras que el find un puntero. Si vas a borra, está mal pedir el objeto. necesitás el puntero.
+    auto unstake_itr = unstakes_table.get(unstake_id);  // <<---- esto está mal
+    unstakes_table.erase(unstake_itr);
+-- El lower_bounds y el upper_bounds no son tan fáciles de usar.
+for (auto p = table.begin(); p != table.end(); p++) {
+    print(p->id);
+}
+for (auto p = table.begin(); p != table.end(); p = table.begin()) {  // <------ p++ no se puede hacer si borrás el puntero
+    table.erase(p)
+}
+-- Cannot charge RAM to other accounts during notify.
+resulta que implementé un handler para manejar una transferencia que viene con parámetros en el memo y así poder crear una orden de compra.
+Resulta que no puedo cargar con RAM al usuario, si registro ese evento lo tengo que garpar desde el contrato.
+- modificar el código de la biblioteca de eosio para que tire un error con más datos
+  /usr/opt/eosio.cdt/1.4.1/include/eosiolib/name.hpp
+      constexpr explicit name( std::string_view str )
+      :value(0)
+      {
+         if( str.size() > 13 ) {
+            eosio_assert( false, (std::string("string is too long to be a valid name: ") + std::string(str)).c_str() );
+         }
+
+         auto n = std::min( str.size(), 12u );
+         for( decltype(n) i = 0; i < n; ++i ) {
+            value <<= 5;
+            value |= char_to_value( str[i] );
+         }
+         value <<= ( 4 + 5*(12 - n) );
+         if( str.size() == 13 ) {
+            uint64_t v = char_to_value( str[12] );
+            if( v > 0x0Full ) {
+               eosio_assert(false, (std::string("thirteenth character in name cannot be a letter that comes after j") + std::string(str)).c_str());
+            }
+            value |= v;
+         }
+      }
+- el datatype time no se debe usar para representar el tiempo. Hay dos variantes que se pueden usar:
+  time_point_sec y time_point. El segundo soporta milisegundos y el primero sólo segundos
+  time_point_sec date = time_point_sec(now());
+- FC Exception encountered while processing chain.push_transaction
+  Cuando tenés que mandar un mensaje de un contrato a otro te va a pasar de tener problemas con los permisos.
+  Para eso necesitás crearle un tipo de permiso nuevo al contrato (eosio.code) además de los que ya trae (owner y active).
+  Implementé un par de contratos específicos para probar ese tema en la carpeta _examples: appserver y appplugin
+  --- solution ---------
+  https://eosio.stackexchange.com/a/1711/2452
+  cleos set account permission appserver active '{"threshold": 1,"keys": [{"key": "EOS8RoCAXxWYUW2v4xkG19F57BDVBzpt9NN2iDsD1ouQNyV2BkiNc","weight": 1}],"accounts": [{"permission":{"actor":"appserver","permission":"eosio.code"},"weight":1}]}' owner -p appserver
+- En producción me dió este error cuando quise hacer un withdraw (que implica que el contrato me mande una transacción de tokens)
+  -- error obtenido --
+  Error 3100006: Subjective exception thrown during block production
+  Error Details:
+  Authorization failure with inline action sent to self
+  transaction declares authority '{"actor":"vapaeetokens","permission":"active"}', but does not have signatures for it under a provided delay of 0 ms, provided permissions [{"actor":"vapaeetokens","permission":"eosio.code"}], provided keys [], and a delay max limit of 3888000000 ms
+  pending console output:
+  --- solución ---
+  https://eosio.stackexchange.com/a/1711/2452
+  telosmain set account permission vapaeetokens active '{"threshold": 1,"keys": [{"key": "EOS8MPwGHuGSHSfBp3HAWsrHDotAqp9ZPShBvNcGDpcmNNa5h8y1Q","weight": 1}],"accounts": [{"permission":{"actor":"vapaeetokens","permission":"eosio.code"},"weight":1}]}' owner -p vapaeetokens
+- es mejor llenar de asserts por todos lados cosa de que si falla, que falle por un error que vos controlás y por tanto sabés dónde y porqué falló.
+- TIP (for devs): to find out this error on production I had to change the asset.hpp and modify the error message to include the data that was causing the error. This gave me more info to start looking for the original causes.

@@ -1,0 +1,25 @@
+<vpe-panel [title]="local.string.history">
+    <div class="row">
+        <div class="nowrap text-bold text-sm col-sm-4 col-padding-right">{{local.string.time | titlecase}}
+            <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('history.'+scope)"></span>
+        </div>
+        <div class="nowrap text-bold text-sm-right col-sm-4 col-padding-right col-padding-left">{{local.string.price | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-sm-4 col-padding-left">{{local.string.amount | titlecase}}</div>
+    </div>
+    <div class="row margin-top">
+        <div class="col-sm-12">
+            <perfect-scrollbar style="max-height: 250px; max-width: 100%">
+                <div class="row margin-bottom" 
+                    *ngFor="let tx of history"
+                    [ngClass]="{'text-success': tx.isbuy, 'text-danger':!tx.isbuy}"
+                >
+                    <div class="nowrap col-sm-4 col-padding-right">
+                            {{tx.date | date : "HH:mm:ss"}}                   
+                    </div>
+                    <div class="nowrap col-sm-4 text-right col-padding-right col-padding-left">{{tx.price.valueToString(8)}}</div>
+                    <div class="nowrap col-sm-4 text-right padding-right-lg ">{{tx.amount.valueToString(8)}}</div>
+                </div>
+            </perfect-scrollbar>
+        </div>
+    </div>
+</vpe-panel>

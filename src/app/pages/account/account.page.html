@@ -1,0 +1,34 @@
+<div class="container-fluid d-lg-none">
+
+    <vpe-panel-account-header [current]="vapaee.current"></vpe-panel-account-header>
+
+    <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [current]="vapaee.current"> </vpe-panel-account-resources>
+        
+    <vpe-panel-balance-breakdown [title]="local.string.balbreak" [hideheader]="true" [current]="vapaee.current"></vpe-panel-balance-breakdown>
+
+    <vpe-panel-user-orders [hidden]="vapaee.current.name == vapaee.default.name" [userorders]="userorders" [hideheader]="true" [title]="local.string.orders"></vpe-panel-user-orders>
+
+    <vpe-panel-wallet [hidden]="vapaee.current.name == vapaee.default.name" (confirmWithdraw)="onWalletConfirmWithdraw($event)" (confirmDeposit)="onWalletConfirmDeposit($event)" [error]="error" [loading]="loading" [actions]="true" [hideuser]="true" [hideheader]="true" [title]="local.string.wallet" [deposits]="deposits" [balances]="balances"></vpe-panel-wallet>
+    
+</div>
+
+
+<!-- ---------------------------------------------------------------------------- -->
+
+<div class="container d-none d-lg-block">
+
+    <vpe-panel-account-header [current]="vapaee.current"></vpe-panel-account-header>
+
+    <div class="row" [hidden]="vapaee.current.name == vapaee.default.name">
+        <div class="col-lg-6 col-padding-right">
+            <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [current]="vapaee.current"> </vpe-panel-account-resources>
+            <vpe-panel-balance-breakdown [title]="local.string.balbreak" [hideheader]="true" [current]="vapaee.current"></vpe-panel-balance-breakdown>
+            <vpe-panel-user-orders [userorders]="userorders" [hideheader]="true" [title]="local.string.orders"></vpe-panel-user-orders>
+        </div>
+        <div class="col-lg-6 col-padding-left">
+            <vpe-panel-wallet (confirmWithdraw)="onWalletConfirmWithdraw($event)" (confirmDeposit)="onWalletConfirmDeposit($event)" [error]="error" [loading]="loading" [actions]="true" [hideuser]="true" [hideheader]="true" [title]="local.string.wallet" [deposits]="deposits" [balances]="balances"></vpe-panel-wallet>
+        </div>
+    </div>
+
+</div>
+

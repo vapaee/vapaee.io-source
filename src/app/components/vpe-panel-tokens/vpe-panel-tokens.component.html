@@ -1,0 +1,54 @@
+<vpe-panel [title]="local.string.Tokenlist">
+    <div class="row">
+        <div class="col-sm-12 input-group">
+            <input
+                type="text"
+                class="form-control form-control-sm"
+                placeholder="{{local.string.searchtk}}"
+                [value]="token_filter"
+                (input)="token_filter = $event.target.value"
+                >
+            <div class="input-group-append">
+                <span class="input-group-text form-control-sm padding-xs">
+                    <i class="material-icons">search</i>
+                </span>
+            </div>
+        </div>            
+    </div>
+    <hr class="line">
+    <div class="row margin-top">
+        <div class="nowrap text-bold text-sm col-sm-3 col-padding-right">{{local.string.token | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-sm-2 col-padding-right col-padding-left">{{local.string.vol | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-sm-4 col-padding-right col-padding-left">{{local.string.price | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-left">{{local.string.change | titlecase}}</div>
+    </div>
+    <div class="row margin-top">
+        <div class="col-sm-12">
+            <perfect-scrollbar style="max-height: 237px; max-width: 100%">
+                <div class="row cursor-pointer margin-bottom active-on-hover" 
+                    *ngFor="let token of get_tokens | filter:token_filter"
+                    [hidden]="token.symbol == 'TLOS'"
+                    routerLink="{{'/exchange/trade/' + token.scope}}"
+                >
+                    <div class="nowrap col-sm-3 col-padding-right">
+                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="token.logo">
+                        {{token.symbol}}
+                        <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('token-stat-'+token.symbol) && !vapaee.feed.loading('summary.'+token.scope)"></span>
+                    </div>
+                    <div class="nowrap col-sm-2 text-right col-padding-right col-padding-left">
+                        {{summary(token.scope).volume.valueToString(2)}}
+                    </div>
+                    <div class="nowrap col-sm-4 text-right col-padding-right col-padding-left">
+                        {{summary(token.scope).price.valueToString(4)}}
+                    </div>
+                    <div
+                        class="nowrap col-sm-3 text-right padding-right-lg"
+                        [ngClass]="{'text-success': summary(token.scope).percent > 0, 'text-danger': summary(token.scope).percent < 0, 'text-muted': summary(token.scope).percent  == 0}"
+                    >
+                        {{summary(token.scope).percent_str}}
+                    </div>
+                </div>
+            </perfect-scrollbar>
+        </div>
+    </div>
+</vpe-panel>
