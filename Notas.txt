@@ -330,7 +330,7 @@ telosmain push action vapaeetokens hotfix '[10, "user33333333"]' -p vapaeetokens
 telosmain push action vapaeetokens hotfix '[10, "vapaeetokens"]' -p vapaeetokens@active
 
 
-telosmain push action vapaeetokens hotfix '[3, "foflexitytls","62.1000 AAA"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[0, "viterbotelos","0.1000 TLOS"]' -p vapaeetokens@active
 
 
 

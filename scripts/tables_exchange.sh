@@ -63,6 +63,7 @@ if [ "$NET" == "" ]; then
     show_balance kate   
 fi
 show_balance vapaeetokens
+show_balance viterbotelos
 
 show_table vapaeetokens vapaeetokens depusers
 show_table vapaeetokens vapaeetokens ordertables

@@ -26,6 +26,18 @@ namespace vapaee {
         static uint128_t combine( name key1, name key2 ) {
             return vapaee::utils::combine(key1.value, key2.value);
         }
+
+        static uint64_t multiply(const asset &A, const asset &B ) {
+            double A_amount = (double)A.amount;
+            double B_amount = (double)B.amount;
+            double A_unit = (double)pow(10.0, A.symbol.precision());
+            double B_unit = (double)pow(10.0, B.symbol.precision());
+            double A_real = A_amount / A_unit;
+            double B_real = B_amount / B_unit;
+            double total = A_real * B_real;
+            uint64_t amount = (uint64_t) (total * B_unit);
+            return amount;
+        }
         
         static asset inverse(const asset &A, const symbol &B ) {
             // PRINT("vapaee::utils::inverse()\n");

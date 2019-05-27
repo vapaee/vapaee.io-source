@@ -629,7 +629,7 @@ namespace vapaee {
                     if (price < a.min) a.min = price;
                 });
             }
-      
+
             PRINT("vapaee::token::exchange::aux_register_transaction_in_history() ...\n");
         }
 
@@ -758,7 +758,8 @@ namespace vapaee {
                     if (b_ptr->total > remaining) { // CNT
                         // buyer wants more that the user is selling -> reduces buyer order amount
                         current_total = remaining;  // CNT
-                        current_payment.amount = (int64_t)( (double)(remaining.amount * b_ptr->selling.amount) / (double)b_ptr->total.amount);
+                        current_payment.amount = vapaee::utils::multiply(remaining, b_ptr->inverse);
+
                         buytable.modify(*b_ptr, aux_get_modify_payer(ram_payer), [&](auto& a){
                             double percent = (double)remaining.amount / (double)a.total.amount;
                             eosio_assert(a.total.symbol == remaining.symbol,
@@ -779,6 +780,7 @@ namespace vapaee {
                                 create_error_asset2(ERROR_AGSO_5, a.total, current_payment).c_str());
                             a.total -= current_payment;
                         });
+
                     } else {
                         // buyer gets all amount wanted -> destroy order
                         uint64_t buy_id = b_ptr->id;
@@ -1357,6 +1359,37 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::action_poblate_user_orders_table()\n");
             require_auth(get_self());
             int count = 0; 
+
+            // // Modificar orden de venta
+            // sellorders table0(get_self(), name("tlosdac.tlos").value);
+            // auto ptr = table0.find(14);
+            // table0.modify(*ptr, same_payer, [&](auto & a){
+            //      a.selling.amount = 2612800000000;
+            // });
+
+            // modificar depósitos
+            // deposits table5(get_self(), name("viterbotelos").value);
+            // auto ptr0 = table5.find(symbol_code("TLOSDAC").raw());
+            // eosio_assert(ptr0 != table5.end(), "Le erraste, no existe la entrada");
+            // table5.modify(*ptr0, same_payer, [&](auto & a){
+            //     a.amount.amount = 110698909424;
+            // });
+
+            // modificar earnings
+            // earnings table1(get_self(), get_self().value);
+            // auto eptr_1 = table1.find(symbol_code("TLOSDAC").raw());
+            // table1.modify(*eptr_1, same_payer, [&](auto & a){
+            //     a.quantity.amount = 211120000;
+            // });
+
+            // modificar history
+            // history table2(get_self(), name("tlosdac.tlos").value);
+            // auto ptr2 = table2.find(8);
+            // table2.modify(*ptr2, same_payer, [&](auto & a){
+            //     a.sellfee.amount = 200000000;
+            //     a.amount.amount = 100000000000;
+            // });
+
 
             // Borrar ordertables
             // tokens table0(get_self(), get_self().value);
