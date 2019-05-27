@@ -27,6 +27,7 @@
     "amount": "amount",
     "price": "price",
     "Price": "Price",
+    "priceNotZero": "Please, set a price different to 0.00000000",
     "retry": "retry",
     "Tokenlist": "Token List",
     "Inventory": "Inventory",

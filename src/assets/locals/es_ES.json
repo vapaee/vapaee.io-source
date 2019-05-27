@@ -27,6 +27,7 @@
     "amount": "cantidad",
     "price": "precio",
     "Price": "Precio",
+    "priceNotZero": "Por favor, establezca un precio diferente a 0.00000000",
     "Tokenlist": "Lista de Tokens",
     "Inventory": "Inventario",
     "Albums": "Álbums",

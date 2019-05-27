@@ -185,6 +185,83 @@
                 <div class="nowrap col-sm-4 text-right col-padding-right col-padding-left">{{local.string.total}}</div>
             </div>
             <perfect-scrollbar style="max-height: 300px; max-width: 100%">
+                
+                <div class="row margin-bottom active-on-hover cursor-pointer" 
+                    *ngFor="let order of own.buy"
+                    
+                >
+                    <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg"
+                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                        >
+                        {{order.price.toString(8)}}
+                    </div>
+                    <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left"
+                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                        >
+                        {{order.deposit.toString(8)}}
+                    </div>
+                
+                    <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
+                        <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.price.token.table + order.id]">cancel</i>
+                        <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.price.token.table + order.id]"></span>
+                    </div>
+                
+                    <div class="col-sm-12" [hidden]="!error">
+                        <div class="alert alert-danger">
+                            <div class="pull-right">
+                                <button type="button" class="close text-white" (click)="error = null">
+                                    <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                </button>                
+                            </div>
+                            {{error}}
+                        </div>
+                    </div>
+    
+                </div>
+                
+                <div class="row margin-bottom active-on-hover cursor-pointer" 
+                    *ngFor="let order of own.sell"
+                >
+                    <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg"
+                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                        >
+                        {{order.price.toString(8)}}
+                    </div>
+                    <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left"
+                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                        >
+                        {{order.deposit.toString(8)}}
+                    </div>
+                
+                    <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
+                        <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.price.token.table + order.id]">cancel</i>
+                        <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.price.token.table + order.id]"></span>
+                    </div>
+                
+                    <div class="col-sm-12" [hidden]="!error">
+                        <div class="alert alert-danger">
+                            <div class="pull-right">
+                                <button type="button" class="close text-white" (click)="error = null">
+                                    <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                </button>                
+                            </div>
+                            {{error}}
+                        </div>
+                    </div>
+                </div>
+                
+            </perfect-scrollbar>
+        </div>        
+
+
+<!--
+        <div class="col-sm-12 d-lg-none margin-top" [hidden]="!vapaee.logged || own.length == 0">
+            <label>{{local.string.orders | titlecase}}</label>
+            <div class="row">
+                <div class="nowrap col-sm-4 text-right col-padding-right padding-left-lg">{{local.string.price}}</div>
+                <div class="nowrap col-sm-4 text-right col-padding-right col-padding-left">{{local.string.total}}</div>
+            </div>
+            <perfect-scrollbar style="max-height: 300px; max-width: 100%">
                 <div class="row margin-bottom active-on-hover cursor-pointer" 
                     *ngFor="let order of own"
                     (click)="cancel(order)"
@@ -206,6 +283,7 @@
                 </div>
             </perfect-scrollbar>
         </div>
+    -->
 
         <div class="d-sm-none d-lg-block col-lg-12 margin-top">
             <div class="row" [hidden]="!vapaee.logged || own.length == 0">
@@ -218,7 +296,7 @@
                     <perfect-scrollbar style="max-height: 200px; max-width: 100%">
                         <div class="row margin-bottom active-on-hover cursor-pointer" 
                             [ngClass]="{'d-none':order.deposit.token.symbol != get_comodity.symbol}"
-                            *ngFor="let order of own"
+                            *ngFor="let order of own.sell"
                             (click)="cancel(order)"
                         >
                             <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg text-danger">{{order.price.toString(8)}}</div>
@@ -239,7 +317,7 @@
                     <perfect-scrollbar style="max-height: 200px; max-width: 100%">
                         <div class="row margin-bottom danger active-on-hover cursor-pointer" 
                             [ngClass]="{'d-none':order.deposit.token.symbol != get_currency.symbol}"
-                            *ngFor="let order of own"
+                            *ngFor="let order of own.buy"
                             (click)="cancel(order)"
                         >
                             <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg text-success">{{order.price.toString(8)}}</div>

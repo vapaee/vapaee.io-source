@@ -31,7 +31,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     @Input() public currency: Token;
     @Input() public deposits: Asset[];
     @Input() public orders: TokenOrders;
-    public own: Order[];
+    public own: {sell:Order[], buy:Order[]};
     price: Asset;
     amount: Asset;
     constructor(
@@ -62,6 +62,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         setTimeout(_ => {
             if (!this.price) this.restaure();
             if (!this.price) return;
+            
 
             this.deposits_comodity = new Asset("0 " + this.comodity.symbol, this.vapaee);
             this.deposits_currency = new Asset("0 " + this.currency.symbol, this.vapaee);
@@ -138,20 +139,32 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     }
     
     setAmount(a:Asset) {
+        this.error = "";
         this.amount = a;
         this.ngOnChanges();
     }
 
     sellAll() {
+        this.error = "";
         this.setAmount(this.deposits_comodity);
         this.wantsTo("sell");
     }
     
     buyAll() {
+        this.error = "";
+        console.log("buyAll()", this.payment);
         this.wantsTo("buy");
+        if (this.price.amount.toNumber() == 0) {
+            this.error = this.local.string.priceNotZero;
+        } else {
+            this.payment.amount = this.deposits_currency.amount.minus(0.0001);
+            var amount = this.payment.amount.dividedBy(this.price.amount);
+            this.setAmount(new Asset(amount, this.deposits_comodity.token));    
+        }
     }
     
     onChange(event:any) {
+        this.error = "";
         this.calculate();
     }
 
@@ -181,24 +194,28 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             this.calculate();
         }
 
-        if (this.orders && this.own.length == 0) {
+        console.log("this.orders ------------------>", this.orders);
+
+        if (this.orders && this.own.sell.length == 0) {
             // console.log("this.orders.sell.length", this.orders.sell.length);
             for (var i=0; i<this.orders.sell.length; i++) {
                 var sell = this.orders.sell[i];
                 for (var j=0; j<sell.orders.length; j++) {
                     var order = sell.orders[j];
                     if (order.owner == this.owner) {
-                        this.own.push(order);
+                        this.own.sell.push(order);
                     }
                 }
             }
+        }
+        if (this.orders && this.own.buy.length == 0) {
             // console.log("this.orders.buy.length", this.orders.buy.length);
             for (var i=0; i<this.orders.buy.length; i++) {
                 var buy = this.orders.buy[i];
                 for (var j=0; j<buy.orders.length; j++) {
                     var order = buy.orders[j];
                     if (order.owner == this.owner) {
-                        this.own.push(order);
+                        this.own.buy.push(order);
                     }
                 }
             }
@@ -207,7 +224,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
 
     ngOnChanges() {
         // console.log("VpePanelOrderEditorComponent.ngOnChanges()");
-        this.own = [];
+        this.own = {sell:[],buy:[]};
         // changes from outside
         return this.vapaee.waitReady.then(_ => this.restaure());
     }
