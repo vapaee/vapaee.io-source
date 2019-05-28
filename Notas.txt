@@ -11,6 +11,10 @@
 - ajustar los tamaños de los fancy-scroll para que el último item se vea por la mitad (y se entienda que continúa)
 
 
+-- HOTFIX --
+cd /var/www/vapaee.io-source/contracts/vapaeetokens
+vapaeetokens; telosmain set contract vapaeetokens $PWD -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[0, "viterbotelos","0.1000 TLOS"]' -p vapaeetokens@active
 
 
 
@@ -47,59 +51,7 @@ cleos push action revelation21 open '["user1.jc", "4,HEART", "user1.jc"]' -p use
 
 
 - Premium
-  - Crítico
-    - Responsive PWA
-      - hay que hacer un evento (onResize) que los paneles se puedan suscribir para repintarse sólos
-      - Cada panel debería poder calcular el área que le toca desplegarse y ponerse una clase SIZE
-      - cada panel debería desplegarse teniendo en cuenta el área que tiene para hacerlo (basado en la clase SIZE)
-      - el alto del panel "Token List" debería igualar el alto de panel "Chart"
-      - Diseño para celulares:
-        - Token List: debe convertirse en un Combobox
-        - Wallet: debe convertirse en un Botón (--> account)
-        - Header mucho más chico
-        - Gráfico: with 100%, height 40%
-        - Order Form: dos modos:
-          - Info: (por defecto) se muestra la cantidad de órdenes propias y botón para desplegar (cambiar de modo)
-          - full: se ve todo el formulario para crear una orden.
-            - Botón que dice: mostrar órdenes propias.
-            - lista de órdenes propias por defecto están ocultas
-        Order Book: mostrar sólo 4 (2 de cada uno). Botón de expandir
-        Historial normal. Botón de expandir
-  - Choto
-    - agregarle la versión en el HOME page. Abajo del subtítulo con letra chica
-    - Wallet Panel (USD):
-      - Combobox sup-derecha (a la derecha del título) para elegir si expresar todo en USD, TLOS, EUR, EOS, etc...
-      - Botón a la derecha del título "Depositos" que diga "withdraw" que si lo tocás switchea a "back to prices"
-      - Botón a la derecha del título "Balances" que diga "deposit" que si lo tocás switchea a "back to prices" (sincronizado con el btn anterior)
-      - A la derecha de cada depósito o balance poner el precio e USD. Si el botón anterior lo precionan, ponemos un botón que dice "withdraw"/"deposit"
-    - Total balance en USD en el header del account bien a la derecha, abajo de los botones de login
-    - correr el botón "logout" bien a la derecha del account header
-    - Agregar max y min de las últimas 24h
-    - Activity feedback: how many users, transactions per day, deposits, withdraws, earnings
-    - agregar y testear que funcione la wallet lynxs 
-  - detalles:
-    - recordar la elección del idioma (coockie)
-    - resaltar el botón del navbar del WP
-    - cambiar el ícono de Beatitude (HEART)
-    - hacer que el uso de la ruedita sobre el chart avance más rápido cuanto más atrás en el tiempo se vaya.
-    - poder hacer click en la cantidad de TLOS que tengo y que se llenen los campos para generar una orden de compra la mas grande que pueda pagar.
-  - bugs chotos
-    - la cantidad de órdenes de compra total se muestra siempre: 0 órdenes - 0.0000 TLOS
-    - que no se muestren los paneles de recursos ni balance cuando no está logueado y con resolución baja
-    - en el panel-order-editor el loading de los cancels no se corresponden bien. (se mezclan compras con ventas)
-  - bugs jodidos
-    - revisar el listado de ordenes propias dentro del panel-order-editor porque muestra cualquiera a veces
-    - revisar el botón de login.
-      - Mostrar mensajes de error!
-      - tirar errores en consola
-      - verificar si el usuario no tiene Telos mainnet en la wallet.
-    + Estoy agregando listener al evento de onresize pero no los estoy sacando. Se acumulan y degradan la performance, mal.
-  - wishlist
-    - en el panel-order-editor poder cancelar más de uno por vez  
-    - adaptar la letra del WP para mostrar los úntos que están hechos y los que faltan
-    + pasar todo el código a un nuevo repositorio dedicado a Vapaée DEX
-    - cambiar el algoritmo que calcula el summary y basarlo en el blockhistory.
-    - cachear el blockhistoy.
+  
       
 - Deluxe
   - Página del Token X (title, description, link, contacts, transaction history, top N holders)

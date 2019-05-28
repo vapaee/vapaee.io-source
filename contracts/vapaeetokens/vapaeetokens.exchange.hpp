@@ -1407,10 +1407,10 @@ namespace vapaee {
 
             // Update ordertables
             // ordertables table1(get_self(), get_self().value);
-            // auto ptr = table1.find(name("olive.tlos").value);
+            // auto ptr = table1.find(name("edna.tlos").value);
             // table1.modify(*ptr, same_payer, [&](auto & a){
-            //     a.blocks = 2;
-            //     a.deals = 5;
+            //     a.blocks = 3;
+            //     a.deals = 4;
             // });
 
             // Delete fake Tokens balance
