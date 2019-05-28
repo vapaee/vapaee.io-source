@@ -2,7 +2,7 @@
 
 # Vapaée DEX - source code
 
-current version: BASIC (v1.1.3)
+current version: BASIC (v1.1.4)
 
 https://vapaee.io
 
@@ -43,6 +43,7 @@ cd script
   - [x] add current version number on the HOME page. Below the subtitle with small print
   - [x] button "deposit" to the right of token balances (temporal solution)
   - [ ] Wallet Panel (USD):
+    - [x] create service to query Telos price in coingecko regularly.
     - [ ] Combobox sup-right (to the right of the title) to choose whether to express everything in USD, TLOS, EUR, EOS, etc ...
     - [ ] Button to the right of the title "Deposits" that says "withdraw" that if you touch it, switch to "back to prices"
     - [ ] Button to the right of the title "Balances" that says "deposit" that if you touch it, switch to "back to prices" (synchronized with the previous btn)
@@ -63,6 +64,7 @@ cd script
   - [x] there's a bug when calculating the payment
   - [ ] the total number of buy orders always displays: 0 orders - 0.0000 TLOS
   - [ ] do not show the resource panels or balance when not logged in and with low resolution
+  - [x] tokens with more volume should be shown on top on the token list
   - [x] in the _order editor panel_ the loading of the cancels do not correspond well. (buy orders are mixed with sell orders)
 - ### Hard bugs
   - [x] review the list of own orders within the _order editor panel_ because it doesn't display properly sometimes

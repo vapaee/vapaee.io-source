@@ -36,6 +36,7 @@ export class VapaeeService {
     public onHistoryChange:Subject<string> = new Subject();
     public onSummaryChange:Subject<string> = new Subject();
     public onBlocklistChange:Subject<any[][]> = new Subject();
+    public onTokensReady:Subject<Token[]> = new Subject();
     vapaeetokens:string = "vapaeetokens";    
     
     private setOrdertables: Function;
@@ -945,17 +946,7 @@ export class VapaeeService {
             }
 
             return Promise.all(promises).then(_ => {
-                this.tokens.sort((a:Token, b:Token) => {
-                    if (this.scopes[a.scope] && this.scopes[b.scope]) {
-                        var a_vol = this.scopes[a.scope].summary.volume;
-                        var b_vol = this.scopes[b.scope].summary.volume;
-                        if(a_vol.amount.isGreaterThan(b_vol.amount)) return -1;
-                        if(a_vol.amount.isLessThan(b_vol.amount)) return 1;    
-                    }
-                    if(a.appname < b.appname) return -1;
-                    if(a.appname > b.appname) return 1;
-                    return 0;
-                });    
+                this.resortTokens();    
             });
         })
     }
@@ -1271,11 +1262,19 @@ export class VapaeeService {
     }
 
     private resortTokens() {
-        this.tokens.sort(function(a:Token, b:Token) {
+        this.tokens.sort((a:Token, b:Token) => {
+            if (this.scopes && this.scopes[a.scope] && this.scopes[b.scope]) {
+                var a_vol = this.scopes[a.scope].summary.volume;
+                var b_vol = this.scopes[b.scope].summary.volume;
+                if(a_vol.amount.isGreaterThan(b_vol.amount)) return -1;
+                if(a_vol.amount.isLessThan(b_vol.amount)) return 1;    
+            }
             if(a.appname < b.appname) return -1;
             if(a.appname > b.appname) return 1;
             return 0;
-        });    
+        }); 
+
+        this.onTokensReady.next(this.tokens);
     }
 
 }
@@ -1336,6 +1335,10 @@ export class Asset {
         } else {
             return integer + "." + decimal;
         }
+    }
+
+    toNumber() {
+        return parseFloat(this.valueToString(8));
     }
 
     get str () {

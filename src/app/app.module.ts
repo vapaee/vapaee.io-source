@@ -17,7 +17,7 @@ import { ScatterService } from './services/scatter.service';
 import { BGBoxService } from './services/bgbox.service';
 import { CntService } from './services/cnt.service';
 import { VapaeeService } from './services/vapaee.service';
-
+import { CoingeckoService } from './services/coingecko.service';
 
 
 import { VpeComponentsModule } from './components/vpe-components.module';
@@ -63,6 +63,7 @@ import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
         VapaeeService,
         CntService,
         HttpClient,
+        CoingeckoService,
         EosioTokenMathService
     ],
     bootstrap: [AppComponent]

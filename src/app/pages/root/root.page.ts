@@ -2,7 +2,6 @@ import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { ScatterService } from 'src/app/services/scatter.service';
-import { ActivatedRoute } from '@angular/router';
 import { CntService } from 'src/app/services/cnt.service';
 import { BGBoxService } from 'src/app/services/bgbox.service';
 import { VapaeeService } from 'src/app/services/vapaee.service';

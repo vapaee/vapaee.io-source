@@ -163,7 +163,7 @@
 
         <!-- ------------------ orders ------------------- -->
         
-        <div class="col-sm-12" [hidden]="!vapaee.logged || own.length == 0">
+        <div class="col-sm-12" [hidden]="!vapaee.logged || (own.sell.length == 0 && own.buy.length == 0)">
             <hr class="line">
         </div>
 
@@ -178,7 +178,7 @@
             </div>
         </div>
 
-        <div class="col-sm-12 d-lg-none margin-top" [hidden]="!vapaee.logged || own.length == 0">
+        <div class="col-sm-12 d-lg-none margin-top" [hidden]="!vapaee.logged || (own.sell.length == 0 && own.buy.length == 0)">
             <label>{{local.string.orders | titlecase}}</label>
             <div class="row">
                 <div class="nowrap col-sm-4 text-right col-padding-right padding-left-lg">{{local.string.price}}</div>
@@ -286,7 +286,7 @@
     -->
 
         <div class="d-sm-none d-lg-block col-lg-12 margin-top">
-            <div class="row" [hidden]="!vapaee.logged || own.length == 0">
+            <div class="row" [hidden]="!vapaee.logged || (own.sell.length == 0 && own.buy.length == 0)">
                 <div class="col-sm-6">
                     <label>{{local.string.sell_orders | titlecase}}</label>
                     <div class="row">

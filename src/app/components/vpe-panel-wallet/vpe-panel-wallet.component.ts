@@ -36,10 +36,14 @@ export class VpePanelWalletComponent implements OnChanges {
     public alert_msg:string;
     public loading_fake_tlos: boolean;
     public loading_fake: boolean;
+
+    public show_prices: boolean;
     constructor(
         public vapaee: VapaeeService,
-        public local: LocalStringsService
+        public local: LocalStringsService,
+        public components: VpeComponentsService
     ) {
+        this.show_prices = true;
         this._fake_tlos_balance = new Asset();
         this.hideuser = false;
         this.hideheader = false;
@@ -47,8 +51,9 @@ export class VpePanelWalletComponent implements OnChanges {
         this.alert_msg = "";
         this.deposit = new Asset();
         this.withdraw = new Asset();
-        
     }
+
+    
 
     get get_fake_tlos_balance() {
         if (this._fake_tlos_balance && this._fake_tlos_balance.amount.toNumber() > 0) return this._fake_tlos_balance;
@@ -82,9 +87,7 @@ export class VpePanelWalletComponent implements OnChanges {
             }
         }
         return this._nonfake_balances;
-    }
-
-      
+    }     
 
     depositForm(asset:Asset) {
         this.alert_msg = "";
