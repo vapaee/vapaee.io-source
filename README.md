@@ -58,7 +58,7 @@ cd script
   - [ ] remember the choice of language (cookie)
   - [ ] highlight the WP navbar button
   - [x] change the Beatitude icon (HEART)
-  - [ ] mouse wheel on the chart must advance faster the further back in time it goes.
+  - [x] mouse wheel on the chart must advance faster the further back in time it goes.
   - [x] make the TLOS deposit clickable so it adds the maximum possible order amount from the token Spot Account into the order form (Ryan Jones request)
 - ### Easy bugs
   - [x] there's a bug when calculating the payment
@@ -66,6 +66,7 @@ cd script
   - [ ] do not show the resource panels or balance when not logged in and with low resolution
   - [x] tokens with more volume should be shown on top on the token list
   - [x] in the _order editor panel_ the loading of the cancels do not correspond well. (buy orders are mixed with sell orders)
+  - [ ] in the _order editor panel_ sometime own order don't appear. It should update regularly as _history panel_ does.
 - ### Hard bugs
   - [x] review the list of own orders within the _order editor panel_ because it doesn't display properly sometimes
   - [ ] check the login button.

@@ -113,7 +113,7 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy, OnInit {
 
     mouseWheel(event) {
         //console.log("mouseWheel", event);
-        this.zoom -= event.delta;
+        this.zoom -= Math.floor(event.delta * (this.zoom / 10));
         if (this.zoom < this.zomm_min) this.zoom = this.zomm_min;
         if (this.zoom > this.data.length) this.zoom = this.data.length;
         // this.recreateChartData();

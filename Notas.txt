@@ -14,7 +14,7 @@
 -- HOTFIX --
 cd /var/www/vapaee.io-source/contracts/vapaeetokens
 vapaeetokens; telosmain set contract vapaeetokens $PWD -p vapaeetokens@active
-telosmain push action vapaeetokens hotfix '[0, "viterbotelos","0.1000 TLOS"]' -p vapaeetokens@active
+telosmain push action vapaeetokens hotfix '[0, "viterbotelos", "0.1000 TLOS"]' -p vapaeetokens@active
 
 
 
