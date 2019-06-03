@@ -33,7 +33,7 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy, OnInit {
     constructor(
         public vapaee: VapaeeService,
         public local: LocalStringsService,
-        public components: VpeComponentsService,
+        public service: VpeComponentsService,
         private _element:ElementRef
     ) {
         this.zoom = 24;
@@ -59,7 +59,7 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy, OnInit {
     }
     
     ngOnInit() {
-        this.components.onResize.subscribe(this.onResizeSubscriber);
+        this.service.onResize.subscribe(this.onResizeSubscriber);
         console.log(this._element.nativeElement);
     }    
 
@@ -154,7 +154,7 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy, OnInit {
                             risingColor: { strokeWidth: 0, fill: '#0f9d58' }   // green
                         },
                         colors: ["#444400"],
-                        height: 300,
+                        height: 290,
                         bar: {
                             groupWidth: "80%"
                         },

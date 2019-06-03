@@ -4,6 +4,7 @@ import { VapaeeService, Asset } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService } from '../vpe-components.service';
 import { Subscriber } from 'rxjs';
+import { Feedback } from 'src/app/services/feedback.service';
 
 
 @Component({
@@ -37,13 +38,17 @@ export class VpePanelWalletComponent implements OnChanges {
     public loading_fake_tlos: boolean;
     public loading_fake: boolean;
 
-    public show_prices: boolean;
+    public show_prices_top: boolean;
+    public show_prices_bottom: boolean;
+    public feed: Feedback;
     constructor(
         public vapaee: VapaeeService,
         public local: LocalStringsService,
-        public components: VpeComponentsService
+        public service: VpeComponentsService
     ) {
-        this.show_prices = true;
+        this.feed = new Feedback();
+        this.show_prices_top = true;
+        this.show_prices_bottom = true;
         this._fake_tlos_balance = new Asset();
         this.hideuser = false;
         this.hideheader = false;
@@ -86,15 +91,35 @@ export class VpePanelWalletComponent implements OnChanges {
                 this._nonfake_balances.push(this.balances[i]);
             }
         }
+        console.log(this._nonfake_balances);
         return this._nonfake_balances;
-    }     
+    }
+    
+    first_deposit() {
+        this.feed.setError("first_deposit", "");
+        if (!this.balances) {
+            console.error("ERROR: deposits not ready", this.deposits);
+            return;
+        }
+        if (this.balances.length == 0) {
+            this.feed.setError("first_deposit", this.local.string.udhavetoken);
+            return;
+        }
+        if (this.balances.length == 1) {
+            var asset:Asset = this.balances[0];
+            this.depositForm(asset);
+        }
+        if (this.balances.length > 1) {
+            this.show_prices_bottom=false;
+        }        
+    }
 
     depositForm(asset:Asset) {
         this.alert_msg = "";
         if (!this.vapaee.logged) return;
         if (!this.actions) return;
         if (!asset.token.verified) {
-            this.alert_msg = "This token is not allowed yet in vapaee.io DEX";
+            this.alert_msg = this.local.string.tinallowed;
             this.deposit = new Asset();
             return;
         }

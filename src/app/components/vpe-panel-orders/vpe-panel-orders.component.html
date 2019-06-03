@@ -40,8 +40,8 @@
                 <div class="col-sm-12">
                     <div class="pull-right">
                         <span class="text-muted">
-                            {{headers.buy ? headers.buy.orders : 0}} {{local.string.orders}} -
-                            {{headers.buy.total ? headers.buy.total.toString() : ""}}
+                            {{iheaders.sell ? iheaders.sell.orders : 0}} {{local.string.orders}} -
+                            {{iheaders.sell.total ? iheaders.sell.total.toString() : ""}}
                         </span>
                     </div>
                     {{local.string.buy_orders | titlecase}}

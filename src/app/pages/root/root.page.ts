@@ -5,6 +5,7 @@ import { ScatterService } from 'src/app/services/scatter.service';
 import { CntService } from 'src/app/services/cnt.service';
 import { BGBoxService } from 'src/app/services/bgbox.service';
 import { VapaeeService } from 'src/app/services/vapaee.service';
+import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 
 declare var $:any;
 
@@ -22,7 +23,8 @@ export class RootPage implements OnInit {
         public scatter: ScatterService,
         public cnt: CntService,
         public bgbox: BGBoxService,
-        public vapaee: VapaeeService
+        public vapaee: VapaeeService,
+        private components: VpeComponentsService
     ) {
     }
     
@@ -50,6 +52,7 @@ export class RootPage implements OnInit {
         console.log("BOX", [this.bgbox]);
         console.log("VPE", [this.vapaee]);
         console.log("Scatter", [this.scatter]);
+        console.log("Components", [this.components]);
         console.log("--------------------------------");
     }
 

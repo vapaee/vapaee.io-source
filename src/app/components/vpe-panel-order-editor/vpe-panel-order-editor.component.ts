@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeService, Asset, TokenOrders, Order } from 'src/app/services/vapaee.service';
+import { VapaeeService, Asset, TokenOrders, Order, OrderRow } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Token } from 'src/app/services/utils.service';
+import { VpeComponentsService } from '../vpe-components.service';
 
 
 @Component({
@@ -30,13 +31,15 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     @Input() public comodity: Token;
     @Input() public currency: Token;
     @Input() public deposits: Asset[];
-    @Input() public orders: TokenOrders;
+    @Input() public buyorders: OrderRow[];
+    @Input() public sellorders: OrderRow[];
     public own: {sell:Order[], buy:Order[]};
     price: Asset;
     amount: Asset;
     constructor(
         public vapaee: VapaeeService,
-        public local: LocalStringsService
+        public local: LocalStringsService,
+        public service: VpeComponentsService
     ) {
         this.error = "";
         this.loading = false;
@@ -194,12 +197,12 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             this.calculate();
         }
 
-        console.log("this.orders ------------------>", this.orders);
+        console.log("this.orders ------------------>", this.sellorders, this.buyorders);
 
-        if (this.orders && this.own.sell.length == 0) {
-            // console.log("this.orders.sell.length", this.orders.sell.length);
-            for (var i=0; i<this.orders.sell.length; i++) {
-                var sell = this.orders.sell[i];
+        if (this.sellorders && this.own.sell.length == 0) {
+            // console.log("this.sellorders.length", this.sellorders.length);
+            for (var i=0; i<this.sellorders.length; i++) {
+                var sell = this.sellorders[i];
                 for (var j=0; j<sell.orders.length; j++) {
                     var order = sell.orders[j];
                     if (order.owner == this.owner) {
@@ -208,10 +211,10 @@ export class VpePanelOrderEditorComponent implements OnChanges {
                 }
             }
         }
-        if (this.orders && this.own.buy.length == 0) {
-            // console.log("this.orders.buy.length", this.orders.buy.length);
-            for (var i=0; i<this.orders.buy.length; i++) {
-                var buy = this.orders.buy[i];
+        if (this.buyorders && this.own.buy.length == 0) {
+            // console.log("this.buyorders.length", this.buyorders.length);
+            for (var i=0; i<this.buyorders.length; i++) {
+                var buy = this.buyorders[i];
                 for (var j=0; j<buy.orders.length; j++) {
                     var order = buy.orders[j];
                     if (order.owner == this.owner) {

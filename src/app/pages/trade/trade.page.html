@@ -31,10 +31,10 @@
         </div>
         <div class="col-sm-8 col-md-9 col-padding-left">
             <vpe-panel-chart [data]="chartData"></vpe-panel-chart>
-            <vpe-panel-order-editor [hidden]="!vapaee.logged" #orderform [deposits]="deposits" [comodity]="comodity" [currency]="currency" [orders]="orders" [owner]="vapaee.logged"></vpe-panel-order-editor>
+            <vpe-panel-order-editor [hidden]="!vapaee.logged" #orderform [deposits]="deposits" [comodity]="comodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="vapaee.logged"></vpe-panel-order-editor>
             <div class="row">
                 <div class="col-sm-8 col-md-9 col-padding-right">
-                    <vpe-panel-orders (onClickRow)="onClickRow($event)" (onClickPrice)="onClickPrice($event)" [headers]="headers" [orders]="orders"></vpe-panel-orders>
+                    <vpe-panel-orders (onClickRow)="onClickRow($event)" (onClickPrice)="onClickPrice($event)" [headers]="headers" [iheaders]="iheaders" [orders]="orders"></vpe-panel-orders>
                 </div>
                 <div class="col-sm-4 col-md-3 col-padding-left">
                     <vpe-panel-history [scope]="comodity ? comodity.scope : ''" [history]="history"></vpe-panel-history>

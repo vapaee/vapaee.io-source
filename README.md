@@ -42,31 +42,30 @@ cd script
   - [ ] the height of the _token list panel_ should equal the height of _chart panel_
   - [x] add current version number on the HOME page. Below the subtitle with small print
   - [x] button "deposit" to the right of token balances (temporal solution)
-  - [ ] Wallet Panel (USD):
+  - [x] Wallet Panel (USD):
     - [x] create service to query Telos price in coingecko regularly.
-    - [ ] Combobox sup-right (to the right of the title) to choose whether to express everything in USD, TLOS, EUR, EOS, etc ...
-    - [ ] Button to the right of the title "Deposits" that says "withdraw" that if you touch it, switch to "back to prices"
-    - [ ] Button to the right of the title "Balances" that says "deposit" that if you touch it, switch to "back to prices" (synchronized with the previous btn)
-    - [ ] To the right of each deposit or balance put the price in USD. If the previous button is pressed, put a button that says "withdraw" / "deposit"
-  - [ ] Total balance in USD in the header of the account on the right, under the login buttons
-  - [ ] run the "logout" button to the right of the account header
-  - [ ] Add max and min of the last 24h for each token
+    - [x] Combobox sup-right (to the right of the title) to choose whether to express everything in USD, TLOS, EUR, EOS, etc ...
+    - [x] Button to the right of the title "Deposits" that says "withdraw" that if you touch it, switch to "back to prices"
+    - [x] Button to the right of the title "Balances" that says "deposit" that if you touch it, switch to "back to prices"
+    - [x] To the right of each deposit or balance put the price in USD. If the previous button is pressed, put a button that says "withdraw" / "deposit"
+  - [x] Total balance in USD in the header of the account next to total balance
+  - [x] Add max and min of the last 24h for each token
   - [ ] Activity feedback on home page: how many users, transactions per day, deposits, withdrawals, earnings
   - [ ] add and test support for the lynx wallet
 - ### Details:
   - [x] add Portugues language (Thanks to Fabiana Cecin)
-  - [ ] remember the choice of language (cookie)
   - [ ] highlight the WP navbar button
   - [x] change the Beatitude icon (HEART)
   - [x] mouse wheel on the chart must advance faster the further back in time it goes.
   - [x] make the TLOS deposit clickable so it adds the maximum possible order amount from the token Spot Account into the order form (Ryan Jones request)
+  - [x] show non-validated tokens in the wallet balance and make them unable to be deposited
 - ### Easy bugs
   - [x] there's a bug when calculating the payment
-  - [ ] the total number of buy orders always displays: 0 orders - 0.0000 TLOS
-  - [ ] do not show the resource panels or balance when not logged in and with low resolution
+  - [x] the total number of buy orders always displays: 0 orders - 0.0000 TLOS
+  - [x] do not show the resource panels or balance when not logged in and with low resolution
   - [x] tokens with more volume should be shown on top on the token list
   - [x] in the _order editor panel_ the loading of the cancels do not correspond well. (buy orders are mixed with sell orders)
-  - [ ] in the _order editor panel_ sometime own order don't appear. It should update regularly as _history panel_ does.
+  - [x] in the _order editor panel_ sometime own order don't appear. It should update regularly as _history panel_ does.
 - ### Hard bugs
   - [x] review the list of own orders within the _order editor panel_ because it doesn't display properly sometimes
   - [ ] check the login button.
@@ -80,3 +79,6 @@ cd script
   - [x] pass all the code to a new repository dedicated to Vapaée DEX
   - [ ] change the algorithm that calculates the summary and base it on the blockhistory.
   - [ ] cache the blockhistoy data.
+  - [ ] remember the choice of language (cookie)
+  - [ ] remember the choice of base currency
+  - [ ] add date in history entries

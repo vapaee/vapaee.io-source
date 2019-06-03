@@ -1,19 +1,16 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { HistoryTx, VapaeeService } from 'src/app/services/vapaee.service';
+import { VapaeeService } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService } from '../vpe-components.service';
 
 
 @Component({
-    selector: 'vpe-panel-history',
-    templateUrl: './vpe-panel-history.component.html',
-    styleUrls: ['./vpe-panel-history.component.scss']
+    selector: 'vpe-fiat-combobox',
+    templateUrl: './vpe-fiat-combobox.component.html',
+    styleUrls: ['./vpe-fiat-combobox.component.scss']
 })
-export class VpePanelHistoryComponent implements OnChanges {
+export class VpeFIatComboboxComponent implements OnChanges {
 
-    @Input() public history: HistoryTx[];
-    @Input() public scope: string;
     constructor(
         public vapaee: VapaeeService,
         public local: LocalStringsService,

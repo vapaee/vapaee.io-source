@@ -93,8 +93,27 @@ export class TradePage implements OnInit, OnDestroy {
         return scope ? scope.orders : this._orders;
     }
 
+    get buyorders() {
+        var scope = this.vapaee.scopes[this.scope];
+        return scope ? scope.orders.buy : this._orders.buy;
+    }
+
+    get sellorders() {
+        var scope = this.vapaee.scopes[this.scope];
+        return scope ? scope.orders.sell : this._orders.sell;
+    }
+
     get headers() {
         var scope = this.vapaee.scopes[this.scope];
+        var header = { 
+            sell: {total:null, orders:0}, 
+            buy: {total:null, orders:0}
+        }
+        return scope ? (scope.header ? scope.header : header) : header;
+    }
+
+    get iheaders() {
+        var scope = this.vapaee.scopes[this.vapaee.inverseScope(this.scope)];
         var header = { 
             sell: {total:null, orders:0}, 
             buy: {total:null, orders:0}
@@ -115,6 +134,18 @@ export class TradePage implements OnInit, OnDestroy {
         // return scope ? (scope.summary ? scope.summary : _summary) : _summary;
     }
 
+    get chartData() {
+        if (!this._chartData) this.regenerateChartData();
+        return this._chartData;
+    }
+
+    get scopes() {
+        return this.vapaee.scopes;
+    }
+
+    get tokens() {
+        return this.vapaee.tokens;
+    }
 
     private regenerateChartData() {
         if (this.vapaee.scopes[this.scope]) {
@@ -128,18 +159,6 @@ export class TradePage implements OnInit, OnDestroy {
         }
     }
 
-    get chartData() {
-        if (!this._chartData) this.regenerateChartData();
-        return this._chartData;
-    }
-
-    get scopes() {
-        return this.vapaee.scopes;
-    }
-
-    get tokens() {
-        return this.vapaee.tokens;
-    }
 
     ngOnDestroy() {
         this.onStateSubscriber.unsubscribe();

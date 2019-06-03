@@ -3,6 +3,7 @@ import { EventEmitter } from '@angular/core';
 import { VapaeeService, Asset } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Account } from 'src/app/services/scatter.service';
+import { VpeComponentsService } from '../vpe-components.service';
 
 
 @Component({
@@ -25,7 +26,8 @@ export class VpePanelBalanceBreakdawnComponent implements OnChanges {
     public withdraw: Asset;
     constructor(
         public vapaee: VapaeeService,
-        public local: LocalStringsService
+        public local: LocalStringsService,
+        public service: VpeComponentsService
     ) {
         this.hideuser = false;
         this.hideheader = false;

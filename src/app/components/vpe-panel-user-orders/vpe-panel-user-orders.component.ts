@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { TokenOrders, VapaeeService, OrderRow, TableHeader, UserOrders } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
+import { VpeComponentsService } from '../vpe-components.service';
 
 
 @Component({
@@ -23,7 +24,8 @@ export class VpePanelUserOrdersComponent implements OnChanges {
     error:string;
     constructor(
         public vapaee: VapaeeService,
-        public local: LocalStringsService
+        public local: LocalStringsService,
+        public service: VpeComponentsService
     ) {
         this.c_loading = {};
     }

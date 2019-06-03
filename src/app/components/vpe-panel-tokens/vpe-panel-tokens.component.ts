@@ -4,6 +4,7 @@ import { Token } from 'src/app/services/utils.service';
 import { Subscriber } from 'rxjs';
 import { VapaeeService, TableMap } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
+import { VpeComponentsService } from '../vpe-components.service';
 
 
 
@@ -21,7 +22,8 @@ export class VpePanelTokensComponent implements OnChanges {
     
     constructor(
         public vapaee: VapaeeService,
-        public local: LocalStringsService
+        public local: LocalStringsService,
+        public service: VpeComponentsService
     ) {
         this.token_filter = "";
     }

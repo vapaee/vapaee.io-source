@@ -65,9 +65,36 @@ export class VapaeeService {
         this.utils = new Utils(this.contract, this.scatter);
         this.feed = new Feedback();
         this.scatter.onLogggedStateChange.subscribe(this.onLoggedChange.bind(this));
-        this.updateLogState();  
+        this.updateLogState();
         this.fetchTokens().then(data => {
             this.tokens = data.tokens;
+            console.log("********************************");
+            console.log("********************************");
+            this.tokens.push({
+                appname: "Viitasphere",
+                contract: "viitasphere1",
+                logo: "/assets/logos/viitasphere.png",
+                logolg: "/assets/logos/viitasphere-lg.png",
+                precision: 4,
+                scope: "viitct.tlos",
+                symbol: "VIITA",
+                verified: false,
+                website: "https://viitasphere.com"
+            });
+            this.tokens.push({
+                appname: "Viitasphere",
+                contract: "viitasphere1",
+                logo: "/assets/logos/viitasphere.png",
+                logolg: "/assets/logos/viitasphere-lg.png",
+                precision: 0,
+                scope: "viitct.tlos",
+                symbol: "VIICT",
+                verified: false,
+                website: "https://viitasphere.com"
+            });
+            console.log(JSON.parse(JSON.stringify(this.tokens)));
+            console.log("********************************");
+            console.log("********************************");
             this.resortTokens();
             this.zero_telos = new Asset("0.0000 TLOS", this);
             this.setReady();
@@ -76,7 +103,7 @@ export class VapaeeService {
         });        
     }
 
-    // getters ------------
+    // getters -------------------------------------------------------------
     get default(): Account {
         return this.scatter.default;
     }
@@ -101,7 +128,16 @@ export class VapaeeService {
         this.scatter.default;
     }
 
-    // --
+    inverseScope(scope:string) {
+        if (!scope) return scope;
+        console.assert(typeof scope =="string", "ERROR: string scope expected, got ", typeof scope, scope);
+        var parts = scope.split(".");
+        console.assert(parts.length == 2, "ERROR: scope format expected is xxx.yyy, got: ", typeof scope, scope);
+        var inverse = parts[1] + "." + parts[0];
+        return inverse;
+    }
+
+    // -- User Log State ---------------------------------------------------
     login() {
         this.feed.setLoading("login", true);
         this.logout();
@@ -260,8 +296,27 @@ export class VapaeeService {
             await this.getBalances();
             return result;
         });
-    }    
+    }
 
+    // Tokens --------------------------------------------------------------
+    addFiatToken(fiat: Token) {
+        console.log("VapaeeService.addFiatToken()", fiat);
+        this.waitReady.then(_ => {
+            this.tokens.push({
+                symbol: fiat.symbol,
+                precision: fiat.precision || 4,
+                contract: "nocontract",
+                appname: fiat.appname,
+                website: "",
+                logo:"",
+                logolg: "",
+                scope: "",
+                stat: null,
+                verified: false,
+                fiat: true
+            });
+        });        
+    }
     // --------------------------------------------------------------
     // Getters 
 
@@ -871,6 +926,9 @@ export class VapaeeService {
             // genero una entrada por cada una de las últimas 24 horas
             var last_24h = {};
             var volume = new Asset(ZERO_TLOS, this);
+            var price_asset = new Asset(price, this);
+            var max_price = price_asset.clone();
+            var min_price = price_asset.clone();
             var first:Asset = null;
             for (var i=0; i<24; i++) {
                 var current = start_hour+i;
@@ -888,6 +946,13 @@ export class VapaeeService {
                 volume.amount = volume.amount.plus(vol.amount);
                 if (price != ZERO_TLOS && !first) {
                     first = new Asset(price, this);
+                }
+                price_asset = new Asset(price, this);
+                if (price_asset.amount.isGreaterThan(max_price.amount)) {
+                    max_price = price_asset.clone();
+                }
+                if (price_asset.amount.isLessThan(min_price.amount)) {
+                    min_price = price_asset.clone();
                 }
             }
             if (!first) {
@@ -915,6 +980,8 @@ export class VapaeeService {
             this.scopes[scope].summary.percent_str = (isNaN(percent) ? 0 : percent) + "%";
             this.scopes[scope].summary.percent = isNaN(percent) ? 0 : percent;
             this.scopes[scope].summary.volume = volume;
+            this.scopes[scope].summary.min_price = min_price;
+            this.scopes[scope].summary.max_price = max_price;
 
             // if(scope=="olive.tlos")console.log("Summary final:", this.scopes[scope].summary);
             // if(scope=="olive.tlos")console.log("---------------------------------------------------");
@@ -1051,6 +1118,7 @@ export class VapaeeService {
             var contracts = {};
             var balances = [];
             for (var i in this.tokens) {
+                if (this.tokens[i].fiat) continue;
                 contracts[this.tokens[i].contract] = true;
             }
             for (var contract in contracts) {
@@ -1230,6 +1298,7 @@ export class VapaeeService {
 
             var priomises = [];
             for (var i in this.tokens) {
+                if (this.tokens[i].fiat) continue;
                 priomises.push(this.fetchTokenStats(this.tokens[i]));
             }
 
@@ -1299,6 +1368,12 @@ export class Asset {
             return;
         }
 
+        if (typeof a == "number") {
+            this.amount = new BigNumber(a);
+            this.token = b;
+            return;
+        }
+
         if (b instanceof VapaeeService) {
             this.parse(a,b);
         }
@@ -1309,14 +1384,16 @@ export class Asset {
     }
 
     parse(text: string, vapaee: VapaeeService) {
+        if (text == "") return;
         var sym = text.split(" ")[1];
         this.token = vapaee.getTokenNow(sym);
         var amount_str = text.split(" ")[0];
         this.amount = new BigNumber(amount_str);
-        console.assert(!!this.token, "ERROR: string malformed of token not found:", text)
+        console.assert(!!this.token, "ERROR: string malformed of token not found:", text);
     }
 
     valueToString(decimals:number = -1): string {
+        if (!this.token) return "0";
         var parts = ("" + this.amount).split(".");
         var integer = parts[0];
         var precision = this.token.precision;
@@ -1338,6 +1415,7 @@ export class Asset {
     }
 
     toNumber() {
+        if (!this.token) return 0;
         return parseFloat(this.valueToString(8));
     }
 
@@ -1346,6 +1424,7 @@ export class Asset {
     }
 
     toString(decimals:number = -1): string {
+        if (!this.token) return "0.0000";
         return this.valueToString(decimals) + " " + this.token.symbol.toUpperCase();
     }
 
@@ -1376,6 +1455,8 @@ export interface Table {
 
 export interface Summary {
     price?:Asset,
+    min_price?:Asset,
+    max_price?:Asset,
     volume?:Asset,
     percent?:number,
     percent_str?:string,

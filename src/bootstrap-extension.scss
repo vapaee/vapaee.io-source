@@ -26,6 +26,12 @@
     text-decoration: line-through;
 }
 
+.btn-xs, .btn-group-xs>.btn {
+    padding: 0.19rem 0.45rem;
+    font-size: 0.7003125rem;
+    line-height: 1.16;
+    border-radius: 0.2rem;
+}
 .btn-padding {
     padding: 6px 12px;
 }
@@ -330,9 +336,13 @@ th.left-aligned, td.left-aligned {
 .color-black { color: black; }
 .color-white { color: white; }
 .color-grey { color: grey; }
+.color-green { color: green; }
+.color-yellow { color: yellow; }
 .bg-color-black { background-color: black; }
 .bg-color-white { background-color: white; }
 .bg-color-grey { background-color: grey; }
+.bg-color-green { background-color: green; }
+.bg-color-yellow { background-color: yellow; }
 .bg-color-black-alpha { background-color: rgba(0,0,0,0.5); }
 
 // --- CARDS (bootstrap-4) -------------------
@@ -681,4 +691,13 @@ table.table-inverse td, table.table-inverse th, table.table-inverse thead th {
     .text-xs-left, .text-xs-right, .text-xs-center, .text-xs {
         font-size: 12px;
     }    
+}
+
+// fixes ------------------------------------------------------------------------
+.btn-sm, .btn-group-sm>.btn {
+    & > i.material-icons {
+        font-size: 0.8203125rem;
+        vertical-align: middle;
+        // font-size: 100%;
+    }
 }

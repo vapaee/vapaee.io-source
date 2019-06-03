@@ -15,20 +15,46 @@
         </div>
 
         <div class="col-sm-12">
-            <div class="pull-right" [hidden]="hideuser || !vapaee.logged">
-                <small class="text-muted cursor-pointer" (click)="clickOnAccount()">
-                    {{local.string.LoggedAs}} '{{vapaee.logged}}'
-                </small>
-            </div>            
+            <div>
+                <div class="pull-right" [hidden]="hideuser || !vapaee.logged">
+                    <small class="text-muted cursor-pointer" (click)="clickOnAccount()">
+                        {{local.string.LoggedAs}} '{{vapaee.logged}}'
+                    </small>
+                </div>
+            </div>
             <div class="text-md">
                 {{local.string.deposits | titlecase}}
                 <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('deposits')"></span>
+                <div class="pull-right" [hidden]="!hideuser || !deposits || deposits.length == 0">
+                    <span class="btn btn-sm btn-primary" [hidden]="!show_prices_top || (hideuser && !vapaee.logged)" (click)="show_prices_top=false">
+                        {{local.string.withdraw | titlecase}}
+                        <i class="material-icons">arrow_downward</i>
+                    </span>
+                    <span class="btn btn-sm btn-primary" [hidden]="show_prices_top" (click)="show_prices_top=true">
+                        {{local.string.hidebtns}}
+                        <i class="material-icons">replay</i>
+                    </span>
+                </div>                
             </div>
             <table class="table complete margin-top">
                 <tbody>
                     <tr [hidden]="!deposits || deposits.length > 0"><td>
                         <div class="col-sm-12 margin-top text-center text-danger">
                             <label>{{local.string.thesnodeps}}</label>
+                        </div>
+                        <div class="col-sm-12 margin-top text-center text-danger">
+                            <span class="btn btn-sm btn-primary" [hidden]="!show_prices_bottom || !vapaee.logged"
+                                  (click)="first_deposit()">{{local.string.deposit | titlecase}}</span>
+                            <div class="col-sm-12 margin-top" [hidden]="!feed.error('first_deposit')">
+                                <div class="alert alert-danger">
+                                    <div class="pull-right">
+                                        <button type="button" class="close text-white" (click)="feed.setError('first_deposit', '')">
+                                            <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                        </button>                
+                                    </div>
+                                    {{feed.error('first_deposit')}}
+                                </div>
+                            </div>                                  
                         </div>
                     </td></tr>
                     <tr
@@ -37,6 +63,10 @@
                         
                         <td>
                             <div (click)="withdrawForm(deposit)" [ngClass]="{'cursor-pointer': actions}">
+                                <div class="pull-right">
+                                    <span class="text-xs color-yellow" [hidden]="!show_prices_top"> {{service.getTokenInCurrentCurrency(deposit)}} </span>
+                                    <span class="btn btn-xs btn-primary" [hidden]="withdraw.token.symbol != 'SYS' || show_prices_top || !hideuser">{{local.string.withdraw | titlecase}}</span>
+                                </div>                                 
                                 <img [src]="deposit.token.logo" style="width: 20px; height: 20px; margin-top:-1px">
                                 {{deposit.toString(8)}}
                                 <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('deposits')"></span>
@@ -62,7 +92,7 @@
             </table>
         </div>
 
-        
+        <!-- Fake tokens -->
         <div class="col-sm-12" [hidden]="hasNoFake()">
             <div class="text-md">
                 {{local.string.faketokens | titlecase}}
@@ -128,8 +158,22 @@
             <div class="text-md">
                 {{local.string.balances | titlecase}}
                 <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('balances')"></span>
+                <div class="pull-right" [hidden]="!deposits || deposits.length == 0">
+                    <span class="btn btn-sm btn-primary" [hidden]="!show_prices_bottom || hideuser || vapaee.logged" (click)="clickOnAccount()">
+                        {{local.string.deposit | titlecase}}
+                        <i class="material-icons">call_made</i>
+                    </span>
+                    <span class="btn btn-sm btn-primary" [hidden]="!show_prices_bottom || !vapaee.logged" (click)="show_prices_bottom=false">
+                        {{local.string.deposit | titlecase}}
+                        <i class="material-icons">arrow_downward</i>
+                    </span>
+                    <span class="btn btn-sm btn-primary" [hidden]="show_prices_bottom" (click)="show_prices_bottom=true">
+                        {{local.string.hidebtns}}
+                        <i class="material-icons">replay</i>
+                    </span>
+                </div>
             </div>
-            <div class="alert alert-info" [hidden]="!alert_msg">
+            <div class="alert alert-info margin-top" [hidden]="!alert_msg">
                 <div class="pull-right">
                     <button type="button" class="close text-white" (click)="alert_msg = null">
                         <i class="material-icons" style="font-size: 100%;">cancel</i>
@@ -147,7 +191,8 @@
                         <td>
                             <div (click)="depositForm(balance)" [ngClass]="{'cursor-pointer': actions}">
                                 <div class="pull-right">
-                                    <span class="btn btn-sm btn-primary" [hidden]="deposit.token.symbol != 'SYS'">{{local.string.deposit | titlecase}}</span>
+                                    <span class="text-xs color-yellow" [hidden]="!show_prices_bottom"> {{service.getTokenInCurrentCurrency(balance)}} </span>
+                                    <span class="btn btn-xs btn-primary" [hidden]="deposit.token.symbol != 'SYS' || show_prices_bottom || !balance.token.verified">{{local.string.deposit | titlecase}}</span>
                                 </div>                                
                                 <img [src]="balance.token.logo" style="width: 20px; height: 20px; margin-top:-1px">
                                 {{balance.toString()}}

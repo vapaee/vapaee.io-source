@@ -3,6 +3,7 @@ import { EventEmitter } from '@angular/core';
 import { VapaeeService, Asset } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Token } from 'src/app/services/utils.service';
+import { VpeComponentsService } from '../vpe-components.service';
 
 
 @Component({
@@ -28,7 +29,8 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
     public withdraw: Asset;
     constructor(
         public vapaee: VapaeeService,
-        public local: LocalStringsService
+        public local: LocalStringsService,
+        public service: VpeComponentsService
     ) {
         this.hideheader = false;
         this.hidebackground = false;
@@ -46,7 +48,7 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
         var tokens = []
         for (var i in this.tokens) {
             var token = this.tokens[i];
-            if (token.verified) {
+            if (!token.fiat) {
                 tokens.push(token);
             }
         }
@@ -69,7 +71,12 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
             price: this.vapaee.zero_telos.clone(),
             records: [],
             volume: this.vapaee.zero_telos.clone()
-        }, scope ? scope.summary : {});
+        }, scope ? scope.summary : {
+            volume: new Asset(),
+            price: new Asset(),
+            max_price: new Asset(),
+            min_price: new Asset(),
+        });
         return _summary;
     }
 

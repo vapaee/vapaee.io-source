@@ -15,6 +15,7 @@ export interface Token {
     logolg?: string,
     verified?: boolean,
     fake?: boolean,
+    fiat?: boolean,
     scope?: string,
     stat?: {
         supply: string,

@@ -9,6 +9,9 @@
             <div class="card-deck">
                 <div class="row" style="flex-grow: 1;">
                     <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let token of get_tokens; let i=index">
+<!-- 
+                        <div class="text-left"><pre>{{summary(token.scope)|json}}</pre></div>
+-->
                         <div class="card token-card text-white bg-dark margin-top" *ngIf="i<limit">
                             <div class="card-body vpe-background-card-body">
                                 <h4 class="card-title">
@@ -30,18 +33,45 @@
                                     <a [href]="token.website" target="_blank"><small class="text-muted">{{token.website}} &nbsp;</small></a><br>
                                 </div>
                                 <div>
-                                    <div class="pull-right" [hidden]="token.symbol == 'TLOS'">
-                                        <div class="nowrap text-right">
+                                    <div class="pull-right">
+                                        <div class="nowrap text-right" *ngIf="token.symbol != 'TLOS' && token.verified">
+                                                <small class="text-muted">max: {{summary(token.scope).max_price.valueToString(4)}} {{summary(token.scope).max_price.token.symbol}}</small><br>
+                                                <small class="text-muted">min: {{summary(token.scope).min_price.valueToString(4)}} {{summary(token.scope).min_price.token.symbol}}</small>
+                                            <!-- 
                                             <small class="text-muted">{{local.string.price}}: </small> <small>{{summary(token.scope).price.valueToString(4)}}  {{summary(token.scope).price.token.symbol}}</small><br>
                                             <small class="text-muted">{{local.string.volume}}: {{summary(token.scope).volume.valueToString(4)}}  {{summary(token.scope).volume.token.symbol}}</small>
+                                            -->
                                         </div>
+                                        <div *ngIf="token.symbol == 'TLOS' || !token.verified">&nbsp;<br>&nbsp;</div>
                                     </div>
-                                    <span [hidden]="token.symbol != 'TLOS'"
+                                    <span [hidden]="token.symbol != 'TLOS' && token.verified"
                                         class="btn disabled btn-primary btn-sm margin-top">trade</span>                            
-                                    <span [hidden]="token.symbol == 'TLOS'"
+                                    <span [hidden]="token.symbol == 'TLOS' || !token.verified"
                                         class="btn btn-primary btn-sm margin-top"
                                         (click)="goToTradeToken(token)"
                                         >trade</span>
+                                </div>
+
+                                <div class="col-xs-12 margin-top">
+                                    <div class="row" style="flex-grow: 1">
+                                        <div class="col-6 text-left col-padding-right" *ngIf="token.symbol != 'TLOS' && token.verified">
+                                            <small class="text-muted">{{local.string.vol}}: {{summary(token.scope).volume.valueToString(4)}}  {{summary(token.scope).volume.token.symbol}}</small>
+                                            <!-- 
+                                            <small class="text-muted">min: {{summary(token.scope).min_price.valueToString(4)}} {{summary(token.scope).min_price.token.symbol}}</small>
+                                            -->
+                                        </div>
+                                        <div class="col-6 text-right col-padding-left" *ngIf="token.symbol != 'TLOS' && token.verified">
+                                            <!--
+                                            <small class="text-muted">{{local.string.price}}: </small>
+                                             -->
+                                            <small class="bold">{{summary(token.scope).price.valueToString(4)}}  {{summary(token.scope).price.token.symbol}}</small>
+                                            <!-- 
+                                            <small class="text-muted">max: {{summary(token.scope).max_price.valueToString(4)}} {{summary(token.scope).max_price.token.symbol}}</small>
+                                            -->
+                                        </div>
+                                        <div class="col-12 text-right" *ngIf="token.symbol == 'TLOS'"> &nbsp; </div>
+                                        <div class="col-12 text-right" *ngIf="!token.verified"> {{local.string.cantbtraded}} </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

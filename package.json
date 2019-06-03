@@ -30,6 +30,7 @@
     "eosjs": "^16.0.9",
     "fast-csv": "^2.4.1",
     "font-awesome": "^4.7.0",
+    "fstream": "^1.0.12",
     "jdenticon": "^2.1.0",
     "jquery": "^3.3.1",
     "ng2-google-charts": "^4.0.0",

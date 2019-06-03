@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { PriceMap } from '../components/vpe-components.service';
+import { SimplePriceMap } from '../components/vpe-components.service';
 
 
 
 @Injectable()
 export class CoingeckoService {
 
-    public onUpdate:Subject<PriceMap> = new Subject();
-    prices: PriceMap;
+    public onUpdate:Subject<SimplePriceMap> = new Subject();
+    prices: SimplePriceMap;
     currency_list: string[];
 
     private setReady: Function;
@@ -35,8 +35,12 @@ export class CoingeckoService {
         var api_endpoint = "https://api.coingecko.com/api/v3";
         var action = "/simple/price?ids=telos&vs_currencies=";
         var url = api_endpoint + action + this.currency_list.join(",");
-        this.http.get<{telos:PriceMap}>(url).toPromise().then(result => {
+        this.http.get<{telos:SimplePriceMap}>(url).toPromise().then(result => {
             this.prices = result.telos;
+            this.prices.tlos = 1;
+            console.log("*********************************");
+            console.log(this.prices);
+            console.log("*********************************");
             this.onUpdate.next(this.prices);
         });
     }

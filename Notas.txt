@@ -1,14 +1,7 @@
--- TODO --
-- publicación hablando de los Fakes que me quieren embaucar.
-- contactar a Loius Thomas: https://louisthomas.co.uk/contact/
-- Gráfica del DEX
-  - corregir bugs de la gráfica
-    - cuando hay un rezise de pantalla, la gráfica debe redibujarse
-- ponerle un timeout a el botón de loguearse poque a veces el Scatter no presenta el loguin a la primera.
-- sacar los textos y botones de tokens falsos
-+ tengo que agregar una entrada más a la tabla tablesummary que tenga los datos de la última hora
-  - tengo que hacer una función que me permita obtener rápido el blocke de la última hora (calculando si corresponden el volumen, los máximos y mínimos).
-- ajustar los tamaños de los fancy-scroll para que el último item se vea por la mitad (y se entienda que continúa)
+-- TODO (code) --
+
+
+
 
 
 -- HOTFIX --
@@ -17,10 +10,8 @@ vapaeetokens; telosmain set contract vapaeetokens $PWD -p vapaeetokens@active
 telosmain push action vapaeetokens hotfix '[0, "viterbotelos", "0.1000 TLOS"]' -p vapaeetokens@active
 
 
-
-
-
-
+-- TODO (not coding) --
+- publicación hablando de los Fakes que me quieren embaucar.
 
 
 - confirmar los tokens:
@@ -32,7 +23,7 @@ telosmain push action vapaeetokens updatetoken '["TEACH", "Teachology", "http://
 telosmain push action vapaeetokens updatetoken '["ROBO", "Proxibots", "https://proxibots.io", "/assets/logos/proxibots.png", "/assets/logos/proxibots-lg.png",true]' -p vapaeetokens@active
 telosmain push action vapaeetokens updatetoken '["TLOS", "Telos", "https://telosfoundation.io", "/assets/logos/telos.png", "/assets/logos/telos-lg.png",true]' -p vapaeetokens@active
 telosmain push action vapaeetokens updatetoken '["CNT", "Cards & Tokens", "http://cardsandtokens.com", "/assets/logos/cnt.svg", "/assets/logos/cnt-lg.svg",true]' -p vapaeetokens@active
-telosmain push action vapaeetokens updatetoken '["ACORN", "Acorn", "http://acorns.fun", "/assets/logos/acorn.svg", "/assets/logos/acorn-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["ACORN", "Acorn", "https://www.acorns.fun", "/assets/logos/acorn.svg", "/assets/logos/acorn-lg.png",true]' -p vapaeetokens@active
 telosmain push action vapaeetokens updatetoken '["HEART", "Beatitude", "https://steemit.com/@steemchurch", "/assets/logos/beautitude.png", "/assets/logos/beautitude-lg.png",true]' -p vapaeetokens@active
 telosmain push action vapaeetokens updatetoken '["OLIVE", "Olive", "http://democratic.money/olive", "/assets/logos/olive.png", "/assets/logos/olive-lg.png",true]' -p vapaeetokens@active
 
