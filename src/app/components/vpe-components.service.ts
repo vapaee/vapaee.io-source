@@ -43,7 +43,7 @@ export class VpeComponentsService {
         if (this.prices[this.current]) {
             return this.prices[this.current].token;
         } else {
-            return {};
+            return {appname:""};
         }
     }
 
@@ -56,7 +56,7 @@ export class VpeComponentsService {
         this.prices = prices;
         this.currencies = [];
         for (var i in this.prices) {
-            var token = this.prices[i].token;
+            var token:Token = this.prices[i].token;
             this.currencies.push(token);
         }
         this.onPricesUpdate.next(this.prices);

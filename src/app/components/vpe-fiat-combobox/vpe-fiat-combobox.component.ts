@@ -2,6 +2,8 @@ import { Component, Input, OnChanges, Output } from '@angular/core';
 import { VapaeeService } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService } from '../vpe-components.service';
+import { Token } from 'src/app/services/utils.service';
+
 
 
 @Component({
