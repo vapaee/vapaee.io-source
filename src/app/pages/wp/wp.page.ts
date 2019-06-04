@@ -204,7 +204,7 @@ export class WPPage implements OnInit, OnDestroy {
             console.log("**********************", result);
             if (result.rows.length > 0) {
                 console.assert(result.rows[0].ballot_id == this.proposalID, result.rows[0].ballot_id, typeof result.rows[0].ballot_id, this.proposalID, typeof this.proposalID);
-                if (result.rows[0].directions.length == 1 && result.rows[0].directions[0] == 1) {
+                if (result.rows[0].directions.length == 1 && result.rows[0].directions[0] == 1 && result.rows[0].expiration > 1559488802) {
                     this.user_voted_us = true;
                 } else {
                     this.cookie.delete("user_dismiss");

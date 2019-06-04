@@ -4,3 +4,31 @@
     overflow: auto;
     display: block;
 }
+
+li.checked {
+    display: block;
+    position: relative;
+    &:before {
+        content: " ";
+        position: absolute;
+        left: -19px;
+        top: 0px;
+        background-image: url(/assets/img/vapaee-check.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        height: 16px;
+        width: 19px;
+        display: inline-block;
+    }
+    &.title:before {
+        left: -28px;
+        height: 30px;
+        width: 30px;
+    }
+    &.subtitle:before {
+        left: -21px;
+        height: 24px;
+        width: 26px;
+        top: -6px;
+    }    
+}

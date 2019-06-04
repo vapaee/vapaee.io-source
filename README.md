@@ -2,7 +2,7 @@
 
 # Vapaée DEX - source code
 
-current version: BASIC (v1.1.4)
+current version: BASIC (v1.2.1)
 
 https://vapaee.io
 
@@ -39,7 +39,7 @@ cd script
       - [ ] _order book panel_: show only 4 (2 of each). Expand button.
       - [x] _history panel_. normal.
 - ### Uncritical
-  - [ ] the height of the _token list panel_ should equal the height of _chart panel_
+  - [x] the height of the _token list panel_ should equal the height of _chart panel_
   - [x] add current version number on the HOME page. Below the subtitle with small print
   - [x] button "deposit" to the right of token balances (temporal solution)
   - [x] Wallet Panel (USD):

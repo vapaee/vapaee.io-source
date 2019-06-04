@@ -109,6 +109,10 @@ ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 30
   "with appkey": "4c7dbd7d49439e146032e2aa7f791e79bc90c9a39033d42d91bb012fa20327c7"
 }
 {
+"app":"Vapaée - Telos DEX"
+"with appkey":"0d45e1d01de69817d724763de2a63a17a53038420cb7d6eacd547fea96f1fc1c"
+}
+{
   "app": "Vapaée - Telos DEX",
   "with key": "ac3b9f0f651eb9d7c906555ee2ac1a581600a29c9358a4173609dba87446fdd5",
   "using network": [
