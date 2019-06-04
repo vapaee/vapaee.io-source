@@ -220,6 +220,8 @@ export class WPPage implements OnInit, OnDestroy {
     }
 
     onAccountChange(account: string) {
+        this.feed.setError("voting", "");
+        console.log("onAccountChange()", account);
         return Promise.all([
             this.findOutIfUserVotedUs(account),
             this.findOutIfUserIsRegistered(account)
