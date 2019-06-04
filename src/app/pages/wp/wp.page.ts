@@ -65,6 +65,7 @@ export class WPPage implements OnInit, OnDestroy {
     }
 
     private _voteForUs() {
+        this.feed.setError("voting", "");
         this.feed.setLoading("voting", true);
         this.feed.setLoading("mirrorcast", true);
         this.feed.setLoading("regvoter", true);
