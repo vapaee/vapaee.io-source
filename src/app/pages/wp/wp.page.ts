@@ -139,6 +139,7 @@ export class WPPage implements OnInit, OnDestroy {
     }
 
     voteForUs() {
+        this.feed.setError("voting", "");
         console.log("voteForUs()");
         if (this.feed.loading("voting")) {
             console.log("cancel voteForUs()");
