@@ -2,7 +2,7 @@
 
 # Vapaée DEX - source code
 
-current version: BASIC (v1.2.1)
+current version: BASIC (v1.2.3)
 
 https://vapaee.io
 
@@ -51,6 +51,8 @@ cd script
   - [x] Total balance in USD in the header of the account next to total balance
   - [x] Add max and min of the last 24h for each token
   - [ ] Activity feedback on home page: how many users, transactions per day, deposits, withdrawals, earnings
+    - [x] Create new table on smart contract to store all user activity
+    - [ ] Create a new component on home page to show last X activity entries
   - [ ] add and test support for the lynx wallet
 - ### Details:
   - [x] add Portugues language (Thanks to Fabiana Cecin)
@@ -82,3 +84,5 @@ cd script
   - [ ] remember the choice of language (cookie)
   - [ ] remember the choice of base currency
   - [ ] add date in history entries
+  - [ ] show personal activity in account page
+  - [ ] list last peronal deals (transactions) in account page
