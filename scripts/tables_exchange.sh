@@ -48,7 +48,7 @@ show_table() {
     table=$3
 
     echo "--------- $code::$table($scope) -------------------------------------------------"
-    cleos $NET get table $code $scope $table -l 100
+    cleos $NET get table $code $scope $table -l 1000
 }
 
 show_table vapaeetokens vapaeetokens tokens
@@ -71,6 +71,8 @@ show_table vapaeetokens vapaeetokens earnings
 show_table vapaeetokens $token.tlos history
 show_table vapaeetokens $token.tlos tablesummary
 show_table vapaeetokens $token.tlos blockhistory
+show_table vapaeetokens vapaeetokens events
+
 
 # show_table vapaeetokens tlos.$token tablesummary
 # show_table vapaeetokens tlos.$token history

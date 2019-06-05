@@ -143,6 +143,7 @@ namespace vapaee {
                     a.amount += amount;
                 });
             }
+
             PRINT("vapaee::token::exchange::aux_add_deposits() ...\n");
         }        
 
@@ -417,6 +418,7 @@ namespace vapaee {
             name tmp_name;
             asset tmp_asset;
             asset tmp_pay;
+            name owner = buyer;
             
             symbol_code A = amount.symbol.code();
             symbol_code B = payment.symbol.code();
@@ -471,6 +473,8 @@ namespace vapaee {
                 a.sellfee = sellfee;
                 a.isbuy = is_buy;
             });
+
+            aux_register_event(owner, name("transaction"), scope.to_string() + "|" + buyer.to_string() + "|" + seller.to_string() + "|" + amount.to_string() + "|" + payment.to_string() + "|" + price.to_string() );
 
             // update deals count for scope table
             ordertables orderstables(get_self(), get_self().value);
@@ -630,7 +634,29 @@ namespace vapaee {
                 });
             }
 
+
+            
+
             PRINT("vapaee::token::exchange::aux_register_transaction_in_history() ...\n");
+        }
+
+        void aux_register_event(name user, name event, string params) {
+            PRINT("vapaee::token::exchange::aux_register_event()\n");
+            PRINT(" user: ", user.to_string(), "\n");
+            PRINT(" event: ", event.to_string(), "\n");
+            PRINT(" desc: ", desc.to_string(), "\n");
+            time_point_sec date = time_point_sec(now());
+            
+            events table(get_self(), get_self().value);
+            table.emplace(get_self(), [&](auto & a){
+                a.id = table.available_primary_key();
+                a.user = user;
+                a.event = event;
+                a.params = params;
+                a.date = date;
+            });
+
+            PRINT("vapaee::token::exchange::aux_register_event() ...\n");
         }
 
         void aux_generate_order(name owner, name type, asset total, asset price, name ram_payer) {
@@ -651,6 +677,10 @@ namespace vapaee {
             
             asset inverse = vapaee::utils::inverse(price, total.symbol);
             asset payment = vapaee::utils::payment(total, price);
+
+            aux_register_event(owner, name("order"), type.to_string() + "|" + total.to_string() + "|" + price.to_string() );
+
+            
             if (type == name("sell")) {
                 aux_generate_sell_order(owner, scope_sell, scope_buy, total, payment, price, inverse, ram_payer);
             } else if (type == name("buy")) {
@@ -1032,6 +1062,8 @@ namespace vapaee {
             ).send();
             PRINT("   transfer ", quantity.to_string(), " to ", owner.to_string(),"\n");
 
+            aux_register_event(owner, name("withdraw"), quantity.to_string());
+
             PRINT("vapaee::token::exchange::action_withdraw() ...\n");
         }
         
@@ -1171,6 +1203,7 @@ namespace vapaee {
                 quantity = aux_extend_asset(quantity);
                 PRINT(" quantity extended: ", quantity.to_string(), "\n");
                 aux_add_deposits(receiver, quantity, get_self());
+                aux_register_event(from, name("deposits"), receiver.to_string() + "|" + quantity.to_string());
             }
 
             PRINT("vapaee::token::exchange::handler_transfer() ...\n");
@@ -1212,8 +1245,9 @@ namespace vapaee {
             
             ordertables orderstables(get_self(), get_self().value);
             auto order_itr = orderstables.find(scope.value);
-            
-            
+
+            // Register event
+            aux_register_event(owner, name("cancelorder"), scope.to_string() + "|" + std::to_string(orders.size()));
 
             for (int i=0; i<orders.size(); i++) {
                 uint64_t order_id = orders[i];

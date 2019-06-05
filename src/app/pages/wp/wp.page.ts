@@ -172,7 +172,7 @@ export class WPPage implements OnInit, OnDestroy {
 
     dismiss() {
         this.user_dismiss = true;
-        this.cookie.set("user_dismiss", "dismiss");
+        // this.cookie.set("user_dismiss", "dismiss");
     }
 
     findOutIfUserIsRegistered(account:string = null){
