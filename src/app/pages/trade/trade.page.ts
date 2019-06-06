@@ -2,8 +2,6 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { ScatterService } from 'src/app/services/scatter.service';
-import { BGBoxService } from 'src/app/services/bgbox.service';
-import { CntService } from 'src/app/services/cnt.service';
 import { ActivatedRoute } from '@angular/router';
 import { Token } from 'src/app/services/utils.service';
 import { VapaeeService, Asset, OrderRow, TokenOrders } from 'src/app/services/vapaee.service';
@@ -37,8 +35,6 @@ export class TradePage implements OnInit, OnDestroy {
         public app: AppService,
         public local: LocalStringsService,
         public scatter: ScatterService,
-        public bgbox: BGBoxService,
-        public cnt: CntService,
         public vapaee: VapaeeService,
         public route: ActivatedRoute
 

@@ -7,6 +7,7 @@ import { Feedback } from './feedback.service';
 import { AnalyticsService } from './common/common.services';
 import { CookieService } from 'ngx-cookie-service';
 import { DatePipe } from '@angular/common';
+import { NullTemplateVisitor } from '@angular/compiler';
 
 @Injectable()
 export class VapaeeService {
@@ -37,7 +38,13 @@ export class VapaeeService {
     public onSummaryChange:Subject<string> = new Subject();
     public onBlocklistChange:Subject<any[][]> = new Subject();
     public onTokensReady:Subject<Token[]> = new Subject();
-    vapaeetokens:string = "vapaeetokens";    
+    vapaeetokens:string = "vapaeetokens";
+    
+    activity:{
+        total:number;
+        events:{[id:string]:EventLog};
+        list:EventLog[];
+    };
     
     private setOrdertables: Function;
     public waitOrdertables: Promise<any> = new Promise((resolve) => {
@@ -60,6 +67,7 @@ export class VapaeeService {
         private datePipe: DatePipe
     ) {
         this.scopes = {};
+        this.activity = {total:0, events:{}, list:[]};
         this.current = this.default;
         this.contract = this.vapaeetokens;
         this.utils = new Utils(this.contract, this.scatter);
@@ -68,8 +76,6 @@ export class VapaeeService {
         this.updateLogState();
         this.fetchTokens().then(data => {
             this.tokens = data.tokens;
-            console.log("********************************");
-            console.log("********************************");
             this.tokens.push({
                 appname: "Viitasphere",
                 contract: "viitasphere1",
@@ -92,9 +98,6 @@ export class VapaeeService {
                 verified: false,
                 website: "https://viitasphere.com"
             });
-            console.log(JSON.parse(JSON.stringify(this.tokens)));
-            console.log("********************************");
-            console.log("********************************");
             this.resortTokens();
             this.zero_telos = new Asset("0.0000 TLOS", this);
             this.setReady();
@@ -494,6 +497,13 @@ export class VapaeeService {
                 
     }
 
+    async updateActivity() {
+        var pagesize = 10;
+        var pages = await this.getActivityTotalPages(pagesize);
+        this.fetchActivity(pages, pages-2, pagesize);
+        this.fetchActivity(pages, pages-1, pagesize);
+    }
+
     async updateTrade(comodity:Token, currency:Token, updateUser:boolean = true): Promise<any> {
         console.log("VapaeeService.updateTrade()");
         return Promise.all([
@@ -526,7 +536,7 @@ export class VapaeeService {
         });
     }
 
-    getBlockHistoryTotalPagesFor(scope:string, pagesize: number) {
+    private getBlockHistoryTotalPagesFor(scope:string, pagesize: number) {
         if (!this.scopes || !this.scopes[scope]) return 0;
         var total = this.scopes[scope].blocks;
         var mod = total % pagesize;
@@ -538,7 +548,7 @@ export class VapaeeService {
         return pages;
     }
 
-    getHistoryTotalPagesFor(scope:string, pagesize: number) {
+    private getHistoryTotalPagesFor(scope:string, pagesize: number) {
         if (!this.scopes || !this.scopes[scope]) return 0;
         var total = this.scopes[scope].deals;
         var mod = total % pagesize;
@@ -548,6 +558,23 @@ export class VapaeeService {
             pages +=1;
         }
         return pages;
+    }
+
+    private async getActivityTotalPages(pagesize: number) {
+        return this.utils.getTable("events", {
+            limit: 1
+        }).then(result => {
+            var params = result.rows[0].params;
+            var total = parseInt(params.split(" ")[0]);
+            var mod = total % pagesize;
+            var dif = total - mod;
+            var pages = dif / pagesize;
+            if (mod > 0) {
+                pages +=1;
+            }
+            this.activity.total = total;
+            return pages;
+        });
     }
 
     async getTransactionHistory(comodity:Token, currency:Token, page:number = -1, pagesize:number = -1, force:boolean = false): Promise<any> {
@@ -1267,6 +1294,98 @@ export class VapaeeService {
         });
     }
 
+    
+    private async fetchActivity(pages: number, page:number = 0, pagesize:number = 25) {
+        var id = page*pagesize;
+        console.log("VapaeeService.fetchActivity(", pages, ",",page,",",pagesize,"): id:", id);
+        
+        if (this.activity.events["id-" + id]) {
+            var pageEvents = [];
+            for (var i=0; i<pagesize; i++) {
+                var id_i = id+i;
+                var event = this.activity.events["id-" + id_i];
+                if (!event) {
+                    break;
+                }
+            }
+            if (pageEvents.length == pagesize) {
+                return;
+            }                
+        }        
+
+        return this.utils.getTable("events", {limit:pagesize, lower_bound:""+id}).then(result => {
+            console.log("**************");
+            console.log("Activity crudo:", result);
+
+            for (var i=0; i < result.rows.length; i++) {
+                var id = result.rows[i].id;
+                var event:EventLog = <EventLog>result.rows[i];
+                if (!this.activity.events["id-" + id]) {
+                    this.activity.events["id-" + id] = event;
+                    this.activity.list.push(event);
+                    console.log("**************>>>>>", id);
+                }
+            }
+
+            this.activity.list.sort(function(a:EventLog, b:EventLog){
+                if(a.date < b.date) return 1;
+                if(a.date > b.date) return -1;
+                if(a.id < b.id) return 1;
+                if(a.id > b.id) return -1;
+            });
+
+        });
+
+
+
+        /*
+
+
+        return this.utils.getTable("history", {scope:scope, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
+
+            // console.log("**************");
+            // console.log("History crudo:", result);
+            
+            this.scopes[scope] = this.auxAssertScope(scope);
+            this.scopes[scope].history = [];
+            this.scopes[scope].tx = this.scopes[scope].tx || {}; 
+
+            // console.log("this.scopes[scope].tx:", this.scopes[scope].tx);
+
+            for (var i=0; i < result.rows.length; i++) {
+                var transaction:HistoryTx = {
+                    id: result.rows[i].id,
+                    amount: new Asset(result.rows[i].amount, this),
+                    payment: new Asset(result.rows[i].payment, this),
+                    buyfee: new Asset(result.rows[i].buyfee, this),
+                    sellfee: new Asset(result.rows[i].sellfee, this),
+                    price: new Asset(result.rows[i].price, this),
+                    buyer: result.rows[i].buyer,
+                    seller: result.rows[i].seller,
+                    date: new Date(result.rows[i].date),
+                    isbuy: !!result.rows[i].isbuy
+                }
+                this.scopes[scope].tx["id-" + transaction.id] = transaction;
+            }
+
+            for (var j in this.scopes[scope].tx) {
+                this.scopes[scope].history.push(this.scopes[scope].tx[j]);
+            }
+
+            this.scopes[scope].history.sort(function(a:HistoryTx, b:HistoryTx){
+                if(a.date < b.date) return 1;
+                if(a.date > b.date) return -1;
+                if(a.id < b.id) return 1;
+                if(a.id > b.id) return -1;
+            });            
+
+            // console.log("History final:", this.scopes[scope].history);
+            // console.log("-------------");
+            return result;
+        });
+        */
+    }
+
     private fetchUserOrders(user:string): Promise<TableResult> {
         return this.utils.getTable("userorders", {scope:user, limit:200}).then(result => {
             return result;
@@ -1489,6 +1608,15 @@ export interface HistoryTx {
     seller: string;
     date: Date;
     isbuy: boolean;
+}
+
+export interface EventLog {
+    id: number;
+    user: string;
+    event: string;
+    params: string;
+    date: Date;
+    processed?: any;
 }
 
 export interface HistoryBlock {

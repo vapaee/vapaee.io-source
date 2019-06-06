@@ -35,6 +35,7 @@ import { VpePanelTokensComponent } from './vpe-panel-tokens/vpe-panel-tokens.com
 import { VpePanelOrderEditorComponent } from './vpe-panel-order-editor/vpe-panel-order-editor.component';
 import { VpeTokenInputComponent } from './vpe-token-input/vpe-token-input.component';
 import { VpeFIatComboboxComponent } from './vpe-fiat-combobox/vpe-fiat-combobox.component';
+import { VpePanelActivityLogComponent } from './vpe-panel-activity-log/vpe-panel-activity-log.component';
 
 
 
@@ -57,6 +58,7 @@ import { VpeFIatComboboxComponent } from './vpe-fiat-combobox/vpe-fiat-combobox.
         VpePanelOrderEditorComponent,
         VpeFIatComboboxComponent,
         VpeTokenInputComponent,
+        VpePanelActivityLogComponent
     ],
     imports: [
         BrowserModule,
@@ -87,7 +89,8 @@ import { VpeFIatComboboxComponent } from './vpe-fiat-combobox/vpe-fiat-combobox.
         VpePanelTokensComponent,
         VpePanelOrderEditorComponent,
         VpeFIatComboboxComponent,
-        VpeTokenInputComponent
+        VpeTokenInputComponent,
+        VpePanelActivityLogComponent
     ]
 })
 export class VpeComponentsModule { }

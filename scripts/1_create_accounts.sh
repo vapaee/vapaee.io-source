@@ -17,3 +17,7 @@ cleos create account eosio tom EOS8RoCAXxWYUW2v4xkG19F57BDVBzpt9NN2iDsD1ouQNyV2B
 cleos create account eosio kate EOS8RoCAXxWYUW2v4xkG19F57BDVBzpt9NN2iDsD1ouQNyV2BkiNc
 
 #cleos set account permission vapaeetokens active '{"threshold": 1,"keys": [{"key": "EOS8RoCAXxWYUW2v4xkG19F57BDVBzpt9NN2iDsD1ouQNyV2BkiNc","weight": 1}],"accounts": [{"permission":{"actor":"vapaeetokens","permission":"eosio.code"},"weight":1}]}' owner -p vapaeetokens
+
+
+
+

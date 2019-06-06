@@ -648,6 +648,22 @@ namespace vapaee {
             time_point_sec date = time_point_sec(now());
             
             events table(get_self(), get_self().value);
+            auto header = table.begin();
+            if (header == table.end()) {
+                table.emplace(get_self(), [&](auto & a){
+                    a.id = table.available_primary_key();
+                    a.user = get_self();
+                    a.event = name("init");
+                    a.params = string("1 event");
+                    a.date = date;
+                });
+            } else {
+                table.modify(*header, get_self(), [&](auto & a){
+                    a.params = std::to_string((unsigned long) table.available_primary_key()) + string(" events");
+                    a.date = date;
+                });
+            }
+
             table.emplace(get_self(), [&](auto & a){
                 a.id = table.available_primary_key();
                 a.user = user;

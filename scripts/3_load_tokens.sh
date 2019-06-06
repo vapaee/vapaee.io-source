@@ -164,3 +164,16 @@ cleos push action vapaeetokens issue '["alice", "100.000000 VPE", "memo VPE"]' -
 cleos push action vapaeetokens issue '["bob", "100.000000 VPE", "memo VPE"]' -p vapaeetokens@active
 cleos push action vapaeetokens issue '["tom", "100.000000 VPE", "memo VPE"]' -p vapaeetokens@active
 cleos push action vapaeetokens issue '["kate", "100.000000 VPE", "memo VPE"]' -p vapaeetokens@active
+
+
+
+
+
+# ---------------------------------------
+echo "-------- viitasphere1 ---------"
+cleos create account eosio viitasphere1 EOS8RoCAXxWYUW2v4xkG19F57BDVBzpt9NN2iDsD1ouQNyV2BkiNc
+cleos set contract viitasphere1 $PWD -p viitasphere1@active
+echo "-------- eosio.token (VIITA) ---------"
+cleos push action viitasphere1 create '[ "eosio", "461168601842738.0000 VIITA"]' -p viitasphere1@active
+echo "-------- eosio.token (VIICT) ---------"
+cleos push action viitasphere1 create '[ "eosio", "461168601842738.0000 VIICT"]' -p viitasphere1@active

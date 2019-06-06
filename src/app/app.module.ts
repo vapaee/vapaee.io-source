@@ -14,8 +14,6 @@ import { LoadingOverall } from './services/common/app.service';
 
 
 import { ScatterService } from './services/scatter.service';
-import { BGBoxService } from './services/bgbox.service';
-import { CntService } from './services/cnt.service';
 import { VapaeeService } from './services/vapaee.service';
 import { CoingeckoService } from './services/coingecko.service';
 
@@ -59,9 +57,7 @@ import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
         DatePipe,
         CookieService,
         ScatterService,
-        BGBoxService,
         VapaeeService,
-        CntService,
         HttpClient,
         CoingeckoService,
         EosioTokenMathService

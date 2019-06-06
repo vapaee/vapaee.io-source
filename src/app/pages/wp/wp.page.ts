@@ -2,8 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { ScatterService } from 'src/app/services/scatter.service';
-import { BGBoxService } from 'src/app/services/bgbox.service';
-import { CntService } from 'src/app/services/cnt.service';
 import { VapaeeService } from 'src/app/services/vapaee.service';
 import { Token, Utils } from 'src/app/services/utils.service';
 import { Feedback } from 'src/app/services/feedback.service';
@@ -29,8 +27,6 @@ export class WPPage implements OnInit, OnDestroy {
         public app: AppService,
         public local: LocalStringsService,
         public scatter: ScatterService,
-        public bgbox: BGBoxService,
-        public cnt: CntService,
         public vapaee: VapaeeService,
         public cookie: CookieService
     ) {
@@ -180,7 +176,7 @@ export class WPPage implements OnInit, OnDestroy {
         this.user_is_registered = false;
         this.feed.setLoading("user-registered", true);
 
-        var encodedName = this.bgbox.utils.encodeName(account || this.vapaee.current.name);
+        var encodedName = this.utils.encodeName(account || this.vapaee.current.name);
         return this.utils.getTable("balances", {scope:"VOTE",
             lower_bound: encodedName.toString(), 
             upper_bound: encodedName.toString(), 
