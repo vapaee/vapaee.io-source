@@ -1,41 +1,58 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { Locals, LocalString } from './datatypes.service';
 import { HttpClient } from '@angular/common/http';
+import { Subject, Subscriber } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 
 declare var navigator:any;
 
 @Injectable()
-export class LocalStringsService {
+export class LocalStringsService  {
     public waitReady:Promise<any>;
     public string: LocalString;
     locals:Locals;
     localKey:string;
+    public onLocalChange:Subject<string> = new Subject();
 
-    constructor(private http: HttpClient) {
+    constructor(
+        private http: HttpClient,
+        public cookie: CookieService
+    ) {
         this.string = {};
         this.locals = {};
 
         var userLang = navigator.language || navigator.userLanguage;
-        switch (userLang.substr(0,2)) {
-            case "es":
-                this.localKey = "es_ES";
-                break;
-            default:
-                this.localKey = "en_US";
+        var cached = this.cookie.get("locals");
+        if (cached) {
+            this.localKey = cached;
+        } else {
+            switch (userLang.substr(0,2)) {
+                case "es":
+                    this.localKey = "es_ES";
+                    break;
+                default:
+                    this.localKey = "en_US";
+            }    
         }
         this.waitReady = this.fetchLocals(this.localKey);
     }
 
-    fetchLocals(localKey:string) {
+    async fetchLocals(localKey:string) {
         return this.http.get<any>("assets/locals/" + localKey + ".json").toPromise().then((response) => {
             this.string = response;
             this.locals[this.localKey] = this.string;
         });
     }
 
-    setLocal(localKey:string) {
-        this.localKey = localKey;
-        return this.fetchLocals(this.localKey);
+    async setLocal(localKey:string) {
+        if (this.localKey != localKey) {
+            this.localKey = localKey;
+            this.cookie.set("locals", this.localKey);
+            return this.fetchLocals(this.localKey).then(_ => {
+                this.onLocalChange.next(this.localKey);
+                return this.localKey;
+            });
+        }
     }
 
 }

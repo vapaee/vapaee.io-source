@@ -53,6 +53,7 @@ export class TradePage implements OnInit, OnDestroy {
         this.comodity = await this.vapaee.getToken(com);
         this.currency = await this.vapaee.getToken(cur);
         this.vapaee.updateTrade(this.comodity, this.currency, updateUser);
+        this.app.setGlobal("last-market", this.scope);
     }
 
     async init() {

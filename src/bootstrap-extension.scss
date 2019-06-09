@@ -208,8 +208,6 @@
 .font-size-xxlg { font-size: 32px !important; }
 .bold { font-weight: bold; }
 
-
-
 .table-cell-padding {
     td { padding: 5px }
 }
@@ -572,6 +570,12 @@ table.table-inverse td, table.table-inverse th, table.table-inverse thead th {
 .text-xs-left, .text-xs-right, .text-xs-center, .text-xs {
     font-size: 8px;
 }
+/*@media (min-width: 420px) {
+    .col-sm-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }    
+}*/
 
 @media (min-width: 420px) {
     .text-xxxl-left, .text-xxxl-right, .text-xxxl-center, .text-xxxl {

@@ -38,9 +38,6 @@ export class CoingeckoService {
         this.http.get<{telos:SimplePriceMap}>(url).toPromise().then(result => {
             this.prices = result.telos;
             this.prices.tlos = 1;
-            console.log("*********************************");
-            console.log(this.prices);
-            console.log("*********************************");
             this.onUpdate.next(this.prices);
         });
     }

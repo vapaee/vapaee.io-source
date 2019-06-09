@@ -23,7 +23,7 @@
                     <a class="nav-link" [routerLink]="'/exchange/tokens'" >{{local.string.Tokens}}</a>
                 </li>
                 <li class="nav-item" [ngClass]="{active: app.stateStartsWith('trade')}">
-                    <a class="nav-link" routerLink="{{'/exchange/trade/cnt.tlos'}}" >{{local.string.Trade}}</a>
+                    <a class="nav-link" routerLink="{{'/exchange/trade/' + app.getGlobal('last-market') }}" >{{local.string.Trade}}</a>
                 </li>
                 <li class="nav-item" [ngClass]="{active: app.stateStartsWith('account')}">
                     <a class="nav-link" [routerLink]="'/exchange/account/' + vapaee.current.name" >{{local.string.Account}}</a>

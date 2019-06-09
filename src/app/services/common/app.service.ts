@@ -29,6 +29,7 @@ export class AppService {
     public onWindowResize:Subject<Device> = new Subject();
     // router : Router;
     // route : ActivatedRoute;
+    private global: {[key:string]:any};
     state : string;
     prev_state : string = "none";
     device: Device = {};
@@ -100,6 +101,16 @@ export class AppService {
     public onInit: Promise<any> = new Promise((resolve) => {
         this.triggerOnInit = resolve;
     });
+
+    getGlobal(key): any {
+        if (!this.global) return undefined;
+        return this.global[key];
+    }
+
+    setGlobal(key:string, value:any) {
+        if (!this.global) this.global = {};
+        this.global[key] = value;
+    }
 
     init() {
         this.detectBrowser();

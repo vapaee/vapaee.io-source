@@ -8,6 +8,9 @@ ACTION deposit ( const asset & total)
 ACTION withdraw(name owner, const asset & quantity)
 ACTION cancel(name owner, name type, const symbol_code & comodity, const symbol_code & currency, const std::vector<uint64_t> & orders) {
 ACTION order(name owner, name type, const asset & total, const asset & price) {
+transaction 
+
+
 
         // TABLE activity (users action log) -----------
         // scope: contract
@@ -109,7 +112,7 @@ cleos push action revelation21 open '["user1.jc", "4,HEART", "user1.jc"]' -p use
   - en el order editor cuando tenés el precio en cero no te deja apretar el botón de vender pero no te avisa que está mal
   - Estando logueado y mirando un market donde tengo órdenes, si estas son vendidas, desaparecen de la lista de órdenes pero la lista peronal de mis órdenes sigue sin actualizarse.
   - página trade. si obtenés un error y cambiás de token, el mensaje de error persiste. Habría que limpiar de errores si se cambia el token/market.
-
+  - Si tengo una orden de compra, estoy mirando ese mercado y alguien me vende tokens, mi saldo no se actualiza hasta que recarlo la pantalla.
 - lista de erores que devuelve la blockchain:
 ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 3050003, "name": "eosio_assert_message_exception", "what": "eosio_assert_message assertion failure", "details": [ { "message": "assertion failure with message: comparison of assets with different symbols is not allowed", "file": "wasm_interface.cpp", "line_number": 964, "method": "eosio_assert" } ] } }
 

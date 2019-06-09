@@ -1,4 +1,4 @@
-<!--
+
 <div class="jumbotron vpe-background-jumbotron margin-top-xxl">
     <div class="container text-center">
         <img class="img-fluid" src="/assets/img/Logo.png">
@@ -7,13 +7,17 @@
         <div>Tokens Exchange - Telos DEX</div>
     </div>    
     <div class="container margin-top text-xs text-muted text-center">
-        <div>BASIC (v1.2.3)</div>
+        <div>BASIC (v1.3.0)</div>
     </div>    
 </div>
 <div class="container margin-top">
     <vpe-panel-tokens-card-deck (tradeToken)="tradeToken($event)" [limit]="3" [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
 </div>
--->
+
 <div class="container margin-top-lg">
-    <vpe-panel-activity-log></vpe-panel-activity-log>
+    <vpe-panel-activity-log (gotoAccount)="gotoAccount($event)" (gotoScope)="gotoScope($event)"></vpe-panel-activity-log>
 </div>
+
+<br>
+<br>
+<br>

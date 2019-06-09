@@ -197,7 +197,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             this.calculate();
         }
 
-        console.log("this.orders ------------------>", this.sellorders, this.buyorders);
+        // console.log("this.orders ------------------>", this.sellorders, this.buyorders);
 
         if (this.sellorders && this.own.sell.length == 0) {
             // console.log("this.sellorders.length", this.sellorders.length);

@@ -35,12 +35,6 @@ export class WPPage implements OnInit, OnDestroy {
         this.utils = new Utils("eosio.trail", this.scatter);
         this.feed = new Feedback();
         this.onAccountChange(null);
-
-        /*
-        setInterval(_ => {
-            this.feed.setLoading("voting", true);
-        }, 5000);
-        */
     }
 
     ngOnDestroy() {
@@ -52,7 +46,6 @@ export class WPPage implements OnInit, OnDestroy {
     }
 
     resetError() {
-        console.log("******************");
         this.feed.setError("voting", null);
     }
 
@@ -182,7 +175,6 @@ export class WPPage implements OnInit, OnDestroy {
             upper_bound: encodedName.toString(), 
             limit: 1
         }).then(result => {
-            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>", result);
             if (result.rows.length > 0) {
                 console.log(result.rows[0]);
                 this.user_is_registered = true;
@@ -199,7 +191,7 @@ export class WPPage implements OnInit, OnDestroy {
         this.user_voted_us = false;
         this.feed.setLoading("user-voted", true);
         return this.utils.getTable("votereceipts", {scope:account || this.vapaee.current.name, limit:1, lower_bound:this.proposalID}).then(result => {
-            console.log("**********************", result);
+            // console.log("**********************", result);
             if (result.rows.length > 0) {
                 console.assert(result.rows[0].ballot_id == this.proposalID, result.rows[0].ballot_id, typeof result.rows[0].ballot_id, this.proposalID, typeof this.proposalID);
                 if (result.rows[0].directions.length == 1 && result.rows[0].directions[0] == 1 && result.rows[0].expiration > 1559488802) {
@@ -216,8 +208,8 @@ export class WPPage implements OnInit, OnDestroy {
     }
 
     onAccountChange(account: string) {
-        this.feed.setError("voting", "");
         console.log("onAccountChange()", account);
+        this.feed.setError("voting", "");
         return Promise.all([
             this.findOutIfUserVotedUs(account),
             this.findOutIfUserIsRegistered(account)

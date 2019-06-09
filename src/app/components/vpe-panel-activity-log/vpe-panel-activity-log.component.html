@@ -1,28 +1,41 @@
-<vpe-panel [title]="local.string.history">
-    Activity log
-    <!-- 
+<vpe-panel [title]="local.string.activitylog">
+
     <div class="row">
-        <div class="nowrap text-bold text-sm col-sm-4 col-padding-right">{{local.string.time | titlecase}}
-            <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('history.'+scope)"></span>
+        <div class="nowrap text-bold text-sm col-2 col-padding-right">
+            Activity
+            <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('activity')"></span>
         </div>
-        <div class="nowrap text-bold text-sm-right col-sm-4 col-padding-right col-padding-left">{{local.string.price | titlecase}}</div>
-        <div class="nowrap text-bold text-sm-right col-sm-4 col-padding-left">{{local.string.amount | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-left col-2 col-padding-right col-padding-left">User</div>
+        <div class="nowrap text-bold text-sm-left col-6 col-padding-right col-padding-left">Detail</div>
+        <div class="nowrap text-bold text-sm-left col-2 col-padding-left">Date</div>
     </div>
     <div class="row margin-top">
-        <div class="col-sm-12">
-            <perfect-scrollbar style="max-height: 250px; max-width: 100%">
-                <div class="row margin-bottom" 
-                    *ngFor="let tx of history"
-                    [ngClass]="{'text-success': tx.isbuy, 'text-danger':!tx.isbuy}"
+        <div class="col-12">
+            <perfect-scrollbar #sp style="max-height: 250px; max-width: 100%" (psYReachEnd)="psYReachEnd()">
+            
+                <div class="row padding-top margin-bottom activity-event" 
+                    [ngClass]="{'text-success': event.event=='transaction' && getOrdertype(event) == 'buy', 'text-danger':  event.event=='transaction' && getOrdertype(event) == 'sell'}"
+                    *ngFor="let event of vapaee.activity.list"
                 >
-                    <div class="nowrap col-sm-4 col-padding-right">
-                            {{tx.date | date : "HH:mm:ss"}}                   
+                    <div class="text-sm      col-2 col-padding-right text-bold"
+                    >
+                        {{local.string["log." + event.event] | titlecase}}
                     </div>
-                    <div class="nowrap col-sm-4 text-right col-padding-right col-padding-left">{{tx.price.valueToString(8)}}</div>
-                    <div class="nowrap col-sm-4 text-right padding-right-lg ">{{tx.amount.valueToString(8)}}</div>
+                    <div class="text-sm-left col-2 col-padding-right col-padding-left">
+                        <span class="cursor-pointer account-name" (click)="clickOnAccount(event.user)">{{event.user}}</span>
+                    </div>
+                    <div class="text-sm-left col-6 col-padding-right col-padding-left"
+                        [ngClass]="{'cursor-pointer': event.event=='transaction'}"
+                        (click)="event.event=='transaction' ? clickOnScope(getOrderScope(event)) : null;">{{eventDetail(event)}}</div>
+                    
+                    
+                    <div class="text-sm-left col-2 col-padding-left d-block d-lg-none">{{event.date | date : "HH:mm:ss"}}</div>
+                    <div class="text-sm-left col-2 col-padding-left d-none d-lg-block">{{event.date | date : "MMM d, HH:mm:ss"}}</div>
+                    
                 </div>
+            
             </perfect-scrollbar>
         </div>
     </div>
-    -->
+    
 </vpe-panel>

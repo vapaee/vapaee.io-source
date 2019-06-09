@@ -48,10 +48,10 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy, OnInit {
     }
 
     onResize(device) {
-        console.log("onResize() --->", device);
+        // console.log("onResize() --->", device);
         this.component.redraw(this.recreateDataTable(), null);
-        console.log(this._element.nativeElement.offsetWidth);
-        console.log(this._element.nativeElement.offsetHeight);
+        // console.log(this._element.nativeElement.offsetWidth);
+        // console.log(this._element.nativeElement.offsetHeight);
     }
 
     ngOnDestroy() {
@@ -60,12 +60,12 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy, OnInit {
     
     ngOnInit() {
         this.service.onResize.subscribe(this.onResizeSubscriber);
-        console.log(this._element.nativeElement);
+        // console.log(this._element.nativeElement);
     }    
 
     ready(event) {
         this.component = event.component;
-        console.assert(!!this.component, "ERROR: ", event);
+        // console.assert(!!this.component, "ERROR: ", event);
     }
 
     error(event) {

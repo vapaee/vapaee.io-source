@@ -303,8 +303,15 @@ export class GoogleChartComponent implements OnChanges, OnDestroy, GoogleChartCo
   }
 
   private unregisterEvents(): void {
-    google.visualization.events.removeAllListeners(this.wrapper.getChart());
-    google.visualization.events.removeAllListeners(this.wrapper);
+    try {
+      if (!google) return;
+      if (!google.visualization) return;
+      if (!google.visualization.events) return;
+      google.visualization.events.removeAllListeners(this.wrapper.getChart());
+      google.visualization.events.removeAllListeners(this.wrapper);  
+    } catch (e) {
+      console.error("ERROR CATCHED: ", e);
+    }
   }
 
   onResize(e:any) { // e:any

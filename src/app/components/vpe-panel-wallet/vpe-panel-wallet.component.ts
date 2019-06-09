@@ -91,7 +91,7 @@ export class VpePanelWalletComponent implements OnChanges {
                 this._nonfake_balances.push(this.balances[i]);
             }
         }
-        console.log(this._nonfake_balances);
+        // console.log(this._nonfake_balances);
         return this._nonfake_balances;
     }
     

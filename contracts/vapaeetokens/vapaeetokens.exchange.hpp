@@ -418,7 +418,7 @@ namespace vapaee {
             name tmp_name;
             asset tmp_asset;
             asset tmp_pay;
-            name owner = buyer;
+            name owner = seller;
             
             symbol_code A = amount.symbol.code();
             symbol_code B = payment.symbol.code();
@@ -694,8 +694,7 @@ namespace vapaee {
             asset inverse = vapaee::utils::inverse(price, total.symbol);
             asset payment = vapaee::utils::payment(total, price);
 
-            aux_register_event(owner, name("order"), type.to_string() + "|" + total.to_string() + "|" + price.to_string() );
-
+            aux_register_event(owner, name(type.to_string() + ".order"), total.to_string() + "|" + price.to_string() );
             
             if (type == name("sell")) {
                 aux_generate_sell_order(owner, scope_sell, scope_buy, total, payment, price, inverse, ram_payer);
@@ -1219,7 +1218,7 @@ namespace vapaee {
                 quantity = aux_extend_asset(quantity);
                 PRINT(" quantity extended: ", quantity.to_string(), "\n");
                 aux_add_deposits(receiver, quantity, get_self());
-                aux_register_event(from, name("deposits"), receiver.to_string() + "|" + quantity.to_string());
+                aux_register_event(from, name("deposit"), receiver.to_string() + "|" + quantity.to_string());
             }
 
             PRINT("vapaee::token::exchange::handler_transfer() ...\n");
@@ -1263,7 +1262,7 @@ namespace vapaee {
             auto order_itr = orderstables.find(scope.value);
 
             // Register event
-            aux_register_event(owner, name("cancelorder"), scope.to_string() + "|" + std::to_string(orders.size()));
+            aux_register_event(owner, name("cancel.order"), scope.to_string() + "|" + std::to_string(orders.size()));
 
             for (int i=0; i<orders.size(); i++) {
                 uint64_t order_id = orders[i];

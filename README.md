@@ -2,7 +2,7 @@
 
 # Vapaée DEX - source code
 
-current version: BASIC (v1.2.3)
+current version: BASIC (v1.3.0)
 
 https://vapaee.io
 
@@ -50,9 +50,12 @@ cd script
     - [x] To the right of each deposit or balance put the price in USD. If the previous button is pressed, put a button that says "withdraw" / "deposit"
   - [x] Total balance in USD in the header of the account next to total balance
   - [x] Add max and min of the last 24h for each token
-  - [ ] Activity feedback on home page: how many users, transactions per day, deposits, withdrawals, earnings
+  - [x] Activity feedback on home page: how many users, transactions per day, deposits, withdrawals, earnings
     - [x] Create new table on smart contract to store all user activity
-    - [ ] Create a new component on home page to show last X activity entries
+    - [x] Create a new component on home page to show last X activity entries
+      - [x] Transactions should appear in color
+      - [x] click on name account should redirect to account page
+      - [x] click on transaction detail should redirect to trade market page
   - [ ] add and test support for the lynx wallet
 - ### Details:
   - [x] add Portugues language (Thanks to Fabiana Cecin)
@@ -81,8 +84,8 @@ cd script
   - [x] pass all the code to a new repository dedicated to Vapaée DEX
   - [ ] change the algorithm that calculates the summary and base it on the blockhistory.
   - [ ] cache the blockhistoy data.
-  - [ ] remember the choice of language (cookie)
-  - [ ] remember the choice of base currency
+  - [x] remember the choice of language (cookie)
+  - [x] remember the choice of base currency (cookie)
+  - [x] remember the last market visited (in memory) and make the 'Trade' nav button to go there instead allways to CNT/TLOS
   - [ ] add date in history entries
   - [ ] show personal activity in account page
-  - [ ] list last peronal deals (transactions) in account page

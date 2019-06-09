@@ -14,7 +14,7 @@
                     [ngClass]="{'text-success': tx.isbuy, 'text-danger':!tx.isbuy}"
                 >
                     <div class="nowrap col-sm-4 col-padding-right">
-                            {{tx.date | date : "HH:mm:ss"}}                   
+                        {{tx.date | date : "HH:mm:ss"}}
                     </div>
                     <div class="nowrap col-sm-4 text-right col-padding-right col-padding-left">{{tx.price.valueToString(8)}}</div>
                     <div class="nowrap col-sm-4 text-right padding-right-lg ">{{tx.amount.valueToString(8)}}</div>

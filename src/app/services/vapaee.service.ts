@@ -39,6 +39,8 @@ export class VapaeeService {
     public onBlocklistChange:Subject<any[][]> = new Subject();
     public onTokensReady:Subject<Token[]> = new Subject();
     vapaeetokens:string = "vapaeetokens";
+
+    activityPagesize:number = 10;
     
     activity:{
         total:number;
@@ -210,7 +212,7 @@ export class VapaeeService {
             // this.scopes = {};
             this.balances = [];
             this.userorders = {};            
-            console.log("this.onCurrentAccountChange.next(this.current.name) !!!!!!");
+            // console.log("this.onCurrentAccountChange.next(this.current.name) !!!!!!");
             this.onCurrentAccountChange.next(this.current.name);
             this.updateCurrentUser();
             this.feed.setLoading("account", false);
@@ -303,7 +305,7 @@ export class VapaeeService {
 
     // Tokens --------------------------------------------------------------
     addFiatToken(fiat: Token) {
-        console.log("VapaeeService.addFiatToken()", fiat);
+        // console.log("VapaeeService.addFiatToken()", fiat);
         this.waitReady.then(_ => {
             this.tokens.push({
                 symbol: fiat.symbol,
@@ -498,10 +500,27 @@ export class VapaeeService {
     }
 
     async updateActivity() {
-        var pagesize = 10;
+        this.feed.setLoading("activity", true);
+        var pagesize = this.activityPagesize;
         var pages = await this.getActivityTotalPages(pagesize);
-        this.fetchActivity(pages, pages-2, pagesize);
-        this.fetchActivity(pages, pages-1, pagesize);
+        await Promise.all([
+            this.fetchActivity(pages-2, pagesize),
+            this.fetchActivity(pages-1, pagesize),
+            this.fetchActivity(pages-0, pagesize)
+        ]);
+        this.feed.setLoading("activity", false);
+    }
+
+    async loadMoreActivity() {
+        if (this.activity.list.length == 0) return;
+        this.feed.setLoading("activity", true);
+        var pagesize = this.activityPagesize;
+        var first = this.activity.list[this.activity.list.length-1];
+        var id = first.id - pagesize;
+        var page = Math.floor((id-1) / pagesize);
+
+        await this.fetchActivity(page, pagesize);
+        this.feed.setLoading("activity", false);
     }
 
     async updateTrade(comodity:Token, currency:Token, updateUser:boolean = true): Promise<any> {
@@ -565,7 +584,7 @@ export class VapaeeService {
             limit: 1
         }).then(result => {
             var params = result.rows[0].params;
-            var total = parseInt(params.split(" ")[0]);
+            var total = parseInt(params.split(" ")[0])-1;
             var mod = total % pagesize;
             var dif = total - mod;
             var pages = dif / pagesize;
@@ -573,6 +592,7 @@ export class VapaeeService {
                 pages +=1;
             }
             this.activity.total = total;
+            console.log("VapaeeService.getActivityTotalPages() total: ", total, " pages: ", pages);
             return pages;
         });
     }
@@ -618,7 +638,6 @@ export class VapaeeService {
 
         return result;
     }
-
 
     private auxHourToLabel(hour:number): string {
         var d = new Date(hour * 1000 * 60 * 60);
@@ -1293,11 +1312,10 @@ export class VapaeeService {
             return result;
         });
     }
-
     
-    private async fetchActivity(pages: number, page:number = 0, pagesize:number = 25) {
-        var id = page*pagesize;
-        console.log("VapaeeService.fetchActivity(", pages, ",",page,",",pagesize,"): id:", id);
+    private async fetchActivity(page:number = 0, pagesize:number = 25) {
+        var id = page*pagesize+1;
+        console.log("VapaeeService.fetchActivity(", page,",",pagesize,"): id:", id);
         
         if (this.activity.events["id-" + id]) {
             var pageEvents = [];
@@ -1316,17 +1334,19 @@ export class VapaeeService {
         return this.utils.getTable("events", {limit:pagesize, lower_bound:""+id}).then(result => {
             console.log("**************");
             console.log("Activity crudo:", result);
+            var list:EventLog[] = [];
 
             for (var i=0; i < result.rows.length; i++) {
                 var id = result.rows[i].id;
                 var event:EventLog = <EventLog>result.rows[i];
                 if (!this.activity.events["id-" + id]) {
                     this.activity.events["id-" + id] = event;
-                    this.activity.list.push(event);
+                    list.push(event);
                     console.log("**************>>>>>", id);
                 }
             }
 
+            this.activity.list = [].concat(this.activity.list).concat(list);
             this.activity.list.sort(function(a:EventLog, b:EventLog){
                 if(a.date < b.date) return 1;
                 if(a.date > b.date) return -1;
@@ -1336,54 +1356,6 @@ export class VapaeeService {
 
         });
 
-
-
-        /*
-
-
-        return this.utils.getTable("history", {scope:scope, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
-
-            // console.log("**************");
-            // console.log("History crudo:", result);
-            
-            this.scopes[scope] = this.auxAssertScope(scope);
-            this.scopes[scope].history = [];
-            this.scopes[scope].tx = this.scopes[scope].tx || {}; 
-
-            // console.log("this.scopes[scope].tx:", this.scopes[scope].tx);
-
-            for (var i=0; i < result.rows.length; i++) {
-                var transaction:HistoryTx = {
-                    id: result.rows[i].id,
-                    amount: new Asset(result.rows[i].amount, this),
-                    payment: new Asset(result.rows[i].payment, this),
-                    buyfee: new Asset(result.rows[i].buyfee, this),
-                    sellfee: new Asset(result.rows[i].sellfee, this),
-                    price: new Asset(result.rows[i].price, this),
-                    buyer: result.rows[i].buyer,
-                    seller: result.rows[i].seller,
-                    date: new Date(result.rows[i].date),
-                    isbuy: !!result.rows[i].isbuy
-                }
-                this.scopes[scope].tx["id-" + transaction.id] = transaction;
-            }
-
-            for (var j in this.scopes[scope].tx) {
-                this.scopes[scope].history.push(this.scopes[scope].tx[j]);
-            }
-
-            this.scopes[scope].history.sort(function(a:HistoryTx, b:HistoryTx){
-                if(a.date < b.date) return 1;
-                if(a.date > b.date) return -1;
-                if(a.id < b.id) return 1;
-                if(a.id > b.id) return -1;
-            });            
-
-            // console.log("History final:", this.scopes[scope].history);
-            // console.log("-------------");
-            return result;
-        });
-        */
     }
 
     private fetchUserOrders(user:string): Promise<TableResult> {

@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Asset, VapaeeService } from '../services/vapaee.service';
 import { Token } from '../services/utils.service';
+import { CookieService } from 'ngx-cookie-service';
 
 
+
+export interface StringMap {[key:string]: string};
 
 export interface PriceMap {
     [key:string]: {
@@ -29,12 +32,13 @@ export class VpeComponentsService {
     current: string;
 
     constructor(
-        private vapaee: VapaeeService
+        private vapaee: VapaeeService,
+        public cookie: CookieService
     ) {
         this.prices = {};
         this.currencies = [];
         this.tokens_prices = {};
-        this.current = "usd";
+        this.current = this.cookie.get("fiat") || "usd";
     }
 
     // Getters ------------------------------------
@@ -61,19 +65,20 @@ export class VpeComponentsService {
         }
         this.onPricesUpdate.next(this.prices);
         this.cacheTIC = {};
-        console.log("VpeComponentsService.setTelosPrices() ------------------->", this.prices);
+        // console.log("VpeComponentsService.setTelosPrices() ------------------->", this.prices);
     }
 
     public setTokensPrices(prices:PriceMap) {
         this.tokens_prices = prices;
         this.onTokenPricesUpdate.next(this.tokens_prices);
         this.cacheTIC = {};
-        console.log("VpeComponentsService.setTokensPrices() ------------------->", this.tokens_prices);
+        // console.log("VpeComponentsService.setTokensPrices() ------------------->", this.tokens_prices);
     }
 
     // Change State -----------------------------------
     setCurrentCurrency(currency:string) {
         this.current = currency;
+        this.cookie.set("fiat", currency);
         this.setTelosPrices(this.prices);
     }
 
