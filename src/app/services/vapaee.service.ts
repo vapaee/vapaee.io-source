@@ -1315,7 +1315,7 @@ export class VapaeeService {
     
     private async fetchActivity(page:number = 0, pagesize:number = 25) {
         var id = page*pagesize+1;
-        console.log("VapaeeService.fetchActivity(", page,",",pagesize,"): id:", id);
+        // console.log("VapaeeService.fetchActivity(", page,",",pagesize,"): id:", id);
         
         if (this.activity.events["id-" + id]) {
             var pageEvents = [];
@@ -1332,8 +1332,8 @@ export class VapaeeService {
         }        
 
         return this.utils.getTable("events", {limit:pagesize, lower_bound:""+id}).then(result => {
-            console.log("**************");
-            console.log("Activity crudo:", result);
+            // console.log("**************");
+            // console.log("Activity crudo:", result);
             var list:EventLog[] = [];
 
             for (var i=0; i < result.rows.length; i++) {
@@ -1342,7 +1342,7 @@ export class VapaeeService {
                 if (!this.activity.events["id-" + id]) {
                     this.activity.events["id-" + id] = event;
                     list.push(event);
-                    console.log("**************>>>>>", id);
+                    // console.log("**************>>>>>", id);
                 }
             }
 

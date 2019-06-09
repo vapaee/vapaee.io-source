@@ -310,7 +310,7 @@ export class GoogleChartComponent implements OnChanges, OnDestroy, GoogleChartCo
       google.visualization.events.removeAllListeners(this.wrapper.getChart());
       google.visualization.events.removeAllListeners(this.wrapper);  
     } catch (e) {
-      console.error("ERROR CATCHED: ", e);
+      console.error("ERROR CATCHED: ", [e]);
     }
   }
 
