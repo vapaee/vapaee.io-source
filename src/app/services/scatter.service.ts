@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
-import ScatterJS from 'scatterjs-core';
-import ScatterEOS from 'scatterjs-plugin-eosjs'
-import Eos from 'eosjs';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AccountPage } from '../pages/account/account.page';
 import { EosioTokenMathService } from './eosio.token-math.service';
 import { Feedback } from './feedback.service';
-// import { EOS, Scatter, AccountData, Account, Endpoint, Eosconf, Network, ScatterJSDef } from './scatter.datatypes.service';
+
+// scatter libraries
+import ScatterJS from 'scatterjs-core';
+import ScatterEOS from 'scatterjs-plugin-eosjs2';
+import {JsonRpc, Api} from 'eosjs';
+
 
 // declare var ScatterJS:any;
 export interface EOS {
@@ -549,7 +551,6 @@ export class ScatterService {
         return tot;
     }
 
-
     calculateTotalBalance(account) {
         return this.tokenMath.addAll([
             account.core_liquid_balance,
@@ -787,6 +788,7 @@ export class ScatterService {
         });
     }
 
+    /*
     testScatterOnLocalNetwork() {
         console.log("ScatterService.testScatterOnLocalNetwork()");
         
@@ -828,4 +830,5 @@ export class ScatterService {
 
         });        
     }
+    */
 }

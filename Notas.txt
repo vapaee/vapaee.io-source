@@ -5,15 +5,8 @@
 
 
 
-Hello,
-I just released version v1.3.1 that includes a component of activity log and a considerable list of small features and bugfixes.
-If you do not see the changes, press F5 twice to refresh the site and verify that the version shown on the home page is v1.3.1
-https://vapaee.io
-
-Join the telegram group if you wanna follow this development closer
-https://t.me/vapaee_dex
-
-
+-- UPDATING SCATTER LIBS --
+npm i -S scatterjs-core scatterjs-plugin-eosjs2 eosjs@20.0.0-beta3
 
 
 
