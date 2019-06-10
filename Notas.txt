@@ -27,7 +27,7 @@ telosmain push action vapaeetokens hotfix '[0, "viterbotelos", "0.1000 TLOS"]' -
 
 -- TODO (not coding) --
 - publicación hablando de los Fakes que me quieren embaucar.
-
+- actualizar mi linkedin y follow telos --> https://www.linkedin.com/company/telos-blockchain-network/
 
 - confirmar los tokens:
 telosmain push action vapaeetokens updatetoken '["QBE", "Qubicles", "https://fenero.io/qubicles", "/assets/logos/qbe.png", "/assets/logos/qbe-lg.png",true]' -p vapaeetokens@active
