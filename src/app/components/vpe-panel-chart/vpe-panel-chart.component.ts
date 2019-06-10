@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, Output, OnInit, OnDestroy, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
+import { Component, Input, OnChanges, Output, OnInit, OnDestroy, ViewChild, ElementRef, ViewContainerRef, Renderer } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { VapaeeService } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
@@ -6,6 +6,7 @@ import { GoogleChartInterface, GoogleChartComponentInterface } from 'src/app/com
 import { GoogleChartComponent } from 'src/app/components/vpe-panel-chart/google-chart-service';
 import { Subscriber } from 'rxjs';
 import { VpeComponentsService } from '../vpe-components.service';
+
 
 
 // https://www.devrandom.it/software/ng2-google-charts/
@@ -19,25 +20,26 @@ import { VpeComponentsService } from '../vpe-components.service';
     templateUrl: './vpe-panel-chart.component.html',
     styleUrls: ['./vpe-panel-chart.component.scss']
 })
-export class VpePanelChartComponent implements OnChanges, OnDestroy, OnInit {
+export class VpePanelChartComponent implements OnChanges, OnDestroy {
 
     @Input() data:any[];
     zoom:number;
+    closed:boolean;
     component:GoogleChartComponentInterface;
     zomm_min: number = 5;
 
-    private onResizeSubscriber: Subscriber<any>;
+    
 
     // @ViewContainerRef('vpe-panel-chart', {read: ElementRef}) elref: ElementRef;
 
     constructor(
         public vapaee: VapaeeService,
         public local: LocalStringsService,
-        public service: VpeComponentsService,
-        private _element:ElementRef
+        private _element:ElementRef,
+        private renderer:Renderer
     ) {
         this.zoom = 24;
-        this.onResizeSubscriber = new Subscriber<string>(this.onResize.bind(this));
+        this.closed = false;
     }
     
     public _chartData:GoogleChartInterface;
@@ -48,20 +50,18 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy, OnInit {
     }
 
     onResize(device) {
-        // console.log("onResize() --->", device);
+        console.log("----------------------------------------->>>>>>>>>>>>");
+        this.closed = false;
         this.component.redraw(this.recreateDataTable(), null);
         // console.log(this._element.nativeElement.offsetWidth);
         // console.log(this._element.nativeElement.offsetHeight);
-    }
+    }  
 
-    ngOnDestroy() {
-        this.onResizeSubscriber.unsubscribe();
-    }
-    
-    ngOnInit() {
-        this.service.onResize.subscribe(this.onResizeSubscriber);
-        // console.log(this._element.nativeElement);
-    }    
+    onClose(device) {
+        this.component.destroy();
+        this.closed = true;
+        // console.log(this._element.nativeElement.offsetHeight);
+    }  
 
     ready(event) {
         this.component = event.component;
@@ -119,6 +119,10 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy, OnInit {
         // this.recreateChartData();
         //console.log(this._chartData);
         this.component.redraw(this.recreateDataTable(), null);
+    }
+
+    ngOnDestroy() {
+        this.component.destroy();
     }
 
     timer;

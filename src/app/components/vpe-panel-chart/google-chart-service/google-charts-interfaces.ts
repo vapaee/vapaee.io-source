@@ -15,6 +15,7 @@ export interface GoogleChartComponentInterface {
 
   redraw(dataTable:any[], options:any): void;
   draw(): void;
+  destroy(): void;
 }
 
 export interface GoogleChartInterface {

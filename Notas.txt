@@ -3,28 +3,16 @@
 - cuando termina de realizarse un depósito o un withdraw habría que cerrar automáticamente el miniformulario
 - verificar que los tokens siempre se mantengan ordenados por volumen 
 
--- tipos de actions --
-ACTION deposit ( const asset & total)
-ACTION withdraw(name owner, const asset & quantity)
-ACTION cancel(name owner, name type, const symbol_code & comodity, const symbol_code & currency, const std::vector<uint64_t> & orders) {
-ACTION order(name owner, name type, const asset & total, const asset & price) {
-transaction 
 
 
+Hello,
+I just released version v1.3.1 that includes a component of activity log and a considerable list of small features and bugfixes.
+If you do not see the changes, press F5 twice to refresh the site and verify that the version shown on the home page is v1.3.1
+https://vapaee.io
 
-        // TABLE activity (users action log) -----------
-        // scope: contract
-        TABLE activity_table {
-            uint64_t id;
-            name user;
-            name action;
-            string params;
-            time_point_sec date;
-            uint64_t primary_key() const { return sym_code.raw(); }
-        };
-        typedef eosio::multi_index< "activity"_n, activity_table > activity;
-        // ------------------------------------
-        
+Join the telegram group if you wanna follow this development closer
+https://t.me/vapaee_dex
+
 
 
 

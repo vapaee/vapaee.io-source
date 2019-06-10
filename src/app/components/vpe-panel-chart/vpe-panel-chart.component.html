@@ -1,4 +1,4 @@
-<vpe-panel [title]="local.string.chart">
+<vpe-panel [title]="local.string.chart" (onResize)="onResize($event)" (onClose)="onClose($event)">
         
     <div class="background">
         <!-- 
@@ -6,12 +6,11 @@
             *ngIf="chartData && chartData.dataTable && chartData.dataTable.length > 0"
         -->
         <google-chart
-            *ngIf="chartData && chartData.dataTable && chartData.dataTable.length > 0"
+            *ngIf="!closed && chartData && chartData.dataTable && chartData.dataTable.length > 0"
             [data]="chartData"
             (chartReady)='ready($event)'
             (mouseWheel)="mouseWheel($event)"
         ></google-chart>
-            
             <!--
             (chartReady)="ready($event)"
             (chartError)="error($event)"

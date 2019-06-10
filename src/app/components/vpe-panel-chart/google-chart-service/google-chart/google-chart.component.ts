@@ -91,6 +91,10 @@ export class GoogleChartComponent implements OnChanges, OnDestroy, GoogleChartCo
   }
 
   public ngOnDestroy(): void {
+    this.destroy();
+  }
+
+  public destroy(): void {
     this.unregisterChartEvents();
   }
 
