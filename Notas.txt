@@ -7,7 +7,7 @@
 
 -- UPDATING SCATTER LIBS --
 npm i -S scatterjs-core scatterjs-plugin-eosjs2 eosjs@20.0.0-beta3
-
+https://github.com/GetScatter/scatter-js
 
 
 
