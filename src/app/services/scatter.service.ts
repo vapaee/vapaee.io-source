@@ -8,11 +8,13 @@ import { Feedback } from './feedback.service';
 // scatter libraries
 import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs2';
+import ScatterLynx from 'scatterjs-plugin-lynx';
 import {JsonRpc, Api} from 'eosjs';
 
 
+
 // declare var ScatterJS:any;
-export interface EOS {
+export interface EOS_old {
     getInfo:Function,
     getAccount:Function,
     getCode:Function,
@@ -75,11 +77,70 @@ export interface EOS {
     contract:Function
 }
 
+export interface RPC {
+    endpoint: string;
+    fetchBuiltin: Function;
+    fetch: Function;
+    get_abi: Function;
+    get_account: Function;
+    get_block_header_state: Function;
+    get_block: Function;
+    get_code: Function;
+    get_currency_balance: Function;
+    get_currency_stats: Function;
+    get_info: Function;
+    get_producer_schedule: Function;
+    get_producers: Function;
+    get_raw_code_and_abi: Function;
+    getRawAbi: Function;
+    get_table_rows: Function;
+    getRequiredKeys: Function;
+    push_transaction: Function;
+    db_size_get: Function;
+    history_get_actions: Function;
+    history_get_transaction: Function;
+    history_get_key_accounts: Function;
+    history_get_controlled_accounts: Function;    
+}
+
+export interface EOS {
+    contracts: Function;
+    cachedAbis: Function;
+    rpc: Function;
+    authorityProvider: Function;
+    abiProvider: Function;
+    signatureProvider: Function;
+    chainId: Function;
+    textEncoder: Function;
+    textDecoder: Function;
+    abiTypes: Function;
+    transactionTypes: Function;
+    rawAbiToJson: Function;
+    getCachedAbi: Function;
+    getAbi: Function;
+    getTransactionAbis: Function;
+    getContract: Function;
+    serialize: Function;
+    deserialize: Function;
+    serializeTransaction: Function;
+    deserializeTransaction: Function;
+    serializeActions: Function;
+    deserializeActions: Function;
+    deserializeTransactionWithActions: Function;
+    transact: Function;
+    pushSignedTransaction: Function;
+    hasRequiredTaposFields: Function;    
+}
+
 export interface Scatter {
-    eos?:Function,
-    forgotten?:boolean, // was forgetIdentity executed?
-    eosHook:any,
     identity: any,
+    eosHook: Function;
+    eos?:Function,
+    network: any;
+    // -----------------
+    
+    forgotten?:boolean, // was forgetIdentity executed?
+    
     isExtension: boolean,
     // -----------------
     authenticate: Function,
@@ -227,6 +288,7 @@ export class ScatterService {
     private symbol: string;
     private _connected: boolean;
     private lib: Scatter;
+    private rpc: RPC;
     public feed: Feedback;
     private ScatterJS: ScatterJSDef;
     private _network: Network;
@@ -276,6 +338,7 @@ export class ScatterService {
                 "port":443
             }]
         };
+        
         this.symbol = "EOS";
         //this.waitReady.then(() => console.log("ScatterService.setReady()"));
         // console.error("scatter interrumpido --------------------------------");
@@ -425,12 +488,29 @@ export class ScatterService {
         this.error = "";
         if ((<any>window).ScatterJS) {
             this.ScatterJS = (<any>window).ScatterJS;
-            this.ScatterJS.plugins( new ScatterEOS() );
-            this.lib = this.ScatterJS.scatter;  
+            this.ScatterJS.plugins( new ScatterEOS(), new ScatterLynx({Api, JsonRpc}) );
+            this.lib = this.ScatterJS.scatter;
             (<any>window).ScatterJS = null;
         }
-        console.log("EOSJS()",[this.network.eosconf]);
-        this.eos = this.lib.eos(this.network.eosconf, Eos, { expireInSeconds:60 });
+
+        const network = ScatterJS.Network.fromJson(this.network.eosconf);
+        this.rpc = new JsonRpc(network.fullhost());
+        this.eos = this.lib.eos(network, Api, {rpc:this.rpc, beta3:true});
+
+
+        var str = "";
+        for (var i in this.rpc) {
+            str += i + ": " + typeof this.rpc[i] + ";\n";
+        }
+        // console.log("-----------------------------------------");
+        // console.log(str);
+        // console.log("-----------------------------------------");
+
+
+
+
+
+
         this.setEosjs("eosjs");
     }
 
@@ -595,7 +675,8 @@ export class ScatterService {
             // console.log("PASO 1 ------", [this._account_queries])
             this.waitEosjs.then(() => {
                 // console.log("PASO 2 (eosjs) ------");
-                this.eos.getAccount({account_name: name}).then((response) => {
+                
+                this.rpc.get_account(name).then((response) => {
                     // console.log("PASO 3 (eosjs.getAccount) ------", response);
                     var accountdata: AccountData = <AccountData>response;
 
@@ -642,6 +723,7 @@ export class ScatterService {
                 }).catch((err) => {
                     reject(err);
                 });
+                
             }).catch((error) => {
                 console.error(error);
                 reject(error);
@@ -664,7 +746,8 @@ export class ScatterService {
             this.login().then((a) => {
                 console.log("this.login().then((a) => { -->", a );
                 this.waitReady.then(() => {
-                    this.eos.contract(account_name).then(contract => {
+                    
+                    this.eos.getContract(account_name).then(contract => {
                         console.log(`-- contract ${account_name} --`);
                         for (var i in contract) {
                             if(typeof contract[i] == "function") console.log("contract."+i+"()", [contract[i]]);
@@ -673,6 +756,7 @@ export class ScatterService {
                     }).catch(error => {
                         console.error(error);
                     });
+                    
                 });
             }).catch((error) => {
                 console.error(error);
@@ -681,11 +765,13 @@ export class ScatterService {
         }); 
     }
 
+    /*
     transfer(from:string, to:string, amount:string, memo:string) {
         console.log("ScatterService.transfer()", from, to, amount, memo);
         return new Promise((resolve, reject) => {
             this.waitEosjs.then(() => {
                 console.log("Scatter.transfer():", from, to, amount, memo, this.authorization);
+                
                 this.eos.transfer(from, to, amount, memo, this.authorization).then(trx => {
                     // That's it!
                     console.log(`Transaction ID: ${trx.transaction_id}`, trx);
@@ -693,13 +779,15 @@ export class ScatterService {
                     resolve(trx);
                 }).catch(error => {
                     console.error(error);
-                }); 
+                });
+                
             }).catch((error) => {
                 console.error(error);
                 reject(error);
             });   
         });
     }
+    */
 
     // loginTimer;
     login() {
@@ -713,7 +801,7 @@ export class ScatterService {
                 var loginTimer = setTimeout( _ => {
                     this.feed.setLoading("login", false);
                     reject("connection timeout");
-                }, 3000);
+                }, 5000);
                 this.connectApp().then(() => {
                     this.lib.getIdentity({"accounts":[this.network.eosconf]})
                         .then( (identity)  => {
@@ -776,11 +864,26 @@ export class ScatterService {
         // https://github.com/EOSIO/eosjs-api/blob/master/docs/api.md#eos.getTableRows
         return new Promise<any>((resolve, reject) => {
             this.waitEosjs.then(() => {
-                this.eos.getTableRows(true, contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos).then(function (_data) {
+                var json = {
+                    code: contract,
+                    index_position: ipos,
+                    json: true,
+                    key_type: ktype,
+                    limit: limit,
+                    lower_bound: lowerb,
+                    scope: scope,
+                    table: table,
+                    table_key: tkey,
+                    upper_bound: upperb
+                }
+                
+                this.rpc.get_table_rows(json).then(_data => {
                     resolve(_data);
                 }).catch(error => {
                     console.error(error);
                 });
+
+                
             }).catch((error) => {
                 console.error(error);
                 reject(error);
@@ -788,47 +891,4 @@ export class ScatterService {
         });
     }
 
-    /*
-    testScatterOnLocalNetwork() {
-        console.log("ScatterService.testScatterOnLocalNetwork()");
-        
-        if ((<any>window).ScatterJS) {
-            this.ScatterJS = (<any>window).ScatterJS;
-            this.lib = this.ScatterJS.scatter;  
-            this.ScatterJS.plugins( new ScatterEOS() );
-            (<any>window).ScatterJS = null;
-        }
-        var network = {
-            blockchain: "eos",
-            chainId: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f",
-            host: "127.0.0.1",
-            port: 8888,
-            protocol: "http",          
-        }
-
-        this.eos = this.ScatterJS.scatter.eos(network, Eos, { expireInSeconds:60 });
-        
-        
-        this.ScatterJS.scatter.connect("Cards & Tokens", {initTimeout:3000}).then(connected => {
-            if(!connected) return console.error(this.error);
-
-            return this.ScatterJS.scatter.getIdentity({"accounts":[network]}).then( (identity)  => {
-                var account = identity.accounts[0];
-                
-                const transactionOptions = { authorization:[`${account.name}@${account.authority}`] };
-                console.log("Scatter.transfer() authority:", transactionOptions);
-                this.eos.transfer(account.name, "bob", "0.0000 SYS", "memo", transactionOptions).then(trx => {
-                    // That's it!
-                    console.log(`Transaction ID: ${trx.transaction_id}`, trx);
-                    // en Notas está el json que describe el objeto trx
-                    
-                }).catch(error => {
-                    console.error(error);
-                });
-                
-            }).catch( err => { console.error(err); });            
-
-        });        
-    }
-    */
 }

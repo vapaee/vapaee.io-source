@@ -254,6 +254,9 @@ export class Utils {
             try {
                 this.scatter.getContract(this.contract).then(contract => {
                     try {
+console.log("*************************************************");
+console.log("https://eosio.github.io/eosjs/guides/2.-Transaction-Examples.html");
+console.log("*************************************************");
                         contract[action](params, this.scatter.authorization).then((response => {
                             console.log("Utils.excecute() ---> ", [response]);
                             resolve(response);

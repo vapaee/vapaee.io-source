@@ -10,6 +10,15 @@ npm i -S scatterjs-core scatterjs-plugin-eosjs2 eosjs@20.0.0-beta3
 https://github.com/GetScatter/scatter-js
 
 
+ScatterJS.plugins( new ScatterEOS(), new ScatterLynx({Api, JsonRpc}) );
+const network = ScatterJS.Network.fromJson(this.network.eosconf);
+const rpc = new JsonRpc(network.fullhost());
+ScatterJS.scatter.eos(network, Api, {rpc, beta3:true});
+
+getAccount({account_name: name})
+contract(account_name)
+getTableRows(true, contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos)
+transfer(from, to, amount, memo, this.authorization)
 
 
 -- HOTFIX --
