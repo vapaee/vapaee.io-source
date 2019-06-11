@@ -2,14 +2,14 @@
 
 # Vapaée DEX - source code
 
-current version: BASIC (v1.4.0)
+current version: BASIC (v1.5.0)
 
 https://vapaee.io
 
 
 ```bash
-git clone https://github.com/vapaee/eosio-angular-app.git
-cd eosio-angular-app
+git clone https://github.com/vapaee/vapaee.io-source.git
+cd vapaee.io-source
 npm i
 ```
 ```bash
@@ -22,7 +22,8 @@ cd script
 ## features for next version - PREMIUM (v2.x.x)
 
 - ### Critical
-  - [ ] Responsive PWA
+  - [x] PWA
+  - [ ] Responsive
     - [x] generate an event _onResize_ for all panels to subscribe
     - [ ] each panel should be able to calculate the area in which it should be deployed and set a element class that reflects it
     - [ ] each panel must be displayed taking into account the area it has to be deployed (based on the class of the element)

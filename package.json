@@ -1,6 +1,6 @@
 {
   "name": "vapaee.io-source",
-  "version": "v1.4.0",
+  "version": "v1.5.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --poll=2000 -o",
@@ -22,7 +22,9 @@
     "@angular/http": "^6.0.3",
     "@angular/platform-browser": "^6.0.3",
     "@angular/platform-browser-dynamic": "^6.0.3",
+    "@angular/pwa": "^0.800.2",
     "@angular/router": "^6.0.3",
+    "@angular/service-worker": "^6.1.10",
     "@ng-bootstrap/ng-bootstrap": "^4.1.0",
     "bignumber.js": "^8.0.2",
     "bootstrap": "^4.3.1",

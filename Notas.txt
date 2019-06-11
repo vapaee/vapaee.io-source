@@ -5,19 +5,6 @@
 
 
 
-Hello,
-I just released version v1.3.1 that includes a component of activity log and a considerable list of small features and bugfixes.
-If you do not see the changes, press F5 twice to refresh the site and verify that the version shown on the home page is v1.3.1
-https://vapaee.io
-
-Join the telegram group if you wanna follow this development closer
-https://t.me/vapaee_dex
-
-
-
-
-
-
 
 -- HOTFIX --
 cd /var/www/vapaee.io-source/contracts/vapaeetokens
@@ -350,7 +337,7 @@ telosmain push action vapaeetokens updatetoken '["VIICT", "Viitasphere", "https:
 ---------------------------------------------------------------------
 -- Testnet ----------------------------------------------------------
 ---------------------------------------------------------------------
-cd /var/www/eosio-angular-app/contracts/vapaeetokens
+cd /var/www/vapaee.io/contracts/vapaeetokens
 telostest set contract vapaeetokens $PWD -p vapaeetokens@active
 telostest push action vapaeetokens addtoken '["eosio.token","TLOS",4,"vapaeetokens"]' -p vapaeetokens@active
 telostest push action vapaeetokens create '["vapaeetokens","500000000.0000 CNT"]' -p vapaeetokens@active

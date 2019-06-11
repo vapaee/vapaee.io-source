@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "eosio-angular-app": {
+    "vapaee.io": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -20,7 +20,8 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "node_modules/font-awesome/css/font-awesome.css",
@@ -54,25 +55,26 @@
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true
+              "buildOptimizer": true,
+              "serviceWorker": true
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "eosio-angular-app:build"
+            "browserTarget": "vapaee.io:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "eosio-angular-app:build:production"
+              "browserTarget": "vapaee.io:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "eosio-angular-app:build"
+            "browserTarget": "vapaee.io:build"
           }
         },
         "test": {
@@ -88,7 +90,8 @@
             "scripts": [],
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ]
           }
         },
@@ -106,7 +109,7 @@
         }
       }
     },
-    "eosio-angular-app-e2e": {
+    "vapaee.io-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -114,11 +117,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "eosio-angular-app:serve"
+            "devServerTarget": "vapaee.io:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "eosio-angular-app:serve:production"
+              "devServerTarget": "vapaee.io:serve:production"
             }
           }
         },
@@ -134,5 +137,5 @@
       }
     }
   },
-  "defaultProject": "eosio-angular-app"
+  "defaultProject": "vapaee.io"
 }

@@ -28,6 +28,8 @@ import { TokensPage } from './pages/tokens/tokens.page';
 import { AccountPage } from './pages/account/account.page';
 import { NotFoundPage } from './pages/not-found/not-found.page';
 import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 
 @NgModule({
@@ -51,7 +53,8 @@ import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
         AppRoutingModule,
         HttpClientModule,
         CommonServicesModule,
-        VpeComponentsModule
+        VpeComponentsModule,
+        ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
     ],
     providers: [
         DatePipe,
@@ -65,3 +68,7 @@ import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
     bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+if ('serviceWorker' in navigator && environment.production) {
+    navigator.serviceWorker.register('/ngsw-worker.js');
+}
