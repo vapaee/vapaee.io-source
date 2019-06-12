@@ -103,6 +103,12 @@ cleos push action revelation21 open '["user1.jc", "4,HEART", "user1.jc"]' -p use
   - Estando logueado y mirando un market donde tengo órdenes, si estas son vendidas, desaparecen de la lista de órdenes pero la lista peronal de mis órdenes sigue sin actualizarse.
   - página trade. si obtenés un error y cambiás de token, el mensaje de error persiste. Habría que limpiar de errores si se cambia el token/market.
   - Si tengo una orden de compra, estoy mirando ese mercado y alguien me vende tokens, mi saldo no se actualiza hasta que recarlo la pantalla.
+  - Si estoy logueado pero le hago click al nombre de otro usuario y me redirije a account page:
+    - tengo habilitados los botones de deposit y withdraw (y no deberían)
+    - en trade page aparece la wallet del usuario consultado y no la propia
+
+
+
 - lista de erores que devuelve la blockchain:
 ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 3050003, "name": "eosio_assert_message_exception", "what": "eosio_assert_message assertion failure", "details": [ { "message": "assertion failure with message: comparison of assets with different symbols is not allowed", "file": "wasm_interface.cpp", "line_number": 964, "method": "eosio_assert" } ] } }
 
