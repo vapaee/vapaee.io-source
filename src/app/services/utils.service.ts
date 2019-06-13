@@ -247,7 +247,11 @@ export class Utils {
         console.error("WARNING!!! esta nueva implementación nunca fue probada y no se si funciona", name);
         const buffer: Serialize.SerialBuffer = new Serialize.SerialBuffer();
         buffer.pushName(name);
-        return new BigNumber(buffer.getUint64AsNumber());
+
+        
+        // var number = numeric.binaryToDecimal(buffer.getUint8Array(8))
+        var number = buffer.getUint64AsNumber();
+        return new BigNumber(number);
     }
 
     // smart contract ---------------------
