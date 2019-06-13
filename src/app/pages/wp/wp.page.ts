@@ -171,7 +171,7 @@ export class WPPage implements OnInit, OnDestroy {
 
         var encodedName = this.utils.encodeName(account || this.vapaee.current.name);
 
-        console.assert(encodedName.toString() == "15830904337826343296", encodedName.toString(), "15830904337826343296");
+        console.assert(encodedName.toString() == "4399453885987553280", encodedName.toString(), "4399453885987553280");
 
         
         return this.utils.getTable("balances", {

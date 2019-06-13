@@ -73,7 +73,7 @@ export class Utils {
     code_f:number;
     code_z:number;
     
-    constructor(contract: string, scatter: ScatterService) {
+    constructor(contract: string = "", scatter: ScatterService = null) {
         this.contract = contract;
         this.scatter = scatter;
         this.code_0 = "0".charCodeAt(0);

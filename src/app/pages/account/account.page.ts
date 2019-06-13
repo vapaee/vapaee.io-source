@@ -4,7 +4,7 @@ import { LocalStringsService } from 'src/app/services/common/common.services';
 import { ScatterService } from 'src/app/services/scatter.service';
 import { Subscriber } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { Profile } from 'src/app/services/utils.service';
+import { Profile, Utils } from 'src/app/services/utils.service';
 import { VapaeeService, Asset, UserOrders, UserOrdersMap } from 'src/app/services/vapaee.service';
 
 
@@ -29,6 +29,9 @@ export class AccountPage implements OnInit, OnDestroy {
     ) {
         this.subscriber = new Subscriber<string>(this.onCntCurrentAccountChange.bind(this));
         this.current_mode = true;
+
+
+        
     }
 
 
@@ -62,6 +65,14 @@ export class AccountPage implements OnInit, OnDestroy {
             } else {
                 this.vapaee.resetCurrentAccount(name);
             };
+
+            var utils:Utils = new Utils("",null);
+            var encodedName = utils.encodeName(name);
+
+            console.log(name, encodedName.toString());
+
+
+
         }, 0);
     }
 
