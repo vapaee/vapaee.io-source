@@ -90,6 +90,7 @@ cleos push action revelation21 open '["user1.jc", "4,HEART", "user1.jc"]' -p use
     - gráfica: historial de una moneda en particular.
 
 
+
 - bugs conocidos:
   - al comprar más de una fila te calcula mal el costo total porque debería tener encuenta los diferentes niveles de precios
   - hay que desuscribir al usuario que ya no tiene depósitos y no se hace: depusers
