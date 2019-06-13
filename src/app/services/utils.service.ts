@@ -120,6 +120,7 @@ export class Utils {
         return "?";
     }
 
+    // _num is an hexa
     decodeUint64(_num: string) {
         var bits:number[] = [];
         var num:string = _num.substr(2);
@@ -250,8 +251,15 @@ export class Utils {
 
         
         // var number = numeric.binaryToDecimal(buffer.getUint8Array(8))
+
+        var slug_encoded = this.encodeSlug(name);
+        console.log("slug_encoded: ", slug_encoded);
+
+
+
         var number = buffer.getUint64AsNumber();
-        return new BigNumber(number);
+        // return new BigNumber(number);
+        return new BigNumber(0x66958c80000000000000000000000000);
     }
 
     // smart contract ---------------------
