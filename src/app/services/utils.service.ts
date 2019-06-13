@@ -2,6 +2,7 @@ import BigNumber from "bignumber.js";
 // import Eos from 'eosjs';
 import { Scatter, ScatterService } from "./scatter.service";
 import { Serialize } from "eosjs";
+import * as Long from 'long';
 
 // vapaee exchange -------------------
 
@@ -244,22 +245,60 @@ export class Utils {
         return str;
     }
 
+    // OLD eosjs encodeName solution ------------------------------------------------------
+    charmap = '.12345abcdefghijklmnopqrstuvwxyz';
+    charidx = ch => {
+        const idx = this.charmap.indexOf(ch)
+        if(idx === -1)
+          throw new TypeError(`Invalid character: '${ch}'`)
+      
+        return idx;
+    }
+    oldEosjsEncodeName(name, littleEndian = false) {
+        if(typeof name !== 'string')
+          throw new TypeError('name parameter is a required string')
+      
+        if(name.length > 12)
+          throw new TypeError('A name can be up to 12 characters long')
+      
+        let bitstr = ''
+        for(let i = 0; i <= 12; i++) { // process all 64 bits (even if name is short)
+          const c = i < name.length ? this.charidx(name[i]) : 0
+          const bitlen = i < 12 ? 5 : 4
+          let bits = Number(c).toString(2)
+          if(bits.length > bitlen) {
+            throw new TypeError('Invalid name ' + name)
+          }
+          bits = '0'.repeat(bitlen - bits.length) + bits
+          bitstr += bits
+        }
+      
+        const value = Long.fromString(bitstr, true, 2)
+      
+        // convert to LITTLE_ENDIAN
+        let leHex = ''
+        const bytes = littleEndian ? value.toBytesLE() : value.toBytesBE()
+        for(const b of bytes) {
+          const n = Number(b).toString(16)
+          leHex += (n.length === 1 ? '0' : '') + n
+        }
+      
+        const ulName = Long.fromString(leHex, true, 16).toString()
+      
+        // console.log('encodeName', name, value.toString(), ulName.toString(), JSON.stringify(bitstr.split(/(.....)/).slice(1)))
+        
+        return ulName.toString()
+    }
+    // -------------------------------------------------------
+
     encodeName(name:string):BigNumber {
-        console.error("WARNING!!! esta nueva implementación nunca fue probada y no se si funciona", name);
+        /*
         const buffer: Serialize.SerialBuffer = new Serialize.SerialBuffer();
         buffer.pushName(name);
-
-        
-        // var number = numeric.binaryToDecimal(buffer.getUint8Array(8))
-
-        var slug_encoded = this.encodeSlug(name);
-        console.log("slug_encoded: ", slug_encoded);
-
-
-
         var number = buffer.getUint64AsNumber();
-        // return new BigNumber(number);
-        return new BigNumber(0x66958c80000000000000000000000000);
+        */
+       var number = this.oldEosjsEncodeName(name)
+        return new BigNumber(number);
     }
 
     // smart contract ---------------------
