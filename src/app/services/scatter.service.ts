@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { AccountPage } from '../pages/account/account.page';
 import { EosioTokenMathService } from './eosio.token-math.service';
 import { Feedback } from './feedback.service';
 
@@ -10,7 +9,6 @@ import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs2';
 import ScatterLynx from 'scatterjs-plugin-lynx';
 import {JsonRpc, Api} from 'eosjs';
-
 
 
 // declare var ScatterJS:any;
@@ -740,6 +738,63 @@ export class ScatterService {
         return promise;
     }
 
+    async executeTransaction(contract:string, action:string, data:any) {
+        return new Promise((resolve, reject) => {
+            this.login().then(_ => {
+                this.waitReady.then(() => {
+                    
+                    this.eos.transact(
+                        {
+                            actions: [{
+                                account: contract,
+                                name: action,
+                                data: data,
+                                authorization: [{
+                                    actor: this.account.name,
+                                    permission: this.account.authority
+                                }],                            
+                            }]
+                        },
+                        {
+                            blocksBehind: 3,
+                            expireSeconds: 30
+                        }                        
+                    ).then(result => {
+                        console.log("EXITO !!!!", result);
+                        resolve(result);
+                    });
+
+
+                });
+            }).catch((error) => {
+                console.error(error);
+                reject(error);
+            });   
+        }); 
+    }    
+
+    /*
+    
+    {
+        actions: [{
+            account: this.contractAccount,
+            name: action,
+            authorization: [{
+                actor: this.account.name,
+                permission: this.account.authority
+            }],
+            data: {
+              ...data
+            }
+        }]
+    },
+    {
+        blocksBehind: 3,
+        expireSeconds: 30
+    }    
+    */
+
+    /*
     getContract(account_name): Promise<any> {
         console.log(`ScatterService.getContract(${account_name})`);
         return new Promise((resolve, reject) => {
@@ -764,6 +819,7 @@ export class ScatterService {
             });   
         }); 
     }
+    */
 
     /*
     transfer(from:string, to:string, amount:string, memo:string) {

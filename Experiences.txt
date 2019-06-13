@@ -102,6 +102,19 @@ Resulta que no puedo cargar con RAM al usuario, si registro ese evento lo tengo 
     this.eos.getAccount({account_name: "accountname"}).then(data => {...})
     this.eos.getTableRows(true, contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos).then(data => {...});
     this.eos.contract(account_name).then(contract => {...});
+    eos.transaction(tr => {
+        tr.newaccount({
+            "creator": creator,
+            "name": name,
+            "owner": owner,
+            "active": active
+        });
+    }, {
+        authorization: [`${account.name}@${account.authority}`]
+    });
+    encodeName(name:string):BigNumber {
+        return new BigNumber(Eos.modules.format.encodeName(name, false));
+    }
   eosjs@20.0.0-beta3
     // https://eosio.github.io/eosjs/guides/3.-Reading%20blockchain-Examples.html
     // imports ---------------
@@ -130,3 +143,25 @@ Resulta que no puedo cargar con RAM al usuario, si registro ese evento lo tengo 
         upper_bound: upperb
     }).then(data => {...});
     this.eos.getContract(account_name).then(contract => {...});
+    this.eos.transact({
+        actions: [{
+            account: contract,
+            name: action,
+            data: data,
+            authorization: [{
+                actor: this.account.name,
+                permission: this.account.authority
+            }],                            
+        }]
+    }, {
+        blocksBehind: 3,
+        expireSeconds: 30
+    }).then(result => {...});
+    encodeName(name:string):BigNumber {
+        const buffer: Serialize.SerialBuffer = new Serialize.SerialBuffer({
+            textEncoder: new TextEncoder(),
+            textDecoder: new TextDecoder(),
+        });
+        buffer.pushName(name);
+        return new BigNumber(buffer.getUint64AsNumber());
+    }    

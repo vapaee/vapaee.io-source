@@ -1,6 +1,7 @@
 import BigNumber from "bignumber.js";
-import Eos from 'eosjs';
+// import Eos from 'eosjs';
 import { Scatter, ScatterService } from "./scatter.service";
+import { Serialize } from "eosjs";
 
 // vapaee exchange -------------------
 
@@ -62,7 +63,7 @@ export interface Profile {
 }
 
 export class Utils {
-    contract: String;
+    contract: string;
     scatter: ScatterService;
     code_0:number;
     code_1:number;
@@ -72,7 +73,7 @@ export class Utils {
     code_f:number;
     code_z:number;
     
-    constructor(contract: String, scatter: ScatterService) {
+    constructor(contract: string, scatter: ScatterService) {
         this.contract = contract;
         this.scatter = scatter;
         this.code_0 = "0".charCodeAt(0);
@@ -243,11 +244,25 @@ export class Utils {
     }
 
     encodeName(name:string):BigNumber {
-        return new BigNumber(Eos.modules.format.encodeName(name, false));
+        console.error("WARNING!!! esta nueva implementación nunca fue probada y no se si funciona", name);
+        const buffer: Serialize.SerialBuffer = new Serialize.SerialBuffer();
+        buffer.pushName(name);
+        return new BigNumber(buffer.getUint64AsNumber());
     }
 
     // smart contract ---------------------
+    excecute(action: string, params: any) {
+        console.log("Utils.excecute()", action, [params]);
+        return new Promise<any>((resolve, reject) => {
+            try {
+                this.scatter.executeTransaction(this.contract, action, params).then(result => {
+                    resolve(result);
+                }).catch(err => { console.error(err); reject(err); });
+            } catch (err) { console.error(err); reject(err); }
+        }); // .catch(err => console.error(err) );
+    } 
 
+    /*
     excecute(action: string, params: any) {
         console.log("Utils.excecute()", action, [params]);
         return new Promise<any>((resolve, reject) => {
@@ -266,6 +281,7 @@ console.log("*************************************************");
             } catch (err) { reject(err); }
         }); // .catch(err => console.error(err) );
     }
+    */
 
     getTable(table:string, params:TableParams = {}): Promise<TableResult> {
 
