@@ -10,15 +10,85 @@ npm i -S scatterjs-core scatterjs-plugin-eosjs2 eosjs@20.0.0-beta3
 https://github.com/GetScatter/scatter-js
 
 
-ScatterJS.plugins( new ScatterEOS(), new ScatterLynx({Api, JsonRpc}) );
-const network = ScatterJS.Network.fromJson(this.network.eosconf);
-const rpc = new JsonRpc(network.fullhost());
-ScatterJS.scatter.eos(network, Api, {rpc, beta3:true});
 
-getAccount({account_name: name})
-contract(account_name)
-getTableRows(true, contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos)
-transfer(from, to, amount, memo, this.authorization)
+
+Hello!
+I'm building a DEX for Telos blockchain and now I'm in the process of integrating EOS Lynx wallet for mobile users. I'm not building an installable app, Vapaée DEX is webapp so it runs on the browser.
+
+I'm having trouble to simply connect/detect the EOS-Lynx wallet so I built a minimal Angular app importing the minimal set of libraries, and configured to work with EOS blockchain to discard any possible Telos interaction issues.
+I'm following the web-doc indications but still can't comunicate with Lynx wallet.
+
+This is the complete one-page-long code. Is just one component with minimun interactioin:
+https://github.com/vapaee/lynx-angular-scatterjs/blob/master/src/app/app.component.ts
+
+This are the libraries on the package json file:
+"eosjs": "^20.0.0"
+"scatterjs-core": "^2.7.18"
+"scatterjs-plugin-eosjs2": "^1.5.0"
+"scatterjs-plugin-lynx": "^1.6.6"
+
+I also deployed this mini project on my server under this url:
+http://lynx.vapaee.io/
+
+It works perfect with Scatter Desktop.
+
+
+
+
+
+Lynx doesn't seem to be a valid ScatterJS plugin.
+
+ng build && cd /var/www/vapaee.io && git add -A && git commit -m 'save' && git push && amazon_server_console
+
+import ScatterJS from 'scatterjs-core';
+import ScatterEOS from 'scatterjs-plugin-eosjs2'
+import ScatterLynx from 'scatterjs-plugin-lynx'
+
+    "@angular/animations": "~7.2.0",
+    "@angular/common": "~7.2.0",
+    "@angular/compiler": "~7.2.0",
+    "@angular/core": "~7.2.0",
+    "@angular/forms": "~7.2.0",
+    "@angular/platform-browser": "~7.2.0",
+    "@angular/platform-browser-dynamic": "~7.2.0",
+    "@angular/router": "~7.2.0",
+    "core-js": "^2.5.4",
+    "rxjs": "~6.3.3",
+    "scatterjs-core": "^2.7.18",
+    "scatterjs-plugin-eosjs2": "^1.5.0",
+    "scatterjs-plugin-lynx": "^1.6.6",
+    "tslib": "^1.9.0",
+    "zone.js": "~0.8.26"
+
+
+// primer intento ------------
+    "@angular/animations": "~7.2.0",
+    "@angular/common": "~7.2.0",
+    "@angular/compiler": "~7.2.0",
+    "@angular/core": "~7.2.0",
+    "@angular/forms": "~7.2.0",
+    "@angular/platform-browser": "~7.2.0",
+    "@angular/platform-browser-dynamic": "~7.2.0",
+    "@angular/router": "~7.2.0",
+    "@scatterjs/core": "^2.7.25",
+    "@scatterjs/eosjs2": "^1.5.7",
+    "core-js": "^2.5.4",
+    "eosjs": "^20.0.0",
+    "rxjs": "~6.3.3",
+    "scatterjs-plugin-lynx": "^1.6.6",
+    "tslib": "^1.9.0",
+    "zone.js": "~0.8.26"
+
+
+
+
+
+
+
+
+
+
+
 
 
 -- HOTFIX --
@@ -107,7 +177,7 @@ cleos push action revelation21 open '["user1.jc", "4,HEART", "user1.jc"]' -p use
   - Si estoy logueado pero le hago click al nombre de otro usuario y me redirije a account page:
     - tengo habilitados los botones de deposit y withdraw (y no deberían)
     - en trade page aparece la wallet del usuario consultado y no la propia
-
+  - En el wallet si tenés un balance demasiado pequeño se muestra con notacion científica: 3.6e-70000 TLOS y encima se calcula mal el USD: 2.1274 USD
 
 
 - lista de erores que devuelve la blockchain:

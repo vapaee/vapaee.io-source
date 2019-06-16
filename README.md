@@ -2,7 +2,7 @@
 
 # Vapaée DEX - source code
 
-current version: BASIC (v1.4.0)
+current version: BASIC (v1.6.1)
 
 https://vapaee.io
 
