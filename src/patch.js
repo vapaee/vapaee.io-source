@@ -1,3 +1,4 @@
+// https://gist.github.com/niespodd/1fa82da6f8c901d1c33d2fcbb762947d
 const fs = require('fs');
 const f = 'node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/webpack-configs/browser.js';
 

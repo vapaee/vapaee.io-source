@@ -2,7 +2,7 @@
 
 # Vapaée DEX - source code
 
-current version: BASIC (v1.5.0)
+current version: BASIC (v1.6.1)
 
 https://vapaee.io
 
@@ -58,6 +58,12 @@ cd script
       - [x] click on name account should redirect to account page
       - [x] click on transaction detail should redirect to trade market page
   - [ ] add and test support for the lynx wallet
+    - [x] migrating drom eosjs to eosjs2
+    - [x] adding EOS-Lynx ScatterJS plugins
+    - [x] fill EOS-Lynx add Dapp form
+    - [ ] waiting EOS-Lynx to comunicate about Dapp submition
+    - [ ] get Dapp actually listed on Lynx Explorer
+    - [ ] test Dapp-wallet comunication. Is it really integrated ??
 - ### Details:
   - [x] add Portugues language (Thanks to Fabiana Cecin)
   - [ ] highlight the WP navbar button

@@ -50,15 +50,14 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
     }
 
     onResize(device) {
-        console.log("----------------------------------------->>>>>>>>>>>>");
         this.closed = false;
-        this.component.redraw(this.recreateDataTable(), null);
+        if (this.component) this.component.redraw(this.recreateDataTable(), null);
         // console.log(this._element.nativeElement.offsetWidth);
         // console.log(this._element.nativeElement.offsetHeight);
     }  
 
     onClose(device) {
-        this.component.destroy();
+        if (this.component) this.component.destroy();
         this.closed = true;
         // console.log(this._element.nativeElement.offsetHeight);
     }  
@@ -118,11 +117,11 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         if (this.zoom > this.data.length) this.zoom = this.data.length;
         // this.recreateChartData();
         //console.log(this._chartData);
-        this.component.redraw(this.recreateDataTable(), null);
+        if (this.component) this.component.redraw(this.recreateDataTable(), null);
     }
 
     ngOnDestroy() {
-        this.component.destroy();
+        if (this.component) this.component.destroy();
     }
 
     timer;

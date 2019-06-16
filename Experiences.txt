@@ -88,3 +88,80 @@ Resulta que no puedo cargar con RAM al usuario, si registro ese evento lo tengo 
   telosmain set account permission vapaeetokens active '{"threshold": 1,"keys": [{"key": "EOS8MPwGHuGSHSfBp3HAWsrHDotAqp9ZPShBvNcGDpcmNNa5h8y1Q","weight": 1}],"accounts": [{"permission":{"actor":"vapaeetokens","permission":"eosio.code"},"weight":1}]}' owner -p vapaeetokens
 - es mejor llenar de asserts por todos lados cosa de que si falla, que falle por un error que vos controlás y por tanto sabés dónde y porqué falló.
 - TIP (for devs): to find out this error on production I had to change the asset.hpp and modify the error message to include the data that was causing the error. This gave me more info to start looking for the original causes.
+- migrar de eosjs@16.0.9 --> eosjs@20.0.0-beta3
+  eosjs@16.0.9:
+    // imports ---------------
+    import ScatterJS from 'scatterjs-core';
+    import ScatterEOS from 'scatterjs-plugin-eosjs'  
+    import Eos from 'eosjs';
+    // set up ----------------
+    ScatterJS.plugins( new ScatterEOS() );
+    network: { blockchain, chainId, host, port, protocol} = ...;
+    this.eos = ScatterJS.scatter.eos(network, Eos, { expireInSeconds:60 });
+    // usage -----------------
+    this.eos.getAccount({account_name: "accountname"}).then(data => {...})
+    this.eos.getTableRows(true, contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos).then(data => {...});
+    this.eos.contract(account_name).then(contract => {...});
+    eos.transaction(tr => {
+        tr.newaccount({
+            "creator": creator,
+            "name": name,
+            "owner": owner,
+            "active": active
+        });
+    }, {
+        authorization: [`${account.name}@${account.authority}`]
+    });
+    encodeName(name:string):BigNumber {
+        return new BigNumber(Eos.modules.format.encodeName(name, false));
+    }
+  eosjs@20.0.0-beta3
+    // https://eosio.github.io/eosjs/guides/3.-Reading%20blockchain-Examples.html
+    // imports ---------------
+    import ScatterJS from 'scatterjs-core';
+    import ScatterEOS from 'scatterjs-plugin-eosjs2';
+    import {JsonRpc, Api} from 'eosjs';
+    import ScatterLynx from 'scatterjs-plugin-lynx'; // optional, to support Lynx wallet
+    // set up ----------------
+    ScatterJS.plugins( new ScatterEOS(), /* optional */ new ScatterLynx({Api, JsonRpc}) );
+    network: { blockchain, chainId, host, port, protocol} = ...;
+    const network = ScatterJS.Network.fromJson(network);
+    this.rpc = new JsonRpc(network.fullhost());
+    this.eos = ScatterJS.scatter.eos(network, Api, {rpc:this.rpc, beta3:true});
+    // usage -----------------
+    this.rpc.get_account(name).then((response) => {...});
+    this.rpc.get_table_rows({
+        code: contract,
+        index_position: ipos,
+        json: true,
+        key_type: ktype,
+        limit: limit,
+        lower_bound: lowerb,
+        scope: scope,
+        table: table,
+        table_key: tkey,
+        upper_bound: upperb
+    }).then(data => {...});
+    this.eos.getContract(account_name).then(contract => {...});
+    this.eos.transact({
+        actions: [{
+            account: contract,
+            name: action,
+            data: data,
+            authorization: [{
+                actor: this.account.name,
+                permission: this.account.authority
+            }],                            
+        }]
+    }, {
+        blocksBehind: 3,
+        expireSeconds: 30
+    }).then(result => {...});
+    encodeName(name:string):BigNumber {
+        const buffer: Serialize.SerialBuffer = new Serialize.SerialBuffer({
+            textEncoder: new TextEncoder(),
+            textDecoder: new TextDecoder(),
+        });
+        buffer.pushName(name);
+        return new BigNumber(buffer.getUint64AsNumber());
+    }    

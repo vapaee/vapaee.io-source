@@ -29,6 +29,9 @@ export class AccountPage implements OnInit, OnDestroy {
     ) {
         this.subscriber = new Subscriber<string>(this.onCntCurrentAccountChange.bind(this));
         this.current_mode = true;
+
+
+        
     }
 
 
@@ -65,28 +68,27 @@ export class AccountPage implements OnInit, OnDestroy {
 
             var utils:Utils = new Utils("",null);
             var encodedName = utils.encodeName(name);
-            console.log(name, encodedName.toString(), "REAL !!");
         }, 0);
     }
 
     onCntCurrentAccountChange(account: string) {
-        console.log("VaeProfilePage.onCntCurrentAccountChange() ----------------->", account);
+        // console.log("VaeProfilePage.onCntCurrentAccountChange() ----------------->", account);
         var url = "/exchange/account/";
         if (account) {
             url += account;
         } else {
             url += "guest";
         };
-        console.log("accountPage.onCntCurrentAccountChange()", [account], " --> ", url);
+        // console.log("accountPage.onCntCurrentAccountChange()", [account], " --> ", url);
         this.app.navigate(url);
     }
 
     onWalletConfirmDeposit(amount: Asset) {
-        console.log("------------------>", amount.toString());
+        // console.log("------------------>", amount.toString());
         this.loading = true;
         this.error = null;
         this.vapaee.deposit(amount).then(_ => {
-            console.log("------------------>", amount.toString());
+            // console.log("------------------>", amount.toString());
             this.loading = false;
         }).catch(e => {
             console.error(typeof e, e);
@@ -101,11 +103,11 @@ export class AccountPage implements OnInit, OnDestroy {
     }
 
     onWalletConfirmWithdraw(amount: Asset) {
-        console.log("------------------>", amount.toString());
+        // console.log("------------------>", amount.toString());
         this.loading = true;
         this.error = null;
         this.vapaee.withdraw(amount).then(_ => {
-            console.log("------------------>", amount.toString());
+            // console.log("------------------>", amount.toString());
             this.loading = false;
         }).catch(e => {
             console.error(typeof e, e);
@@ -120,7 +122,7 @@ export class AccountPage implements OnInit, OnDestroy {
     }
 
     navigateToTable(event) {
-        console.log("-------------->", event);
+        // console.log("-------------->", event);
         this.app.navigate('/exchange/trade/' + event)
     }
 

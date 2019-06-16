@@ -1,6 +1,8 @@
 import BigNumber from "bignumber.js";
-import Eos from 'eosjs';
+// import Eos from 'eosjs';
 import { Scatter, ScatterService } from "./scatter.service";
+import { Serialize } from "eosjs";
+import * as Long from 'long';
 
 // vapaee exchange -------------------
 
@@ -62,7 +64,7 @@ export interface Profile {
 }
 
 export class Utils {
-    contract: String;
+    contract: string;
     scatter: ScatterService;
     code_0:number;
     code_1:number;
@@ -72,7 +74,7 @@ export class Utils {
     code_f:number;
     code_z:number;
     
-    constructor(contract: String, scatter: ScatterService) {
+    constructor(contract: string = "", scatter: ScatterService = null) {
         this.contract = contract;
         this.scatter = scatter;
         this.code_0 = "0".charCodeAt(0);
@@ -119,6 +121,7 @@ export class Utils {
         return "?";
     }
 
+    // _num is an hexa
     decodeUint64(_num: string) {
         var bits:number[] = [];
         var num:string = _num.substr(2);
@@ -242,18 +245,84 @@ export class Utils {
         return str;
     }
 
+    // OLD eosjs encodeName solution ------------------------------------------------------
+    charmap = '.12345abcdefghijklmnopqrstuvwxyz';
+    charidx = ch => {
+        const idx = this.charmap.indexOf(ch)
+        if(idx === -1)
+          throw new TypeError(`Invalid character: '${ch}'`)
+      
+        return idx;
+    }
+    oldEosjsEncodeName(name, littleEndian = false) {
+        if(typeof name !== 'string')
+          throw new TypeError('name parameter is a required string')
+      
+        if(name.length > 12)
+          throw new TypeError('A name can be up to 12 characters long')
+      
+        let bitstr = ''
+        for(let i = 0; i <= 12; i++) { // process all 64 bits (even if name is short)
+          const c = i < name.length ? this.charidx(name[i]) : 0
+          const bitlen = i < 12 ? 5 : 4
+          let bits = Number(c).toString(2)
+          if(bits.length > bitlen) {
+            throw new TypeError('Invalid name ' + name)
+          }
+          bits = '0'.repeat(bitlen - bits.length) + bits
+          bitstr += bits
+        }
+      
+        const value = Long.fromString(bitstr, true, 2)
+      
+        // convert to LITTLE_ENDIAN
+        let leHex = ''
+        const bytes = littleEndian ? value.toBytesLE() : value.toBytesBE()
+        for(const b of bytes) {
+          const n = Number(b).toString(16)
+          leHex += (n.length === 1 ? '0' : '') + n
+        }
+      
+        const ulName = Long.fromString(leHex, true, 16).toString()
+      
+        // console.log('encodeName', name, value.toString(), ulName.toString(), JSON.stringify(bitstr.split(/(.....)/).slice(1)))
+        
+        return ulName.toString()
+    }
+    // -------------------------------------------------------
+
     encodeName(name:string):BigNumber {
-        return new BigNumber(Eos.modules.format.encodeName(name, false));
+        /*
+        const buffer: Serialize.SerialBuffer = new Serialize.SerialBuffer();
+        buffer.pushName(name);
+        var number = buffer.getUint64AsNumber();
+        */
+       var number = this.oldEosjsEncodeName(name)
+        return new BigNumber(number);
     }
 
     // smart contract ---------------------
+    excecute(action: string, params: any) {
+        console.log("Utils.excecute()", action, [params]);
+        return new Promise<any>((resolve, reject) => {
+            try {
+                this.scatter.executeTransaction(this.contract, action, params).then(result => {
+                    resolve(result);
+                }).catch(err => { console.error(err); reject(err); });
+            } catch (err) { console.error(err); reject(err); }
+        }); // .catch(err => console.error(err) );
+    } 
 
+    /*
     excecute(action: string, params: any) {
         console.log("Utils.excecute()", action, [params]);
         return new Promise<any>((resolve, reject) => {
             try {
                 this.scatter.getContract(this.contract).then(contract => {
                     try {
+console.log("*************************************************");
+console.log("https://eosio.github.io/eosjs/guides/2.-Transaction-Examples.html");
+console.log("*************************************************");
                         contract[action](params, this.scatter.authorization).then((response => {
                             console.log("Utils.excecute() ---> ", [response]);
                             resolve(response);
@@ -263,6 +332,7 @@ export class Utils {
             } catch (err) { reject(err); }
         }); // .catch(err => console.error(err) );
     }
+    */
 
     getTable(table:string, params:TableParams = {}): Promise<TableResult> {
 
