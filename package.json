@@ -1,6 +1,6 @@
 {
   "name": "vapaee.io-source",
-  "version": "v1.6.1",
+  "version": "v1.7.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --poll=2000 -o",
@@ -36,6 +36,7 @@
     "fstream": "^1.0.12",
     "jdenticon": "^2.1.0",
     "jquery": "^3.3.1",
+    "ng-sidebar": "^8.0.0",
     "ng2-google-charts": "^4.0.0",
     "ng2-search-filter": "^0.4.7",
     "ngx-cookie-service": "^2.1.0",

@@ -1,24 +1,33 @@
-<div class="container-fluid d-lg-none">
+<div class="jumbotron vpe-background-jumbotron margin-top-xxl" [hidden]="!app.device.portrait">
+    <div class="container text-center">
+        <img class="img-fluid" src="/assets/img/soon.png">
+        <p>Low-resolution support is still under development</p>
+    </div>  
+</div>
+
+<div class="container" [hidden]="!app.device.portrait">
 
     <vpe-panel-account-header [current]="vapaee.current"></vpe-panel-account-header>
 
     <div class="row" [hidden]="vapaee.current.name == vapaee.default.name">
         <div class="col-lg-12">
+
+            <vpe-panel-wallet (confirmWithdraw)="onWalletConfirmWithdraw($event)" (confirmDeposit)="onWalletConfirmDeposit($event)" [error]="error" [loading]="loading" [actions]="true" [hideuser]="true" [hideheader]="true" [title]="local.string.wallet" [deposits]="deposits" [balances]="balances"></vpe-panel-wallet>
+
             <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [current]="vapaee.current"> </vpe-panel-account-resources>
                 
             <vpe-panel-balance-breakdown [title]="local.string.balbreak" [hideheader]="true" [current]="vapaee.current"></vpe-panel-balance-breakdown>
 
-            <vpe-panel-user-orders [userorders]="userorders" [hideheader]="true" [title]="local.string.orders"></vpe-panel-user-orders>
-
-            <vpe-panel-wallet (confirmWithdraw)="onWalletConfirmWithdraw($event)" (confirmDeposit)="onWalletConfirmDeposit($event)" [error]="error" [loading]="loading" [actions]="true" [hideuser]="true" [hideheader]="true" [title]="local.string.wallet" [deposits]="deposits" [balances]="balances"></vpe-panel-wallet>
+            <!--vpe-panel-user-orders [userorders]="userorders" [hideheader]="true" [title]="local.string.orders"></vpe-panel-user-orders-->
         </div>
     </div>
 </div>
 
 
+
 <!-- ---------------------------------------------------------------------------- -->
 
-<div class="container d-none d-lg-block">
+<div class="container" [hidden]="app.device.portrait">
 
     <vpe-panel-account-header [current]="vapaee.current"></vpe-panel-account-header>
 

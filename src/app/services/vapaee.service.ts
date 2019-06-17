@@ -1483,7 +1483,7 @@ export class Asset {
         console.assert(!!this.token, "ERROR: string malformed of token not found:", text);
     }
 
-    valueToString(decimals:number = -1): string {
+    valueToString(decimals:number = -1, total:boolean = false): string {
         if (!this.token) return "0";
         var parts = ("" + this.amount).split(".");
         var integer = parts[0];
@@ -1492,12 +1492,17 @@ export class Asset {
         if (decimals != -1) {
             precision = decimals;
         }
+        if (total) {
+            precision -= parts[0].length-1;
+            precision = precision > 0 ? precision : 0;
+        }
         for (var i=decimal.length; i<precision; i++) {
             decimal += "0";
         }
         if (decimal.length > precision) {
             decimal = decimal.substr(0, precision);
-        }
+        }    
+
         if (precision == 0) {
             return integer;
         } else {

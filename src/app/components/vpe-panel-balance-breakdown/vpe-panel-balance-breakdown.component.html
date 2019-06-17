@@ -1,4 +1,4 @@
-<vpe-panel [hideheader]="hideheader" [title]="local.string.balbreak">
+<vpe-panel [id]="'vpe-panel-balance-breakdown'" (onResize)="onResize($event)" [hideheader]="hideheader" [title]="local.string.balbreak">
     <div class="row">
         <div class="col-sm-12" [hidden]="!title">
             <div class="text-lg text-center">

@@ -1,10 +1,10 @@
-import { Component, Input, OnChanges, Output } from '@angular/core';
+import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Token } from 'src/app/services/utils.service';
 import { Subscriber } from 'rxjs';
 import { VapaeeService, TableMap } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { VpeComponentsService } from '../vpe-components.service';
+import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 
 
 
@@ -18,7 +18,11 @@ export class VpePanelTokensComponent implements OnChanges {
     @Input() public tokens: Token[];
     @Input() public scopes: TableMap;
     @Output() selectToken: EventEmitter<string> = new EventEmitter();
-    token_filter:string;   
+    token_filter:string;
+    
+    @HostBinding('class') display;
+    volume_digits: number;
+    price_digits: number;
     
     constructor(
         public vapaee: VapaeeService,
@@ -37,6 +41,58 @@ export class VpePanelTokensComponent implements OnChanges {
             }
         }
         return tokens
+    }
+
+    get local_string_change () {
+        if (this.display == "small" || this.display == "tiny") {
+            return this.local.string.chg;
+        } else {
+            return this.local.string.change;
+        }
+    }
+
+    async updateSize(event:ResizeEvent) {
+        this.volume_digits = 4;
+        this.price_digits = 8;
+        
+        this.display = "normal";
+        if (event.width < 370) {
+            this.display = "medium";
+        }
+        if (event.width < 360) {
+            this.price_digits = 7;
+        }
+        if (event.width < 350) {
+            this.volume_digits = 3;
+        }
+        if (event.width < 320) {
+            this.display = "small";
+        }
+        if (event.width < 300) {
+            this.price_digits = 6;
+            this.volume_digits = 2;
+        }
+        if (event.width < 280) {
+            this.price_digits = 5;
+        }
+        if (event.width < 260) {
+            this.volume_digits = 1;
+        }
+        if (event.width < 250) {
+            this.display = "tiny";
+        }
+        if (event.width < 230) {
+            this.price_digits = 5;
+        }
+        if (event.width < 210) {
+            this.price_digits = 4;
+        }
+    }
+
+    onResize(event:ResizeEvent) {
+        setTimeout(_ => {
+            this.updateSize(event);
+        });
     }
 
     summary(_scope) {

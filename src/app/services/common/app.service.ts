@@ -35,6 +35,7 @@ export class AppService {
     device: Device = {};
     loading: boolean;
     countdown: number;
+    _verison: string;
 
     constructor(
         private router: Router, 
@@ -55,6 +56,10 @@ export class AppService {
             }
         });
         window.document.body.removeAttribute("loading");
+    }
+
+    get version() {
+        return this._verison;
     }
 
     isOpera:boolean;
@@ -102,6 +107,29 @@ export class AppService {
         this.triggerOnInit = resolve;
     });
 
+    // sidemenu -----------------
+    public sidemenu: {opened:boolean, skip:boolean} = {opened:false, skip:false};
+    private skipSideMenu() {
+        var skip = this.sidemenu.skip;
+        this.sidemenu.skip = true;
+        setTimeout(_ => { this.sidemenu.skip = false; }, 500);
+        return skip;
+    }
+    toggleSideMenu() {
+        if (this.skipSideMenu()) return;
+        this.sidemenu.opened = !this.sidemenu.opened;
+        console.log("toggleSideMenu()", this.sidemenu.opened);
+    }
+    openSideMenu() {
+        if (this.skipSideMenu()) return;
+        this.sidemenu.opened = true;
+    }
+    closeSideMenu() {
+        if (this.skipSideMenu()) return;
+        this.sidemenu.opened = false;
+    }
+
+    // global variables ---------
     getGlobal(key): any {
         if (!this.global) return undefined;
         return this.global[key];
@@ -112,7 +140,13 @@ export class AppService {
         this.global[key] = value;
     }
 
-    init() {
+    toggleGlobal(key:string) {
+        if (!this.global) this.global = {};
+        this.global[key] = !this.global[key];
+    }    
+
+    init(version:string) {
+        this._verison = version;
         this.detectBrowser();
         this.dom.appendComponentToBody(LoadingOverall);
         this.triggerOnInit();

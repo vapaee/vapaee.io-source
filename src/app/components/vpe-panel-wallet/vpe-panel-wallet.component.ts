@@ -1,8 +1,8 @@
-import { Component, Input, OnChanges, Output } from '@angular/core';
+import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { VapaeeService, Asset } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { VpeComponentsService } from '../vpe-components.service';
+import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 import { Subscriber } from 'rxjs';
 import { Feedback } from 'src/app/services/feedback.service';
 
@@ -41,11 +41,16 @@ export class VpePanelWalletComponent implements OnChanges {
     public show_prices_top: boolean;
     public show_prices_bottom: boolean;
     public feed: Feedback;
+
+    @HostBinding('class') display;
+    digits: {[key:string]:number};
+
     constructor(
         public vapaee: VapaeeService,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
+        this.digits = {};
         this.feed = new Feedback();
         this.show_prices_top = true;
         this.show_prices_bottom = true;
@@ -56,9 +61,7 @@ export class VpePanelWalletComponent implements OnChanges {
         this.alert_msg = "";
         this.deposit = new Asset();
         this.withdraw = new Asset();
-    }
-
-    
+    }   
 
     get get_fake_tlos_balance() {
         if (this._fake_tlos_balance && this._fake_tlos_balance.amount.toNumber() > 0) return this._fake_tlos_balance;
@@ -93,6 +96,52 @@ export class VpePanelWalletComponent implements OnChanges {
         }
         // console.log(this._nonfake_balances);
         return this._nonfake_balances;
+    }
+
+    async updateSize(event:ResizeEvent) {
+        console.log("onResize()", event.width, [event]);
+        this.digits = {
+            amount:8,
+            fiat:4
+        };
+        this.display = "normal";
+        if (event.width < 370) {
+            this.display = "medium";
+        }
+        if (event.width < 360) {
+            this.digits.amount = 7;
+        }
+        if (event.width < 350) {
+            this.digits.fiat = 3;
+        }
+        if (event.width < 320) {
+            this.display = "small";
+        }
+        if (event.width < 300) {
+            this.digits.amount = 6;
+            this.digits.fiat = 2;
+        }
+        if (event.width < 280) {
+            this.digits.amount = 5;
+        }
+        if (event.width < 260) {
+            this.digits.fiat = 1;
+        }
+        if (event.width < 250) {
+            this.display = "tiny";
+        }
+        if (event.width < 230) {
+            this.digits.amount = 5;
+        }
+        if (event.width < 210) {
+            this.digits.amount = 4;
+        }
+    }
+
+    onResize(event:ResizeEvent) {
+        setTimeout(_ => {
+            this.updateSize(event);
+        });
     }
     
     first_deposit() {

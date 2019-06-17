@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ElementRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Asset, VapaeeService } from '../services/vapaee.service';
 import { Token } from '../services/utils.service';
@@ -19,22 +19,46 @@ export interface SimplePriceMap {
     [key:string]: number;
 }
 
+export interface Device {
+    fullhd?:boolean, // >= 1600px
+    full?:boolean,   // >= 1200px
+    big?:boolean,    // < 1200px
+    normal?:boolean, // < 992px
+    medium?:boolean, // < 768px
+    small?:boolean,  // < 576px
+    tiny?:boolean,   // < 420px
+    portrait?:boolean,
+    wide?:boolean,
+    height?:number,
+    width?: number,
+    class?: string
+}
+
+export interface ResizeEvent {
+    device:Device,
+    id:string,
+    width:number,
+    height:number,
+    el: ElementRef
+}
 
 @Injectable()
 export class VpeComponentsService {
 
-    public onResize:Subject<any[][]> = new Subject();
+    public onResize:Subject<Device> = new Subject();
     public onPricesUpdate:Subject<PriceMap> = new Subject();
     public onTokenPricesUpdate:Subject<PriceMap> = new Subject();
     prices: PriceMap;
     public currencies: Token[];
     tokens_prices: PriceMap;
     current: string;
+    public device:Device;
 
     constructor(
         private vapaee: VapaeeService,
         public cookie: CookieService
     ) {
+        this.device = {};
         this.prices = {};
         this.currencies = [];
         this.tokens_prices = {};
@@ -52,7 +76,8 @@ export class VpeComponentsService {
     }
 
     // enter events ------------------------------
-    public windowHasResized(e) {
+    public windowHasResized(e:Device) {
+        this.device = e;
         this.onResize.next(e);
     }
 

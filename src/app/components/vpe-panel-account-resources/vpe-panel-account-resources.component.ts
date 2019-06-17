@@ -3,7 +3,7 @@ import { EventEmitter } from '@angular/core';
 import { VapaeeService, Asset } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Account } from 'src/app/services/scatter.service';
-import { VpeComponentsService } from '../vpe-components.service';
+import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 
 
 @Component({
@@ -33,6 +33,16 @@ export class VpePanelAccountResourcesComponent implements OnChanges {
         this.hideuser = false;
         this.hideheader = false;
         this.current = this.vapaee.default;
+    }
+
+    async updateSize(event:ResizeEvent) {
+
+    }
+
+    onResize(event:ResizeEvent) {
+        setTimeout(_ => {
+            this.updateSize(event);
+        });
     }
 
     ngOnChanges() {

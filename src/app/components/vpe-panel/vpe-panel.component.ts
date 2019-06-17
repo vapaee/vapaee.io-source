@@ -2,9 +2,7 @@ import { Component, Input, OnChanges, Output, OnDestroy, OnInit, ElementRef, Vie
 import { VapaeeService } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Subscriber, Subject } from 'rxjs';
-import { VpeComponentsService } from '../vpe-components.service';
-
-
+import { VpeComponentsService, Device, ResizeEvent } from '../vpe-components.service';
 
 @Component({
     selector: 'vpe-panel',
@@ -14,36 +12,47 @@ import { VpeComponentsService } from '../vpe-components.service';
 export class VpePanelComponent implements OnChanges, OnDestroy, AfterViewInit {
 
     @ViewChild('body') body:ElementRef;
+    @Input() public id: string;
     @Input() public title: string;
     @Input() public hideheader: boolean;
     @Input() public hidebackground: boolean;
     @Input() public initclosed: boolean;
     @Input() public expanded: boolean;
-    devicecache:any[][];
+    resizeEvent:ResizeEvent;
 
     private onResizeSubscriber: Subscriber<any>;
-    @Output() public onResize:Subject<any[][]> = new Subject();
-    @Output() public onClose:Subject<any[][]> = new Subject();
-    @Output() public onExpand:Subject<any[][]> = new Subject();
+    @Output() public onResize:Subject<ResizeEvent> = new Subject();
+    @Output() public onClose:Subject<ResizeEvent> = new Subject();
+    @Output() public onExpand:Subject<ResizeEvent> = new Subject();
 
     private bodyw: number;
     private bodyh: number;
     private bodyp: number;
     
+    private element: ElementRef;
+
     constructor(
         public vapaee: VapaeeService,
         public local: LocalStringsService,
         public service: VpeComponentsService,
+        private el: ElementRef
     ) {
+        this.element = el;
         this.expanded = !this.initclosed;
         this.hideheader = false;
         this.hidebackground = false;
         this.onResizeSubscriber = new Subscriber<string>(this.triggerResize.bind(this));
     }
 
-    triggerResize(device:any[][]) {
-        this.devicecache = device;
-        this.onResize.next(device);
+    triggerResize(device:Device) {        
+        this.resizeEvent = {
+            device: device,
+            width: this.element.nativeElement.offsetWidth,
+            height: this.element.nativeElement.offsetHeight,
+            id: this.id,
+            el: this.element
+        };
+        this.onResize.next(this.resizeEvent);
         this.updateBodyMesurements();
     }
 
@@ -64,17 +73,18 @@ export class VpePanelComponent implements OnChanges, OnDestroy, AfterViewInit {
     ngAfterViewInit() {
         this.service.onResize.subscribe(this.onResizeSubscriber);
         this.updateBodyMesurements();
+        this.triggerResize(this.service.device);
     }  
 
     turn(offon:boolean) {
         // console.log("this.expanded", this.expanded, " -- > ", offon);
         this.expanded = offon;       
         if (this.expanded) {
-            this.onExpand.next(this.devicecache);
+            this.onExpand.next(this.resizeEvent);
             setTimeout(_ => {
                 this.body.nativeElement.style.height = "unset";
                 // this.body.nativeElement.style.padding = "unset";
-                this.onResize.next(this.devicecache);
+                this.onResize.next(this.resizeEvent);
             }, 510);             
             /// this.body.nativeElement.style.height = this.bodyh + "px";
             /// this.body.nativeElement.style.padding = this.bodyp + "px";
@@ -84,7 +94,7 @@ export class VpePanelComponent implements OnChanges, OnDestroy, AfterViewInit {
             this.bodyp = parseInt(window.getComputedStyle(this.body.nativeElement, null).getPropertyValue('padding'));
             console.log(this.bodyh, this.bodyp, window.getComputedStyle(this.body.nativeElement, null).getPropertyValue('padding'));
 
-            this.onClose.next(this.devicecache);
+            this.onClose.next(this.resizeEvent);
             setTimeout(_ => {
                 this.body.nativeElement.style.height = "0px";
                 this.body.nativeElement.style.paddingTop = "0px";

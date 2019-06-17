@@ -1,9 +1,9 @@
-import { Component, Input, OnChanges, Output } from '@angular/core';
+import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { VapaeeService, Asset, TokenOrders, Order, OrderRow } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Token } from 'src/app/services/utils.service';
-import { VpeComponentsService } from '../vpe-components.service';
+import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 
 
 @Component({
@@ -36,6 +36,9 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     public own: {sell:Order[], buy:Order[]};
     price: Asset;
     amount: Asset;
+
+    @HostBinding('class') display;
+    
     constructor(
         public vapaee: VapaeeService,
         public local: LocalStringsService,
@@ -59,6 +62,38 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     }
     get get_payment() {
         return this.payment || new Asset();
+    }
+
+    async updateSize(event:ResizeEvent) {
+        this.display = "normal";
+
+        if (event.width < 900) {
+            this.display = "medium";            
+        }
+        if (event.width < 850) {
+        }
+        if (event.width < 830) {
+        }
+        if (event.width < 770) {
+        }
+        if (event.width < 740) {
+        }        
+        if (event.width < 700) {
+            this.display = "tiny";
+        }
+        if (event.width < 660) {
+            this.display = "small";
+        }     
+        if (event.width < 600) {
+        }
+        if (event.width < 560) {
+        }
+    }
+
+    onResize(event:ResizeEvent) {
+        setTimeout(_ => {
+            this.updateSize(event);
+        });
     }
 
     calculate() {

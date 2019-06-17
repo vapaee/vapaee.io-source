@@ -3,7 +3,7 @@ import { EventEmitter } from '@angular/core';
 import { VapaeeService, Asset } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Token } from 'src/app/services/utils.service';
-import { VpeComponentsService } from '../vpe-components.service';
+import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 
 
 @Component({
@@ -53,6 +53,16 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
             }
         }
         return tokens
+    }
+
+    async updateSize(event:ResizeEvent) {
+
+    }
+
+    onResize(event:ResizeEvent) {
+        setTimeout(_ => {
+            this.updateSize(event);
+        });
     }
 
     ngOnChanges() {

@@ -1,4 +1,4 @@
-<vpe-panel [hideheader]="hideheader" [title]="local.string.wallet">
+<vpe-panel [id]="'vpe-panel-wallet'" (onResize)="onResize($event)" [hideheader]="hideheader" [title]="local.string.wallet">
     <div class="row">
 
         <div class="col-sm-12">
@@ -64,11 +64,11 @@
                         <td>
                             <div (click)="withdrawForm(deposit)" [ngClass]="{'cursor-pointer': actions}">
                                 <div class="pull-right">
-                                    <span class="text-xs color-yellow" [hidden]="!show_prices_top"> {{service.getTokenInCurrentCurrency(deposit)}} </span>
+                                    <span class="text-xs color-yellow" [hidden]="!show_prices_top"> {{service.getTokenInCurrentCurrency(deposit).toString(digits.fiat)}} </span>
                                     <span class="btn btn-xs btn-primary" [hidden]="withdraw.token.symbol != 'SYS' || show_prices_top || !hideuser">{{local.string.withdraw | titlecase}}</span>
                                 </div>                                 
                                 <img [src]="deposit.token.logo" style="width: 20px; height: 20px; margin-top:-1px">
-                                {{deposit.toString(8)}}
+                                {{deposit.toString(digits.amount)}}
                                 <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('deposits')"></span>
                             </div>
                             <div class="row" [hidden]="deposit.token.symbol != withdraw.token.symbol">
@@ -91,68 +91,6 @@
                 </tbody>
             </table>
         </div>
-
-        <!-- Fake tokens -->
-        <div class="col-sm-12" [hidden]="hasNoFake()">
-            <div class="text-md">
-                {{local.string.faketokens | titlecase}}
-                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('balances')"></span>
-            </div>
-            <table class="table complete margin-top">
-                <tbody>
-                    <tr [hidden]="!get_fake_balances || (get_fake_balances.length > 0 && get_fake_tlos_balance.amount.toNumber() > 0)"><td>
-                        <div class="col-sm-12 margin-top text-center text-danger">
-                            <label [hidden]="get_fake_balances.length > 0">{{local.string.thesnofaket}}</label>
-                            <label [hidden]="get_fake_balances.length == 0">{{local.string.thesnofaketelos}}</label>
-
-                            <div [hidden]="!vapaee.logged">
-                                <div class="pull-right col-sm-6" [hidden]="get_fake_tlos_balance.amount.toNumber() > 0">
-                                    <span class="btn btn-sm btn-primary" (click)="freeFakeTelos()">
-                                        <span class="spinner-border spinner-border-sm" [hidden]="!loading_fake_tlos"></span>
-                                        {{local.string.getfftelos }}
-                                    </span>
-                                </div>
-
-                                <div class="pull-right col-sm-6" [hidden]="!get_fake_balances || get_fake_balances.length > 0">
-                                    <span class="btn btn-sm btn-secondary" (click)="freeFakeTokens()">
-                                        <span class="spinner-border spinner-border-sm" [hidden]="!loading_fake"></span>
-                                        {{local.string.getfftokens | titlecase}}
-                                    </span>
-                                </div>
-                            </div>                            
-                        </div>                        
-                    </td></tr>                    
-                    <tr 
-                        [ngClass]="{'active-on-hover':actions}"
-                        [hidden]="balance.amount.toNumber() == 0"
-                        *ngFor="let balance of get_fake_balances"
-                        >
-                        <td>
-                            <div (click)="depositForm(balance)" [ngClass]="{'cursor-pointer': actions}">
-                                <img [src]="balance.token.logo" style="width: 20px; height: 20px; margin-top:-1px">
-                                {{balance.toString()}}
-                                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('balances-'+balance.token.contract) && !vapaee.feed.loading('token-stat-'+balance.token.symbol)"></span>
-                            </div>
-                            <div class="row" [hidden]="balance.token.symbol != deposit.token.symbol">
-                                <div class="col-sm-12 margin-top">
-                                    <label>{{local.string.deposit | titlecase}}</label>
-                                    <vpe-token-input
-                                        [(asset)]="deposit"
-                                        (valueChange)="onChange($event)"
-                                        (valueEnter)="onConfirmDeposit($event)"
-                                        precision="4"
-                                        [button]="local.string.deposit"
-                                        [loading]="loading"
-                                        [error]="error"
-                                        placeholder="{{local.string.deposit | titlecase}}"></vpe-token-input>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
 
         <div class="col-sm-12">
             <div class="text-md">
@@ -191,7 +129,7 @@
                         <td>
                             <div (click)="depositForm(balance)" [ngClass]="{'cursor-pointer': actions}">
                                 <div class="pull-right">
-                                    <span class="text-xs color-yellow" [hidden]="!show_prices_bottom"> {{service.getTokenInCurrentCurrency(balance)}} </span>
+                                    <span class="text-xs color-yellow" [hidden]="!show_prices_bottom"> {{service.getTokenInCurrentCurrency(balance).toString(digits.fiat)}} </span>
                                     <span class="btn btn-xs btn-primary" [hidden]="deposit.token.symbol != 'SYS' || show_prices_bottom || !balance.token.verified">{{local.string.deposit | titlecase}}</span>
                                 </div>                                
                                 <img [src]="balance.token.logo" style="width: 20px; height: 20px; margin-top:-1px">

@@ -1,13 +1,21 @@
-<vpe-panel [title]="local.string.activitylog">
+<vpe-panel [id]="'vpe-panel-activity-log'" (onResize)="onResize($event)" [title]="local.string.activitylog">
 
-    <div class="row">
+    <div class="row" [hidden]="lines == 2">
         <div class="nowrap text-bold text-sm col-2 col-padding-right">
-            Activity
+                {{local.string.activity | titlecase}}
             <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('activity')"></span>
         </div>
-        <div class="nowrap text-bold text-sm-left col-2 col-padding-right col-padding-left">User</div>
-        <div class="nowrap text-bold text-sm-left col-6 col-padding-right col-padding-left">Detail</div>
-        <div class="nowrap text-bold text-sm-left col-2 col-padding-left">Date</div>
+        <div class="nowrap text-bold text-sm-left col-2 col-padding-right col-padding-left">{{local.string.user | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-left col-6 col-padding-right col-padding-left">{{local.string.detail | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-2 col-padding-left">{{local.string.date | titlecase}}</div>
+    </div>
+    <div class="row"[hidden]="lines == 1">
+        <div class="nowrap text-bold text-sm col-5 col-padding-right">
+            {{local.string.activity | titlecase}}
+            <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('activity')"></span>
+        </div>
+        <div class="nowrap text-bold text-sm-left col-4 col-padding-right col-padding-left">{{local.string.user | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-3 col-padding-left">{{local.string.date | titlecase}}</div>
     </div>
     <div class="row margin-top">
         <div class="col-12">
@@ -16,6 +24,7 @@
                 <div class="row padding-top margin-bottom activity-event" 
                     [ngClass]="{'text-success': event.event=='transaction' && getOrdertype(event) == 'buy', 'text-danger':  event.event=='transaction' && getOrdertype(event) == 'sell'}"
                     *ngFor="let event of vapaee.activity.list"
+                    [hidden]="lines == 2"
                 >
                     <div class="text-sm      col-2 col-padding-right text-bold"
                     >
@@ -29,10 +38,29 @@
                         (click)="event.event=='transaction' ? clickOnScope(getOrderScope(event)) : null;">{{eventDetail(event)}}</div>
                     
                     
-                    <div class="text-sm-left col-2 col-padding-left d-block d-lg-none">{{event.date | date : "HH:mm:ss"}}</div>
-                    <div class="text-sm-left col-2 col-padding-left d-none d-lg-block">{{event.date | date : "MMM d, HH:mm:ss"}}</div>
+                    <div class="text-sm-right col-2 col-padding-left d-block d-lg-none">{{event.date | date : "HH:mm:ss"}}</div>
+                    <div class="text-sm-right col-2 col-padding-left d-none d-lg-block">{{event.date | date : "MMM d, HH:mm:ss"}}</div>
                     
                 </div>
+
+                <div class="row padding-top margin-bottom activity-event" 
+                    [ngClass]="{'text-success': event.event=='transaction' && getOrdertype(event) == 'buy', 'text-danger':  event.event=='transaction' && getOrdertype(event) == 'sell'}"
+                    *ngFor="let event of vapaee.activity.list"
+                    [hidden]="lines == 1"
+                >
+                    <div class="text-sm      col-5 col-padding-right text-bold"
+                    >
+                        {{local.string["log." + event.event] | titlecase}}
+                    </div>
+                    <div class="text-sm-left col-4 col-padding-right col-padding-left">
+                        <span class="cursor-pointer account-name" (click)="clickOnAccount(event.user)">{{event.user}}</span>
+                    </div>
+                    <div class="text-sm-right col-3 col-padding-left d-block d-lg-none">{{event.date | date : "HH:mm:ss"}}</div>
+                    <div class="text-sm-right col-3 col-padding-left d-none d-lg-block">{{event.date | date : "MMM d, HH:mm:ss"}}</div>
+                    <div class="text-sm-center col-12 margin-top-xs text-muted"
+                        [ngClass]="{'cursor-pointer': event.event=='transaction'}"
+                        (click)="event.event=='transaction' ? clickOnScope(getOrderScope(event)) : null;">{{eventDetail(event)}}</div>                    
+                </div>                
             
             </perfect-scrollbar>
         </div>

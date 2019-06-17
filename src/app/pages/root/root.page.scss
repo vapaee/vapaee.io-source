@@ -23,7 +23,23 @@
     background: -moz-linear-gradient(top, rgba(58,58,58,1) 0%, rgba(84,84,84,1) 100%);
     background: -webkit-linear-gradient(top, rgba(58,58,58,1) 0%,rgba(84,84,84,1) 100%);
     background: linear-gradient(to bottom, rgba(58,58,58,1) 0%,rgba(84,84,84,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3a3a3a', endColorstr='#545454',GradientType=0 );    
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3a3a3a', endColorstr='#545454',GradientType=0 );
+
+    &.wide.normal, &.portrait  {
+        #navbar {
+            display: none;
+        }
+    }
+
+    .btn.ng-sidemenu-toggler {
+        background-image: none;
+        background-color: transparent;
+        &.active {
+            background-image: linear-gradient(#101112, #17191b 40%, #1b1e20);
+            background-color: #3A3F44;
+        }
+    }
+
 }
 
 

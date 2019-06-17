@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, Output, OnInit, OnDestroy, ViewChild, Chan
 import { EventEmitter } from '@angular/core';
 import { VapaeeService, EventLog } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { VpeComponentsService, StringMap } from '../vpe-components.service';
+import { VpeComponentsService, StringMap, ResizeEvent } from '../vpe-components.service';
 import { Subscriber } from 'rxjs';
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 
@@ -16,6 +16,7 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
 
     @Output() gotoAccount: EventEmitter<string> = new EventEmitter();
     @Output() gotoScope: EventEmitter<string> = new EventEmitter();
+    @Input() lines: number;
     detail: StringMap;
     data: {[key:string]:StringMap};
     list: EventLog[];
@@ -31,15 +32,38 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
     ) {
         this.detail = {};
         this.data = {};
+        this.obj = {"max-height": "250px", "max-width": "100%"};
+        this.lines = 1;
         this.onLocalChangeSubscriber = new Subscriber<string>(this.onLocalChange.bind(this));
     }
-
-    ngOnChanges() {
-        // this.vapaee.activity.events[""].processed
+    obj: any;
+    _ps_height: number;
+    get ps_style() {
+        this.obj = {"max-height": "250px", "max-width": "100%"};
+        if (this.lines == 1) {
+            this.obj["max-height"] = "250px"
+        } else {
+            this.obj["max-height"] = this._ps_height+"px";
+        };
+        return this.obj;
     }
 
     get activity() {
         return this.vapaee.activity.list;
+    }
+
+    async updateSize(event:ResizeEvent) {
+        this._ps_height = event.device.height - 50;
+    }
+
+    onResize(event:ResizeEvent) {
+        setTimeout(_ => {
+            this.updateSize(event);
+        });
+    }
+
+    ngOnChanges() {
+        // this.vapaee.activity.events[""].processed
     }
 
     onLocalChange() {

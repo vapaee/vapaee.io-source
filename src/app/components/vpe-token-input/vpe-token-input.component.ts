@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Asset, VapaeeService } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
+import { ResizeEvent } from '../vpe-components.service';
 
 
 @Component({

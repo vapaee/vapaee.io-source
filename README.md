@@ -2,7 +2,7 @@
 
 # Vapaée DEX - source code
 
-current version: BASIC (v1.6.1)
+current version: BASIC (v1.7.0)
 
 https://vapaee.io
 
@@ -25,8 +25,8 @@ cd script
   - [x] PWA
   - [ ] Responsive
     - [x] generate an event _onResize_ for all panels to subscribe
-    - [ ] each panel should be able to calculate the area in which it should be deployed and set a element class that reflects it
-    - [ ] each panel must be displayed taking into account the area it has to be deployed (based on the class of the element)
+    - [x] each panel should be able to calculate the area in which it should be deployed and set a element class that reflects it
+    - [x] each panel must be displayed taking into account the area it has to be deployed (based on the class of the element)
     - [ ] Cell phones design:
       - [ ] _token list panel_: must become a Combobox
       - [ ] _wallet panel_: must become a button (that takes you to account page)

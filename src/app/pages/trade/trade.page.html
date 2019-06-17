@@ -1,4 +1,12 @@
-<div class="container-fluid margin-top">
+<div class="jumbotron vpe-background-jumbotron margin-top-xxl" [hidden]="!app.device.portrait">
+    <div class="container text-center">
+        <img class="img-fluid" src="/assets/img/soon.png">
+        <p>Low-resolution support is still under development</p>
+    </div>  
+</div>
+
+
+<div class="container-fluid margin-top" [hidden]="app.device.portrait">
     <!--
     <div class="row">
         <div class="col">

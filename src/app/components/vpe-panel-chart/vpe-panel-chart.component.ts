@@ -5,7 +5,7 @@ import { LocalStringsService } from 'src/app/services/common/common.services';
 import { GoogleChartInterface, GoogleChartComponentInterface } from 'src/app/components/vpe-panel-chart/google-chart-service/google-charts-interfaces';
 import { GoogleChartComponent } from 'src/app/components/vpe-panel-chart/google-chart-service';
 import { Subscriber } from 'rxjs';
-import { VpeComponentsService } from '../vpe-components.service';
+import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 
 
 
@@ -49,7 +49,7 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         return this._chartData;
     }
 
-    onResize(device) {
+    onResize(device:ResizeEvent) {
         this.closed = false;
         if (this.component) this.component.redraw(this.recreateDataTable(), null);
         // console.log(this._element.nativeElement.offsetWidth);

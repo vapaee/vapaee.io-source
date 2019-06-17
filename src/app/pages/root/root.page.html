@@ -1,4 +1,4 @@
-<nav class="navbar vpe-background-navbar drop-shadow navbar-expand-lg navbar-dark bg-primary" (click)="collapseMenu()">
+<nav class="navbar navbar-fixed-top vpe-background-navbar drop-shadow navbar-expand-lg navbar-dark bg-primary" (click)="collapseMenu()" [ngClass]="app.device.class">
     <div class="container">
         <a class="navbar-brand" href="http://cardsandtokens.com" target="_blank">
             <img src="/assets/img/cards-and-tokens.png" alt="" class="cnt-logo">
@@ -10,9 +10,16 @@
             </div>
         </div>
 
-        <button class="navbar-toggler margin-xs" id="toggle-btn" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+
+        <span class="d-lg-none btn btn-sm btn-primary ng-sidemenu-toggler" [ngClass]="{'active':app.sidemenu.opened}" (click)="app.toggleSideMenu()">
             <span class="navbar-toggler-icon"></span>
-        </button>        
+        </span>
+        <!--
+
+        <button class="navbar-toggler margin-xs" (click)="app.toggleSideMenu()">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+         -->
 
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav ml-auto">

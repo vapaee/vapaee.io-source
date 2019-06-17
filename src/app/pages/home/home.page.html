@@ -1,23 +1,61 @@
+<div [hidden]="app.device.portrait" >
 
-<div class="jumbotron vpe-background-jumbotron margin-top-xxl">
-    <div class="container text-center">
-        <img class="img-fluid" src="/assets/img/Logo.png">
-    </div>    
-    <div class="container margin-top text-lg text-center">
-        <div>Tokens Exchange - Telos DEX</div>
-    </div>    
-    <div class="container margin-top text-xs text-muted text-center">
-        <div>BASIC (v1.6.1)</div>
-    </div>    
-</div>
-<div class="container margin-top">
-    <vpe-panel-tokens-card-deck (tradeToken)="tradeToken($event)" [limit]="3" [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
+    <div class="jumbotron vpe-background-jumbotron margin-top-xxl">
+        <div class="container text-center">
+            <img class="img-fluid" src="/assets/img/Logo.png">
+        </div>    
+        <div class="container margin-top text-lg text-center">
+            <div>Tokens Exchange - Telos DEX</div>
+        </div>    
+        <div class="container margin-top text-xs text-muted text-center">
+            <div>BASIC ({{app.version}})</div>
+        </div>    
+    </div>
+   
+    <div class="container margin-top">
+        <vpe-panel-tokens-card-deck (tradeToken)="tradeToken($event)" [limit]="3" [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
+    </div>
+    
+    <div class="container margin-top-lg">
+        <vpe-panel-activity-log (gotoAccount)="gotoAccount($event)" (gotoScope)="gotoScope($event)"></vpe-panel-activity-log>
+    </div>
+
+    <br>
+    <br>
+    <br>
 </div>
 
-<div class="container margin-top-lg">
-    <vpe-panel-activity-log (gotoAccount)="gotoAccount($event)" (gotoScope)="gotoScope($event)"></vpe-panel-activity-log>
-</div>
+<div [hidden]="!app.device.portrait" >
 
-<br>
-<br>
-<br>
+        <div class="jumbotron vpe-background-jumbotron margin-top-xl">
+            <div class="container text-center">
+                <img class="img-fluid" src="/assets/img/Logo.png">
+            </div>    
+            <div class="container margin-top text-lg text-center">
+                <div>Tokens Exchange</div>
+                <div>Telos DEX</div>
+            </div>    
+            <div class="container margin-top text-sm text-muted text-center">
+                <div>BASIC ({{app.version}})</div>
+            </div>    
+        </div>
+       
+        <div class="container">
+            <vpe-panel-tokens-card-deck (tradeToken)="tradeToken($event)" [limit]="3" [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
+        </div>
+        
+        <div class="container margin-top-lg">
+            <vpe-panel-activity-log [lines]="2" (gotoAccount)="gotoAccount($event)" (gotoScope)="gotoScope($event)"></vpe-panel-activity-log>
+        </div>
+    
+        <br>
+        <br>
+        <br>
+    </div>
+
+
+<!-- 
+<div class="container margin-top text-left">
+    <pre>{{app.device|json}}</pre>
+</div>
+-->

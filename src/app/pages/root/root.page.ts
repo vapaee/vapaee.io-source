@@ -5,6 +5,9 @@ import { ScatterService } from 'src/app/services/scatter.service';
 import { VapaeeService } from 'src/app/services/vapaee.service';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 
+
+
+
 declare var $:any;
 
 @Component({
@@ -22,6 +25,7 @@ export class RootPage implements OnInit {
         public vapaee: VapaeeService,
         private components: VpeComponentsService
     ) {
+        
     }
     
     ngOnInit() {

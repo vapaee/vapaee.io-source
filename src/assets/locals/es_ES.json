@@ -52,10 +52,12 @@
     "volume": "volumen",
     "vol": "vol.",
     "change": "cambio",
+    "chg": "cmb.",
     "Exchange": "Cambio",
     "WPaper": "White Paper",
     "blog": "blog",
     "time": "hora",
+    "date": "fecha",
     "Language": "Lenguaje",
     "Account": "Cuenta",
     "Video": "Video",
@@ -103,5 +105,7 @@
     "log.deposit":"depósito",
     "log.transaction":"transacción",
     "activity": "actividad",
-    "activitylog": "Log de actividad"
+    "activitylog": "Log de actividad",
+    "user": "usuario",
+    "detail": "detalle"
 }

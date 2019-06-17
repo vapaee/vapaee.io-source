@@ -533,6 +533,26 @@ table.table-inverse td, table.table-inverse th, table.table-inverse thead th {
 .flex-grow { flex-grow: 1; }
 .flex-no-grow { flex-grow: 0; }
 
+.medium {
+    font-size: 90%;
+    font-weight: 400;
+}
+
+small, .small {
+    font-size: 80%;
+    font-weight: 400;
+}
+
+.tiny {
+    font-size: 72%;
+    font-weight: 300;
+}
+
+.title {
+    font-size: 100%;
+    font-weight: 700;
+}
+
 
 .text-bold {
     font-weight: bold;
@@ -704,4 +724,24 @@ table.table-inverse td, table.table-inverse th, table.table-inverse thead th {
         vertical-align: middle;
         // font-size: 100%;
     }
+}
+
+// fixing navbar
+.navbar-fixed-bottom, .navbar-fixed-top {
+    position: fixed;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+    &.navbar-fixwd-top {
+        top: 0px;
+    }
+    &.navbar-fixwd-bottom {
+        bottom: 0px;
+    }
+}
+.navbar-fixed-bottom {
+    bottom: 0px;
+}
+.navbar-fixed-top {
+    top: 0px;
 }

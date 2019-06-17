@@ -1,4 +1,4 @@
-<vpe-panel [title]="local.string.Tokenlist">
+<vpe-panel [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [title]="local.string.Tokenlist">
     <div class="row">
         <div class="col-sm-12 input-group">
             <input
@@ -18,9 +18,9 @@
     <hr class="line">
     <div class="row margin-top">
         <div class="nowrap text-bold text-sm col-sm-3 col-padding-right">{{local.string.token | titlecase}}</div>
-        <div class="nowrap text-bold text-sm-right col-sm-2 col-padding-right col-padding-left">{{local.string.vol | titlecase}}</div>
-        <div class="nowrap text-bold text-sm-right col-sm-4 col-padding-right col-padding-left">{{local.string.price | titlecase}}</div>
-        <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-left">{{local.string.change | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-right col-padding-left">{{local.string.vol | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-right col-padding-left">{{local.string.price | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-left">{{local_string_change | titlecase}}</div>
     </div>
     <div class="row margin-top">
         <div class="col-sm-12">
@@ -35,11 +35,11 @@
                         {{token.symbol}}
                         <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('token-stat-'+token.symbol) && !vapaee.feed.loading('summary.'+token.scope)"></span>
                     </div>
-                    <div class="nowrap col-sm-2 text-right col-padding-right col-padding-left">
-                        {{summary(token.scope).volume.valueToString(2)}}
+                    <div class="nowrap col-sm-3 text-right col-padding-right col-padding-left">
+                        {{summary(token.scope).volume.valueToString(volume_digits, true)}}
                     </div>
-                    <div class="nowrap col-sm-4 text-right col-padding-right col-padding-left">
-                        {{summary(token.scope).price.valueToString(4)}}
+                    <div class="nowrap col-sm-3 text-right col-padding-right col-padding-left">
+                        {{summary(token.scope).price.valueToString(price_digits, true)}}
                     </div>
                     <div
                         class="nowrap col-sm-3 text-right padding-right-lg"

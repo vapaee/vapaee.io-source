@@ -4,6 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { CommonServicesModule } from './services/common/common.module';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
+import { SidebarModule } from 'ng-sidebar';
 import { CookieService } from 'ngx-cookie-service';
 
 import { DatePipe } from '@angular/common';
@@ -32,6 +33,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
 
+
+
 @NgModule({
     declarations: [
         RootPage,
@@ -54,7 +57,8 @@ import { environment } from '../environments/environment';
         HttpClientModule,
         CommonServicesModule,
         VpeComponentsModule,
-        ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
+        ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
+        SidebarModule.forRoot()
     ],
     providers: [
         DatePipe,
