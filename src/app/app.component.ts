@@ -69,13 +69,13 @@ export class AppComponent {
     @HostBinding('class') class = 'box';
   
     constructor(
-        private app: AppService,
-        private components: VpeComponentsService,
-        private coingecko: CoingeckoService,
-        private vapaee: VapaeeService,
+        public app: AppService,
+        public components: VpeComponentsService,
+        public coingecko: CoingeckoService,
+        public vapaee: VapaeeService,
         public local: LocalStringsService
     ) {
-        this.app.init("v1.7.0");
+        this.app.init("v1.7.1");
     }
     
     ngOnInit() {

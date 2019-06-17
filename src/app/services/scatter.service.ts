@@ -486,7 +486,13 @@ export class ScatterService {
         this.error = "";
         if ((<any>window).ScatterJS) {
             this.ScatterJS = (<any>window).ScatterJS;
-            this.ScatterJS.plugins( new ScatterEOS(), new ScatterLynx({Api, JsonRpc}) );
+            try {
+                this.ScatterJS.plugins( new ScatterEOS(), new ScatterLynx({Api, JsonRpc}) );
+            } catch (e) {
+                console.error("ERROR:", e.message, [e]);
+                console.error("Falling back to normal ScatterEOS plugin");
+                this.ScatterJS.plugins( new ScatterEOS() );
+            }
             this.lib = this.ScatterJS.scatter;
             (<any>window).ScatterJS = null;
         }
