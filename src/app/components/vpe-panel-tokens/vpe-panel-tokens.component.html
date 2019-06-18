@@ -28,7 +28,7 @@
                 <div class="row cursor-pointer margin-bottom active-on-hover" 
                     *ngFor="let token of get_tokens | filter:token_filter"
                     [hidden]="token.symbol == 'TLOS'"
-                    (click)="clockOnToken(token.scope)"
+                    (click)="clickOnToken(token.scope)"
                 >
                     <div class="nowrap col-sm-3 col-padding-right">
                         <img style="height:16px; width: 16px; margin-top:-2px" [src]="token.logo">

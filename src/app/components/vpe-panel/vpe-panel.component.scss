@@ -1,4 +1,14 @@
 :host {
+    &.active-on-hover:hover {
+        // background: blue !important;
+        div.vpe-background-panel {
+            background: darken(#1f211f, 7%) !important;
+            background: -moz-linear-gradient(top, darken(#1f211f, 7%) 0%, darken(#2d302d, 7%) 100%) !important;
+            background: -webkit-linear-gradient(top, darken(#1f211f, 7%) 0%,darken(#2d302d, 7%) 100%) !important;
+            background: linear-gradient(to bottom, darken(#1f211f, 7%) 0%,darken(#2d302d, 7%) 100%) !important;
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='darken(#1f211f, 7%)', endColorstr='darken(#2d302d, 7%)',GradientType=0 ) !important;
+        }
+    }
     display: flex;
     flex-direction: column;
     div.body {

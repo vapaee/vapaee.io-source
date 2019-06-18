@@ -1,19 +1,34 @@
-<div class="jumbotron vpe-background-jumbotron margin-top-xxl" [hidden]="!app.device.portrait">
-    <div class="container text-center">
-        <img class="img-fluid" src="/assets/img/soon.png">
-        <p>Low-resolution support is still under development</p>
-    </div>  
+<div [hidden]="!app.device.portrait">
+    <vpe-panel-token-selector [tokens]="tokens" [scopes]="scopes" (selectToken)="selectToken($event)"></vpe-panel-token-selector>
+    <br>
+    <div class="vpe-background-jumbotron margin-top-xs">
+        <div class="container-fluid">
+            chart
+        </div>
+    </div>
+    <div class="vpe-background-jumbotron margin-top-xs">
+        <div class="container-fluid">
+            logged as --> [wallet]
+        </div>
+        <div class="container-fluid">
+            order form
+        </div>
+    </div>
+    <div class="vpe-background-jumbotron margin-top-xs">
+        <div class="container-fluid">
+            order book
+        </div>
+    </div>
+    <div class="vpe-background-jumbotron margin-top-xs">
+        <div class="container-fluid">
+            history
+        </div>
+    </div>      
 </div>
 
 
+
 <div class="container-fluid margin-top" [hidden]="app.device.portrait">
-    <!--
-    <div class="row">
-        <div class="col">
-            <vpe-panel-chart></vpe-panel-chart>
-        </div>
-    </div>
-    -->
     
     <div class="card text-white bg-dark">
         <div class="card-header vpe-background-card-header padding">

@@ -75,7 +75,7 @@ export class AppComponent {
         public vapaee: VapaeeService,
         public local: LocalStringsService
     ) {
-        this.app.init("v1.7.1");
+        this.app.init("v1.7.2");
     }
     
     ngOnInit() {
@@ -119,7 +119,8 @@ export class AppComponent {
                 }
             }
             this.components.setTokensPrices(tokenPrices);
-        })
+        });
+     
     }
 
 
@@ -128,5 +129,5 @@ export class AppComponent {
         this.app.onWindowsResize();
         this.class = this.app.device.class;
     }
-    
+
 }

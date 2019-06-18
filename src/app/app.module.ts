@@ -46,7 +46,7 @@ import { environment } from '../environments/environment';
         NotFoundPage,
         ComingSoonPage,
         AppComponent,
-        LoadingOverall,
+        LoadingOverall
     ],
     entryComponents: [
         LoadingOverall

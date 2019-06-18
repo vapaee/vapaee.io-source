@@ -482,38 +482,27 @@ export class ScatterService {
     }
 
     initScatter() {
+
         console.log("ScatterService.initScatter()");
         this.error = "";
         if ((<any>window).ScatterJS) {
             this.ScatterJS = (<any>window).ScatterJS;
-            try {
-                this.ScatterJS.plugins( new ScatterEOS(), new ScatterLynx({Api, JsonRpc}) );
-            } catch (e) {
-                console.error("ERROR:", e.message, [e]);
-                console.error("Falling back to normal ScatterEOS plugin");
-                this.ScatterJS.plugins( new ScatterEOS() );
-            }
-            this.lib = this.ScatterJS.scatter;
             (<any>window).ScatterJS = null;
         }
 
+        try {
+            ScatterJS.plugins( new ScatterEOS(), new ScatterLynx({"Api":Api, "JsonRpc":JsonRpc}) );
+        } catch (e) {
+            console.error("ERROR:", e.message, [e]);
+            console.error("Falling back to normal ScatterEOS plugin");
+            ScatterJS.plugins( new ScatterEOS() );
+        }
+         
+        this.lib = ScatterJS.scatter;
+
         const network = ScatterJS.Network.fromJson(this.network.eosconf);
         this.rpc = new JsonRpc(network.fullhost());
-        this.eos = this.lib.eos(network, Api, {rpc:this.rpc, beta3:true});
-
-
-        var str = "";
-        for (var i in this.rpc) {
-            str += i + ": " + typeof this.rpc[i] + ";\n";
-        }
-        // console.log("-----------------------------------------");
-        // console.log(str);
-        // console.log("-----------------------------------------");
-
-
-
-
-
+        this.eos = this.lib.eos(network, Api, {rpc:this.rpc});
 
         this.setEosjs("eosjs");
     }

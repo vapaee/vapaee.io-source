@@ -2,7 +2,7 @@
 
 # Vapaée DEX - source code
 
-current version: BASIC (v1.7.1)
+current version: BASIC (v1.7.2)
 
 https://vapaee.io
 
@@ -61,7 +61,7 @@ cd script
     - [x] migrating drom eosjs to eosjs2
     - [x] adding EOS-Lynx ScatterJS plugins
     - [x] fill EOS-Lynx add Dapp form
-    - [ ] waiting EOS-Lynx to comunicate about Dapp submition
+    - [x] waiting EOS-Lynx to comunicate about Dapp submition
     - [ ] get Dapp actually listed on Lynx Explorer
     - [ ] test Dapp-wallet comunication. Is it really integrated ??
 - ### Details:

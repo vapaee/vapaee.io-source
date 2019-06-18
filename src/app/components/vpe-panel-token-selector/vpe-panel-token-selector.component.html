@@ -1,0 +1,11 @@
+<vpe-panel (click)="openDialog()" class="cursor-pointer active-on-hover" [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [hideheader]="hideheader" [title]="local.string.Tokenlist">
+    <div class="row">
+        <div class="nowrap col-sm-3 col-padding-right">
+            <div class="pull-right">
+               <i class="material-icons cursor-pointer"> expand_more </i> 
+            </div>
+            <img style="height:16px; width: 16px; margin-top:-2px" [src]="current?.logo">
+            {{current?.appname}} ({{current?.symbol}})
+        </div>
+    </div>
+</vpe-panel>

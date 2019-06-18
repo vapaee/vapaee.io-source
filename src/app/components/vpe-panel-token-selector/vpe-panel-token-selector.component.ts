@@ -1,22 +1,25 @@
-import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
+import { Component, Input, OnChanges, Output, HostBinding, Inject } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Token } from 'src/app/services/utils.service';
 import { Subscriber } from 'rxjs';
 import { VapaeeService, TableMap } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material';
 
 
 @Component({
-    selector: 'vpe-panel-tokens',
-    templateUrl: './vpe-panel-tokens.component.html',
-    styleUrls: ['./vpe-panel-tokens.component.scss']
+    selector: 'vpe-panel-token-selector',
+    templateUrl: './vpe-panel-token-selector.component.html',
+    styleUrls: ['./vpe-panel-token-selector.component.scss']
 })
-export class VpePanelTokensComponent implements OnChanges {
+export class VpePanelTokenSelectorComponent implements OnChanges {
 
     @Input() public tokens: Token[];
+    @Input() public current: Token;
     @Input() public scopes: TableMap;
+    @Input() public hideheader: boolean;
     @Output() selectToken: EventEmitter<string> = new EventEmitter();
     token_filter:string;
     
@@ -27,9 +30,11 @@ export class VpePanelTokensComponent implements OnChanges {
     constructor(
         public vapaee: VapaeeService,
         public local: LocalStringsService,
-        public service: VpeComponentsService
+        public service: VpeComponentsService,
+        public dialog: MatDialog
     ) {
         this.token_filter = "";
+        this.hideheader = true;
     }
 
     get get_tokens() {
@@ -56,38 +61,20 @@ export class VpePanelTokensComponent implements OnChanges {
         this.price_digits = 8;
         
         this.display = "normal";
-        if (event.width < 370) {
-            this.display = "medium";
-        }
-        if (event.width < 360) {
-            this.price_digits = 7;
-        }
-        if (event.width < 350) {
-            this.volume_digits = 3;
-        }
-        if (event.width < 320) {
-            this.display = "small";
-        }
-        if (event.width < 300) {
-            this.price_digits = 6;
-            this.volume_digits = 2;
-        }
-        if (event.width < 280) {
-            this.price_digits = 5;
-        }
-        if (event.width < 260) {
-            this.volume_digits = 1;
-        }
-        if (event.width < 250) {
-            this.display = "tiny";
-        }
-        if (event.width < 230) {
-            this.price_digits = 5;
-        }
-        if (event.width < 210) {
-            this.price_digits = 4;
-        }
     }
+
+    openDialog(): void {
+        const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+            width: '100%',
+            data: {tokens: this.tokens, scopes: this.scopes}
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed', result);
+            this.current = <Token>result;
+        });
+    }
+
 
     onResize(event:ResizeEvent) {
         setTimeout(_ => {
@@ -113,9 +100,44 @@ export class VpePanelTokensComponent implements OnChanges {
     
 
     ngOnChanges() {
+        if (!this.current && this.tokens && this.tokens.length > 0) {
+            this.current = this.tokens[0];
+        }
     }
 
     onStateChange() {
 
     }
+}
+
+
+// -------------------------------------------------------
+
+@Component({
+    selector: 'dialog-overview-example-dialog',
+    template: `
+        <vpe-panel-tokens [tokens]="tokens" [scopes]="scopes" (selectToken)="selectToken($event)"></vpe-panel-tokens>
+    `,
+})
+export class DialogOverviewExampleDialog {
+    public tokens: Token[];
+    public scopes: TableMap;
+
+    constructor(
+        public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+        @Inject(MAT_DIALOG_DATA) public data: any
+    ) {
+        console.log("this.data", this.data);
+        this.tokens = this.data.tokens;
+        this.scopes = this.data.scopes;
+    }
+  
+    onNoClick(): void {
+        this.dialogRef.close();
+    }
+
+    selectToken(token:Token) {
+        this.dialogRef.close(token);
+    }
+  
 }
