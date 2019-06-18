@@ -23,12 +23,16 @@ import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 export class VpePanelChartComponent implements OnChanges, OnDestroy {
 
     @Input() data:any[];
-    zoom:number;
+    
     closed:boolean;
     component:GoogleChartComponentInterface;
     zomm_min: number = 5;
+    bgStyle: any;
 
-    
+    @Input() public height: number;
+    @Input() public zoom: number;
+    @Input() public hideheader: boolean;
+    @Input() public margintop: boolean;
 
     // @ViewContainerRef('vpe-panel-chart', {read: ElementRef}) elref: ElementRef;
 
@@ -39,7 +43,10 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         private renderer:Renderer
     ) {
         this.zoom = 24;
+        this.height = 290;
         this.closed = false;
+        this.margintop = true;
+        this.bgStyle = {"height": this.height + "px"};
     }
     
     public _chartData:GoogleChartInterface;
@@ -126,6 +133,7 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
 
     timer;
     ngOnChanges() {
+        this.bgStyle = {"height": this.height + "px"};
         //console.log("********************* ngOnChanges()", this.data);
         // if (this.data && this.data.length > 0) {
         if (this.data) {
@@ -157,7 +165,7 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
                             risingColor: { strokeWidth: 0, fill: '#0f9d58' }   // green
                         },
                         colors: ["#444400"],
-                        height: 290,
+                        height: this.height,
                         bar: {
                             groupWidth: "80%"
                         },

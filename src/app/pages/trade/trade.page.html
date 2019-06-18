@@ -1,19 +1,11 @@
 <div [hidden]="!app.device.portrait">
     <vpe-panel-token-selector [tokens]="tokens" [scopes]="scopes" [current]="comodity" (selectToken)="selectToken($event)"></vpe-panel-token-selector>
-    <br>
-    <div class="vpe-background-jumbotron margin-top-xs">
-        <div class="container-fluid">
-            chart
-        </div>
-    </div>
-    <div class="vpe-background-jumbotron margin-top-xs">
-        <div class="container-fluid">
-            logged as --> [wallet]
-        </div>
-        <div class="container-fluid">
-            order form
-        </div>
-    </div>
+    
+    <vpe-panel-chart [hideheader]="true" [zoom]="500" [height]="chartHeight" [margintop]="true" [data]="chartData"></vpe-panel-chart>
+
+    <vpe-panel-order-editor [hidden]="!vapaee.logged" #orderform_min [deposits]="deposits" [comodity]="comodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="vapaee.logged"></vpe-panel-order-editor>
+
+    
     <div class="vpe-background-jumbotron margin-top-xs">
         <div class="container-fluid">
             order book
@@ -54,7 +46,7 @@
         </div>
         <div class="col-sm-8 col-md-9 col-padding-left">
             <vpe-panel-chart [data]="chartData"></vpe-panel-chart>
-            <vpe-panel-order-editor [hidden]="!vapaee.logged" #orderform [deposits]="deposits" [comodity]="comodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="vapaee.logged"></vpe-panel-order-editor>
+            <vpe-panel-order-editor [hidden]="!vapaee.logged" #orderform_full [deposits]="deposits" [comodity]="comodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="vapaee.logged"></vpe-panel-order-editor>
             <div class="row">
                 <div class="col-sm-8 col-md-9 col-padding-right">
                     <vpe-panel-orders (onClickRow)="onClickRow($event)" (onClickPrice)="onClickPrice($event)" [headers]="headers" [iheaders]="iheaders" [orders]="orders"></vpe-panel-orders>

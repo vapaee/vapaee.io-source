@@ -22,6 +22,7 @@ export class TradePage implements OnInit, OnDestroy {
     currency:Token;
     _orders:TokenOrders;
     timer:number;
+    chartHeight: number;
     _chartData:any[];
     private onStateSubscriber: Subscriber<string>;
     private onBlocklistSubscriber: Subscriber<any[][]>;
@@ -29,7 +30,8 @@ export class TradePage implements OnInit, OnDestroy {
     public loading: boolean;
     public error: string;
 
-    @ViewChild(VpePanelOrderEditorComponent) orderform: VpePanelOrderEditorComponent;
+    @ViewChild(VpePanelOrderEditorComponent) orderform_min: VpePanelOrderEditorComponent;
+    @ViewChild(VpePanelOrderEditorComponent) orderform_full: VpePanelOrderEditorComponent;
    
     constructor(
         public app: AppService,
@@ -39,6 +41,7 @@ export class TradePage implements OnInit, OnDestroy {
         public route: ActivatedRoute
 
     ) {
+        this.chartHeight = this.app.device.height * 0.38; 
         this.loading = false;
         this.error = "";
         this._orders = {sell:[],buy:[]};
@@ -58,7 +61,8 @@ export class TradePage implements OnInit, OnDestroy {
 
     async init() {
         // console.log("TradePage.init() <-- ");
-        this.orderform ? this.orderform.reset() : null;
+        this.orderform_min ? this.orderform_min.reset() : null;
+        this.orderform_full ? this.orderform_full.reset() : null;
         this.comodity = null;
         this.currency = null;
         this._chartData = [];
@@ -171,14 +175,19 @@ export class TradePage implements OnInit, OnDestroy {
 
     onClickRow(e:{type:string, row:OrderRow}) {
         // console.log("**************** onClickRow", e);
-        this.orderform.setPrice(e.row.price.clone());
-        this.orderform.setAmount(e.row.sum.clone());
-        this.orderform.wantsTo(e.type == "sell" ? "buy" : "sell");
+        this.orderform_min.setPrice(e.row.price.clone());
+        this.orderform_min.setAmount(e.row.sum.clone());
+        this.orderform_min.wantsTo(e.type == "sell" ? "buy" : "sell");
+
+        this.orderform_full.setPrice(e.row.price.clone());
+        this.orderform_full.setAmount(e.row.sum.clone());
+        this.orderform_full.wantsTo(e.type == "sell" ? "buy" : "sell");
     }
 
     onClickPrice(e) {
         // console.log("**************** onClickPrice", e);
-        this.orderform.setPrice(e.row.price.clone());
+        this.orderform_min.setPrice(e.row.price.clone());
+        this.orderform_full.setPrice(e.row.price.clone());
     }
     
     onStateChange(state:string) {

@@ -12,6 +12,8 @@
     display: flex;
     flex-direction: column;
     div.body {
+        display: flex;
+        flex-direction: column;
         -webkit-transition: height .5s ease-out;
         -ms-transition: height .5s ease-out;
         transition: height .5s ease-out;

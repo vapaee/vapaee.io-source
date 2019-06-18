@@ -1,6 +1,6 @@
-<vpe-panel [id]="'vpe-panel-chart'" (onResize)="onResize($event)" (onClose)="onClose($event)" [title]="local.string.chart">
+<vpe-panel [id]="'vpe-panel-chart'" (onResize)="onResize($event)" (onClose)="onClose($event)" [hideheader]="hideheader" [margintop]="margintop" [title]="local.string.chart">
         
-    <div class="background">
+    <div class="background" [ngStyle]="bgStyle">
         <!-- 
             <div class="text-lg text-center"><br>{{local.string.chart}}<br>{{local.string.comingsoon}}<br><br></div>
             *ngIf="chartData && chartData.dataTable && chartData.dataTable.length > 0"
