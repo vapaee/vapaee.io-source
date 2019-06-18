@@ -36,10 +36,7 @@ import { VpePanelOrderEditorComponent } from './vpe-panel-order-editor/vpe-panel
 import { VpeTokenInputComponent } from './vpe-token-input/vpe-token-input.component';
 import { VpeFIatComboboxComponent } from './vpe-fiat-combobox/vpe-fiat-combobox.component';
 import { VpePanelActivityLogComponent } from './vpe-panel-activity-log/vpe-panel-activity-log.component';
-import { VpePanelTokenSelectorComponent, DialogOverviewExampleDialog } from './vpe-panel-token-selector/vpe-panel-token-selector.component';
-import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA, MatBottomSheetModule, MatDialogRef, MatDialog } from '@angular/material';
-
-
+import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-panel-token-selector.component';
 
 
 @NgModule({
@@ -61,26 +58,20 @@ import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA, MatBottomSheetModule, MatDial
         VpeFIatComboboxComponent,
         VpeTokenInputComponent,
         VpePanelActivityLogComponent,
-        VpePanelTokenSelectorComponent,
-        DialogOverviewExampleDialog
+        VpePanelTokenSelectorComponent
     ],
     imports: [
         BrowserModule,
         PerfectScrollbarModule,
         Ng2SearchPipeModule,
         VapaeeGoogleChartsModule,
-        FormsModule,
-        MatBottomSheetModule
+        FormsModule
     ],
     providers: [
         DatePipe,
         CookieService,
         VpeComponentsService,
         { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG },
-        { provide: MatDialog, useValue: { open: () => { console.log("AAAAAAAAAAAAAAAAAAAAAAAAAA"); }} },
-        { provide: MatDialogRef, useValue: { close: (dialogResult: any) => { } } },        
-        { provide: MatBottomSheetRef, useValue: {} },
-        { provide: MAT_BOTTOM_SHEET_DATA, useValue: {} }
     ],
     exports: [
         IdenticonComponent,
@@ -100,8 +91,7 @@ import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA, MatBottomSheetModule, MatDial
         VpeFIatComboboxComponent,
         VpeTokenInputComponent,
         VpePanelActivityLogComponent,
-        VpePanelTokenSelectorComponent,
-        DialogOverviewExampleDialog
+        VpePanelTokenSelectorComponent
     ]
 })
 export class VpeComponentsModule { }

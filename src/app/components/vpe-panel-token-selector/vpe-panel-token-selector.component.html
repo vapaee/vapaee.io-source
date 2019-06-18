@@ -1,4 +1,4 @@
-<vpe-panel (click)="openDialog()" class="cursor-pointer active-on-hover" [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [hideheader]="hideheader" [title]="local.string.Tokenlist">
+<vpe-panel (click)="open(content)" class="cursor-pointer active-on-hover" [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [hideheader]="hideheader" [title]="local.string.Tokenlist">
     <div class="row">
         <div class="nowrap col-sm-3 col-padding-right">
             <div class="pull-right">
@@ -9,3 +9,7 @@
         </div>
     </div>
 </vpe-panel>
+
+<ng-template #content let-modal>
+    <vpe-panel-tokens [complete]="false" [margintop]="false" [tokens]="tokens" [scopes]="scopes" [hideheader]='true' (selectToken)="onTokenSelected($event)"></vpe-panel-tokens>
+</ng-template>

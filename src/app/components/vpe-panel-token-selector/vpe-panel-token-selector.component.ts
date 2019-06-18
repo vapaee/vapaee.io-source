@@ -5,8 +5,7 @@ import { Subscriber } from 'rxjs';
 import { VapaeeService, TableMap } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -18,6 +17,8 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
 
     @Input() public tokens: Token[];
     @Input() public current: Token;
+    // @Input() public comodity: Token;
+    // @Input() public currency: Token;    
     @Input() public scopes: TableMap;
     @Input() public hideheader: boolean;
     @Output() selectToken: EventEmitter<string> = new EventEmitter();
@@ -31,7 +32,7 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
         public vapaee: VapaeeService,
         public local: LocalStringsService,
         public service: VpeComponentsService,
-        public dialog: MatDialog
+        private modalService: NgbModal
     ) {
         this.token_filter = "";
         this.hideheader = true;
@@ -62,19 +63,6 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
         
         this.display = "normal";
     }
-
-    openDialog(): void {
-        const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-            width: '100%',
-            data: {tokens: this.tokens, scopes: this.scopes}
-        });
-    
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed', result);
-            this.current = <Token>result;
-        });
-    }
-
 
     onResize(event:ResizeEvent) {
         setTimeout(_ => {
@@ -108,36 +96,31 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
     onStateChange() {
 
     }
-}
 
-
-// -------------------------------------------------------
-
-@Component({
-    selector: 'dialog-overview-example-dialog',
-    template: `
-        <vpe-panel-tokens [tokens]="tokens" [scopes]="scopes" (selectToken)="selectToken($event)"></vpe-panel-tokens>
-    `,
-})
-export class DialogOverviewExampleDialog {
-    public tokens: Token[];
-    public scopes: TableMap;
-
-    constructor(
-        public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: any
-    ) {
-        console.log("this.data", this.data);
-        this.tokens = this.data.tokens;
-        this.scopes = this.data.scopes;
+    // modal -------------
+    closeResult: string;
+    open(content) {
+        this.modalService.open(content, {centered: true}).result.then((result) => {
+            this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
     }
-  
-    onNoClick(): void {
-        this.dialogRef.close();
+    
+    private getDismissReason(reason: any): string {
+        if (reason === ModalDismissReasons.ESC) {
+            return 'by pressing ESC';
+        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+            return 'by clicking on a backdrop';
+        } else {
+            return  `with: ${reason}`;
+        }
     }
 
-    selectToken(token:Token) {
-        this.dialogRef.close(token);
+    onTokenSelected(e) {
+        if (this.modalService.hasOpenModals()) {
+            this.modalService.dismissAll(e);
+        }
+        this.clickOnToken(e);
     }
-  
 }

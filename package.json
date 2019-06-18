@@ -15,19 +15,17 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^6.1.10",
-    "@angular/cdk": "github:angular/cdk-builds#89f40f293288fc8e568cc01c7b79d31e25c61de0",
     "@angular/common": "^6.0.3",
     "@angular/compiler": "^6.0.3",
     "@angular/core": "^6.0.3",
     "@angular/forms": "^6.0.3",
     "@angular/http": "^6.0.3",
-    "@angular/material": "github:angular/material2-builds#8873f67f2988f214d09b55b15f2e10a5d9b5bb0d",
     "@angular/platform-browser": "^6.0.3",
     "@angular/platform-browser-dynamic": "^6.0.3",
     "@angular/pwa": "^0.800.2",
     "@angular/router": "^6.0.3",
     "@angular/service-worker": "^6.1.10",
-    "@ng-bootstrap/ng-bootstrap": "^4.1.0",
+    "@ng-bootstrap/ng-bootstrap": "^4.2.1",
     "bignumber.js": "^8.0.2",
     "bootstrap": "^4.3.1",
     "bytebuffer": "^5.0.1",
@@ -52,6 +50,7 @@
     "zone.js": "^0.8.26"
   },
   "notas": {
+    "@ng-bootstrap/ng-bootstrap": "^4.1.0",
     "eosjs": "20.0.0",
     "scatterjs-core": "^2.7.18",
     "scatterjs-plugin-eosjs2": "^1.5.0",

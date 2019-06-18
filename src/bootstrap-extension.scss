@@ -745,3 +745,8 @@ small, .small {
 .navbar-fixed-top {
     top: 0px;
 }
+
+// esto permite poner íconos a la derecha sin que se agrande el contenedor
+div.pull-right {
+    line-height: 0px;
+}

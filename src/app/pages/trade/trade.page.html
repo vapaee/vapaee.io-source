@@ -1,5 +1,5 @@
 <div [hidden]="!app.device.portrait">
-    <vpe-panel-token-selector [tokens]="tokens" [scopes]="scopes" (selectToken)="selectToken($event)"></vpe-panel-token-selector>
+    <vpe-panel-token-selector [tokens]="tokens" [scopes]="scopes" [current]="comodity" (selectToken)="selectToken($event)"></vpe-panel-token-selector>
     <br>
     <div class="vpe-background-jumbotron margin-top-xs">
         <div class="container-fluid">

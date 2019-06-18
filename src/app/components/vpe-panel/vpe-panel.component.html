@@ -1,4 +1,4 @@
-<div class="margin-top" [ngClass]="{'card text-white bg-dark vpe-background-panel':!hidebackground}">
+<div [ngClass]="{'margin-top':margintop, 'card text-white bg-dark vpe-background-panel':!hidebackground}">
     <div class="title vpe-background-panel-title" [hidden]="hideheader">
         <div class="pull-right">
             <i class="material-icons cursor-pointer" [ngClass]="{'rotated-180':expanded}" (click)="turn(!expanded)" > expand_more </i> 

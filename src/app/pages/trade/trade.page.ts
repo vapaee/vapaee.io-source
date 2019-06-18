@@ -197,11 +197,11 @@ export class TradePage implements OnInit, OnDestroy {
     // wallet actions 
 
     onWalletConfirmDeposit(amount: Asset) {
-        console.log("------------------>", amount.toString());
+        // console.log("------------------>", amount.toString());
         this.loading = true;
         this.error = null;
         this.vapaee.deposit(amount).then(_ => {
-            console.log("------------------>", amount.toString());
+            // console.log("------------------>", amount.toString());
             this.loading = false;
         }).catch(e => {
             console.error(typeof e, e);
@@ -216,11 +216,11 @@ export class TradePage implements OnInit, OnDestroy {
     }
 
     onWalletConfirmWithdraw(amount: Asset) {
-        console.log("------------------>", amount.toString());
+        // console.log("------------------>", amount.toString());
         this.loading = true;
         this.error = null;
         this.vapaee.withdraw(amount).then(_ => {
-            console.log("------------------>", amount.toString());
+            // console.log("------------------>", amount.toString());
             this.loading = false;
         }).catch(e => {
             console.error(typeof e, e);

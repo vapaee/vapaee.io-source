@@ -17,6 +17,9 @@ export class VpePanelTokensComponent implements OnChanges {
 
     @Input() public tokens: Token[];
     @Input() public scopes: TableMap;
+    @Input() public hideheader: boolean;
+    @Input() public margintop: boolean;
+    @Input() public complete: boolean;
     @Output() selectToken: EventEmitter<string> = new EventEmitter();
     token_filter:string;
     
@@ -30,6 +33,8 @@ export class VpePanelTokensComponent implements OnChanges {
         public service: VpeComponentsService
     ) {
         this.token_filter = "";
+        this.margintop = true;
+        this.complete = true;
     }
 
     get get_tokens() {
@@ -113,6 +118,7 @@ export class VpePanelTokensComponent implements OnChanges {
     
 
     ngOnChanges() {
+        
     }
 
     onStateChange() {

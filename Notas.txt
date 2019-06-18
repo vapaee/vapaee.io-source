@@ -88,9 +88,6 @@ import ScatterLynx from 'scatterjs-plugin-lynx'
 
 
 
-
-
-
 -- HOTFIX --
 cd /var/www/vapaee.io-source/contracts/vapaeetokens
 vapaeetokens; telosmain set contract vapaeetokens $PWD -p vapaeetokens@active

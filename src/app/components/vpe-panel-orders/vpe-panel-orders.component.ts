@@ -15,6 +15,8 @@ export class VpePanelOrdersComponent implements OnChanges {
     @Input() public orders: TokenOrders;
     @Input() public headers: TableHeader;
     @Input() public iheaders: TableHeader;
+    @Input() public hideheader: boolean;
+    
     @Output() onClickRow: EventEmitter<{type:string, row:OrderRow}> = new EventEmitter();
     @Output() onClickPrice: EventEmitter<{type:string, row:OrderRow}> = new EventEmitter();
 

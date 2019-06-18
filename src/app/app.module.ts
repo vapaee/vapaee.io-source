@@ -4,6 +4,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { CommonServicesModule } from './services/common/common.module';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { SidebarModule } from 'ng-sidebar';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -52,6 +54,7 @@ import { environment } from '../environments/environment';
         LoadingOverall
     ],
     imports: [
+        NgbModule,
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,

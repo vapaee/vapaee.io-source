@@ -15,6 +15,7 @@ export class VpePanelComponent implements OnChanges, OnDestroy, AfterViewInit {
     @Input() public id: string;
     @Input() public title: string;
     @Input() public hideheader: boolean;
+    @Input() public margintop: boolean;
     @Input() public hidebackground: boolean;
     @Input() public initclosed: boolean;
     @Input() public expanded: boolean;
@@ -40,6 +41,7 @@ export class VpePanelComponent implements OnChanges, OnDestroy, AfterViewInit {
         this.element = el;
         this.expanded = !this.initclosed;
         this.hideheader = false;
+        this.margintop = true;
         this.hidebackground = false;
         this.onResizeSubscriber = new Subscriber<string>(this.triggerResize.bind(this));
     }

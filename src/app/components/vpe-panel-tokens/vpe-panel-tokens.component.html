@@ -1,4 +1,4 @@
-<vpe-panel [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [title]="local.string.Tokenlist">
+<vpe-panel [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [hideheader]="hideheader" [margintop]="margintop" [title]="local.string.Tokenlist">
     <div class="row">
         <div class="col-sm-12 input-group">
             <input
@@ -16,7 +16,8 @@
         </div>            
     </div>
     <hr class="line">
-    <div class="row margin-top">
+    
+    <div class="row margin-top" [hidden]="!complete">
         <div class="nowrap text-bold text-sm col-sm-3 col-padding-right">{{local.string.token | titlecase}}</div>
         <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-right col-padding-left">{{local.string.vol | titlecase}}</div>
         <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-right col-padding-left">{{local.string.price | titlecase}}</div>
@@ -24,7 +25,7 @@
     </div>
     <div class="row margin-top">
         <div class="col-sm-12">
-            <perfect-scrollbar style="max-height: 206px; max-width: 100%">
+            <perfect-scrollbar [hidden]="!complete" style="max-height: 206px; max-width: 100%">
                 <div class="row cursor-pointer margin-bottom active-on-hover" 
                     *ngFor="let token of get_tokens | filter:token_filter"
                     [hidden]="token.symbol == 'TLOS'"
@@ -46,6 +47,18 @@
                         [ngClass]="{'text-success': summary(token.scope).percent > 0, 'text-danger': summary(token.scope).percent < 0, 'text-muted': summary(token.scope).percent  == 0}"
                     >
                         {{summary(token.scope).percent_str}}
+                    </div>
+                </div>
+            </perfect-scrollbar>
+            <perfect-scrollbar [hidden]="complete" style="max-height: 100%; max-width: 100%">
+                <div class="row cursor-pointer margin-bottom active-on-hover" 
+                    *ngFor="let token of get_tokens | filter:token_filter"
+                    [hidden]="token.symbol == 'TLOS'"
+                    (click)="clickOnToken(token.scope)"
+                >
+                    <div class="nowrap col-sm-12 margin-top-xl">
+                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="token.logo">
+                        {{token.symbol}}
                     </div>
                 </div>
             </perfect-scrollbar>
