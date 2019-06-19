@@ -54,6 +54,11 @@ export class Feedback {
         }
     }
 
+    clearError(key:string) {
+        this.setError(key, "");
+    }
+
+
     error(key:string) {
         if (this.scopes[key]) {
             return this.scopes[key].msg;

@@ -4,6 +4,7 @@ import { VapaeeService, Asset, TokenOrders, Order, OrderRow } from 'src/app/serv
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Token } from 'src/app/services/utils.service';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
+import { Feedback } from 'src/app/services/feedback.service';
 
 
 @Component({
@@ -19,7 +20,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     asset: Asset;
     can_sell: boolean;
     can_buy: boolean;
-    error: string;
+    feed: Feedback;
     loading: boolean;
     cant_operate: boolean;
     toolow: boolean;
@@ -47,7 +48,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
-        this.error = "";
+        this.feed = new Feedback();
         this.loading = false;
         this.c_loading = {};
         this.deposits_comodity = new Asset();
@@ -67,9 +68,11 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         return this.payment || new Asset();
     }
 
+    orders_decimals: number
     async updateSize(event:ResizeEvent) {
         this.display = "normal";
         this.portrait = false;
+        this.orders_decimals = 8;
 
         if (event.device.wide) {
             if (event.width < 900) {
@@ -85,6 +88,18 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             // portrait
             if (event.width < 800) {
                 this.portrait = true;
+            }
+            if (event.width < 700) {
+                this.orders_decimals = 7;
+            }
+            if (event.width < 600) {
+                this.orders_decimals = 6;
+            }
+            if (event.width < 500) {
+                this.orders_decimals = 5;
+            }
+            if (event.width < 400) {
+                this.orders_decimals = 4;
             }
         }
     }
@@ -188,23 +203,23 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     }
     
     setAmount(a:Asset) {
-        this.error = "";
+        this.feed.clearError("form");
         this.amount = a;
         this.ngOnChanges();
     }
 
     sellAll() {
-        this.error = "";
+        this.feed.clearError("form");
         this.setAmount(this.deposits_comodity);
         this.wantsTo("sell");
     }
     
     buyAll() {
-        this.error = "";
+        this.feed.clearError("form");
         console.log("buyAll()", this.payment);
         this.wantsTo("buy");
         if (this.price.amount.toNumber() == 0) {
-            this.error = this.local.string.priceNotZero;
+            this.feed.setError("form", this.local.string.priceNotZero);
         } else {
             this.payment.amount = this.deposits_currency.amount.minus(0.0001);
             var amount = this.payment.amount.dividedBy(this.price.amount);
@@ -213,7 +228,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     }
     
     onChange(event:any) {
-        this.error = "";
+        this.feed.clearError("form");
         this.calculate();
     }
 
@@ -289,16 +304,16 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         if (this.payment.amount.toNumber() == 0) return;
         console.log("BUY");
         this.loading = true;
-        this.error = "";
+        this.feed.clearError("form");
         this.vapaee.createOrder("buy", this.amount, this.price).then(_ => {
             // success
             this.loading = false;
         }).catch(e => {
             console.log(e);
             if (typeof e == "string") {
-                this.error = "ERROR: " + JSON.stringify(JSON.parse(e), null, 4);
+                this.feed.setError("form", "ERROR: " + JSON.stringify(JSON.parse(e), null, 4));
             } else {
-                this.error = null;
+                this.feed.clearError("form");
             }
             this.loading = false;
         });
@@ -309,16 +324,16 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         // if (this.payment.amount.toNumber() == 0) return;
         console.log("SELL");
         this.loading = true;
-        this.error = "";
+        this.feed.clearError("form");
         this.vapaee.createOrder("sell", this.amount, this.price).then(_ => {
             // success
             this.loading = false;
         }).catch(e => {
             console.log(e);
             if (typeof e == "string") {
-                this.error = "ERROR: " + JSON.stringify(JSON.parse(e), null, 4);
+                this.feed.setError("form", "ERROR: " + JSON.stringify(JSON.parse(e), null, 4));
             } else {
-                this.error = null;
+                this.feed.clearError("form");
             }
             this.loading = false;
         });
@@ -326,6 +341,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
 
     cancel(order) {
         var key = order.id;
+        this.feed.clearError("orders");
         if (order.deposit.token.symbol != order.telos.token.symbol) {
             this.c_loading[key] = true;
             this.vapaee.cancelOrder("sell", order.deposit.token, order.telos.token, [order.id]).then(_ => {
@@ -334,9 +350,9 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             }).catch(e => {
                 console.log(e);
                 if (typeof e == "string") {
-                    this.error = "ERROR: " + JSON.stringify(JSON.parse(e), null, 4);
+                    this.feed.setError("orders", "ERROR: " + JSON.stringify(JSON.parse(e), null, 4));
                 } else {
-                    this.error = null;
+                    this.feed.clearError("orders");
                 }
                 this.c_loading[key] = false;
             });;
@@ -349,9 +365,9 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             }).catch(e => {
                 console.log(e);
                 if (typeof e == "string") {
-                    this.error = "ERROR: " + JSON.stringify(JSON.parse(e), null, 4);
+                    this.feed.setError("orders", "ERROR: " + JSON.stringify(JSON.parse(e), null, 4));
                 } else {
-                    this.error = null;
+                    this.feed.clearError("orders");
                 }
                 this.c_loading[key] = false;
             });;

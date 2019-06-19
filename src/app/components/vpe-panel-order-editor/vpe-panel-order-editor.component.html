@@ -42,16 +42,16 @@
             </div>
         </div>
 
-        <div class="col-sm-12 margin-top" [hidden]="!error">
+        <div class="col-12 margin-top" [hidden]="!feed.error('form')">
             <div class="alert alert-danger">
                 <div class="pull-right">
-                    <button type="button" class="close text-white" (click)="error = null">
+                    <button type="button" class="close text-white" (click)="feed.clearError('form')">
                         <i class="material-icons" style="font-size: 100%;">cancel</i>
                     </button>                
                 </div>
-                {{error}}
+                {{feed.error('form')}}
             </div>
-        </div>        
+        </div>       
 
         <div class="col-12 margin-top text-right">
             <div class="row">
@@ -109,6 +109,87 @@
             </div>                 
 
         </div>
+
+        <!-- orders portrait -->
+        <div class="col-12" [hidden]="!vapaee.logged || (own.sell.length == 0 && own.buy.length == 0)">
+            <div class="row">
+
+                <div class="col-12">
+                    <hr class="line">
+                </div>                
+
+                <div class="col-12 margin-top" [hidden]="!feed.error('orders')">
+                    <div class="alert alert-danger">
+                        <div class="pull-right">
+                            <button type="button" class="close text-white" (click)="feed.clearError('orders')">
+                                <i class="material-icons" style="font-size: 100%;">cancel</i>
+                            </button>                
+                        </div>
+                        {{feed.error('orders')}}
+                    </div>
+                </div>        
+
+                <div class="col-12 margin-top">
+                    <label>{{local.string.orders | titlecase}}</label>
+                    <div class="row">
+                        <div class="nowrap col-5 text-right col-padding-right padding-left-lg">{{local.string.price}}</div>
+                        <div class="nowrap col-5 text-right col-padding-right col-padding-left">{{local.string.total}}</div>
+                    </div>
+                    <perfect-scrollbar style="max-height: 300px; max-width: 100%">
+                        
+                        <div class="row margin-bottom-sm margin-top-sm active-on-hover cursor-pointer" 
+                            *ngFor="let order of own.buy"
+                            (click)="cancel(order)"
+                        >
+                            <div class="nowrap col-5 text-right col-padding-right padding-left-lg"
+                                [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                                >
+                                {{order.price.toString(orders_decimals)}}
+                            </div>
+                            <div class="nowrap col-5 text-right col-padding-right col-padding-left"
+                                [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                                >
+                                {{order.deposit.toString(orders_decimals)}}
+                            </div>
+                        
+                            <div class="nowrap col-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
+                                <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.price.token.table + order.id]">cancel</i>
+                                <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.price.token.table + order.id]"></span>
+                            </div>
+            
+                        </div>
+                        
+                        <div class="row margin-bottom-sm margin-top-sm active-on-hover cursor-pointer" 
+                            *ngFor="let order of own.sell"
+                            (click)="cancel(order)"
+                        >
+                            <div class="nowrap col-5 text-right col-padding-right padding-left-lg"
+                                [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                                >
+                                {{order.price.toString(orders_decimals)}}
+                            </div>
+                            <div class="nowrap col-5 text-right col-padding-right col-padding-left"
+                                [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                                >
+                                {{order.deposit.toString(orders_decimals)}}
+                            </div>
+                        
+                            <div class="nowrap col-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
+                                <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.price.token.table + order.id]">cancel</i>
+                                <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.price.token.table + order.id]"></span>
+                            </div>
+        
+                        </div>
+                        
+                    </perfect-scrollbar>
+                </div>
+            
+
+
+
+            </div>
+        </div>
+
 
 
 
@@ -232,6 +313,17 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-12 margin-top" [hidden]="!feed.error('form')">
+                <div class="alert alert-danger">
+                    <div class="pull-right">
+                        <button type="button" class="close text-white" (click)="feed.clearError('form')">
+                            <i class="material-icons" style="font-size: 100%;">cancel</i>
+                        </button>                
+                    </div>
+                    {{feed.error('form')}}
+                </div>
+            </div>            
         </div>
 
 
@@ -241,14 +333,14 @@
             <hr class="line">
         </div>
 
-        <div class="col-sm-12 margin-top" [hidden]="!error">
+        <div class="col-12 margin-top" [hidden]="!feed.error('orders')">
             <div class="alert alert-danger">
                 <div class="pull-right">
-                    <button type="button" class="close text-white" (click)="error = null">
+                    <button type="button" class="close text-white" (click)="feed.clearError('orders')">
                         <i class="material-icons" style="font-size: 100%;">cancel</i>
                     </button>                
                 </div>
-                {{error}}
+                {{feed.error('orders')}}
             </div>
         </div>
 
@@ -262,7 +354,7 @@
                 
                 <div class="row margin-bottom active-on-hover cursor-pointer" 
                     *ngFor="let order of own.buy"
-                    
+                    (click)="cancel(order)"
                 >
                     <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg"
                         [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
@@ -284,6 +376,7 @@
                 
                 <div class="row margin-bottom active-on-hover cursor-pointer" 
                     *ngFor="let order of own.sell"
+                    (click)="cancel(order)"
                 >
                     <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg"
                         [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
@@ -330,7 +423,7 @@
                     </perfect-scrollbar>                    
                 </div>
                 <div class="col-sm-6">
-                    <label>{{local.string.sell_orders | titlecase}}</label>
+                    <label>{{local.string.buy_orders | titlecase}}</label>
                     <div class="row">
                         <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg">{{local.string.price}}</div>
                         <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left">{{local.string.total}}</div>
