@@ -21,6 +21,7 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
     // @Input() public currency: Token;    
     @Input() public scopes: TableMap;
     @Input() public hideheader: boolean;
+    @Input() public margintop: boolean;
     @Output() selectToken: EventEmitter<string> = new EventEmitter();
     token_filter:string;
     

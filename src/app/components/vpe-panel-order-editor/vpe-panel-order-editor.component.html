@@ -1,5 +1,123 @@
 <vpe-panel [id]="'vpe-panel-order-editor'" (onResize)="onResize($event)" [title]="local.string.OrderForm">
-    <div class="row">
+
+    <!-- ----------- portrait screen ------------- -->
+    <div class="row" *ngIf="portrait">
+        <div class="col-6 text-right nowrap">
+            <span class="cursor-pointer" (click)="sellAll()">
+                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_comodity.token.logo ? deposits_comodity.token.logo : '#'">
+                <span [ngClass]="{'text-danger': !can_sell && wants=='sell'}"> {{deposits_comodity.toString()}} </span>
+            </span>
+        </div>
+        <div class="col-6 text-right nowrap">
+            <span class="cursor-pointer" (click)="buyAll()">
+                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_currency.token.logo ? deposits_currency.token.logo : '#'">
+                <span [ngClass]="{'text-danger': !can_buy && wants=='buy'}"> {{deposits_currency.toString()}} </span>
+            </span>
+        </div>
+
+        <div class="col-6 margin-top">
+            <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='sell', 'btn-danger': can_sell, 'disabled': !can_sell}" (click)="wantsTo('sell')" >
+                <i class="material-icons"> done_outline </i> {{local.string.wanna_sell}}
+            </span>
+        </div>
+        <div class="col-6 margin-top">
+            <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='buy', 'btn-success': can_buy, 'disabled': !can_buy}" (click)="wantsTo('buy')" >
+                <i class="material-icons"> done_outline </i> {{local.string.wanna_buy}}
+            </span>
+        </div>
+
+
+        <div class="col-12 margin-top">
+            <div class="row">
+                <div class="col-2 text-sm margin-top"> <label [ngClass]="{'text-danger':!can_sell && wants=='sell'}">{{local.string.Amount | titlecase}}</label> </div>
+                <div class="col-10">
+                    <vpe-token-input [(asset)]="amount" (valueChange)="onChange($event)" precision="8" placeholder="{{local.string.Amount}}"></vpe-token-input>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2 text-sm margin-top"> <label>{{local.string.Price | titlecase}}</label> </div>
+                <div class="col-10">
+                    <vpe-token-input [(asset)]="price" (valueChange)="onChange($event)" precision="8" placeholder="{{local.string.Price}}"></vpe-token-input>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 margin-top" [hidden]="!error">
+            <div class="alert alert-danger">
+                <div class="pull-right">
+                    <button type="button" class="close text-white" (click)="error = null">
+                        <i class="material-icons" style="font-size: 100%;">cancel</i>
+                    </button>                
+                </div>
+                {{error}}
+            </div>
+        </div>        
+
+        <div class="col-12 margin-top text-right">
+            <div class="row">
+                <div class="col text-right nowrap" [hidden]="wants=='buy'">
+                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_amount.token.logo ? get_amount.token.logo : '#'">
+                    <span [ngClass]="{'text-danger': !can_sell}"> {{get_amount.str}} </span>
+                    &nbsp; <i style="vertical-align: bottom;" class="material-icons"> trending_flat </i> &nbsp;
+                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_payment.token.logo ? get_payment.token.logo : '#'">
+                    {{get_payment.str}}
+                </div>
+                <div class="col text-right nowrap" [hidden]="wants=='sell'">
+                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_payment.token.logo ? get_payment.token.logo : '#'">
+                    <span [ngClass]="{'text-danger': !can_buy}"> {{get_payment.str}} </span>
+                    &nbsp; <i style="vertical-align: bottom;" class="material-icons"> trending_flat </i> &nbsp;
+                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_amount.token.logo ? get_amount.token.logo : '#'">
+                    {{get_amount.str}}
+                </div>                        
+            </div>
+        </div>
+
+
+        <!-- Too low amounts -->
+        <div class="col-12 margin-top" [hidden]="!toolow">
+            <div class="text-right">
+                <label> {{local.string.toolow}} &nbsp; </label>
+            </div>
+        </div>
+        
+        <!-- Buy & Sell buttons -->
+        <div class="col-12 margin-top" [hidden]="toolow">
+            <!-- Buy -->
+            <div [hidden]="wants=='sell' || !can_buy">
+                <span type="text" class="form-control form-control-sm btn btn-sm btn-success" [ngClass]="{disabled: cant_operate}" (click)="buy()" >
+                    <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
+                    {{local.string.Buy}}
+                </span>
+            </div>
+            <div class="text-right" [hidden]="!(wants=='buy' && !can_buy)">
+                <label> {{local.string.needtodep}} &nbsp; </label>
+                <img style="height:16px; width: 16px; margin-top:-2px" [src]="money?.token?.logo || '#'">
+                <label> &nbsp; {{money?.token?.symbol}}</label>
+            </div>
+
+            <!-- Sell -->
+            <div [hidden]="wants=='buy' || !can_sell">
+                <span type="text" class="form-control form-control-sm btn btn-sm btn-danger" [ngClass]="{disabled: cant_operate}" (click)="sell()" >
+                    <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
+                    {{local.string.Sell}}
+                </span>
+            </div>
+            <div class="text-right" [hidden]="!(wants=='sell' && !can_sell)">
+                <label> {{local.string.needtodep}} &nbsp; </label>
+                <img style="height:16px; width: 16px; margin-top:-2px" [src]="amount?.token?.logo || '#'">
+                <label> &nbsp; {{amount?.token?.symbol}}</label>
+            </div>                 
+
+        </div>
+
+
+
+    </div>
+
+
+
+    <!-- ----------- wide screen ------------- -->
+    <div class="row" *ngIf="!portrait">
   
         <div class="col-sm-12" [hidden]="vapaee.logged">
             <div  class="pull-right margin-top">
@@ -18,7 +136,7 @@
                 <div class="col-sm-4">
                     <div class="row">
                         <div class="col col-sm-auto col-padding-left">
-                            <label [ngClass]="{'text-danger':!can_sell && wants=='sell'}">{{local.string.Amount}}</label>
+                            <label [ngClass]="{'text-danger':!can_sell && wants=='sell'}">{{local.string.Amount | titlecase}}</label>
                         </div>
                         <div class="col text-right nowrap col-padding-right">
                             <span class="cursor-pointer" (click)="sellAll()">
@@ -43,10 +161,20 @@
                 <div class="col-sm-4">
                     <vpe-token-input [(asset)]="amount" (valueChange)="onChange($event)" precision="8" placeholder="{{local.string.Amount}}"></vpe-token-input>
                 </div>
-                <div class="col-sm-4">
+                
+                <!-- Too low amounts -->
+                <div class="col-4 margin-top" [hidden]="!toolow">
+                    <div class="text-right">
+                        <label> {{local.string.toolow}} &nbsp; </label>
+                    </div>
+                </div>
+                
+                <!-- Buy & Sell buttons -->
+                <div class="col-4 margin-top" [hidden]="toolow">
+
                     <!-- Buy -->
                     <div [hidden]="wants=='sell' || !can_buy">
-                        <span type="text" class="form-control form-control-sm btn btn-sm btn-success" [ngClass]="{disabled: payment ? payment.amount.toNumber() == 0:true}" (click)="buy()" >
+                        <span type="text" class="form-control form-control-sm btn btn-sm btn-success" [ngClass]="{disabled: cant_operate}" (click)="buy()" >
                             <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
                             {{local.string.Buy}}
                         </span>
@@ -59,7 +187,7 @@
     
                     <!-- Sell -->
                     <div [hidden]="wants=='buy' || !can_sell">
-                        <span type="text" class="form-control form-control-sm btn btn-sm btn-danger" [ngClass]="{disabled: payment ? payment.amount.toNumber() == 0:true}" (click)="sell()" >
+                        <span type="text" class="form-control form-control-sm btn btn-sm btn-danger" [ngClass]="{disabled: cant_operate}" (click)="sell()" >
                             <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
                             {{local.string.Sell}}
                         </span>
@@ -73,14 +201,14 @@
                 </div>
             </div>
             <div class="form-row margin-top text-sm">
-                <div class="col-sm-2 col-padding-right">
-                    <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='buy', 'btn-success': can_buy, 'disabled': !can_buy}" (click)="wantsTo('buy')" >
-                        <i class="material-icons"> done_outline </i> {{local.string.wanna_buy}}
-                    </span>
-                </div>
                 <div class="col-sm-2 col-padding-left">
                     <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='sell', 'btn-danger': can_sell, 'disabled': !can_sell}" (click)="wantsTo('sell')" >
                         <i class="material-icons"> done_outline </i> {{local.string.wanna_sell}}
+                    </span>
+                </div>                
+                <div class="col-sm-2 col-padding-right">
+                    <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='buy', 'btn-success': can_buy, 'disabled': !can_buy}" (click)="wantsTo('buy')" >
+                        <i class="material-icons"> done_outline </i> {{local.string.wanna_buy}}
                     </span>
                 </div>
                 <!-- Arrow -->
@@ -106,60 +234,6 @@
             </div>
         </div>
 
-        <!--
-        <div class="col-sm-12" [hidden]="!vapaee.logged">
-            <div class="form-row">
-                <div class="col-sm-3">
-                    <label>{{local.string.wdywdo}}</label>
-                    <div class="row">
-                        <div class="col-sm-6 col-padding-right">
-                            <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='buy', 'btn-success': can_buy, 'disabled': !can_buy}" (click)="wantsTo('buy')" >
-                                <i class="material-icons"> done_outline </i> {{local.string.wanna_buy}}
-                            </span>
-                        </div>
-                        <div class="col-sm-6 col-padding-left">
-                            <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='sell', 'btn-danger': can_sell, 'disabled': !can_sell}" (click)="wantsTo('sell')" >
-                                <i class="material-icons"> done_outline </i> {{local.string.wanna_sell}}
-                            </span>    
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group col-sm-3">
-                    <label>{{local.string.Price}}</label>
-                    <vpe-token-input [(asset)]="price" (valueChange)="onChange($event)" precision="8" placeholder="{{local.string.Price}}"></vpe-token-input>
-                </div> 
-                <div class="form-group col-sm-3">
-                    <label [ngClass]="{'text-danger':!can_sell && wants=='sell'}">{{local.string.Amount}}</label>
-                    <vpe-token-input [(asset)]="amount" (valueChange)="onChange($event)" precision="8" placeholder="{{local.string.Amount}}"></vpe-token-input>
-                </div>
-
-                <div [hidden]="wants=='sell' || !can_buy" class="form-group col-sm-3">
-                    <label>{{local.string.Payment}} {{payment ? payment.toString(8) : ""}}</label>
-                    <span type="text" class="form-control form-control-sm btn btn-sm btn-success" (click)="buy()" >
-                        <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
-                        {{local.string.Buy}}
-                    </span>
-                </div>
-                <div [hidden]="!(wants=='buy' && !can_buy)" class="form-group col-sm-3">
-                    <label class="text-danger">{{local.string.ycntpay}} {{payment ? payment.toString(8) : ""}}</label>
-                    <label class="text-danger" >{{local.string.yohave}} {{money ? money.toString(8) : ""}}</label>
-                </div>
-
-
-                <div [hidden]="wants=='buy' || !can_sell" class="form-group col-sm-3">
-                    <label>{{local.string.Payment}} {{payment ? payment.toString(8) : ""}}</label>
-                    <span type="text" class="form-control form-control-sm btn btn-sm btn-danger" (click)="sell()" >
-                        <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
-                        {{local.string.Sell}}
-                    </span>
-                </div>
-                <div [hidden]="!(wants=='sell' && !can_sell)" class="form-group col-sm-3">
-                    <label class="text-danger">{{local.string.ycntsell}} {{amount ? amount.toString(8) : ""}}</label>
-                    <label class="text-danger" >{{local.string.yohave}} {{asset ? asset.toString(8) : ""}}</label>
-                </div>
-            </div>
-        </div>
-        -->
 
         <!-- ------------------ orders ------------------- -->
         
@@ -205,17 +279,6 @@
                         <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.price.token.table + order.id]">cancel</i>
                         <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.price.token.table + order.id]"></span>
                     </div>
-                
-                    <!--div class="col-sm-12" [hidden]="!error">
-                        <div class="alert alert-danger">
-                            <div class="pull-right">
-                                <button type="button" class="close text-white" (click)="error = null">
-                                    <i class="material-icons" style="font-size: 100%;">cancel</i>
-                                </button>                
-                            </div>
-                            {{error}}
-                        </div>
-                    </div-->
     
                 </div>
                 
@@ -237,53 +300,11 @@
                         <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.price.token.table + order.id]">cancel</i>
                         <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.price.token.table + order.id]"></span>
                     </div>
-                
-                    <!--div class="col-sm-12" [hidden]="!error">
-                        <div class="alert alert-danger">
-                            <div class="pull-right">
-                                <button type="button" class="close text-white" (click)="error = null">
-                                    <i class="material-icons" style="font-size: 100%;">cancel</i>
-                                </button>                
-                            </div>
-                            {{error}} 
-                        </div>
-                    </div-->
+
                 </div>
                 
-            </perfect-scrollbar>
-        </div>        
-
-
-<!--
-        <div class="col-sm-12 d-lg-none margin-top" [hidden]="!vapaee.logged || own.length == 0">
-            <label>{{local.string.orders | titlecase}}</label>
-            <div class="row">
-                <div class="nowrap col-sm-4 text-right col-padding-right padding-left-lg">{{local.string.price}}</div>
-                <div class="nowrap col-sm-4 text-right col-padding-right col-padding-left">{{local.string.total}}</div>
-            </div>
-            <perfect-scrollbar style="max-height: 300px; max-width: 100%">
-                <div class="row margin-bottom active-on-hover cursor-pointer" 
-                    *ngFor="let order of own"
-                    (click)="cancel(order)"
-                >
-                    <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg"
-                        [ngClass]="{'text-danger':order.deposit.token.symbol == get_currency.symbol, 'text-success':order.deposit.token.symbol == get_comodity.symbol}"
-                        >
-                        {{order.price.toString(8)}}
-                    </div>
-                    <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left"
-                        [ngClass]="{'text-danger':order.deposit.token.symbol == get_currency.symbol, 'text-success':order.deposit.token.symbol == get_comodity.symbol}"
-                        >
-                        {{order.total.toString(8)}}
-                    </div>
-                    <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg">
-                        <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.id]">cancel</i>
-                        <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.id]"></span>
-                    </div>
-                </div>
             </perfect-scrollbar>
         </div>
-    -->
 
         <div class="d-sm-none d-lg-block col-lg-12 margin-top">
             <div class="row" [hidden]="!vapaee.logged || (own.sell.length == 0 && own.buy.length == 0)">

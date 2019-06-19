@@ -28,7 +28,7 @@
     "amount": "cantidad",
     "price": "precio",
     "Price": "Precio",
-    "priceNotZero": "Por favor, establezca un precio diferente a 0.00000000",
+    "priceNotZero": "Por favor, establezca un precio mayor que cero",
     "udhavetoken": "No tienes ningún token para depositar.",
     "hidebtns": "ocultar botones",
     "Tokenlist": "Lista de Tokens",
@@ -107,5 +107,6 @@
     "activity": "actividad",
     "activitylog": "Log de actividad",
     "user": "usuario",
-    "detail": "detalle"
+    "detail": "detalle",
+    "toolow": "montos demasiado bajos"
 }

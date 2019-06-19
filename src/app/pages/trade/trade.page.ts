@@ -41,7 +41,7 @@ export class TradePage implements OnInit, OnDestroy {
         public route: ActivatedRoute
 
     ) {
-        this.chartHeight = this.app.device.height * 0.38; 
+        this.chartHeight = Math.max(this.app.device.height - 430, 175); 
         this.loading = false;
         this.error = "";
         this._orders = {sell:[],buy:[]};

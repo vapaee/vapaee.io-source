@@ -28,7 +28,7 @@
     "amount": "amount",
     "price": "price",
     "Price": "Price",
-    "priceNotZero": "Please, set a price different to 0.00000000",
+    "priceNotZero": "Please, set a price grater than zero",
     "udhavetoken": "You don't have any tokens to deposit.",
     "hidebtns": "hide buttons",
     "retry": "retry",
@@ -107,5 +107,6 @@
     "activity": "activity",
     "activitylog": "activity log",
     "user": "user",
-    "detail": "detail"
+    "detail": "detail",
+    "toolow": "too low amounts"
 }

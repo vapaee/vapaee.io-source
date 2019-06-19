@@ -1,5 +1,5 @@
-<div [hidden]="!app.device.portrait">
-    <vpe-panel-token-selector [tokens]="tokens" [scopes]="scopes" [current]="comodity" (selectToken)="selectToken($event)"></vpe-panel-token-selector>
+<div *ngIf="app.device.portrait">
+    <vpe-panel-token-selector [tokens]="tokens" [scopes]="scopes" [current]="comodity" [margintop]="true" (selectToken)="selectToken($event)"></vpe-panel-token-selector>
     
     <vpe-panel-chart [hideheader]="true" [zoom]="500" [height]="chartHeight" [margintop]="true" [data]="chartData"></vpe-panel-chart>
 
@@ -20,7 +20,7 @@
 
 
 
-<div class="container-fluid margin-top" [hidden]="app.device.portrait">
+<div class="container-fluid margin-top" *ngIf="!app.device.portrait">
     
     <div class="card text-white bg-dark">
         <div class="card-header vpe-background-card-header padding">

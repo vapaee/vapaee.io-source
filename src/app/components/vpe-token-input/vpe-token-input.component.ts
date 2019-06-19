@@ -67,6 +67,7 @@ export class VpeTokenInputComponent implements OnChanges {
             var precision = this.asset.token.precision;
             if (this.precision != -1) precision = this.precision;
             this.text = this.asset.toString(precision).split(" ")[0];
+            console.log("this.text" , this.text);
             if (this.text != this.prev) {
                 this.prev = this.text;
                 this.valueChange.emit(this.asset);

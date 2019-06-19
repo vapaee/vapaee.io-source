@@ -1485,7 +1485,7 @@ export class Asset {
 
     valueToString(decimals:number = -1, total:boolean = false): string {
         if (!this.token) return "0";
-        var parts = ("" + this.amount).split(".");
+        var parts = this.amount.toFixed().split(".");
         var integer = parts[0];
         var precision = this.token.precision;
         var decimal = (parts.length==2 ? parts[1] : "");

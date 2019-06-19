@@ -21,6 +21,9 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     can_buy: boolean;
     error: string;
     loading: boolean;
+    cant_operate: boolean;
+    toolow: boolean;
+    portrait: boolean;
     c_loading: {[id:string]:boolean};
     wants: string;
 
@@ -66,27 +69,23 @@ export class VpePanelOrderEditorComponent implements OnChanges {
 
     async updateSize(event:ResizeEvent) {
         this.display = "normal";
+        this.portrait = false;
 
-        if (event.width < 900) {
-            this.display = "medium";            
-        }
-        if (event.width < 850) {
-        }
-        if (event.width < 830) {
-        }
-        if (event.width < 770) {
-        }
-        if (event.width < 740) {
-        }        
-        if (event.width < 700) {
-            this.display = "tiny";
-        }
-        if (event.width < 660) {
-            this.display = "small";
-        }     
-        if (event.width < 600) {
-        }
-        if (event.width < 560) {
+        if (event.device.wide) {
+            if (event.width < 900) {
+                this.display = "medium";            
+            }
+            if (event.width < 700) {
+                this.display = "tiny";
+            }
+            if (event.width < 660) {
+                this.display = "small";
+            }    
+        } else {
+            // portrait
+            if (event.width < 800) {
+                this.portrait = true;
+            }
         }
     }
 
@@ -101,6 +100,9 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             if (!this.price) this.restaure();
             if (!this.price) return;
             
+            this.cant_operate = true;
+            this.toolow = false;
+            console.log("calculate");
 
             this.deposits_comodity = new Asset("0 " + this.comodity.symbol, this.vapaee);
             this.deposits_currency = new Asset("0 " + this.currency.symbol, this.vapaee);
@@ -146,6 +148,15 @@ export class VpePanelOrderEditorComponent implements OnChanges {
                     this.can_buy = false;
                 }
             }
+
+            if (this.payment.amount.isLessThan(1) && this.amount.amount.isLessThan(1)) {
+                this.toolow = true;
+                this.cant_operate = false;
+            }
+
+            if (this.payment.amount.toNumber()) {
+                this.cant_operate = false;
+            }            
             
             if (!this.wants) {
                 if (this.can_buy) {

@@ -3,13 +3,14 @@
         <div class="pull-right">
             <i class="material-icons cursor-pointer" [ngClass]="{'rotated-180':expanded}" (click)="turn(!expanded)" > expand_more </i> 
         </div>
-        <label class="text-sm title">
+        <!-- class="text-sm title" -->
+        <label class="title" style="font-size: 15px;">
             <i class="tiny material-icons">brightness_1</i>
             {{title | titlecase}} 
         </label>
     </div>
 
-    <div #body class="body" [ngClass]="{'card-body padding':!hidebackground, 'closed':!expanded}">
+    <div #body class="body max-height-100" [ngClass]="{'card-body padding':!hidebackground, 'closed':!expanded}">
         <ng-content></ng-content>
     </div>
 </div>
