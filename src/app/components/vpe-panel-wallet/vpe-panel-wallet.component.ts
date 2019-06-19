@@ -22,6 +22,8 @@ export class VpePanelWalletComponent implements OnChanges {
     @Input() public actions: boolean;
     @Input() public hideuser: boolean;
     @Input() public hideheader: boolean;
+    @Input() public margintop: boolean;
+    @Input() public expanded: boolean;
     @Input() public title: string;
     @Input() public loading: boolean;
     @Input() public error: string;
@@ -57,6 +59,8 @@ export class VpePanelWalletComponent implements OnChanges {
         this._fake_tlos_balance = new Asset();
         this.hideuser = false;
         this.hideheader = false;
+        this.margintop = true;
+        this.expanded = true; 
         this.actions = false;
         this.alert_msg = "";
         this.deposit = new Asset();

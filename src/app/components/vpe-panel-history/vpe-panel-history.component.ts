@@ -14,6 +14,10 @@ export class VpePanelHistoryComponent implements OnChanges {
 
     @Input() public history: HistoryTx[];
     @Input() public scope: string;
+    @Input() public hideheader: boolean;
+    @Input() public margintop: boolean;
+    @Input() public expanded: boolean;
+
     @HostBinding('class') display;
     public digits: number;
     public timeformat: string;
@@ -24,6 +28,9 @@ export class VpePanelHistoryComponent implements OnChanges {
     ) {
         this.digits = 8;
         this.display = "full";
+        this.hideheader = false;
+        this.margintop = true;
+        this.expanded = true; 
     }
 
     ngOnChanges() {
@@ -34,6 +41,11 @@ export class VpePanelHistoryComponent implements OnChanges {
         this.digits = 8;
         this.display = "normal";
         this.timeformat = "HH:mm:ss";
+
+        if (event.device.portrait) {
+            this.display = "small";
+        }
+
         if (event.width < 320) {
             this.display = "medium";
         }

@@ -1,7 +1,7 @@
 <div [ngClass]="{'margin-top':margintop, 'card text-white bg-dark vpe-background-panel':!hidebackground}">
-    <div class="title vpe-background-panel-title" [hidden]="hideheader">
+    <div class="title vpe-background-panel-title cursor-pointer" [hidden]="hideheader" (click)="turn(!expanded)">
         <div class="pull-right">
-            <i class="material-icons cursor-pointer" [ngClass]="{'rotated-180':expanded}" (click)="turn(!expanded)" > expand_more </i> 
+            <i class="material-icons" [ngClass]="{'rotated-180':expanded}" > expand_more </i> 
         </div>
         <!-- class="text-sm title" -->
         <label class="title" style="font-size: 15px;">

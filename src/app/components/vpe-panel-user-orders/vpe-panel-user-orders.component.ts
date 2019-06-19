@@ -15,6 +15,8 @@ export class VpePanelUserOrdersComponent implements OnChanges {
     @Input() public orders: TokenOrders;
     @Input() public headers: TableHeader;
     @Input() public hideheader: boolean;
+    @Input() public margintop: boolean;
+    @Input() public expanded: boolean;
     @Input() public title: string;
     @Input() public userorders: Map<string,UserOrders>;
     @Output() onClickRow: EventEmitter<{type:string, row:OrderRow}> = new EventEmitter();
@@ -28,6 +30,9 @@ export class VpePanelUserOrdersComponent implements OnChanges {
         public service: VpeComponentsService
     ) {
         this.c_loading = {};
+        this.hideheader = false;
+        this.margintop = true;
+        this.expanded = true; 
     }
 
     async updateSize(event:ResizeEvent) {

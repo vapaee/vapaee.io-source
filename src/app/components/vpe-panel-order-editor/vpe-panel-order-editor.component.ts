@@ -37,6 +37,10 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     @Input() public deposits: Asset[];
     @Input() public buyorders: OrderRow[];
     @Input() public sellorders: OrderRow[];
+    @Input() public hideheader: boolean;
+    @Input() public margintop: boolean;
+    @Input() public expanded: boolean;
+
     public own: {sell:Order[], buy:Order[]};
     price: Asset;
     amount: Asset;
@@ -48,6 +52,9 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
+        this.hideheader = false;
+        this.margintop = true;
+        this.expanded = true; 
         this.feed = new Feedback();
         this.loading = false;
         this.c_loading = {};

@@ -5,9 +5,9 @@ import { EosioTokenMathService } from './eosio.token-math.service';
 import { Feedback } from './feedback.service';
 
 // scatter libraries
-import ScatterJS from 'scatterjs-core';
-import ScatterEOS from 'scatterjs-plugin-eosjs2';
-import ScatterLynx from 'scatterjs-plugin-lynx';
+import ScatterJS from '@scatterjs/core';
+import ScatterEOS from '@scatterjs/eosjs2';
+import ScatterLynx from '@scatterjs/lynx';
 import {JsonRpc, Api} from 'eosjs';
 
 

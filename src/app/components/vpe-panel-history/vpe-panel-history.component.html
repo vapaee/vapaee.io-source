@@ -1,40 +1,40 @@
-<vpe-panel [id]="'vpe-panel-history'" (onResize)="onResize($event)" [title]="local.string.history">
+<vpe-panel [id]="'vpe-panel-history'" (onResize)="onResize($event)" [margintop]="margintop" [expanded]="expanded" [title]="local.string.history">
     <div class="row">
 
-        <div class="col-sm-3 no-padding">
+        <div class="col-3 no-padding">
             <div class="row no-margin">
-                <div class="nowrap text-bold text-sm-left col-sm-12 col-padding-right">
+                <div class="nowrap text-bold text-sm-left col-12 col-padding-right">
                         {{local.string.time | titlecase}}
                     <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('history.'+scope)"></span>
                 </div>
             </div>
         </div>
-        <div class="col-sm-9 no-padding">
+        <div class="col-9 no-padding">
             <div class="row no-margin">
-                <div class="nowrap text-bold text-sm-right col-sm-5 col-padding-right col-padding-left">{{local.string.price | titlecase}}</div>
-                <div class="nowrap text-bold text-sm-right col-sm-7 col-padding-left">{{local.string.amount | titlecase}}</div>
+                <div class="nowrap text-bold text-sm-right col-5 col-padding-right col-padding-left">{{local.string.price | titlecase}}</div>
+                <div class="nowrap text-bold text-sm-right col-7 col-padding-left">{{local.string.amount | titlecase}}</div>
             </div>
         </div>
     </div>
     <div class="row margin-top">
-        <div class="col-sm-12">
+        <div class="col-12">
             <perfect-scrollbar style="max-height: 250px; max-width: 100%">
                 <div class="row margin-bottom" 
                     *ngFor="let tx of history"
                     [ngClass]="{'text-success': tx.isbuy, 'text-danger':!tx.isbuy}"
                 >
 
-                    <div class="col-sm-3 no-padding">
+                    <div class="col-3 no-padding">
                         <div class="row no-margin">
-                            <div class="nowrap col-sm-12 col-padding-right">
+                            <div class="nowrap col-12 col-padding-right">
                                 {{tx.date | date : timeformat}}
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-9 no-padding">
+                    <div class="col-9 no-padding">
                         <div class="row no-margin">
-                            <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left">{{tx.price.valueToString(digits, true)}}</div>
-                            <div class="nowrap col-sm-7 text-right padding-right-lg ">{{tx.amount.valueToString(digits, true)}}</div>    
+                            <div class="nowrap col-5 text-right col-padding-right col-padding-left">{{tx.price.valueToString(digits, true)}}</div>
+                            <div class="nowrap col-7 text-right padding-right-lg ">{{tx.amount.valueToString(digits, true)}}</div>    
                         </div>
                     </div>
                 </div>

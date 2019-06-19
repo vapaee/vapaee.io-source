@@ -15,6 +15,8 @@ export class VpePanelBalanceBreakdawnComponent implements OnChanges {
 
     @Input() public hideuser: boolean;
     @Input() public hideheader: boolean;
+    @Input() public margintop: boolean;
+    @Input() public expanded: boolean;
     @Input() public title: string;
     @Input() public loading: boolean;
     @Input() public error: string;
@@ -31,6 +33,8 @@ export class VpePanelBalanceBreakdawnComponent implements OnChanges {
     ) {
         this.hideuser = false;
         this.hideheader = false;
+        this.margintop = true;
+        this.expanded = true; 
         this.current = this.vapaee.default;
     }
 

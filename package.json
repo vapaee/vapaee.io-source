@@ -1,6 +1,6 @@
 {
   "name": "vapaee.io-source",
-  "version": "v1.7.2",
+  "version": "v1.8.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --poll=2000 -o",
@@ -26,11 +26,14 @@
     "@angular/router": "^6.0.3",
     "@angular/service-worker": "^6.1.10",
     "@ng-bootstrap/ng-bootstrap": "^4.2.1",
+    "@scatterjs/core": "^2.7.26",
+    "@scatterjs/eosjs2": "^1.5.8",
+    "@scatterjs/lynx": "^1.6.17",
     "bignumber.js": "^8.0.2",
     "bootstrap": "^4.3.1",
     "bytebuffer": "^5.0.1",
     "core-js": "^2.5.4",
-    "eosjs": "20.0.0",
+    "eosjs": "^20.0.0",
     "fast-csv": "^2.4.1",
     "font-awesome": "^4.7.0",
     "fstream": "^1.0.12",
@@ -44,9 +47,6 @@
     "popper.js": "^1.14.7",
     "rxjs": "^6.2.1",
     "rxjs-compat": "^6.3.3",
-    "scatterjs-core": "^2.7.18",
-    "scatterjs-plugin-eosjs2": "^1.5.0",
-    "scatterjs-plugin-lynx": "^1.6.6",
     "zone.js": "^0.8.26"
   },
   "notas": {

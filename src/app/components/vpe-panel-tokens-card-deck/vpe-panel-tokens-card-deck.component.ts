@@ -15,6 +15,8 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
 
     @Input() public tokens: Token[];
     @Input() public hideheader: boolean;
+    @Input() public margintop: boolean;
+    @Input() public expanded: boolean;
     @Input() public title: string;
     @Input() public loading: boolean;
     @Input() public error: string;
@@ -33,6 +35,8 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
         public service: VpeComponentsService
     ) {
         this.hideheader = false;
+        this.margintop = true;
+        this.expanded = true; 
         this.hidebackground = false;
         this.limit = 0;
         this.vapaee.waitReady.then(_ => {

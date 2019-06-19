@@ -33,6 +33,8 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
     @Input() public zoom: number;
     @Input() public hideheader: boolean;
     @Input() public margintop: boolean;
+    @Input() public expanded: boolean;
+
 
     // @ViewContainerRef('vpe-panel-chart', {read: ElementRef}) elref: ElementRef;
 
@@ -45,7 +47,9 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         this.zoom = 24;
         this.height = 290;
         this.closed = false;
+        this.hideheader = false;
         this.margintop = true;
+        this.expanded = true; 
         this.bgStyle = {"height": this.height + "px"};
     }
     

@@ -17,6 +17,9 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
     @Output() gotoAccount: EventEmitter<string> = new EventEmitter();
     @Output() gotoScope: EventEmitter<string> = new EventEmitter();
     @Input() lines: number;
+    @Input() public hideheader: boolean;
+    @Input() public margintop: boolean;
+    @Input() public expanded: boolean;
     detail: StringMap;
     data: {[key:string]:StringMap};
     list: EventLog[];
@@ -30,6 +33,9 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
         public service: VpeComponentsService,
         private cdr: ChangeDetectorRef
     ) {
+        this.hideheader = false;
+        this.margintop = true;
+        this.expanded = true; 
         this.detail = {};
         this.data = {};
         this.obj = {"max-height": "250px", "max-width": "100%"};

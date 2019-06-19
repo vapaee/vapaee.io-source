@@ -15,6 +15,8 @@ export class VpePanelAccountHeaderComponent implements OnChanges {
 
     @Input() public hideuser: boolean;
     @Input() public hideheader: boolean;
+    @Input() public margintop: boolean;
+    @Input() public expanded: boolean;
     @Input() public title: string;
     @Input() public loading: boolean;
     @Input() public error: string;
@@ -32,7 +34,9 @@ export class VpePanelAccountHeaderComponent implements OnChanges {
         public service: VpeComponentsService
     ) {
         this.hideuser = false;
-        this.hideheader = false;
+        this.hideheader = true;
+        this.margintop = true;
+        this.expanded = true; 
         this.loading_fake = false;
         this.current = this.vapaee.default;
     }

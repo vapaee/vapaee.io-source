@@ -749,4 +749,7 @@ small, .small {
 // esto permite poner íconos a la derecha sin que se agrande el contenedor
 div.pull-right {
     line-height: 0px;
+    & > * {
+        line-height: 1.5;
+    }
 }
