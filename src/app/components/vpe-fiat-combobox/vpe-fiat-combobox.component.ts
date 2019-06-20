@@ -13,11 +13,14 @@ import { Token } from 'src/app/services/utils.service';
 })
 export class VpeFIatComboboxComponent implements OnChanges {
 
+    @Input() public btn: string;
+
     constructor(
         public vapaee: VapaeeService,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
+        this.btn = "xs";
     }
 
     ngOnChanges() {

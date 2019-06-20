@@ -3,7 +3,7 @@ import { EventEmitter } from '@angular/core';
 import { VapaeeService, Asset } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Account, ScatterService } from 'src/app/services/scatter.service';
-import { VpeComponentsService } from '../vpe-components.service';
+import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 
 
 @Component({
@@ -27,6 +27,7 @@ export class VpePanelAccountHeaderComponent implements OnChanges {
     public deposit: Asset;
     public withdraw: Asset;
     public loading_fake: boolean;
+    public portrait: boolean;
     constructor(
         public vapaee: VapaeeService,
         public scatter: ScatterService,
@@ -60,6 +61,16 @@ export class VpePanelAccountHeaderComponent implements OnChanges {
 
     setCurrency(currency:string) {
         this.service.setCurrentCurrency(currency);
+    }
+
+    async updateSize(event:ResizeEvent) {
+        this.portrait = event.device.portrait;
+    }
+
+    onResize(event:ResizeEvent) {
+        setTimeout(_ => {
+            this.updateSize(event);
+        });
     }
 
 }

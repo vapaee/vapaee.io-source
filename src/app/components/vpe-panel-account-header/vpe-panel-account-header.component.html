@@ -1,6 +1,57 @@
-<vpe-panel (click)="open(content)" class="cursor-pointer active-on-hover" [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.account">
+<vpe-panel (click)="open(content)" class="cursor-pointer active-on-hover"  [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [hidebackground]='true' [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.account">
     <div class="card text-white bg-dark margin-top">
-        <div class="card-header vpe-background-card-header">
+
+
+
+        <!-- portrait -->
+        <div class="card-header vpe-background-card-header" *ngIf="portrait">
+                <div class="row">
+                    <div class="col-auto col-padding-right">
+                        <identicon-comp class="portrait" [value]="current.name"></identicon-comp>
+                    </div>
+    
+                    <div class="col col-padding-left">
+                        <div class="pull-right" style="margin-top: 8px;">
+                            <span [ngClass]="{'d-none':!vapaee.logged}">
+                                <span class="btn btn-xs btn-primary margin-left" (click)="vapaee.logout()">
+                                    <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('logout') && !vapaee.feed.loading('log-state')"></span> 
+                                    <span> {{local.string.logout}} </span>
+                                </span>
+                            </span>
+                        </div>                    
+                        <div class="text-xl"> {{current.name}} </div>
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div class="col">            
+    
+                        <!-- Total balance (if any) -->
+                        <div class="text-md nowrap" [hidden]="!current.data.total_balance">
+                            <small>total balance: </small>
+                            <span class="text-md"> {{current.data.total_balance}} </span>
+                            <span class="text-sm color-yellow d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
+                        </div>
+                        <div class="text-md nowrap" [hidden]="!current.data.total_balance">
+    
+                            <div class="pull-right">
+                                <vpe-fiat-combobox [btn]="'xs'"></vpe-fiat-combobox>
+                            </div> 
+    
+                            <span class="text-sm color-yellow d-sm d-md-none"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
+                        </div>                    
+    
+                    </div>
+                </div>
+            </div>
+    
+    
+    
+    
+
+
+        <!-- wide -->
+        <div class="card-header vpe-background-card-header" *ngIf="!portrait">
             <div class="row">
                 <div class="col-sm-auto col-padding-right">
                     <identicon-comp [value]="current.name"></identicon-comp>
@@ -26,10 +77,6 @@
                                 <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('login') && !vapaee.feed.loading('log-state')"></span>
                                 {{local.string.LoginWScOrSq}}
                             </span>
-                            <!-- 
-                            <br>
-                            <span>{{local.string.NotLogged}}</span>
-                            -->
                             <br>
                             <br>
                             <vpe-fiat-combobox></vpe-fiat-combobox>         
@@ -47,16 +94,6 @@
                         </span>
                     </div>
 
-                    <!-- Fake tokens -->
-                    <!--div [hidden]="!vapaee.logged">
-                        <div class="pull-right">
-                            <span class="btn btn-sm btn-primary" (click)="freeFakeTokens()">
-                                <span class="spinner-border spinner-border-sm" [hidden]="!loading_fake"></span>
-                                {{local.string.getfftokens | titlecase}}
-                            </span>
-                        </div>
-                    </div--> 
-                    
                     <!-- No Wallet detected -->
                     <div [ngClass]="{'d-none':vapaee.loginState != 'no-scatter'}" [hidden]="current.data.total_balance">
                         <div class="pull-right text-center">
@@ -96,5 +133,7 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 </vpe-panel>

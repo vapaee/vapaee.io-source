@@ -1,5 +1,5 @@
 <div class="nav-item dropdown" ngbDropdown>
-    <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" id="language">
+    <a class="btn btn-primary dropdown-toggle" [ngClass]="{'btn-xs':btn=='xs', 'btn-sm':btn=='sm', 'btn-md':btn=='md'}" data-toggle="dropdown" id="language">
         {{service.currency.appname}} ({{service.getTelosInCurrentCurrency("1.0000 TLOS")}})
         <span class="caret"></span>
     </a>

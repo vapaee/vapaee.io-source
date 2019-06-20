@@ -13,14 +13,14 @@
     display: inline-block;
 }
 
-@media (min-width: 576px) {
-    .col-padding-left {
-        padding-left: 6px;
-    }
-    .col-padding-right {
-        padding-right: 6px;
-    }
+
+.col-padding-left {
+    padding-left: 6px;
 }
+.col-padding-right {
+    padding-right: 6px;
+}
+
 
 [strike] {
     text-decoration: line-through;
