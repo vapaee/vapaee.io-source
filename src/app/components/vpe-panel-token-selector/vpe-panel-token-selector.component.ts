@@ -88,6 +88,7 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
     }
 
     clickOnToken(scope:string) {
+        console.log("VpePanelTokenSelectorComponent.clickOnToken()", scope);
         this.selectToken.next(scope);
     }
     
@@ -123,6 +124,7 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
     }
 
     onTokenSelected(e) {
+        console.log("VpePanelTokenSelectorComponent.onTokenSelected()", e);
         if (this.modalService.hasOpenModals()) {
             this.modalService.dismissAll(e);
         }
