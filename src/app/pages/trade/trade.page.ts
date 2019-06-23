@@ -248,4 +248,9 @@ export class TradePage implements OnInit, OnDestroy {
         console.log("TradePage.selectToken()", scope);
         this.app.navigate('/exchange/trade/' + scope);
     }
+
+    scopeChange(scope) {
+        console.log("TradePage.scopeChange()", scope);
+        this.selectToken(scope);
+    }
 }

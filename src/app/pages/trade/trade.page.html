@@ -1,5 +1,5 @@
 <div *ngIf="app.device.portrait">
-    <vpe-panel-token-selector [tokens]="tokens" [scopes]="scopes" [current]="comodity" [margintop]="true" (selectToken)="selectToken($event)"></vpe-panel-token-selector>
+    <vpe-panel-token-selector [tokens]="tokens" [scopes]="scopes" [current]="comodity" [margintop]="true" (scopeChange)="scopeChange($event)"></vpe-panel-token-selector>
     
     <vpe-panel-chart [hideheader]="true" [zoom]="500" [height]="chartHeight" [margintop]="true" [data]="chartData"></vpe-panel-chart>
 

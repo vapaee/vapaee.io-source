@@ -24,7 +24,7 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
     @Input() public margintop: boolean;
     @Input() public expanded: boolean;
 
-    @Output() selectToken: EventEmitter<string> = new EventEmitter();
+    @Output() scopeChange: EventEmitter<string> = new EventEmitter();
     token_filter:string;
     
     @HostBinding('class') display;
@@ -89,7 +89,7 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
 
     clickOnToken(scope:string) {
         console.log("VpePanelTokenSelectorComponent.clickOnToken()", scope);
-        this.selectToken.next(scope);
+        this.scopeChange.next(scope);
     }
     
 
