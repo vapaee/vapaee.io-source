@@ -66,6 +66,7 @@
     "thesnofaket": "there's no fake tokens",
     "thesnofaketelos": "there's no fake TLOS tokens",
     "faketokens": "fake tokens",
+    "login": "login",
     "LoginWScatter": "Login with Scatter",
     "LoginWScOrSq": "Login with Scatter or Sqrl",
     "noScatter": "Scatter not detected",

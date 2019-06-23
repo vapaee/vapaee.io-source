@@ -16,12 +16,12 @@
         </div>
 
         <div class="col-6 margin-top">
-            <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='sell', 'btn-danger': can_sell, 'disabled': !can_sell}" (click)="wantsTo('sell')" >
+            <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='sell', 'btn-danger': can_sell, 'disabled': !can_sell}" (click)="wantsTo('sell', true)" >
                 <i class="material-icons"> done_outline </i> {{local.string.wanna_sell}}
             </span>
         </div>
         <div class="col-6 margin-top">
-            <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='buy', 'btn-success': can_buy, 'disabled': !can_buy}" (click)="wantsTo('buy')" >
+            <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='buy', 'btn-success': can_buy, 'disabled': !can_buy}" (click)="wantsTo('buy', true)" >
                 <i class="material-icons"> done_outline </i> {{local.string.wanna_buy}}
             </span>
         </div>
@@ -153,8 +153,8 @@
                             </div>
                         
                             <div class="nowrap col-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
-                                <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.price.token.table + order.id]">cancel</i>
-                                <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.price.token.table + order.id]"></span>
+                                <i class="material-icons" style="font-size: 100%;" [hidden]="vapaee.feed.loading('cancel-buy-'+order.id)">cancel</i>
+                                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('cancel-buy-'+order.id)"></span>
                             </div>
             
                         </div>
@@ -175,8 +175,8 @@
                             </div>
                         
                             <div class="nowrap col-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
-                                <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.price.token.table + order.id]">cancel</i>
-                                <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.price.token.table + order.id]"></span>
+                                <i class="material-icons" style="font-size: 100%;" [hidden]="vapaee.feed.loading('cancel-sell-'+order.id)">cancel</i>
+                                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('cancel-sell-'+order.id)"></span>
                             </div>
         
                         </div>
@@ -251,7 +251,7 @@
                 </div>
                 
                 <!-- Buy & Sell buttons -->
-                <div class="col-4 margin-top" [hidden]="toolow">
+                <div class="col-4" [hidden]="toolow">
 
                     <!-- Buy -->
                     <div [hidden]="wants=='sell' || !can_buy">
@@ -283,12 +283,12 @@
             </div>
             <div class="form-row margin-top text-sm">
                 <div class="col-sm-2 col-padding-left">
-                    <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='sell', 'btn-danger': can_sell, 'disabled': !can_sell}" (click)="wantsTo('sell')" >
+                    <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='sell', 'btn-danger': can_sell, 'disabled': !can_sell}" (click)="wantsTo('sell', true)" >
                         <i class="material-icons"> done_outline </i> {{local.string.wanna_sell}}
                     </span>
                 </div>                
                 <div class="col-sm-2 col-padding-right">
-                    <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='buy', 'btn-success': can_buy, 'disabled': !can_buy}" (click)="wantsTo('buy')" >
+                    <span type="text" class="form-control form-control-sm btn btn-sm" [ngClass]="{active: wants=='buy', 'btn-success': can_buy, 'disabled': !can_buy}" (click)="wantsTo('buy', true)" >
                         <i class="material-icons"> done_outline </i> {{local.string.wanna_buy}}
                     </span>
                 </div>

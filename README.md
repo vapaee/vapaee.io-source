@@ -2,7 +2,7 @@
 
 # Vapaée DEX - source code
 
-current version: BASIC (v1.8.1)
+current version: BASIC (v2.0.0)
 
 https://vapaee.io
 
@@ -27,18 +27,15 @@ cd script
     - [x] generate an event _onResize_ for all panels to subscribe
     - [x] each panel should be able to calculate the area in which it should be deployed and set a element class that reflects it
     - [x] each panel must be displayed taking into account the area it has to be deployed (based on the class of the element)
-    - [ ] Cell phones design:
-      - [ ] _token list panel_: must become a Combobox
-      - [ ] _wallet panel_: must become a button (that takes you to account page)
-      - [ ] smaller header
-      - [ ] _chart panel_: with 100%, height 40%
-      - [ ] _order form panel_: two modes:
-        - [ ] _info mode_: (default) shows the only the number of own orders and button to display (change mode)
-        - [ ] _full mode_: you see the entire form to create an order. Own order list still not seen
-          - [ ] Button: show own orders.
-          - [ ] Own orders list by default is hidden
-      - [ ] _order book panel_: show only 4 (2 of each). Expand button.
-      - [x] _history panel_. normal.
+    - [x] Cell phones design:
+      - [x] trade page
+         - [x] chart component 
+         - [x] token selection component
+         - [x] order editor component
+         - [x] history component
+         - [x] order book component
+      - [x] account page
+         - [x] wallet component
 - ### Uncritical
   - [x] the height of the _token list panel_ should equal the height of _chart panel_
   - [x] add current version number on the HOME page. Below the subtitle with small print
@@ -62,8 +59,9 @@ cd script
     - [x] adding EOS-Lynx ScatterJS plugins
     - [x] fill EOS-Lynx add Dapp form
     - [x] waiting EOS-Lynx to comunicate about Dapp submition
+    - [x] solve input vitual-keyboard bug. Implement a modal with an in-app virtual keyboard
     - [ ] get Dapp actually listed on Lynx Explorer
-    - [ ] test Dapp-wallet comunication. Is it really integrated ??
+    - [x] test Dapp-wallet comunication. Is it really integrated ??
 - ### Details:
   - [x] add Portugues language (Thanks to Fabiana Cecin)
   - [ ] highlight the WP navbar button
@@ -80,9 +78,9 @@ cd script
   - [x] in the _order editor panel_ sometime own order don't appear. It should update regularly as _history panel_ does.
 - ### Hard bugs
   - [x] review the list of own orders within the _order editor panel_ because it doesn't display properly sometimes
-  - [ ] check the login button.
+  - [x] check the login button.
     - [ ] show error messages!
-    - [ ] throw errors in console
+    - [x] throw errors in console
     - [ ] verify if the user does have Telos mainnet configured in the wallet.
   - [x] At the moment infinite listeners are being added to the onresize event but I am not taking them out. They accumulate and degrade the performance, badly.
 - ### Wishlist

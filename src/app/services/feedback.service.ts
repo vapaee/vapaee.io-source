@@ -1,6 +1,6 @@
 export interface Feed {
     msg?:string;
-    msgtype:string;
+    msgtype?:string;
     loading?:boolean;
 }
 
@@ -16,9 +16,7 @@ export class Feedback {
     private updateScopes() {
         for (var i in this.keys) {
             this.scopes[this.keys[i]] = this.scopes[this.keys[i]] || {
-                loading: false,
-                msg: "",
-                msgtype: ""
+                loading: false
             }
         }
     }

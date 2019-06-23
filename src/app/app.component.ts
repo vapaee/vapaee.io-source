@@ -19,26 +19,36 @@ import { LocalStringsService } from './services/common/common.services';
             <div class="sidebar-content">
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('home')}" (click)="app.closeSideMenu()">
-                        <a class="nav-link" routerLink="{{'/exchange/home'}}" >{{local.string.Home}}</a>
+                        <a class="nav-link" routerLink="{{'/exchange/home'}}" >
+                            <i class="material-icons"> navigate_next </i>{{local.string.Home}}
+                        </a>
                     </li>
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('tokens')}" (click)="app.closeSideMenu()">
-                        <a class="nav-link" [routerLink]="'/exchange/tokens'" >{{local.string.Tokens}}</a>
+                        <a class="nav-link" [routerLink]="'/exchange/tokens'" >
+                            <i class="material-icons"> navigate_next </i>{{local.string.Tokens}}
+                        </a>
                     </li>
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('trade')}" (click)="app.closeSideMenu()">
-                        <a class="nav-link" routerLink="{{'/exchange/trade/' + (app.getGlobal('last-market') || 'cnt.tlos') }}" >{{local.string.Trade}}</a>
+                        <a class="nav-link" routerLink="{{'/exchange/trade/' + (app.getGlobal('last-market') || 'cnt.tlos') }}" >
+                            <i class="material-icons"> navigate_next </i>{{local.string.Trade}}
+                        </a>
                     </li>
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('account')}" (click)="app.closeSideMenu()">
-                        <a class="nav-link" [routerLink]="'/exchange/account/' + vapaee.current.name" >{{local.string.Account}}</a>
+                        <a class="nav-link" [routerLink]="'/exchange/account/' + vapaee.current.name" >
+                            <i class="material-icons"> navigate_next </i>{{local.string.Account}}
+                        </a>
                     </li>
-                    <li class="nav-item" [ngClass]="{active: app.stateStartsWith('wp')}" (click)="app.closeSideMenu()">
-                        <a class="nav-link" [routerLink]="'/exchange/wp'" >WP</a>
+                    <li class="nav-item highlight" [ngClass]="{active: app.stateStartsWith('wp')}" (click)="app.closeSideMenu()">
+                        <a class="nav-link" [routerLink]="'/exchange/wp'" >
+                            <i class="material-icons"> navigate_next </i>WP
+                        </a>
                     </li>
                     <li class="nav-item dropdown" ngbDropdown>
                         <a ngbDropdownToggle class="nav-link dropdown-toggle cursor-pointer" data-toggle="dropdown" id="language">{{local.string.Language}} <span class="caret"></span></a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="language">
-                            <span class="cursor-pointer dropdown-item" (click)="local.setLocal('en_US');">English</span>
-                            <span class="cursor-pointer dropdown-item" (click)="local.setLocal('es_ES');">Español</span>
-                            <span class="cursor-pointer dropdown-item" (click)="local.setLocal('pt_BR');">Português</span>
+                            <span class="cursor-pointer dropdown-item" (click)="local.setLocal('en_US'); debug();">English</span>
+                            <span class="cursor-pointer dropdown-item" (click)="local.setLocal('es_ES'); debug();">Español</span>
+                            <span class="cursor-pointer dropdown-item" (click)="local.setLocal('pt_BR'); debug();">Português</span>
                         </div>
                     </li>                    
                 </ul>        
@@ -54,7 +64,7 @@ import { LocalStringsService } from './services/common/common.services';
     <!-- Page content -->
       
   `,
-    styles: ['display: block; ']
+    styles: ['li.nav-item.active a.nav-link { position:relative; } li.nav-item.active a.nav-link i.material-icons { display: inline-block; } a.nav-link i.material-icons { display: none; position: absolute; left: -24px; top: 5px; }']
 })
 export class AppComponent {
 
@@ -75,7 +85,7 @@ export class AppComponent {
         public vapaee: VapaeeService,
         public local: LocalStringsService
     ) {
-        this.app.init("v1.8.1");
+        this.app.init("v2.0.0");
     }
     
     ngOnInit() {
@@ -128,6 +138,14 @@ export class AppComponent {
     onWindowsResize() {
         this.app.onWindowsResize();
         this.class = this.app.device.class;
+    }
+
+
+    debug(){
+        console.log("--------------------------------");
+        console.log("VPE", [this.vapaee]);
+        console.log("Components", [this.components]);
+        console.log("--------------------------------");
     }
 
 }

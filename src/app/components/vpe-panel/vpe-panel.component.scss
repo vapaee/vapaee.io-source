@@ -1,5 +1,6 @@
 :host {
     max-height: 100%;
+    flex-grow: 1;
     &.active-on-hover:hover {
         // background: blue !important;
         div.vpe-background-panel {
@@ -12,7 +13,15 @@
     }
     display: flex;
     flex-direction: column;
+    &.overflow div.body {
+        overflow: visible !important;
+    }
+    div.main {
+        flex-grow: 1;
+        display: flex;
+    }
     div.body {
+        flex-grow: 1;
         display: flex;
         flex-direction: column;
         -webkit-transition: height .5s ease-out;
@@ -57,4 +66,5 @@
         
     }
 }
+
 

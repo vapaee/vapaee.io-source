@@ -1,4 +1,16 @@
 :host {
     display: flex;
+    flex-grow: 1;
     flex-direction: column;
+}
+
+// account header 
+@media (max-width: 576px) {
+    .card-header {
+        padding: 10px;
+    }
+    .account-name {
+        margin-left: -5px;
+    }
+    
 }

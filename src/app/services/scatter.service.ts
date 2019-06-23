@@ -757,7 +757,10 @@ export class ScatterService {
                     ).then(result => {
                         console.log("EXITO !!!!", result);
                         resolve(result);
-                    });
+                    }).catch((error) => {
+                        console.error("ERROR !!!!", error);
+                        reject(error);
+                    }); 
 
 
                 });

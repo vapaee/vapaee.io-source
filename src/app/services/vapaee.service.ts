@@ -145,7 +145,11 @@ export class VapaeeService {
     // -- User Log State ---------------------------------------------------
     login() {
         this.feed.setLoading("login", true);
+        this.feed.setLoading("log-state", true);
+        console.log("VapaeeService.login() this.feed.loading('log-state')", this.feed.loading('log-state'));
         this.logout();
+        this.updateLogState();
+        console.log("VapaeeService.login() this.feed.loading('log-state')", this.feed.loading('log-state'));
         this.feed.setLoading("logout", false);
         return this.scatter.login().then(() => {
             this.updateLogState();
@@ -222,23 +226,32 @@ export class VapaeeService {
     private updateLogState() {
         this.loginState = "no-scatter";
         this.feed.setLoading("log-state", true);
-        // console.error("VapaeeService.updateLogState() ", this.loginState);
+        console.log("VapaeeService.updateLogState() ", this.loginState, this.feed.loading("log-state"));
         this.scatter.waitConnected.then(() => {
             this.loginState = "no-logged";
-            // console.error("VapaeeService.updateLogState()   ", this.loginState);
+            // console.log("VapaeeService.updateLogState()   ", this.loginState);
             if (this.scatter.logged) {
                 this.loginState = "account-ok";
-                // console.error("VapaeeService.updateLogState()     ", this.loginState);
+                // console.log("VapaeeService.updateLogState()     ", this.loginState);
             }
             this.feed.setLoading("log-state", false);
+            console.log("VapaeeService.updateLogState() ", this.loginState, this.feed.loading("log-state"));
         });
 
-        var timer = setInterval(_ => {
-            if (!this.feed.loading("connect")) {
+        var timer2;
+        var timer1 = setInterval(_ => {
+            if (!this.scatter.feed.loading("connect")) {
                 this.feed.setLoading("log-state", false);
-                clearInterval(timer);
+                clearInterval(timer1);
+                clearInterval(timer2);
             }
         }, 200);
+
+        timer2 = setTimeout(_ => {
+            clearInterval(timer1);
+            this.feed.setLoading("log-state", false);
+        }, 6000);
+        
     }
 
     private async getAccountData(name: string): Promise<AccountData>  {
@@ -251,6 +264,7 @@ export class VapaeeService {
     createOrder(type:string, amount:Asset, price:Asset) {
         // "alice", "buy", "2.50000000 CNT", "0.40000000 TLOS"
         // name owner, name type, const asset & total, const asset & price
+        this.feed.setLoading("order-"+type, true);
         return this.utils.excecute("order", {
             owner:  this.scatter.account.name,
             type: type,
@@ -258,13 +272,20 @@ export class VapaeeService {
             price: price.toString(8)
         }).then(async result => {
             this.updateTrade(amount.token, price.token);
+            this.feed.setLoading("order-"+type, false);
             return result;
+        }).catch(e => {
+            this.feed.setLoading("order-"+type, false);
+            console.error(e);
+            throw e;
         });
     }
 
     cancelOrder(type:string, comodity:Token, currency:Token, orders:number[]) {
         // '["alice", "buy", "CNT", "TLOS", [1,0]]'
         // name owner, name type, const asset & total, const asset & price
+        this.feed.setLoading("cancel-"+type, true);
+        for (var i in orders) { this.feed.setLoading("cancel-"+type+"-"+orders[i], true); }
         return this.utils.excecute("cancel", {
             owner:  this.scatter.account.name,
             type: type,
@@ -273,33 +294,61 @@ export class VapaeeService {
             orders: orders
         }).then(async result => {
             this.updateTrade(comodity, currency);
+            this.feed.setLoading("cancel-"+type, false);
+            for (var i in orders) { this.feed.setLoading("cancel-"+type+"-"+orders[i], false); }    
             return result;
+        }).catch(e => {
+            this.feed.setLoading("cancel-"+type, false);
+            for (var i in orders) { this.feed.setLoading("cancel-"+type+"-"+orders[i], false); }    
+            console.error(e);
+            throw e;
         });
     }
 
     deposit(quantity:Asset) {
         // name owner, name type, const asset & total, const asset & price
         var util = new Utils(quantity.token.contract, this.scatter);
-        return util.excecute("transfer", {
+        this.feed.setError("deposit", null);
+        this.feed.setLoading("deposit", true);
+        this.feed.setLoading("deposit-"+quantity.token.symbol.toLowerCase(), true);
+        return util.excecute("deposit", {
             from:  this.scatter.account.name,
             to: this.vapaeetokens,
             quantity: quantity.toString(),
             memo: "deposit"
         }).then(async result => {
+            this.feed.setLoading("deposit", false);
+            this.feed.setLoading("deposit-"+quantity.token.symbol.toLowerCase(), false);    
             await this.getDeposits();
             await this.getBalances();
             return result;
+        }).catch(e => {
+            this.feed.setLoading("deposit", false);
+            this.feed.setLoading("deposit-"+quantity.token.symbol.toLowerCase(), false);
+            this.feed.setError("deposit", typeof e == "string" ? e : JSON.stringify(e,null,4));
+            console.error(e);
+            throw e;
         });
     }    
 
     withdraw(quantity:Asset) {
+        this.feed.setError("withdraw", null);
+        this.feed.setLoading("withdraw", true);
+        this.feed.setLoading("withdraw-"+quantity.token.symbol.toLowerCase(), true);   
         return this.utils.excecute("withdraw", {
             owner:  this.scatter.account.name,
             quantity: quantity.toString()
         }).then(async result => {
+            this.feed.setLoading("withdraw", false);
+            this.feed.setLoading("withdraw-"+quantity.token.symbol.toLowerCase(), false);
             await this.getDeposits();
             await this.getBalances();
             return result;
+        }).catch(e => {
+            this.feed.setLoading("withdraw", false);
+            this.feed.setLoading("withdraw-"+quantity.token.symbol.toLowerCase(), false);
+            this.feed.setError("withdraw", typeof e == "string" ? e : JSON.stringify(e,null,4));
+            throw e;
         });
     }
 
@@ -392,6 +441,12 @@ export class VapaeeService {
 
     getTokenNow(sym:string): Token {
         for (var i in this.tokens) {
+            // there's a little bug. This is a justa  work arround
+            if (this.tokens[i].symbol.toUpperCase() == "TLOS" && this.tokens[i].fiat) {
+                // this solves attaching wrong tlos token to asset
+                continue;
+            }
+             
             if (this.tokens[i].symbol.toUpperCase() == sym.toUpperCase()) {
                 return this.tokens[i];
             }
@@ -540,7 +595,7 @@ export class VapaeeService {
     }
 
     async updateCurrentUser(): Promise<any> {
-        console.log("VapaeeService.updateCurrentUser()");
+        // console.log("VapaeeService.updateCurrentUser()");
         this.feed.setLoading("current", true);        
         return Promise.all([
             this.getUserOrders(),
@@ -564,6 +619,7 @@ export class VapaeeService {
         if (mod > 0) {
             pages +=1;
         }
+        // console.log("getBlockHistoryTotalPagesFor() total:", total, " pages:", pages);
         return pages;
     }
 
@@ -647,7 +703,7 @@ export class VapaeeService {
     }
 
     async getBlockHistory(comodity:Token, currency:Token, page:number = -1, pagesize:number = -1, force:boolean = false): Promise<any> {
-        console.log("VapaeeService.getBlockHistory()", comodity.symbol);
+        console.log("VapaeeService.getBlockHistory()", comodity.symbol, page, pagesize);
         var scope:string = comodity.symbol.toLowerCase() + "." + currency.symbol.toLowerCase();
         if (comodity == this.telos) {
             scope = currency.symbol.toLowerCase() + "." + comodity.symbol.toLowerCase();
@@ -666,7 +722,7 @@ export class VapaeeService {
                 if (page < 0) page = 0;
             }
             var promises = [];
-            for (var i=0; i<pages; i++) {
+            for (var i=0; i<=pages; i++) {
                 var promise = this.fetchBlockHistory(scope, i, pagesize);
                 promises.push(promise);
             }
@@ -1422,6 +1478,7 @@ export class VapaeeService {
     }
 
     private resortTokens() {
+        console.log("resortTokens()");
         this.tokens.sort((a:Token, b:Token) => {
             if (this.scopes && this.scopes[a.scope] && this.scopes[b.scope]) {
                 var a_vol = this.scopes[a.scope].summary.volume;
@@ -1429,10 +1486,15 @@ export class VapaeeService {
                 if(a_vol.amount.isGreaterThan(b_vol.amount)) return -1;
                 if(a_vol.amount.isLessThan(b_vol.amount)) return 1;    
             }
+
+            if (!a.scope) return -1;
+            if (!b.scope) return 1;
             if(a.appname < b.appname) return -1;
             if(a.appname > b.appname) return 1;
             return 0;
         }); 
+
+        console.log("resortTokens()", this.tokens);
 
         this.onTokensReady.next(this.tokens);
     }

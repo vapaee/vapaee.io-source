@@ -47,7 +47,12 @@ export class VpePanelOrdersComponent implements OnChanges {
 
     get orders_sell_inverted() {
         if (!this.inverted || this.inverted.length != this.orders.sell.length) {
-            this.inverted = this.orders.sell.reverse();            
+            this.inverted = this.orders.sell.map(x => x);
+            // console.log("this.orders.sell[0]: ", this.orders.sell[0], "this.inverted[0]", this.inverted[0]);
+            this.inverted.reverse();
+            // console.log("this.orders.sell[0]: ", this.orders.sell[0], "this.inverted[0]", this.inverted[0]);
+            // console.log("orders_sell_inverted(): ", this.orders.sell);
+            // console.log("orders_sell_inverted(): ", this.inverted);
         }        
         return this.inverted;
     }

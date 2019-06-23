@@ -308,7 +308,10 @@ export class Utils {
             try {
                 this.scatter.executeTransaction(this.contract, action, params).then(result => {
                     resolve(result);
-                }).catch(err => { console.error(err); reject(err); });
+                }).catch(err => {
+                    console.error("ERROR: ", err);
+                    reject(err);
+                });
             } catch (err) { console.error(err); reject(err); }
         }); // .catch(err => console.error(err) );
     } 

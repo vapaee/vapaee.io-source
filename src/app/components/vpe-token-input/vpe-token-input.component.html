@@ -1,8 +1,9 @@
-<div class="input-group" [hidden]="button">
+
+<div class="input-group" [hidden]="button" (click)="onClick(content)">
     <input
         type="text"
         class="form-control form-control-sm"
-        [ngClass]="{'disabled': disabled}"
+        [ngClass]="{'disabled': disabled, 'pointer-events-none': service.device.portrait}"
         (ngModelChange)="onChange(ctrl,$event)"
         (blur)="onBlur(ctrl,$event)"
         #ctrl="ngModel"
@@ -15,11 +16,11 @@
     </div>
 </div>
 
-<div class="input-group" [hidden]="!button">
+<div class="input-group" [hidden]="!button" (click)="onClick(content)">
     <input
         type="text"
         class="form-control form-control-sm"
-        [ngClass]="{'disabled': disabled}"
+        [ngClass]="{'disabled': disabled, 'pointer-events-none': service.device.portrait}"
         (ngModelChange)="onChange(ctrl,$event)"
         (blur)="onBlur(ctrl,$event)"
         #ctrl="ngModel"
@@ -30,7 +31,7 @@
     >
     <div class="input-group-append">
         <span class="input-group-text form-control-sm padding-xs">{{asset ? asset.token.symbol : ' '}}</span>
-        <button [hidden]="!button" class="action btn btn-sm btn-primary" type="button" (click)="onEnter()">
+        <button [hidden]="!button" class="action btn btn-sm btn-primary" type="button" (click)="onEnter($event)">
             <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
             {{button | titlecase}}
         </button>
@@ -47,3 +48,104 @@
         </div>
     </div>    
 </div>
+
+
+<ng-template #content let-modal>
+    <vpe-panel [margintop]="false" [hideheader]="true">   
+        <div class="d-flex flex-column flex-grow expand">
+            <div class="d-flex flex-row margin-top">
+                <div class="text-lg text-center flex-grow">{{placeholder}}</div>
+            </div>
+
+            <div class="d-flex flex-row margin-top-xl">
+                <span class="btn btn-sm btn-success flex-grow text-md" (click)="add(1)">+1</span>
+                <span class="btn btn-sm btn-success flex-grow text-md" (click)="add(0.1)">+0.1</span>
+                <span class="btn btn-sm btn-success flex-grow text-md" (click)="add(0.01)">+0.01</span>
+                <span class="btn btn-sm btn-success flex-grow text-md" (click)="add(0.001)">+0.001</span>
+            </div>
+
+            <div class="d-flex flex-row margin-top">
+                <div class="text-lg text-center flex-grow">{{newtext}} {{asset?.token?.symbol}}</div>
+            </div>
+
+            <div class="d-flex flex-row margin-top">
+                <span class="btn btn-sm btn-danger flex-grow text-md" (click)="add(-1)">-1</span>
+                <span class="btn btn-sm btn-danger flex-grow text-md" (click)="add(-0.1)">-0.1</span>
+                <span class="btn btn-sm btn-danger flex-grow text-md" (click)="add(-0.01)">-0.01</span>
+                <span class="btn btn-sm btn-danger flex-grow text-md" (click)="add(-0.001)">-0.001</span>
+            </div>
+
+            <div class="d-flex flex-row margin-top-xl">
+                <div class="flex-grow row">
+                    <div class="col-6 text-center"><span class="btn-danger  btn" (click)="onFinish(false)">Cancel</span></div>
+                    <div class="col-6 text-center"><span class="btn-success btn" (click)="onFinish(true)">Confirm</span></div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-grow margin-top justify-content-end">
+                <div class="d-flex flex-row bg-color-blue">
+                    <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('.')">.</span></div>
+                    <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('0')">0</span></div>
+                    <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type(null,true)">&lt;</span></div>
+                </div>
+                <div class="d-flex flex-row bg-color-blue">
+                    <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('1')">1</span></div>
+                    <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('2')">2</span></div>
+                    <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('3')">3</span></div>
+                </div>
+                <div class="d-flex flex-row bg-color-blue">
+                    <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('4')">4</span></div>
+                    <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('5')">5</span></div>
+                    <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('6')">6</span></div>
+                </div>
+                <div class="d-flex flex-row bg-color-blue">
+                    <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('7')">7</span></div>
+                    <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('8')">8</span></div>
+                    <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('9')">9</span></div>
+                </div>
+            </div>
+        </div>
+        
+    
+        <!--
+        <div class="sub-btns margin-top row flex-grow">
+            <div class="col">
+
+                <div class="d-flex flex-column flex-grow expand">
+                    <div class="col p-2">
+                        <div class="row bg-color-blue">
+                            <div class="col">.</div>
+                            <div class="col bg-color-red">0</div>
+                            <div class="col">&lt;-</div>
+                        </div>
+                    </div>
+                    <div class="col p-2">
+                        <div class="row bg-color-blue">
+                            <div class="col">1</div>
+                            <div class="col">2</div>
+                            <div class="col bg-color-red">3</div>
+                        </div>
+                    </div>
+                    <div class="col p-2">
+                        <div class="row bg-color-blue">
+                            <div class="col">4</div>
+                            <div class="col bg-color-red">5</div>
+                            <div class="col">6</div>
+                        </div>
+                    </div>
+                    <div class="col p-2">
+                        <div class="row bg-color-blue">
+                            <div class="col bg-color-red">7</div>
+                            <div class="col">8</div>
+                            <div class="col">9</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        -->
+
+
+    </vpe-panel>
+</ng-template>

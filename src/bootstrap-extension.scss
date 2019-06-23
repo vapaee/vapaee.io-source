@@ -228,7 +228,9 @@
     td { cursor: pointer; }
 }
 .cursor-pointer { cursor: pointer; }
-
+.pointer-events-none {
+    pointer-events: none;
+}
 
 .thead-inverse th {
     color: #fff;
@@ -335,11 +337,15 @@ th.left-aligned, td.left-aligned {
 .color-white { color: white; }
 .color-grey { color: grey; }
 .color-green { color: green; }
+.color-red { color: red; }
+.color-blue { color: blue; }
 .color-yellow { color: yellow; }
 .bg-color-black { background-color: black; }
 .bg-color-white { background-color: white; }
 .bg-color-grey { background-color: grey; }
 .bg-color-green { background-color: green; }
+.bg-color-red { background-color: red; }
+.bg-color-blue { background-color: blue; }
 .bg-color-yellow { background-color: yellow; }
 .bg-color-black-alpha { background-color: rgba(0,0,0,0.5); }
 
@@ -557,6 +563,9 @@ small, .small {
 .text-bold {
     font-weight: bold;
 }
+.text-monospace {
+    font-family: monospace;
+}
 // Insiprado en https://mdbootstrap.com/utilities/bootstrap-text/
 .text-xxxl-left, .text-xxl-left, .text-xl-left, .text-lg-left, .text-md-left, .text-sm-left, .text-xs-left {
     text-align: left;
@@ -753,3 +762,13 @@ div.pull-right {
         line-height: 1.5;
     }
 }
+
+
+// spinner xs size
+.spinner-border-xs {
+    margin-bottom: 2px;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-width: 0.2em;
+}
+

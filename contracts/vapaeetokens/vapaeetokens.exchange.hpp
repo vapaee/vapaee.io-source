@@ -622,7 +622,7 @@ namespace vapaee {
          
                 // update how many blocks do we have
                 orderstables.modify(*orders_itr, same_payer, [&](auto & a){
-                    a.blocks += 1;
+                    a.blocks = id;
                 });
             } else {
                 blocktable.modify(*bptr, get_self(), [&](auto & a){
@@ -634,9 +634,6 @@ namespace vapaee {
                 });
             }
 
-
-            
-
             PRINT("vapaee::token::exchange::aux_register_transaction_in_history() ...\n");
         }
 
@@ -644,7 +641,7 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::aux_register_event()\n");
             PRINT(" user: ", user.to_string(), "\n");
             PRINT(" event: ", event.to_string(), "\n");
-            PRINT(" desc: ", desc.to_string(), "\n");
+            PRINT(" params: ", params.c_str(), "\n");
             time_point_sec date = time_point_sec(now());
             
             events table(get_self(), get_self().value);
@@ -1531,6 +1528,13 @@ namespace vapaee {
             //     table6.erase(*ptr);
             //     if (count++ > num) break;
             // }
+
+            ordertables orderstables(get_self(), get_self().value);
+            auto orders_itr = orderstables.find(account.value);
+            
+            orderstables.modify(*orders_itr, same_payer, [&](auto & a){
+                a.blocks = num;
+            });
 
             
             PRINT("vapaee::token::exchange::action_poblate_user_orders_table() ...\n");

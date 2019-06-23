@@ -1,13 +1,20 @@
 -- TODO (code) --
-- cuando la wallet no está detectada no se ve el combobox de fiat currency
 - cuando termina de realizarse un depósito o un withdraw habría que cerrar automáticamente el miniformulario
-- verificar que los tokens siempre se mantengan ordenados por volumen 
 
 
 
 -- UPDATING SCATTER LIBS --
 npm i -S scatterjs-core scatterjs-plugin-eosjs2 eosjs@20.0.0-beta3
 https://github.com/GetScatter/scatter-js
+
+
+
+
+
+
+
+
+
 
 
 
@@ -31,6 +38,15 @@ I also deployed this mini project on my server under this url:
 http://lynx.vapaee.io/
 
 It works perfect with Scatter Desktop.
+
+
+
+
+
+
+
+
+
 
 
 
@@ -78,9 +94,6 @@ import ScatterLynx from 'scatterjs-plugin-lynx'
     "scatterjs-plugin-lynx": "^1.6.6",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26"
-
-
-
 
 
 

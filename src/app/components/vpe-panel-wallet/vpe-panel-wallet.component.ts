@@ -26,7 +26,8 @@ export class VpePanelWalletComponent implements OnChanges {
     @Input() public expanded: boolean;
     @Input() public title: string;
     @Input() public loading: boolean;
-    @Input() public error: string;
+    @Input() public withdraw_error: string;
+    @Input() public deposit_error: string;
 
     @Output() confirmDeposit: EventEmitter<any> = new EventEmitter();
     @Output() confirmWithdraw: EventEmitter<any> = new EventEmitter();
@@ -39,6 +40,7 @@ export class VpePanelWalletComponent implements OnChanges {
     public alert_msg:string;
     public loading_fake_tlos: boolean;
     public loading_fake: boolean;
+    public portrait: boolean;
 
     public show_prices_top: boolean;
     public show_prices_bottom: boolean;
@@ -94,52 +96,67 @@ export class VpePanelWalletComponent implements OnChanges {
         if (this._nonfake_balances) return this._nonfake_balances;
         this._nonfake_balances = this._nonfake_balances || [];
         for (var i in this.balances) {
-            if (!this.balances[i].token.fake) {
+            if (!this.balances[i].token.fake && !this.balances[i].token.fiat) {
                 this._nonfake_balances.push(this.balances[i]);
             }
         }
-        // console.log(this._nonfake_balances);
+        console.log("get_non_fake_balances --->", this.balances);
         return this._nonfake_balances;
     }
 
     async updateSize(event:ResizeEvent) {
-        console.log("onResize()", event.width, [event]);
+        // console.log("onResize()", event.width, [event]);
         this.digits = {
             amount:8,
             fiat:4
         };
+        this.portrait = event.device.portrait;
         this.display = "normal";
-        if (event.width < 370) {
-            this.display = "medium";
+        if (event.device.wide) {
+            if (event.width < 370) {
+                this.display = "medium";
+            }            
+            if (event.width < 360) {
+                this.digits.amount = 7;
+            }
+            if (event.width < 350) {
+                this.digits.fiat = 3;
+            }
+            if (event.width < 320) {
+                this.display = "small";
+            }
+            if (event.width < 300) {
+                this.digits.amount = 6;
+                this.digits.fiat = 2;
+            }
+            if (event.width < 280) {
+                this.digits.amount = 5;
+            }
+            if (event.width < 260) {
+                this.digits.fiat = 1;
+            }
+            if (event.width < 250) {
+                this.display = "tiny";
+            }
+            if (event.width < 230) {
+                this.digits.amount = 5;
+            }
+            if (event.width < 210) {
+                this.digits.amount = 4;
+            }
+        } else {
+            this.digits.amount = 8;
+            this.digits.fiat = 4;
+            if (event.width < 370) {
+                this.display = "medium";
+            }
+            if (event.width < 300) {
+                this.digits.amount = 6;
+                this.digits.fiat = 2;
+            }
         }
-        if (event.width < 360) {
-            this.digits.amount = 7;
-        }
-        if (event.width < 350) {
-            this.digits.fiat = 3;
-        }
-        if (event.width < 320) {
-            this.display = "small";
-        }
-        if (event.width < 300) {
-            this.digits.amount = 6;
-            this.digits.fiat = 2;
-        }
-        if (event.width < 280) {
-            this.digits.amount = 5;
-        }
-        if (event.width < 260) {
-            this.digits.fiat = 1;
-        }
-        if (event.width < 250) {
-            this.display = "tiny";
-        }
-        if (event.width < 230) {
-            this.digits.amount = 5;
-        }
-        if (event.width < 210) {
-            this.digits.amount = 4;
-        }
+
+        
     }
 
     onResize(event:ResizeEvent) {

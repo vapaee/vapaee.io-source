@@ -124,7 +124,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             
             this.cant_operate = true;
             this.toolow = false;
-            console.log("calculate");
+            // console.log("calculate");
 
             this.deposits_comodity = new Asset("0 " + this.comodity.symbol, this.vapaee);
             this.deposits_currency = new Asset("0 " + this.currency.symbol, this.vapaee);
@@ -196,11 +196,30 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         });
     }
 
-    wantsTo(what) {
+    wantsTo(what, takeprice:boolean = false) {
         console.assert(what == "sell" || what == "buy", "ERROR: wantsTo what??", what);
         // if (what == "sell" && !this.can_sell) return;
         // if (what == "buy" && !this.can_buy) return;
         this.wants = what;
+
+        if (what == "sell" && this.buyorders && takeprice) {
+            console.log("wantsTo",what, this.buyorders);
+            if (this.buyorders.length > 0) {
+                var order = this.buyorders[0];
+                console.log("******* order", order);
+                this.price = order.price;
+            }
+        }
+
+        if (what == "buy" && this.sellorders && takeprice) {
+            console.log("wantsTo",what, this.sellorders);
+            if (this.sellorders.length > 0) {
+                var order = this.sellorders[0];
+                console.log("******* order", order);
+                this.price = order.price;
+            }
+        }
+
         this.calculate();
     }
 
@@ -305,6 +324,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         console.log(this);
         console.log("-------");
     }
+    
 
     buy() {
         if (!this.can_buy) return;
@@ -320,6 +340,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             if (typeof e == "string") {
                 this.feed.setError("form", "ERROR: " + JSON.stringify(JSON.parse(e), null, 4));
             } else {
+                this.feed.setError("form", "ERROR: " + JSON.stringify(e, null, 4));
                 this.feed.clearError("form");
             }
             this.loading = false;
@@ -340,6 +361,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             if (typeof e == "string") {
                 this.feed.setError("form", "ERROR: " + JSON.stringify(JSON.parse(e), null, 4));
             } else {
+                this.feed.setError("form", "ERROR: " + JSON.stringify(e, null, 4));
                 this.feed.clearError("form");
             }
             this.loading = false;

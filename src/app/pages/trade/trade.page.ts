@@ -30,6 +30,9 @@ export class TradePage implements OnInit, OnDestroy {
     public loading: boolean;
     public error: string;
 
+    // temporal
+    public asset: Asset =  new Asset();
+
     @ViewChild(VpePanelOrderEditorComponent) orderform_min: VpePanelOrderEditorComponent;
     @ViewChild(VpePanelOrderEditorComponent) orderform_full: VpePanelOrderEditorComponent;
    
@@ -205,21 +208,22 @@ export class TradePage implements OnInit, OnDestroy {
 
     // wallet actions 
 
+    get withdraw_error() {
+        return this.vapaee.feed.error('withdraw');
+    }
+
+    get deposit_error() {
+        return this.vapaee.feed.error('deposit');
+    }    
+
     onWalletConfirmDeposit(amount: Asset) {
         // console.log("------------------>", amount.toString());
         this.loading = true;
-        this.error = null;
         this.vapaee.deposit(amount).then(_ => {
             // console.log("------------------>", amount.toString());
             this.loading = false;
         }).catch(e => {
             console.error(typeof e, e);
-            // this.error = "ERROR: " + JSON.stringify(typeof e == "string" ? JSON.parse(e) : e, null, 4);
-            if (typeof e == "string") {
-                this.error = "ERROR: " + JSON.stringify(JSON.parse(e), null, 4);
-            } else {
-                this.error = null;
-            }
             this.loading = false;
         });
     }
@@ -227,18 +231,11 @@ export class TradePage implements OnInit, OnDestroy {
     onWalletConfirmWithdraw(amount: Asset) {
         // console.log("------------------>", amount.toString());
         this.loading = true;
-        this.error = null;
         this.vapaee.withdraw(amount).then(_ => {
             // console.log("------------------>", amount.toString());
             this.loading = false;
         }).catch(e => {
             console.error(typeof e, e);
-            // this.error = "ERROR: " + JSON.stringify(typeof e == "string" ? JSON.parse(e) : e, null, 4);
-            if (typeof e == "string") {
-                this.error = "ERROR: " + JSON.stringify(JSON.parse(e), null, 4);
-            } else {
-                this.error = null;
-            }
             this.loading = false;
         });        
     }

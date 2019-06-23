@@ -1,49 +1,84 @@
-<vpe-panel (click)="open(content)" class="cursor-pointer active-on-hover"  [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [hidebackground]='true' [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.account">
+<vpe-panel class="cursor-pointer active-on-hover overflow"  [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [hidebackground]='true' [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.account">
     <div class="card text-white bg-dark margin-top">
-
-
 
         <!-- portrait -->
         <div class="card-header vpe-background-card-header" *ngIf="portrait">
-                <div class="row">
-                    <div class="col-auto col-padding-right">
-                        <identicon-comp class="portrait" [value]="current.name"></identicon-comp>
-                    </div>
-    
-                    <div class="col col-padding-left">
-                        <div class="pull-right" style="margin-top: 8px;">
-                            <span [ngClass]="{'d-none':!vapaee.logged}">
-                                <span class="btn btn-xs btn-primary margin-left" (click)="vapaee.logout()">
-                                    <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('logout') && !vapaee.feed.loading('log-state')"></span> 
-                                    <span> {{local.string.logout}} </span>
-                                </span>
-                            </span>
-                        </div>                    
-                        <div class="text-xl"> {{current.name}} </div>
-                    </div>
+            <div class="row">
+                <div class="col-auto col-padding-right">
+                    <identicon-comp class="portrait" [value]="current.name"></identicon-comp>
                 </div>
-    
-                <div class="row">
-                    <div class="col">            
-    
-                        <!-- Total balance (if any) -->
-                        <div class="text-md nowrap" [hidden]="!current.data.total_balance">
-                            <small>total balance: </small>
-                            <span class="text-md"> {{current.data.total_balance}} </span>
-                            <span class="text-sm color-yellow d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
+
+                <div class="col col-padding-left">
+                    <div class="pull-right text-center" [hidden]="current.name != 'guest'">
+
+                        <div [ngClass]="{'d-none':vapaee.loginState != 'no-scatter'}">
+                            <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
+                                <span class="spinner-border spinner-border-xs" [hidden]="!vapaee.feed.loading('log-state') && !scatter.feed.loading('connect')"></span>
+                                {{local.string.retry | titlecase}}
+                            </span><br>
+                            <span class="text-sm">{{local.string.noWallet}} </span>
                         </div>
-                        <div class="text-md nowrap" [hidden]="!current.data.total_balance">
-    
-                            <div class="pull-right">
-                                <vpe-fiat-combobox [btn]="'xs'"></vpe-fiat-combobox>
-                            </div> 
-    
-                            <span class="text-sm color-yellow d-sm d-md-none"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
-                        </div>                    
-    
+
+                        <div [ngClass]="{'d-none':vapaee.loginState != 'no-logged'}">
+                            <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
+                                <span class="spinner-border spinner-border-xs" [hidden]="!vapaee.feed.loading('login') && !vapaee.feed.loading('log-state')"></span>
+                                {{local.string.login | titlecase}}
+                            </span><br>
+                            <span class="text-sm">{{local.string.NotLogged}} </span>
+                        </div>
+
+                    </div>                    
+                    <div class="pull-right" style="margin-top: 8px;">
+                        <span [ngClass]="{'d-none':!vapaee.logged}">
+                            <span class="btn btn-xs btn-primary margin-left" (click)="vapaee.logout()">
+                                <span class="spinner-border spinner-border-xs" [hidden]="!vapaee.feed.loading('logout') && !vapaee.feed.loading('log-state')"></span> 
+                                <span> {{local.string.logout}} </span>
+                            </span>
+                        </span>
+                    </div>                    
+                    <div class="text-xl nowrap account-name"> {{current.name}}</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">            
+
+                    <!-- Total balance (if any) -->
+                    <div class="text-md nowrap margin-top-xs" [hidden]="!current.data.total_balance">
+                        <span class="text-md"> {{current.data.total_balance}} </span>
+                        <span class="text-sm color-yellow d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
+                    </div>
+                    <div class="text-md nowrap  margin-top-xs" [hidden]="!current.data.total_balance">
+
+                        <div class="pull-right">
+                            <vpe-fiat-combobox [btn]="'xs'"></vpe-fiat-combobox>
+                        </div> 
+
+                        <span class="text-sm color-yellow d-sm d-md-none"> {{service.getTelosInCurrentCurrency(current.data.total_balance)}} </span>
+                    </div>
+
+                </div>
+
+                <div class="col-12 text-right" [hidden]="current.name == 'guest'">
+                    <div [ngClass]="{'d-none':vapaee.loginState != 'no-scatter'}">
+                        <hr class="line" />
+                        <span class="text-md">{{local.string.noWallet}} </span>
+                        <span class="btn btn-xs btn-primary" (click)="vapaee.login()">
+                            <span class="spinner-border spinner-border-xs" [hidden]="!vapaee.feed.loading('log-state') && !scatter.feed.loading('connect')"></span>
+                            {{local.string.retry | titlecase}}
+                        </span>
+                    </div>
+                    <div [ngClass]="{'d-none':vapaee.loginState != 'no-logged'}">
+                        <hr class="line" />
+                        <span class="text-md">{{local.string.NotLogged}} </span>
+                        <span class="btn btn-xs btn-primary" (click)="vapaee.login()">
+                            <span class="spinner-border spinner-border-xs" [hidden]="!vapaee.feed.loading('login') && !vapaee.feed.loading('log-state')"></span>
+                            {{local.string.LoginWScOrSq}}
+                        </span>
                     </div>
                 </div>
             </div>
+        </div>
     
     
     
@@ -59,7 +94,7 @@
                 <div class="col col-padding-left">
                     <div [ngClass]="{'d-none':vapaee.loginState != 'no-scatter'}">
                         <div class="pull-right text-center" [hidden]="!current.data.total_balance">
-                            <span class="btn btn-sm btn-primary" (click)="scatter.connectApp()">
+                            <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
                                 <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('log-state')"></span>
                                 {{local.string.retry | titlecase}}
                             </span><br>
@@ -97,7 +132,7 @@
                     <!-- No Wallet detected -->
                     <div [ngClass]="{'d-none':vapaee.loginState != 'no-scatter'}" [hidden]="current.data.total_balance">
                         <div class="pull-right text-center">
-                            <span class="btn btn-sm btn-primary" (click)="scatter.connectApp()">
+                            <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
                                 <span class="spinner-border spinner-border-sm" [hidden]="!scatter.feed.loading('connect')"></span>
                                 {{local.string.retry | titlecase}}
                             </span>

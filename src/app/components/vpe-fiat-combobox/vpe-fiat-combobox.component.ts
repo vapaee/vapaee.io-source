@@ -20,7 +20,7 @@ export class VpeFIatComboboxComponent implements OnChanges {
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
-        this.btn = "xs";
+        this.btn = "sm";
     }
 
     ngOnChanges() {

@@ -62,7 +62,12 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
 
     onResize(device:ResizeEvent) {
         this.closed = false;
-        if (this.component) this.component.redraw(this.recreateDataTable(), null);
+        console.log("this.zoom", this.zoom);
+        var data = this.recreateDataTable();
+        setTimeout(_ => {
+            if (this.component) this.component.redraw(data, null);
+        }, 0);
+        
         // console.log(this._element.nativeElement.offsetWidth);
         // console.log(this._element.nativeElement.offsetHeight);
     }  
@@ -136,10 +141,31 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
     }
 
     timer;
+    cache: any;
     ngOnChanges() {
         this.bgStyle = {"height": this.height + "px"};
-        //console.log("********************* ngOnChanges()", this.data);
+        // console.log("********************* ngOnChanges()", this.data);
         // if (this.data && this.data.length > 0) {
+        
+        this.cache = this.cache || {};
+        if (this.cache.data_length == this.data.length) {
+            var last = this.data[this.data.length-1];
+            var equals = true;
+            for (var i in this.cache.last_block) {
+                if (this.cache.last_block[i] != last[i]) {
+                    equals = false;
+                    break;
+                }
+            }
+            if (equals) {
+                console.log("skip", [this.cache]);
+                return;    
+            } 
+        }
+
+        this.cache.data_length =  this.data.length;
+        this.cache.last_block =  this.data[this.data.length-1];
+
         if (this.data) {
             this._chartData = null;
             clearTimeout(this.timer);
