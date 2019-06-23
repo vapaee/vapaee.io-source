@@ -11,5 +11,5 @@
 </vpe-panel>
 
 <ng-template #content let-modal>
-    <vpe-panel-tokens [complete]="false" [margintop]="false" [tokens]="tokens" [scopes]="scopes" [hideheader]='true' (selectToken)="onTokenSelected($event)"></vpe-panel-tokens>
+    <vpe-panel-tokens [search]="'no-search'" [complete]="false" [margintop]="false" [tokens]="tokens" [scopes]="scopes" [hideheader]='true' (selectToken)="onTokenSelected($event)"></vpe-panel-tokens>
 </ng-template>

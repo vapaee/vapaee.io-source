@@ -1,5 +1,5 @@
 <vpe-panel class="max-height-100" [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.Tokenlist">
-    <div class="row">
+    <div class="row" *ngIf="search != 'no-search'">
         <div class="col-sm-12 input-group">
             <input
                 type="text"

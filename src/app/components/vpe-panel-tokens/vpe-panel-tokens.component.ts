@@ -21,6 +21,7 @@ export class VpePanelTokensComponent implements OnChanges {
     @Input() public margintop: boolean;
     @Input() public expanded: boolean;
     @Input() public complete: boolean;
+    @Input() public search: string;
     @Output() selectToken: EventEmitter<string> = new EventEmitter();
     token_filter:string;
     
