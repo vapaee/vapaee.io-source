@@ -100,7 +100,6 @@
                             </span><br>
                             <span>{{local.string.noWallet}}</span>
                             <br>
-                            <br>
                             <vpe-fiat-combobox></vpe-fiat-combobox>
                         </div>
                     </div>
@@ -157,7 +156,7 @@
                         <span class="text-md"> {{current.data.total_balance}} </span>
                         <span class="text-sm color-yellow d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
 
-                        <div class="pull-right" [hidden]="!vapaee.logged">
+                        <div class="pull-right" [hidden]="!vapaee.logged || vapaee.loginState == 'no-scatter'">
                             <vpe-fiat-combobox></vpe-fiat-combobox>
                         </div>                    
                     </div>

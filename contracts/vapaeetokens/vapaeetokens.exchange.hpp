@@ -336,6 +336,51 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::aux_try_to_unlock() ...\n");
         }
 
+        void aux_earn_micro_change(name owner, symbol orig, symbol extended, name ram_payer) {
+            PRINT("vapaee::token::exchange::aux_earn_micro_change()\n");
+            PRINT(" owner: ", owner.to_string(), "\n");
+            PRINT(" orig: ", orig.code().to_string(), "\n");
+            PRINT(" extended: ", extended.code().to_string(), "\n");
+            PRINT(" ram_payer: ", ram_payer.to_string(), "\n");
+
+            deposits depositstable(get_self(), owner.value);
+            auto itr = depositstable.find(extended.code().raw());
+            
+            if (itr == depositstable.end()) return;
+            // eosio_assert(itr != depositstable.end(),
+            //             create_error_symbol1(ERROR_AEMC_1, extended).c_str());
+            
+            eosio_assert(orig.code().raw() == extended.code().raw(),
+                        create_error_symbol2(ERROR_AEMC_2, orig, extended).c_str());
+
+            asset lowest_real_value = asset(1, orig);
+            asset lowest_extended_value = aux_extend_asset(lowest_real_value);
+            PRINT("   lowest_real_value: ", lowest_real_value.to_string(), "\n");
+            PRINT("   lowest_extended_value: ", lowest_extended_value.to_string(), "\n");
+            PRINT("   itr->amount: ", itr->amount.to_string(), "\n");
+            if (itr->amount < lowest_extended_value) {
+                    // transfer to contract fees on CNT
+                    action(
+                        permission_level{owner,name("active")},
+                        get_self(),
+                        name("swapdeposit"),
+                        std::make_tuple(owner, get_self(), itr->amount, string(" withdraw micro-change fees: ") + itr->amount.to_string())
+                    ).send();
+
+                    PRINT("     -- withdraw micro-change fees: ",  itr->amount.to_string(), " from ", owner.to_string(),"\n");
+                    // convert deposits to earnings
+                    action(
+                        permission_level{get_self(),name("active")},
+                        get_self(),
+                        name("deps2earn"),
+                        std::make_tuple(itr->amount)
+                    ).send();
+                    PRINT("     -- converting micro-chang fees ", itr->amount.to_string(), " to earnings\n");
+            }
+
+            PRINT("vapaee::token::exchange::aux_earn_micro_change() ...\n");
+        }
+
         void aux_convert_deposits_to_earnings(asset quantity) {
             PRINT("vapaee::token::exchange::aux_convert_deposits_to_earnings()\n");
             PRINT(" quantity: ", quantity.to_string(), "\n");
@@ -704,6 +749,16 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::aux_generate_order() ...\n");
         }
 
+        string create_error_symbol1(const char * text, const symbol & sym1) {
+            string result = string(text) + " [" + sym1.code().to_string() + "]";
+            return result;
+        }
+
+        string create_error_symbol2(const char * text, const symbol & sym1, const symbol & sym2) {
+            string result = string(text) + " [" + sym1.code().to_string() + "], [" + sym2.code().to_string()+"]";
+            return result;
+        }
+
         string create_error_asset1(const char * text, const asset & token1) {
             string result = string(text) + " [" + token1.to_string() + "]";
             return result;
@@ -896,7 +951,7 @@ namespace vapaee {
                     ).send();
                     PRINT("     -- transfer ", seller_gains.to_string(), " to ", buyer.to_string(),"\n");
                         
-                    // transfer to contractg fees on CNT
+                    // transfer to contract fees on CNT
                     action(
                         permission_level{owner,name("active")},
                         get_self(),
@@ -1060,6 +1115,8 @@ namespace vapaee {
             require_auth(owner);
             asset extended = aux_extend_asset(quantity);
             aux_substract_deposits(owner, extended, owner);
+
+            aux_earn_micro_change(owner, quantity.symbol, extended.symbol, owner);
 
             // send tokens
             tokens tokenstable(get_self(), get_self().value);

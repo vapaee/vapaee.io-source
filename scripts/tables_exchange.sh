@@ -71,7 +71,7 @@ show_table vapaeetokens vapaeetokens earnings
 show_table vapaeetokens $token.tlos history
 show_table vapaeetokens $token.tlos tablesummary
 show_table vapaeetokens $token.tlos blockhistory
-show_table vapaeetokens vapaeetokens events
+# show_table vapaeetokens vapaeetokens events
 
 
 # show_table vapaeetokens tlos.$token tablesummary

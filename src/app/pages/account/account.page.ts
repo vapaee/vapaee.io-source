@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { ScatterService } from 'src/app/services/scatter.service';
@@ -6,6 +6,7 @@ import { Subscriber } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { Profile, Utils } from 'src/app/services/utils.service';
 import { VapaeeService, Asset, UserOrders, UserOrdersMap } from 'src/app/services/vapaee.service';
+import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 
 
 @Component({
@@ -13,7 +14,7 @@ import { VapaeeService, Asset, UserOrders, UserOrdersMap } from 'src/app/service
     templateUrl: './account.page.html',
     styleUrls: ['./account.page.scss', '../common.page.scss']
 })
-export class AccountPage implements OnInit, OnDestroy {
+export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
 
     private subscriber: Subscriber<string>;
     current_mode: boolean;
@@ -26,12 +27,10 @@ export class AccountPage implements OnInit, OnDestroy {
         public scatter: ScatterService,
         public route: ActivatedRoute,
         public vapaee: VapaeeService,
+        public components: VpeComponentsService
     ) {
         this.subscriber = new Subscriber<string>(this.onCntCurrentAccountChange.bind(this));
-        this.current_mode = true;
-
-
-        
+        this.current_mode = true;        
     }
 
 
@@ -45,7 +44,14 @@ export class AccountPage implements OnInit, OnDestroy {
 
     get userorders(): UserOrdersMap {
         return this.vapaee.userorders;
-    }    
+    }
+    
+    ngAfterViewInit()  {
+        setTimeout(_ => { this.components.windowHasResized(this.components.device); },  500);
+        setTimeout(_ => { this.components.windowHasResized(this.components.device); }, 1500);
+        setTimeout(_ => { this.components.windowHasResized(this.components.device); }, 2000);
+        setTimeout(_ => { this.components.windowHasResized(this.components.device); }, 2500);
+    }
 
     updateAccount() {
     }

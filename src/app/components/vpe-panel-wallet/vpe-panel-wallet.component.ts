@@ -54,7 +54,10 @@ export class VpePanelWalletComponent implements OnChanges {
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
-        this.digits = {};
+        this.digits = {
+            amount:8,
+            fiat:4
+        };
         this.feed = new Feedback();
         this.show_prices_top = true;
         this.show_prices_bottom = true;
@@ -100,18 +103,19 @@ export class VpePanelWalletComponent implements OnChanges {
                 this._nonfake_balances.push(this.balances[i]);
             }
         }
-        console.log("get_non_fake_balances --->", this.balances);
+        // console.log("get_non_fake_balances --->", this.balances);
         return this._nonfake_balances;
     }
 
     async updateSize(event:ResizeEvent) {
-        // console.log("onResize()", event.width, [event]);
         this.digits = {
             amount:8,
             fiat:4
         };
+
         this.portrait = event.device.portrait;
         this.display = "normal";
+        console.log("updateSize() event.device.wide --->", event.device.wide);
         if (event.device.wide) {
             if (event.width < 370) {
                 this.display = "medium";
@@ -156,7 +160,6 @@ export class VpePanelWalletComponent implements OnChanges {
             }
         }
 
-        
     }
 
     onResize(event:ResizeEvent) {
@@ -252,6 +255,7 @@ export class VpePanelWalletComponent implements OnChanges {
         this._nonfake_balances = null;
         this._fake_balances = null;
         this._fake_tlos_balance = null;
+        this.service.windowHasResized(this.service.device);
     }
 
     onChange() {

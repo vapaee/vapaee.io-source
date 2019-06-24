@@ -2,8 +2,13 @@
     display: block;
     height: 100%;
 }
-.cnt-logo {
+.image-logo {
+    margin-top: 1px;
+    margin-left: 10px;
     height: 37px;
+    &.vpe {
+        margin-left: 25px;
+    }
 }
 
 // some minor fixes
@@ -13,8 +18,35 @@
 .navbar-brand {
     border-right-width: 0px;
 }
-.navbar-brand {
+.navbar-brand.brand {
     padding: 5px 20px 5px 10px;
+    overflow: hidden;
+    position: relative;
+    min-width: 150px;
+    .image-container {
+        position: absolute; top:0; left:0; right:0; bottom:0; 
+        transition: margin-top 0.3s ease-out;
+        &.switch {            
+            margin-top: -38px;
+        }
+    }
+}
+@media (min-width: 576px) {
+    .image-logo {
+        margin-top: 3px;
+        margin-left: 10px;
+        height: 45px;
+    }    
+    .navbar-brand.brand {
+        padding: 5px 20px 5px 10px;
+        min-width: 250px;
+        font-size: 1.7rem;
+        .image-container {
+            &.switch {
+                margin-top: -47px;
+            }
+        }
+    }
 }
 
 .navbar {

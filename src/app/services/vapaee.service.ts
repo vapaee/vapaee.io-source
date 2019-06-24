@@ -311,7 +311,7 @@ export class VapaeeService {
         this.feed.setError("deposit", null);
         this.feed.setLoading("deposit", true);
         this.feed.setLoading("deposit-"+quantity.token.symbol.toLowerCase(), true);
-        return util.excecute("deposit", {
+        return util.excecute("transfer", {
             from:  this.scatter.account.name,
             to: this.vapaeetokens,
             quantity: quantity.toString(),

@@ -44,7 +44,7 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         private _element:ElementRef,
         private renderer:Renderer
     ) {
-        this.zoom = 24;
+        this.zoom = 24*30; // one month of chart
         this.height = 290;
         this.closed = false;
         this.hideheader = false;

@@ -54,6 +54,7 @@ export class VpePanelComponent implements OnChanges, OnDestroy, AfterViewInit {
             id: this.id,
             el: this.element
         };
+        // console.assert(this.resizeEvent.width > 0, JSON.stringify(this.resizeEvent));
         this.onResize.next(this.resizeEvent);
         this.updateBodyMesurements();
     }

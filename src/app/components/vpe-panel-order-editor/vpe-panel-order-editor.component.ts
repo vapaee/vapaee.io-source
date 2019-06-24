@@ -341,7 +341,6 @@ export class VpePanelOrderEditorComponent implements OnChanges {
                 this.feed.setError("form", "ERROR: " + JSON.stringify(JSON.parse(e), null, 4));
             } else {
                 this.feed.setError("form", "ERROR: " + JSON.stringify(e, null, 4));
-                this.feed.clearError("form");
             }
             this.loading = false;
         });
@@ -362,7 +361,6 @@ export class VpePanelOrderEditorComponent implements OnChanges {
                 this.feed.setError("form", "ERROR: " + JSON.stringify(JSON.parse(e), null, 4));
             } else {
                 this.feed.setError("form", "ERROR: " + JSON.stringify(e, null, 4));
-                this.feed.clearError("form");
             }
             this.loading = false;
         });

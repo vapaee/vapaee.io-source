@@ -10,35 +10,10 @@ https://github.com/GetScatter/scatter-js
 
 
 
+aux_extend_asset
 
 
 
-
-
-
-
-
-
-
-Hello!
-I'm building a DEX for Telos blockchain and now I'm in the process of integrating EOS Lynx wallet for mobile users. I'm not building an installable app, Vapaée DEX is webapp so it runs on the browser.
-
-I'm having trouble to simply connect/detect the EOS-Lynx wallet so I built a minimal Angular app importing the minimal set of libraries, and configured to work with EOS blockchain to discard any possible Telos interaction issues.
-I'm following the web-doc indications but still can't comunicate with Lynx wallet.
-
-This is the complete one-page-long code. Is just one component with minimun interactioin:
-https://github.com/vapaee/lynx-angular-scatterjs/blob/master/src/app/app.component.ts
-
-This are the libraries on the package json file:
-"eosjs": "^20.0.0"
-"scatterjs-core": "^2.7.18"
-"scatterjs-plugin-eosjs2": "^1.5.0"
-"scatterjs-plugin-lynx": "^1.6.6"
-
-I also deployed this mini project on my server under this url:
-http://lynx.vapaee.io/
-
-It works perfect with Scatter Desktop.
 
 
 
