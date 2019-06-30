@@ -202,22 +202,24 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         // if (what == "buy" && !this.can_buy) return;
         this.wants = what;
 
-        if (what == "sell" && this.buyorders && takeprice) {
-            console.log("wantsTo",what, this.buyorders);
-            if (this.buyorders.length > 0) {
-                var order = this.buyorders[0];
-                console.log("******* order", order);
-                this.price = order.price;
+        if (this.price.amount.isEqualTo(0)) {
+            if (what == "sell" && this.buyorders && takeprice) {
+                console.log("wantsTo",what, this.buyorders);
+                if (this.buyorders.length > 0) {
+                    var order = this.buyorders[0];
+                    console.log("******* order", order);
+                    this.price = order.price;
+                }
             }
-        }
-
-        if (what == "buy" && this.sellorders && takeprice) {
-            console.log("wantsTo",what, this.sellorders);
-            if (this.sellorders.length > 0) {
-                var order = this.sellorders[0];
-                console.log("******* order", order);
-                this.price = order.price;
-            }
+    
+            if (what == "buy" && this.sellorders && takeprice) {
+                console.log("wantsTo",what, this.sellorders);
+                if (this.sellorders.length > 0) {
+                    var order = this.sellorders[0];
+                    console.log("******* order", order);
+                    this.price = order.price;
+                }
+            }    
         }
 
         this.calculate();

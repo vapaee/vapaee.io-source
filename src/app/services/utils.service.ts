@@ -302,6 +302,7 @@ export class Utils {
     }
 
     // smart contract ---------------------
+    /*
     excecute(action: string, params: any) {
         console.log("Utils.excecute()", action, [params]);
         return new Promise<any>((resolve, reject) => {
@@ -314,18 +315,14 @@ export class Utils {
                 });
             } catch (err) { console.error(err); reject(err); }
         }); // .catch(err => console.error(err) );
-    } 
-
-    /*
+    }
+    /*/
     excecute(action: string, params: any) {
         console.log("Utils.excecute()", action, [params]);
         return new Promise<any>((resolve, reject) => {
             try {
                 this.scatter.getContract(this.contract).then(contract => {
                     try {
-console.log("*************************************************");
-console.log("https://eosio.github.io/eosjs/guides/2.-Transaction-Examples.html");
-console.log("*************************************************");
                         contract[action](params, this.scatter.authorization).then((response => {
                             console.log("Utils.excecute() ---> ", [response]);
                             resolve(response);
@@ -335,7 +332,7 @@ console.log("*************************************************");
             } catch (err) { reject(err); }
         }); // .catch(err => console.error(err) );
     }
-    */
+    //*/
 
     getTable(table:string, params:TableParams = {}): Promise<TableResult> {
 

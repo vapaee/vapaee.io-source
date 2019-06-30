@@ -3,6 +3,72 @@
 - Hay que traducir el nuevo modal
 
 
+-- TODAY TODO LIST --
+- respaldar las estructuras actuales de las tablas history, blockhistory y tablesummary
+- modificarlas así:
+  - history
+    asset inverse;
+  - blockhistory:
+    asset inverse;
+    asset amount;
+  - tablesummary:
+    asset inverse;
+    asset amount;
+  - ordertables
+    por ordersummary
+    
+- Adaptar aux_register_transaction_in_history
+  - tablesummary
+    - incluir el inverse y el amount
+  - blockhistory
+    - incluir el inverse y el amount
+  - history
+    - incluir el inverse
+
+- resetaer toda la blockchain local y reiniciar el DEX
+- hay que adaptar la web para que siga funcionando bien.
+  - hay algo para hacer?
+
+- una vez que funcione bien, hay que pasar todo a producción
+  - hacer un build del código y deployarlo.
+  - pasar las tablas tablesummary, blockhistory y history a ts, bs y h2 respect.
+  - reproducir la vieja estructura
+  - implementar una variable "desabled" que si está en true no funciona ninguna action (está fuera de servicio)
+  - nueva acción que permita encender y apagar esa variable
+  - escribir una action hotfix que permita iterar sobre los datos y compiar de una tabla a la nueva borrando de la original
+  - deployar en producción
+    - sacar el PRINT
+    - subir código y abi
+    - ejecutar setdisabled(true)
+    - ejecutar N veces el hotfix para pasar los datos a las nuevas tablas
+  - clonar el código de las tablas nuevas (ts, bs y h2) y renombrarlas como las viejas (tablesummary, blockhistory y history)
+  - reescribir el hotfix para que haga el trabajo inverso: saque entries de las tablas nuevas y los ponga en las viejas.
+  - cambiar la logica del código para que opere con las tablas viejas (que ahora tienen la estructura nueva)
+  - deployar en producción
+    - sacar el PRINT
+    - subir código y abi
+    - ejecutar N veces el hotfix para pasar los datos a las nuevas tablas
+    - ejecutar setdisabled(false)
+
+- sustituimos ordertables por odersummary en la lógica.
+  - aux_register_transaction_in_history
+  - aux_generate_sell_order
+  - aux_cancel_sell_order
+  - action_clear_tables_orders_and_history
+  - action_cancel_all_orders
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -- UPDATING SCATTER LIBS --
 npm i -S scatterjs-core scatterjs-plugin-eosjs2 eosjs@20.0.0-beta3

@@ -5,14 +5,79 @@ import { EosioTokenMathService } from './eosio.token-math.service';
 import { Feedback } from './feedback.service';
 
 // scatter libraries
+/*/
+// eosjs2
 import ScatterJS from '@scatterjs/core';
 import ScatterEOS from '@scatterjs/eosjs2';
 import ScatterLynx from '@scatterjs/lynx';
 import {JsonRpc, Api} from 'eosjs';
-
+/*/
+import ScatterJS from 'scatterjs-core';
+import ScatterEOS from 'scatterjs-plugin-eosjs'
+import Eos from 'eosjs';
+//*/
 
 // declare var ScatterJS:any;
-export interface EOS_old {
+
+// eosjs2
+export interface RPC {
+    endpoint: string;
+    fetchBuiltin: Function;
+    fetch: Function;
+    get_abi: Function;
+    get_account: Function;
+    get_block_header_state: Function;
+    get_block: Function;
+    get_code: Function;
+    get_currency_balance: Function;
+    get_currency_stats: Function;
+    get_info: Function;
+    get_producer_schedule: Function;
+    get_producers: Function;
+    get_raw_code_and_abi: Function;
+    getRawAbi: Function;
+    get_table_rows: Function;
+    getRequiredKeys: Function;
+    push_transaction: Function;
+    db_size_get: Function;
+    history_get_actions: Function;
+    history_get_transaction: Function;
+    history_get_key_accounts: Function;
+    history_get_controlled_accounts: Function;    
+}
+
+/*
+// eosjs2
+export interface EOS {
+    contracts: Function;
+    cachedAbis: Function;
+    rpc: Function;
+    authorityProvider: Function;
+    abiProvider: Function;
+    signatureProvider: Function;
+    chainId: Function;
+    textEncoder: Function;
+    textDecoder: Function;
+    abiTypes: Function;
+    transactionTypes: Function;
+    rawAbiToJson: Function;
+    getCachedAbi: Function;
+    getAbi: Function;
+    getTransactionAbis: Function;
+    getContract: Function;
+    serialize: Function;
+    deserialize: Function;
+    serializeTransaction: Function;
+    deserializeTransaction: Function;
+    serializeActions: Function;
+    deserializeActions: Function;
+    deserializeTransactionWithActions: Function;
+    transact: Function;
+    pushSignedTransaction: Function;
+    hasRequiredTaposFields: Function;    
+}
+/*/
+export interface EOS {
     getInfo:Function,
     getAccount:Function,
     getCode:Function,
@@ -74,61 +139,7 @@ export interface EOS_old {
     setparams:Function,
     contract:Function
 }
-
-export interface RPC {
-    endpoint: string;
-    fetchBuiltin: Function;
-    fetch: Function;
-    get_abi: Function;
-    get_account: Function;
-    get_block_header_state: Function;
-    get_block: Function;
-    get_code: Function;
-    get_currency_balance: Function;
-    get_currency_stats: Function;
-    get_info: Function;
-    get_producer_schedule: Function;
-    get_producers: Function;
-    get_raw_code_and_abi: Function;
-    getRawAbi: Function;
-    get_table_rows: Function;
-    getRequiredKeys: Function;
-    push_transaction: Function;
-    db_size_get: Function;
-    history_get_actions: Function;
-    history_get_transaction: Function;
-    history_get_key_accounts: Function;
-    history_get_controlled_accounts: Function;    
-}
-
-export interface EOS {
-    contracts: Function;
-    cachedAbis: Function;
-    rpc: Function;
-    authorityProvider: Function;
-    abiProvider: Function;
-    signatureProvider: Function;
-    chainId: Function;
-    textEncoder: Function;
-    textDecoder: Function;
-    abiTypes: Function;
-    transactionTypes: Function;
-    rawAbiToJson: Function;
-    getCachedAbi: Function;
-    getAbi: Function;
-    getTransactionAbis: Function;
-    getContract: Function;
-    serialize: Function;
-    deserialize: Function;
-    serializeTransaction: Function;
-    deserializeTransaction: Function;
-    serializeActions: Function;
-    deserializeActions: Function;
-    deserializeTransactionWithActions: Function;
-    transact: Function;
-    pushSignedTransaction: Function;
-    hasRequiredTaposFields: Function;    
-}
+//*/
 
 export interface Scatter {
     identity: any,
@@ -482,8 +493,8 @@ export class ScatterService {
     }
 
     initScatter() {
-
         console.log("ScatterService.initScatter()");
+        /*/
         this.error = "";
         if ((<any>window).ScatterJS) {
             this.ScatterJS = (<any>window).ScatterJS;
@@ -491,7 +502,7 @@ export class ScatterService {
         }
 
         try {
-            ScatterJS.plugins( new ScatterEOS(), new ScatterLynx({"Api":Api, "JsonRpc":JsonRpc}) );
+            ScatterJS.plugins( new ScatterEOS() );
         } catch (e) {
             console.error("ERROR:", e.message, [e]);
             console.error("Falling back to normal ScatterEOS plugin");
@@ -505,6 +516,19 @@ export class ScatterService {
         this.eos = this.lib.eos(network, Api, {rpc:this.rpc});
 
         this.setEosjs("eosjs");
+        /*/
+        console.log("ScatterService.initScatter()");
+        this.error = "";
+        if ((<any>window).ScatterJS) {
+            this.ScatterJS = (<any>window).ScatterJS;
+            this.ScatterJS.plugins( new ScatterEOS() );
+            this.lib = this.ScatterJS.scatter;  
+            (<any>window).ScatterJS = null;
+        }
+        console.log("EOSJS()",[this.network.eosconf]);
+        this.eos = this.lib.eos(this.network.eosconf, Eos, { expireInSeconds:60 });
+        this.setEosjs("eosjs");
+        //*/
     }
 
     reconnectTimer;
@@ -669,7 +693,14 @@ export class ScatterService {
             this.waitEosjs.then(() => {
                 // console.log("PASO 2 (eosjs) ------");
                 
-                this.rpc.get_account(name).then((response) => {
+                /*
+                // eosjs2
+                this.rpc.get_account(name).
+                /*/
+                this.eos.getAccount({account_name: name}).
+                //*/
+                
+                then((response) => {
                     // console.log("PASO 3 (eosjs.getAccount) ------", response);
                     var accountdata: AccountData = <AccountData>response;
 
@@ -733,6 +764,8 @@ export class ScatterService {
         return promise;
     }
 
+    /*
+    // eosjs2
     async executeTransaction(contract:string, action:string, data:any) {
         return new Promise((resolve, reject) => {
             this.login().then(_ => {
@@ -769,7 +802,9 @@ export class ScatterService {
                 reject(error);
             });   
         }); 
-    }    
+    }
+    */
+
 
     /*
     
@@ -792,7 +827,7 @@ export class ScatterService {
     }    
     */
 
-    /*
+    
     getContract(account_name): Promise<any> {
         console.log(`ScatterService.getContract(${account_name})`);
         return new Promise((resolve, reject) => {
@@ -800,7 +835,7 @@ export class ScatterService {
                 console.log("this.login().then((a) => { -->", a );
                 this.waitReady.then(() => {
                     
-                    this.eos.getContract(account_name).then(contract => {
+                    this.eos.contract(account_name).then(contract => {
                         console.log(`-- contract ${account_name} --`);
                         for (var i in contract) {
                             if(typeof contract[i] == "function") console.log("contract."+i+"()", [contract[i]]);
@@ -817,7 +852,7 @@ export class ScatterService {
             });   
         }); 
     }
-    */
+    
 
     /*
     transfer(from:string, to:string, amount:string, memo:string) {
@@ -914,6 +949,7 @@ export class ScatterService {
     }
 
     getTableRows(contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos): Promise<any> {
+        /*
         // console.log("ScatterService.getTableRows()");
         // https://github.com/EOSIO/eosjs-api/blob/master/docs/api.md#eos.getTableRows
         return new Promise<any>((resolve, reject) => {
@@ -943,6 +979,23 @@ export class ScatterService {
                 reject(error);
             });   
         });
+        /*/
+        // console.log("ScatterService.getTableRows()");
+        // https://github.com/EOSIO/eosjs-api/blob/master/docs/api.md#eos.getTableRows
+        return new Promise<any>((resolve, reject) => {
+            this.waitEosjs.then(() => {
+                this.eos.getTableRows(true, contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos).then(function (_data) {
+                    resolve(_data);
+                }).catch(error => {
+                    console.error(error);
+                });
+            }).catch((error) => {
+                console.error(error);
+                reject(error);
+            });   
+        });
+        //*/
+
     }
 
 }
