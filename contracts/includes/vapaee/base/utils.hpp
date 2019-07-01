@@ -38,16 +38,24 @@ namespace vapaee {
             uint64_t amount = (uint64_t) (total * B_unit);
             return amount;
         }
+
+        static double to_double(const asset &A) {
+            double amount = (double)A.amount;
+            double unit = (double)pow(10.0, A.symbol.precision());
+            double result = amount / unit;            
+            return result;
+        }
         
         static asset inverse(const asset &A, const symbol &B ) {
             // PRINT("vapaee::utils::inverse()\n");
-            // PRINT(" A: ", A.to_string(), "\n");
-            // PRINT(" B: ", B.code().to_string(), "\n");
-            double A_amount = (double)A.amount;
-            double unit = (double)pow(10.0, A.symbol.precision());
-            double result = unit / A_amount;
-            int64_t amount = (int64_t) (result * unit);
-            asset inv = asset(amount, B);
+            // PRINT(" A: ", A.to_string(), "\n");                     // 2.00000000 CNT
+            // PRINT(" B: ", B.code().to_string(), "\n");              // TLOS  (4,"TLOS")
+            double A_amount = (double)A.amount;                        // 200000000
+            double A_unit = (double)pow(10.0, A.symbol.precision());   // 100000000 
+            double B_unit = (double)pow(10.0, B.precision());          //     10000 
+            double A_real = A_unit / A_amount;                         //       0.5 
+            int64_t amount = (int64_t) (A_real * B_unit);              //      5000   
+            asset inv = asset(amount, B);                              // 0.5000 TLOS
             // PRINT("  A_amount: ", std::to_string(A_amount), "\n");
             // PRINT("  unit: ", std::to_string(unit), "\n");     
             // PRINT("  result: ", std::to_string(result), "\n");     
@@ -56,6 +64,20 @@ namespace vapaee {
             // PRINT("vapaee::utils::inverse()\n");
             return inv;
         }
+
+
+        static asset amount(const asset &price, const asset &payment, const symbol &B ) {
+            // PRINT("vapaee::utils::amount()\n");
+            double price_amount = (double)price.amount;
+            double unit = (double)pow(10.0, price.symbol.precision());
+            double real_inverse = unit / price_amount;
+            double real_amount = (double) (payment.amount * real_inverse);
+            int64_t amount = (int64_t) (real_amount);
+            asset result = asset(amount, B);
+            // PRINT("vapaee::utils::amount()\n");
+            return result;
+        }
+
 
         static asset payment(const asset &total, const asset &price ) {
             // PRINT("vapaee::utils::payment()\n");

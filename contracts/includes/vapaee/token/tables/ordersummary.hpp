@@ -4,7 +4,7 @@
         struct booksummary {
             asset total;
             int orders;
-        }
+        };
 
         // TABLE ordersummary -----------
         // scope: contract
@@ -12,7 +12,7 @@
             name table;
             symbol_code sell;
             symbol_code pay;
-            booksummary offer;
+            booksummary supply;
             booksummary demand;
             int deals;
             int blocks;

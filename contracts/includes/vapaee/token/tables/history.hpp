@@ -7,8 +7,9 @@
             time_point_sec date;
             name buyer;
             name seller;
-            asset amount;
             asset price;
+            asset inverse;
+            asset amount;
             asset payment;
             asset buyfee;
             asset sellfee;
@@ -26,4 +27,3 @@
             indexed_by<"payment"_n, const_mem_fun<history_table, uint64_t, &history_table::by_payment_key>>
         > history;
         // ------------------------------------
-        

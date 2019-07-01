@@ -7,7 +7,9 @@ import { TradePage } from './pages/trade/trade.page';
 import { TokensPage } from './pages/tokens/tokens.page';
 import { AccountPage } from './pages/account/account.page';
 import { NotFoundPage } from './pages/not-found/not-found.page';
+import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
 
+//*
 const routes: Routes = [
   { path: '',                            data: { state: "root" }, redirectTo: '/exchange/home', pathMatch: 'full' },
   { path: 'exchange',                    data: { state: "root" }, component: RootPage,
@@ -25,7 +27,25 @@ const routes: Routes = [
   },
   { path: '**',                          data: { state: "404" }, component: NotFoundPage }
 ];
-
+/*/
+const routes: Routes = [
+  { path: '',                            data: { state: "root" }, redirectTo: '/exchange/home', pathMatch: 'full' },
+  { path: 'exchange',                    data: { state: "root" }, component: RootPage,
+    children: [
+      { path: '',                        data: { state: "root" }, redirectTo: '/exchange/home', pathMatch: 'full' },
+      { path: 'wp',                      data: { state: "wp" }, component: ComingSoonPage },
+      { path: 'home',                    data: { state: "home" }, component: ComingSoonPage },
+      { path: 'trade/:scope',            data: { state: "trade" }, component: ComingSoonPage },
+      { path: 'tokens',                  data: { state: "tokens" }, component: ComingSoonPage, children: [
+          { path: ':symbol',             data: { state: "edit" }, component: ComingSoonPage }
+      ] },
+      { path: 'account',                 data: { state: "guest" }, component: ComingSoonPage},
+      { path: 'account/:name',           data: { state: "account" }, component: ComingSoonPage }
+    ]
+  },
+  { path: '**',                          data: { state: "404" }, component: NotFoundPage }
+];
+//*/
 @NgModule({
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule]

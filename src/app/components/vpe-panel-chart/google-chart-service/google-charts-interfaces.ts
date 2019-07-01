@@ -20,7 +20,7 @@ export interface GoogleChartComponentInterface {
 
 export interface GoogleChartInterface {
   chartType: string;
-  options?: object;
+  options?: any;
   dataTable?: any;
   opt_firstRowIsData?: boolean;
   opt_onresize?: boolean;

@@ -33,6 +33,13 @@ using namespace utils;
 #include <vapaee/base/utils.hpp>
 
 /*
+#define MAINTENANCE(...) eosio_assert(false, "This contract is in maintenance. Please, try later again.");
+/*/
+#define MAINTENANCE(...)
+//*/
+
+
+/*
 #define PRINT(...) print(__VA_ARGS__)
 #define AUX_DEBUG_ACTIONS(...) __VA_ARGS__
 /*/

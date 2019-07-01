@@ -6,9 +6,9 @@
             name table;
             symbol_code sell;
             symbol_code pay;
-            asset total;
-            vector<asset> fees;
-            int orders;
+            asset total;            // <<--  esto va junto [booksummary]
+            vector<asset> fees;     // <<--  esto se va..
+            int orders;             // <<--  esto va junto [booksummary]
             int deals;
             int blocks;
             uint64_t primary_key() const { return table.value; }

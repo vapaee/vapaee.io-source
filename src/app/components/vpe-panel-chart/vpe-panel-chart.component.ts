@@ -42,15 +42,20 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         public vapaee: VapaeeService,
         public local: LocalStringsService,
         private _element:ElementRef,
-        private renderer:Renderer
+        private renderer:Renderer,
+        private service: VpeComponentsService
     ) {
         this.zoom = 24*30; // one month of chart
-        this.height = 290;
         this.closed = false;
         this.hideheader = false;
         this.margintop = true;
         this.expanded = true; 
         this.bgStyle = {"height": this.height + "px"};
+        if (this.service.device.width >= 1200) {
+            this.height = 298;
+        } else {
+            this.height = 295;
+        }        
     }
     
     public _chartData:GoogleChartInterface;
@@ -60,12 +65,21 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         return this._chartData;
     }
 
-    onResize(device:ResizeEvent) {
+    onResize(event:ResizeEvent) {
         this.closed = false;
-        console.log("this.zoom", this.zoom);
+        if (this.service.device.width >= 1200) {
+            this.height = 298;
+        } else {
+            this.height = 295;
+        }
+        // console.log("event.width", event.width, "event.device.width",  event.device.width);
         var data = this.recreateDataTable();
         setTimeout(_ => {
-            if (this.component) this.component.redraw(data, null);
+            if (this._chartData && this._chartData.options && this._chartData.options.height != this.height) {
+                this.ngOnChanges();
+            } else {
+                if (this.component) this.component.redraw(data, null);
+            }
         }, 0);
         
         // console.log(this._element.nativeElement.offsetWidth);
@@ -144,7 +158,7 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
     cache: any;
     ngOnChanges() {
         this.bgStyle = {"height": this.height + "px"};
-        // console.log("********************* ngOnChanges()", this.data);
+        // console.log("********************* ngOnChanges()", [this.data, this._chartData.options.height]);
         // if (this.data && this.data.length > 0) {
         
         this.cache = this.cache || {};
@@ -156,6 +170,9 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
                     equals = false;
                     break;
                 }
+            }
+            if (this._chartData.options.height != this.height) {
+                equals = false;
             }
             if (equals) {
                 console.log("skip", [this.cache]);

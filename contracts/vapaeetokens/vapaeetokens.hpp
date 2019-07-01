@@ -30,48 +30,56 @@ CONTRACT vapaeetokens : public eosio::contract {
 
         using contract::contract;
         ACTION create( name issuer, asset maximum_supply) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.create()\n");
             vapaee::token::core c;
             c.action_create_token(issuer, maximum_supply);
         };
 
         ACTION addissuer( name app, const symbol_code& symbol ) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.addissuer()\n");
             vapaee::token::core c;
             c.action_add_token_issuer(app, symbol);
         };
         
         ACTION removeissuer( name app, const symbol_code& symbol ) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.removeissuer()\n");
             vapaee::token::core c;
             c.action_remove_token_issuer(app, symbol);
         };        
 
         ACTION issue( name to, const asset& quantity, string memo ) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.issue()\n");
             vapaee::token::core c;
             c.action_issue(to, quantity, memo);
         };
 
         ACTION burn(name owner, asset quantity, string memo ) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.burn()\n");
             vapaee::token::core c;
             c.action_burn(owner, quantity, memo);
         };
 
         ACTION transfer(name from, name to, asset quantity, string  memo ) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.transfer()\n");
             vapaee::token::core c;
             c.action_transfer(from, to, quantity, memo);
         };
 
         ACTION open( name owner, const symbol& symbol, name ram_payer ) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.open()\n");
             vapaee::token::core c;
             c.action_open(owner, symbol, ram_payer);
         };
 
         ACTION close( name owner, const symbol& symbol ) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.close()\n");
             vapaee::token::core c;
             c.action_close(owner, symbol);
@@ -82,6 +90,7 @@ CONTRACT vapaeetokens : public eosio::contract {
         // AIRDROP-ACTOINS  ------------------------------------------------------------------------------------------------------
         
         ACTION setsnapshot (name contract, uint64_t scope, const symbol_code& sym_code, int64_t cap, int64_t min, int64_t ratio, int64_t base, const std::string & memo) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.setsnapshot()\n");
             vapaee::token::airdrop a;
             a.action_setsnapshot(contract, scope, sym_code, cap, min, ratio, base, memo);
@@ -94,6 +103,7 @@ CONTRACT vapaeetokens : public eosio::contract {
         };*/
 
         ACTION claim (name owner, const symbol_code & symbolcode, name ram_payer) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.claim()\n");
             vapaee::token::airdrop a;
             a.action_claim(owner, symbolcode, ram_payer);
@@ -103,18 +113,21 @@ CONTRACT vapaeetokens : public eosio::contract {
     public:
         // EXCHANGE-ACTOINS  ------------------------------------------------------------------------------------------------------
         ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name ram_payer) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.addtoken()\n");
             vapaee::token::exchange e;
             e.action_add_token(contract, symbol, precision, ram_payer);
         };
         
         ACTION updatetoken (const symbol_code & sym_code, string appname, string website, string logo, string logolg, bool verified) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.updatetoken()\n");
             vapaee::token::exchange e;
             e.action_update_token_info(sym_code, appname, website, logo, logolg, verified);
         };        
 
         ACTION cancel(name owner, name type, const symbol_code & comodity, const symbol_code & currency, const std::vector<uint64_t> & orders) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.cancel()\n");
             vapaee::token::exchange e;
             e.action_cancel(owner, type, comodity, currency, orders);
@@ -122,24 +135,28 @@ CONTRACT vapaeetokens : public eosio::contract {
 
         // "bob", "buy", "5.0000 CNT", "0.2000 TLOS", "1.0000 TLOS"
         ACTION order(name owner, name type, const asset & total, const asset & price) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.order()\n");
             vapaee::token::exchange e;
             e.action_order(owner, type, total, price);
         };
 
         ACTION withdraw(name owner, const asset & quantity) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.withdraw()\n");
             vapaee::token::exchange e;
             e.action_withdraw(owner, quantity);
         };        
 
         ACTION swapdeposit(name from, name to, const asset & quantity, string  memo) {
+            MAINTENANCE();
             PRINT("\nACTION vapaeetokens.swapdeposit()\n");
             vapaee::token::exchange e;
             e.action_swapdeposit(from, to, quantity, memo);
         };
 
         HANDLER htransfer(name from, name to, asset quantity, string  memo ) {
+            MAINTENANCE();
             PRINT("\nHANDLER vapaeetokens.htransfer()\n");
 
             // skipp handling outcoming transfers from this contract to outside

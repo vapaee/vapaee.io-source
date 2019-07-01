@@ -1029,6 +1029,7 @@ export class VapaeeService {
             var last_24h = {};
             var volume = new Asset(ZERO_TLOS, this);
             var price_asset = new Asset(price, this);
+            // if(scope=="cnt.tlos")console.log("AAAAAAAAAAA------- price ", price);
             var max_price = price_asset.clone();
             var min_price = price_asset.clone();
             var first:Asset = null;
@@ -1053,7 +1054,7 @@ export class VapaeeService {
                 if (price_asset.amount.isGreaterThan(max_price.amount)) {
                     max_price = price_asset.clone();
                 }
-                if (price_asset.amount.isLessThan(min_price.amount)) {
+                if (min_price.amount.isEqualTo(0) || price_asset.amount.isLessThan(min_price.amount)) {
                     min_price = price_asset.clone();
                 }
             }

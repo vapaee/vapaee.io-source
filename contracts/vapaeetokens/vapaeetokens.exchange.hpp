@@ -22,6 +22,41 @@ namespace vapaee {
         inline name get_self() const { return _self; }
         inline name get_code() const { return _code; }
 
+        string create_error_symbol1(const char * text, const symbol & sym1) {
+            string result = string(text) + " [" + sym1.code().to_string() + "]";
+            return result;
+        }
+
+        string create_error_symbol2(const char * text, const symbol & sym1, const symbol & sym2) {
+            string result = string(text) + " [" + sym1.code().to_string() + "], [" + sym2.code().to_string()+"]";
+            return result;
+        }
+
+        string create_error_asset1(const char * text, const asset & token1) {
+            string result = string(text) + " [" + token1.to_string() + "]";
+            return result;
+        }
+
+        string create_error_asset2(const char * text, const asset & token1, const asset & token2) {
+            string result = string(text) + " [" + token1.to_string() + "], [" + token2.to_string()+"]";
+            return result;
+        }
+
+        string create_error_asset3(const char * text, const asset & token1, const asset & token2, const asset & token3) {
+            string result = string(text) + " [" + token1.to_string() + "], [" + token2.to_string()+"], [" + token3.to_string()+"]";
+            return result;
+        }
+
+        string create_error_asset4(const char * text, const asset & token1, const asset & token2, const asset & token3, const asset & token4) {
+            string result = string(text) + " [" + token1.to_string() + "], [" + token2.to_string()+"], [" + token3.to_string()+"], [" + token4.to_string()+"]";
+            return result;
+        }
+
+        string create_error_asset5(const char * text, const asset & token1, const asset & token2, const asset & token3, const asset & token4, const asset & token5) {
+            string result = string(text) + " [" + token1.to_string() + "], [" + token2.to_string()+"], [" + token3.to_string()+"], [" + token4.to_string()+"], [" + token5.to_string()+"]";
+            return result;
+        }        
+
         string aux_to_lowercase(string str) {
             string result = str;
             for (int i=0; i<str.length(); i++) {
@@ -391,8 +426,8 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::aux_convert_deposits_to_earnings() ...\n");
         }
 
-        name aux_get_history_scope_for_symbols(const symbol_code & A, const symbol_code & B) {
-            PRINT("vapaee::token::exchange::aux_get_history_scope_for_symbols()\n");
+        name aux_get_canonical_scope_for_symbols(const symbol_code & A, const symbol_code & B) {
+            PRINT("vapaee::token::exchange::aux_get_canonical_scope_for_symbols()\n");
             PRINT(" A: ", A.to_string(), "\n");
             PRINT(" B: ", B.to_string(), "\n");
             name scope;
@@ -413,7 +448,7 @@ namespace vapaee {
 
             PRINT(" ->scope: ", scope.to_string(), "\n");
             
-            PRINT("vapaee::token::exchange::aux_get_history_scope_for_symbols() ...\n");
+            PRINT("vapaee::token::exchange::aux_get_canonical_scope_for_symbols() ...\n");
             return scope;
         }
 
@@ -449,11 +484,12 @@ namespace vapaee {
             return name("error");
         }
 
-        void aux_register_transaction_in_history(name buyer, name seller, asset amount, asset price, asset payment, asset buyfee, asset sellfee) {
+        void aux_register_transaction_in_history(name buyer, name seller, asset price, asset inverse, asset payment, asset amount, asset buyfee, asset sellfee) {
             PRINT("vapaee::token::exchange::aux_register_transaction_in_history()\n");
             PRINT(" buyer: ", buyer.to_string(), "\n");
             PRINT(" seller: ", seller.to_string(), "\n");
             PRINT(" amount: ", amount.to_string(), "\n");   // 0.00047800 TLOS
+            PRINT(" inverse: ", inverse.to_string(), "\n"); // 0.00047800 TLOS
             PRINT(" price: ", price.to_string(), "\n");     // 2092.05020920 EDNA
             PRINT(" payment: ", payment.to_string(), "\n"); // 1.00000000 EDNA
             PRINT(" buyfee: ", buyfee.to_string(), "\n");   // 0.00000047 TLOS
@@ -467,34 +503,33 @@ namespace vapaee {
             
             symbol_code A = amount.symbol.code();
             symbol_code B = payment.symbol.code();
-            name scope = aux_get_history_scope_for_symbols(A, B);
+            name scope = aux_get_canonical_scope_for_symbols(A, B);
             
             bool is_buy = false;
             PRINT(" -> scope: ", scope.to_string(), "\n");
             if (scope == aux_get_scope_for_tokens(B, A)) {
-                // swap names
-                tmp_name = buyer; buyer = seller; seller = tmp_name;
+                // swap buyer / seller names
+                tmp_name = buyer;
+                buyer = seller;
+                seller = tmp_name;
 
                 // swap fees
-                tmp_asset = buyfee; buyfee = sellfee; buyfee = tmp_asset;
+                tmp_asset = buyfee;
+                buyfee = sellfee;
+                buyfee = tmp_asset;
 
                 // swap amount / payment
                 tmp_asset = amount;
-                tmp_pay = price;
-                tmp_pay.amount = amount.amount * ((double)price.amount / (double) pow(10.0, price.symbol.precision()));
-
-                // DEBUGGING --> pasa por acá sin problemas
-                // amount: 0.00047800 TLOS
-                // payment: 1.00000000 EDNA
-                // tmp_asset: 0.00047800 TLOS
                 amount = payment;
                 payment = tmp_asset;
                 
-                // sell transaction
-                is_buy = true;
-
                 // swap price / inverse
-                price = vapaee::utils::inverse(price, tmp_asset.symbol);
+                tmp_pay = price;
+                price = inverse;
+                inverse = tmp_pay;
+
+                // swap to "sell" type of transaction
+                is_buy = true;
 
                 // PRINT(" -> buyer: ", buyer.to_string(), "\n");
                 // PRINT(" -> seller: ", seller.to_string(), "\n");
@@ -505,6 +540,7 @@ namespace vapaee {
                 // PRINT(" -> payment: ", payment.to_string(), "\n");
             }
 
+            // register event on history table
             history table(get_self(), scope.value);
             table.emplace(get_self(), [&](auto & a){
                 a.id = table.available_primary_key();
@@ -513,35 +549,41 @@ namespace vapaee {
                 a.seller = seller;
                 a.amount = amount;
                 a.price = price;
+                a.inverse = inverse;
                 a.payment = payment;
                 a.buyfee = buyfee;
                 a.sellfee = sellfee;
                 a.isbuy = is_buy;
             });
 
+            // register event for activity log
             aux_register_event(owner, name("transaction"), scope.to_string() + "|" + buyer.to_string() + "|" + seller.to_string() + "|" + amount.to_string() + "|" + payment.to_string() + "|" + price.to_string() );
 
             // update deals count for scope table
-            ordertables orderstables(get_self(), get_self().value);
-            auto orders_itr = orderstables.find(scope.value);
+            ordersummary o_summary(get_self(), get_self().value);
+            auto orders_itr = o_summary.find(scope.value);
 
-            if (orders_itr == orderstables.end()) {
-                orderstables.emplace( get_self(), [&]( auto& a ) {
+            if (orders_itr == o_summary.end()) {
+                o_summary.emplace( get_self(), [&]( auto& a ) {
                     a.table = scope;
                     a.sell = amount.symbol.code();
                     a.pay = payment.symbol.code();
-                    a.orders = 0;
                     a.deals = 1;
                     a.blocks = 1;
-                    a.total = asset(0, amount.symbol);
+                    a.supply.orders = 0;
+                    a.supply.total = asset(0, amount.symbol);
+                    a.demand.orders = 0;
+                    a.demand.total = asset(0, payment.symbol);
                 });
-                orders_itr = orderstables.find(scope.value);           
+                orders_itr = o_summary.find(scope.value);           
             } else {
-                orderstables.modify(*orders_itr, same_payer, [&](auto & a){
+                o_summary.modify(*orders_itr, same_payer, [&](auto & a){
                     a.deals += 1;
+                    // the following is redundant. IDK why is this still here
                     a.sell = amount.symbol.code();
                     a.pay = payment.symbol.code();
-                    a.total = asset(a.total.amount, amount.symbol);
+                    a.supply.total = asset(a.supply.total.amount, amount.symbol);
+                    a.demand.total = asset(a.demand.total.amount, payment.symbol);
                 });
             }
             /*
@@ -580,7 +622,9 @@ namespace vapaee {
                 summary.emplace(get_self(), [&](auto & a) {
                     a.label = label;
                     a.price = price;
+                    a.inverse = inverse;
                     a.volume = payment;
+                    a.amount = amount;
                     a.date = date;
                     a.hour = hour;
                     a.entrance = last_price;
@@ -593,7 +637,9 @@ namespace vapaee {
                 if (ptr->hour == hour) {
                     summary.modify(*ptr, get_self(), [&](auto & a){
                         a.price = price;
+                        a.inverse = inverse;
                         a.volume += payment;
+                        a.amount += amount;
                         a.date = date;
                         if (price > a.max) a.max = price;
                         if (price < a.min) a.min = price;
@@ -602,7 +648,9 @@ namespace vapaee {
                     eosio_assert(ptr->hour < hour, "ERROR: inconsistency in hour property");
                     summary.modify(*ptr, get_self(), [&](auto & a){
                         a.price = price;
+                        a.inverse = inverse;
                         a.volume = payment;
+                        a.amount = amount;
                         a.date = date;
                         a.hour = hour;
                         a.entrance = last_price;
@@ -617,6 +665,7 @@ namespace vapaee {
 
             ptr = summary.find(label.value);
             asset volume = ptr->volume;
+            asset total = ptr->amount;
             asset entrance = ptr->entrance;
             asset min = ptr->min;
             asset max = ptr->max;
@@ -627,7 +676,9 @@ namespace vapaee {
                 summary.emplace(get_self(), [&](auto & a) {
                     a.label = name("lastone");
                     a.price = price;
+                    a.inverse = inverse;
                     a.volume = volume;
+                    a.amount = total;
                     a.date = date;
                     a.hour = hour;
                     a.entrance = entrance;
@@ -637,7 +688,9 @@ namespace vapaee {
             } else {
                 summary.modify(*ptr, get_self(), [&](auto & a){
                     a.price = price;
+                    a.inverse = inverse;
                     a.volume = volume;
+                    a.amount = total;
                     a.date = date;
                     a.hour = hour;
                     a.entrance = entrance;
@@ -655,7 +708,9 @@ namespace vapaee {
                 blocktable.emplace(get_self(), [&](auto & a) {
                     a.id = id;
                     a.price = price;
+                    a.inverse = inverse;
                     a.volume = payment;
+                    a.amount = amount;
                     a.date = date;
                     a.hour = hour;
                     a.entrance = last_price;
@@ -666,13 +721,15 @@ namespace vapaee {
                 });
          
                 // update how many blocks do we have
-                orderstables.modify(*orders_itr, same_payer, [&](auto & a){
-                    a.blocks = id;
+                o_summary.modify(*orders_itr, same_payer, [&](auto & a){
+                    a.blocks = id+1;
                 });
             } else {
                 blocktable.modify(*bptr, get_self(), [&](auto & a){
                     a.price = price;
+                    a.inverse = inverse;
                     a.volume += payment;
+                    a.amount += amount;
                     a.date = date;
                     if (price > a.max) a.max = price;
                     if (price < a.min) a.min = price;
@@ -749,41 +806,6 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::aux_generate_order() ...\n");
         }
 
-        string create_error_symbol1(const char * text, const symbol & sym1) {
-            string result = string(text) + " [" + sym1.code().to_string() + "]";
-            return result;
-        }
-
-        string create_error_symbol2(const char * text, const symbol & sym1, const symbol & sym2) {
-            string result = string(text) + " [" + sym1.code().to_string() + "], [" + sym2.code().to_string()+"]";
-            return result;
-        }
-
-        string create_error_asset1(const char * text, const asset & token1) {
-            string result = string(text) + " [" + token1.to_string() + "]";
-            return result;
-        }
-
-        string create_error_asset2(const char * text, const asset & token1, const asset & token2) {
-            string result = string(text) + " [" + token1.to_string() + "], [" + token2.to_string()+"]";
-            return result;
-        }
-
-        string create_error_asset3(const char * text, const asset & token1, const asset & token2, const asset & token3) {
-            string result = string(text) + " [" + token1.to_string() + "], [" + token2.to_string()+"], [" + token3.to_string()+"]";
-            return result;
-        }
-
-        string create_error_asset4(const char * text, const asset & token1, const asset & token2, const asset & token3, const asset & token4) {
-            string result = string(text) + " [" + token1.to_string() + "], [" + token2.to_string()+"], [" + token3.to_string()+"], [" + token4.to_string()+"]";
-            return result;
-        }
-
-        string create_error_asset5(const char * text, const asset & token1, const asset & token2, const asset & token3, const asset & token4, const asset & token5) {
-            string result = string(text) + " [" + token1.to_string() + "], [" + token2.to_string()+"], [" + token3.to_string()+"], [" + token4.to_string()+"], [" + token5.to_string()+"]";
-            return result;
-        }
-
         void aux_generate_sell_order(name owner, name scope_buy, name scope_sell, asset total, asset payment, asset price, asset inverse, name ram_payer) {
             PRINT("vapaee::token::exchange::aux_generate_sell_order()\n");
             PRINT(" owner: ", owner.to_string(), "\n");
@@ -799,9 +821,13 @@ namespace vapaee {
             sellorders buytable(get_self(), scope_buy.value);
             sellorders selltable(get_self(), scope_sell.value);
 
-            ordertables orderstables(get_self(), get_self().value);
-            auto sell_itr = orderstables.find(scope_sell.value);
-            auto buy_itr = orderstables.find(scope_buy.value);
+            ordersummary o_summary(get_self(), get_self().value);
+            symbol_code A = total.symbol.code();
+            symbol_code B = payment.symbol.code();
+            name can_scope = aux_get_canonical_scope_for_symbols(A, B);
+            auto orders_ptr = o_summary.find(can_scope.value);
+            auto buy_itr = o_summary.find(scope_buy.value);
+            bool reverse_scope = can_scope != scope_sell;
 
             // sellorders selltable(get_self(), scope.value);
             auto buy_index = buytable.template get_index<name("price")>();
@@ -869,13 +895,19 @@ namespace vapaee {
                         PRINT("    payment (1): ", current_payment.to_string(),"\n");
 
                         // decrese the total in registry for this incompleted order
-                        eosio_assert(buy_itr != orderstables.end(), "table MUST exist but it does not");
-                        orderstables.modify(*buy_itr, ram_payer, [&](auto & a){
+                        eosio_assert(orders_ptr != o_summary.end(), "table MUST exist but it does not");
+                        o_summary.modify(*orders_ptr, ram_payer, [&](auto & a){
                             PRINT("        a.total:  ", a.total.to_string(),"\n");
                             PRINT("        payment:  ", current_payment.to_string(),"\n");
+                            
                             eosio_assert(a.total.symbol == current_payment.symbol,
                                 create_error_asset2(ERROR_AGSO_5, a.total, current_payment).c_str());
-                            a.total -= current_payment;
+
+                            if (!reverse_scope) {
+                                a.supply.total -= current_payment;
+                            } else {
+                                a.demand.total -= current_payment;
+                            }
                         });
 
                     } else {
@@ -897,25 +929,29 @@ namespace vapaee {
                         eosio_assert(buyer_itr != buyerorders.end(), "ERROR: cómo que no existe? No fue registrado antes? buyer? scope_buy?");
 
                         // take out the registry for this completed order
-                        eosio_assert(buy_itr != orderstables.end(), "table MUST exist but it does not");
-                        if (buy_itr->orders > 1) {
-                            buyerorders.modify(*buyer_itr, ram_payer, [&](auto & a){
-                                std::vector<uint64_t> newlist;
-                                std::copy_if (a.ids.begin(), a.ids.end(), std::back_inserter(newlist), [&](uint64_t i){return i!=buy_id;} );
-                                a.ids = newlist;
-                            });
-                            orderstables.modify(*buy_itr, ram_payer, [&](auto & a){
-                                a.orders--;
-                                eosio_assert(a.total.symbol == current_payment.symbol,
-                                    create_error_asset2(ERROR_AGSO_6, a.total, current_payment).c_str());
-                                a.total -= current_payment;
-                                PRINT("     orderstables.modify() a.orders--; a.total: ", a.total.to_string(),"\n");
-                            });
+                        eosio_assert(orders_ptr != o_summary.end(), "table MUST exist but it does not");
+                        if (!reverse_scope) {
+                            if (orders_ptr->orders > 1) {
+                                buyerorders.modify(*buyer_itr, ram_payer, [&](auto & a){
+                                    std::vector<uint64_t> newlist;
+                                    std::copy_if (a.ids.begin(), a.ids.end(), std::back_inserter(newlist), [&](uint64_t i){return i!=buy_id;} );
+                                    a.ids = newlist;
+                                });
+                                o_summary.modify(*orders_ptr, ram_payer, [&](auto & a){
+                                    a.orders--;
+                                    eosio_assert(a.total.symbol == current_payment.symbol,
+                                        create_error_asset2(ERROR_AGSO_6, a.total, current_payment).c_str());
+                                    a.total -= current_payment;
+                                    PRINT("     o_summary.modify() a.orders--; a.total: ", a.total.to_string(),"\n");
+                                });
+                            } else {
+                                o_summary.erase(*orders_ptr);
+                                buyerorders.erase(*buyer_itr);
+                                PRINT("     o_summary.erase()\n");
+                            }                            
                         } else {
-                            orderstables.erase(*buy_itr);
-                            buyerorders.erase(*buyer_itr);
-                            PRINT("     orderstables.erase()\n");
-                        }
+                            // aaaaaaaaaaaaaaaaaaaaaaaa
+                        }                        
 
                         buyer_itr = buyerorders.find(scope_buy.value);
                         if (buyer_itr != buyerorders.end() && buyer_itr->ids.size() == 0) {
@@ -1003,7 +1039,7 @@ namespace vapaee {
                     // PRINT("   - inverse:         ", inverse.to_string(), "\n");
                     // PRINT("   - current_price:   ", current_price.to_string(), "\n");    // 0.00047800 TLOS
                     // PRINT("   - current_inverse: ", current_inverse.to_string(), "\n");
-                    aux_register_transaction_in_history(buyer, seller, current_total, current_inverse, current_payment, buyer_fee, seller_fee);
+                    aux_register_transaction_in_history(buyer, seller, current_inverse, current_price, current_payment, current_total, buyer_fee, seller_fee);
                     
                 } else {
                     break;
@@ -1048,18 +1084,34 @@ namespace vapaee {
                 });
 
                 // register new order in the orders table
-                if (sell_itr == orderstables.end()) {
-                    orderstables.emplace( ram_payer, [&]( auto& a ) {
-                        a.table = scope_sell;
-                        a.sell = remaining.symbol.code();
-                        a.pay = payment.symbol.code();
-                        a.orders = 1;
-                        a.total = remaining;
+                if (orders_ptr == o_summary.end()) {
+                    o_summary.emplace( ram_payer, [&]( auto& a ) {
+                        a.table = can_scope;
+                        if (!reverse_scope) {
+                            a.sell = remaining.symbol.code();
+                            a.pay = payment.symbol.code();            
+                            a.supply.orders = 1;
+                            a.supply.total = remaining;
+                            a.demand.orders = 0;
+                            a.demand.total = asset(0, payment.symbol);
+                        } else {
+                            a.sell = payment.symbol.code();
+                            a.pay = remaining.symbol.code();
+                            a.supply.orders = 0;
+                            a.supply.total = asset(0, payment.symbol);
+                            a.demand.orders = 1;
+                            a.demand.total = remaining
+                        }
                     });
                 } else {
-                    orderstables.modify(*sell_itr, ram_payer, [&](auto & a){
-                        a.orders++;
-                        a.total += remaining;
+                    o_summary.modify(*orders_ptr, ram_payer, [&](auto & a){
+                        if (!reverse_scope) {
+                            a.supply.orders++;
+                            a.supply.total += remaining;
+                        } else {
+                            a.demand.orders++;
+                            a.demand.total += remaining;
+                        }
                     });
                 }
 
@@ -1550,6 +1602,29 @@ namespace vapaee {
             // if (eptr_6 != table1.end()) table1.erase(*eptr_6);            
 
             
+            // recorro las tablas de historial y actualizo un dato
+            // history table2(get_self(), account.value);
+            // for (auto ptr = table2.begin(); ptr != table2.end(); ptr++) {
+            //     table2.modify(*ptr, get_self(), [&](auto & a){
+            //         a.inverse = vapaee::utils::inverse(ptr->price, quantity.symbol);
+            //     });
+            // }            
+            // blockhistory table4(get_self(), account.value);
+            // for (auto ptr = table4.begin(); ptr != table4.end(); ptr++) {
+            //     table4.modify(*ptr, get_self(), [&](auto & a){
+            //         a.inverse = vapaee::utils::inverse(ptr->price, quantity.symbol);
+            //         a.amount = vapaee::utils::amount(ptr->price, ptr->volume, quantity.symbol);
+            //     });
+            // }
+            // tablesummary table6(get_self(), account.value);
+            // for (auto ptr = table6.begin(); ptr != table6.end(); ptr++) {
+            //     table6.modify(*ptr, get_self(), [&](auto & a){
+            //         a.inverse = vapaee::utils::inverse(ptr->price, quantity.symbol);
+            //         a.amount = vapaee::utils::amount(ptr->price, ptr->volume, quantity.symbol);
+            //     });
+            // }
+            
+            
  
             // Borrar history
             // history table2(get_self(), account.value);
@@ -1586,12 +1661,12 @@ namespace vapaee {
             //     if (count++ > num) break;
             // }
 
-            ordertables orderstables(get_self(), get_self().value);
-            auto orders_itr = orderstables.find(account.value);
-            
-            orderstables.modify(*orders_itr, same_payer, [&](auto & a){
-                a.blocks = num;
-            });
+            // ordertables orderstables(get_self(), get_self().value);
+            // auto orders_itr = orderstables.find(account.value);
+            // 
+            // orderstables.modify(*orders_itr, same_payer, [&](auto & a){
+            //     a.blocks = num;
+            // });
 
             
             PRINT("vapaee::token::exchange::action_poblate_user_orders_table() ...\n");

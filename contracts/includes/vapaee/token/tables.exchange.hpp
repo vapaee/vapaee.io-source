@@ -4,6 +4,7 @@
 #include "tables/deposits.hpp"
 #include "tables/depusers.hpp"
 #include "tables/ordertables.hpp"
+#include "tables/ordersummary.hpp"
 #include "tables/earnings.hpp"
 #include "tables/history.hpp"
 #include "tables/tablesummary.hpp"
