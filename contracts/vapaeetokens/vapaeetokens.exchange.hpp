@@ -542,8 +542,9 @@ namespace vapaee {
 
             // register event on history table
             history table(get_self(), scope.value);
+            uint64_t h_id = table.available_primary_key();
             table.emplace(get_self(), [&](auto & a){
-                a.id = table.available_primary_key();
+                a.id = h_id;
                 a.date = date;
                 a.buyer = buyer;
                 a.seller = seller;
@@ -558,48 +559,6 @@ namespace vapaee {
 
             // register event for activity log
             aux_register_event(owner, name("transaction"), scope.to_string() + "|" + buyer.to_string() + "|" + seller.to_string() + "|" + amount.to_string() + "|" + payment.to_string() + "|" + price.to_string() );
-
-            // update deals count for scope table
-            ordersummary o_summary(get_self(), get_self().value);
-            auto orders_itr = o_summary.find(scope.value);
-
-            if (orders_itr == o_summary.end()) {
-                o_summary.emplace( get_self(), [&]( auto& a ) {
-                    a.table = scope;
-                    a.sell = amount.symbol.code();
-                    a.pay = payment.symbol.code();
-                    a.deals = 1;
-                    a.blocks = 1;
-                    a.supply.orders = 0;
-                    a.supply.total = asset(0, amount.symbol);
-                    a.demand.orders = 0;
-                    a.demand.total = asset(0, payment.symbol);
-                });
-                orders_itr = o_summary.find(scope.value);           
-            } else {
-                o_summary.modify(*orders_itr, same_payer, [&](auto & a){
-                    a.deals += 1;
-                    // the following is redundant. IDK why is this still here
-                    a.sell = amount.symbol.code();
-                    a.pay = payment.symbol.code();
-                    a.supply.total = asset(a.supply.total.amount, amount.symbol);
-                    a.demand.total = asset(a.demand.total.amount, payment.symbol);
-                });
-            }
-            /*
-            // DEBUGGING CODE (ini) -------------------------------------------------
-            if (payment.symbol.code().to_string() == string("EDNA") || amount.symbol.code().to_string() == string("EDNA")) {
-                eosio_assert(false,
-                    create_error_asset4("MESSAGE FROM VITER to debug EDNA token trading. line 448",
-                    amount, payment, price, last_price).c_str());
-            }
-            // DEBUGGING CODE (end) -------------------------------------------------
-            */
-            // DEBUGGING CODE ---> PASA
-            // amount: 1.00000000 EDNA
-            // payment: 0.00047800 TLOS
-            // price: 0.00047800 TLOS
-            // last_price: 2092.05020920 EDNA
 
             // find out last price
             asset last_price = price;
@@ -701,12 +660,12 @@ namespace vapaee {
 
             // save table summary (price & volume/h)
             blockhistory blocktable(get_self(), scope.value);
-            uint64_t id = blocktable.available_primary_key();
+            uint64_t bh_id = blocktable.available_primary_key();
             auto index = blocktable.template get_index<name("hour")>();
             auto bptr = index.find(hour);
             if (bptr == index.end()) {
                 blocktable.emplace(get_self(), [&](auto & a) {
-                    a.id = id;
+                    a.id = bh_id;
                     a.price = price;
                     a.inverse = inverse;
                     a.volume = payment;
@@ -719,11 +678,6 @@ namespace vapaee {
                     if (last_price > a.max) a.max = last_price;
                     if (last_price < a.min) a.min = last_price;
                 });
-         
-                // update how many blocks do we have
-                o_summary.modify(*orders_itr, same_payer, [&](auto & a){
-                    a.blocks = id+1;
-                });
             } else {
                 blocktable.modify(*bptr, get_self(), [&](auto & a){
                     a.price = price;
@@ -735,6 +689,17 @@ namespace vapaee {
                     if (price < a.min) a.min = price;
                 });
             }
+
+
+            // update deals (history table) & blocks (blockhistory table) count for scope table
+            ordersummary o_summary(get_self(), get_self().value);
+            auto orders_itr = o_summary.find(scope.value);
+
+            eosio_assert(orders_itr != o_summary.end(), "Why is this entry missing?");
+            o_summary.modify(*orders_itr, same_payer, [&](auto & a){
+                a.deals = h_id+1;
+                a.blocks = bh_id+1;
+            });
 
             PRINT("vapaee::token::exchange::aux_register_transaction_in_history() ...\n");
         }
@@ -826,7 +791,6 @@ namespace vapaee {
             symbol_code B = payment.symbol.code();
             name can_scope = aux_get_canonical_scope_for_symbols(A, B);
             auto orders_ptr = o_summary.find(can_scope.value);
-            auto buy_itr = o_summary.find(scope_buy.value);
             bool reverse_scope = can_scope != scope_sell;
 
             // sellorders selltable(get_self(), scope.value);
@@ -897,21 +861,24 @@ namespace vapaee {
                         // decrese the total in registry for this incompleted order
                         eosio_assert(orders_ptr != o_summary.end(), "table MUST exist but it does not");
                         o_summary.modify(*orders_ptr, ram_payer, [&](auto & a){
-                            PRINT("        a.total:  ", a.total.to_string(),"\n");
+                            PRINT("        a.total:  ", a.demand.total.to_string(),"\n");
                             PRINT("        payment:  ", current_payment.to_string(),"\n");
                             
-                            eosio_assert(a.total.symbol == current_payment.symbol,
-                                create_error_asset2(ERROR_AGSO_5, a.total, current_payment).c_str());
+                            eosio_assert(a.demand.total.symbol == current_payment.symbol,
+                                create_error_asset2(ERROR_AGSO_5, a.demand.total, current_payment).c_str());
 
                             if (!reverse_scope) {
-                                a.supply.total -= current_payment;
-                            } else {
+                                // we are consuming part of a buy-order so we decrement the demand
                                 a.demand.total -= current_payment;
+                            } else {
+                                // we are consuming part of a sell-order so we decrement the supply
+                                a.supply.total -= current_payment;
                             }
                         });
 
                     } else {
                         // buyer gets all amount wanted -> destroy order
+
                         uint64_t buy_id = b_ptr->id;
                         current_total = b_ptr->total;
                         current_payment = b_ptr->selling;
@@ -919,44 +886,41 @@ namespace vapaee {
                         PRINT("    payment (2): ", current_payment.to_string(),"\n");
 
                         // register order in user personal order registry
-                        userorders buyerorders(get_self(), buyer.value);
-                        // for (auto pp = buyerorders.begin(); pp != buyerorders.end(); pp++) {
-                        //     PRINT("    pp->table: ", pp->table, scope_buy == pp->table ? " (yes) " : " (no) "," pp->orders: ", pp->orders.size(),"\n");
-                        // }
+                        userorders buyerorders(get_self(), buyer.value);                        
                         auto buyer_itr = buyerorders.find(scope_buy.value);
-                        // PRINT("    buyer: ", buyer.to_string(),"\n");
-                        // PRINT("    scope_buy: ", scope_buy.to_string(),"\n");
                         eosio_assert(buyer_itr != buyerorders.end(), "ERROR: cómo que no existe? No fue registrado antes? buyer? scope_buy?");
-
-                        // take out the registry for this completed order
                         eosio_assert(orders_ptr != o_summary.end(), "table MUST exist but it does not");
-                        if (!reverse_scope) {
-                            if (orders_ptr->orders > 1) {
-                                buyerorders.modify(*buyer_itr, ram_payer, [&](auto & a){
-                                    std::vector<uint64_t> newlist;
-                                    std::copy_if (a.ids.begin(), a.ids.end(), std::back_inserter(newlist), [&](uint64_t i){return i!=buy_id;} );
-                                    a.ids = newlist;
-                                });
-                                o_summary.modify(*orders_ptr, ram_payer, [&](auto & a){
-                                    a.orders--;
-                                    eosio_assert(a.total.symbol == current_payment.symbol,
-                                        create_error_asset2(ERROR_AGSO_6, a.total, current_payment).c_str());
-                                    a.total -= current_payment;
-                                    PRINT("     o_summary.modify() a.orders--; a.total: ", a.total.to_string(),"\n");
-                                });
-                            } else {
-                                o_summary.erase(*orders_ptr);
-                                buyerorders.erase(*buyer_itr);
-                                PRINT("     o_summary.erase()\n");
-                            }                            
-                        } else {
-                            // aaaaaaaaaaaaaaaaaaaaaaaa
-                        }                        
 
+                        // take the order out of the buyer personal order registry
+                        buyerorders.modify(*buyer_itr, ram_payer, [&](auto & a){
+                            std::vector<uint64_t> newlist;
+                            std::copy_if (a.ids.begin(), a.ids.end(), std::back_inserter(newlist), [&](uint64_t i){return i!=buy_id;} );
+                            a.ids = newlist;
+                        });
+                        // if there's no orders left, erase the entire table entry
                         buyer_itr = buyerorders.find(scope_buy.value);
                         if (buyer_itr != buyerorders.end() && buyer_itr->ids.size() == 0) {
                             buyerorders.erase(*buyer_itr);
                         }
+
+                        if (!reverse_scope) {
+                            // we are consuming a buy-order so we decrement the demand
+                            o_summary.modify(*orders_ptr, ram_payer, [&](auto & a){
+                                a.demand.orders--;
+                                eosio_assert(a.demand.total.symbol == current_payment.symbol,
+                                    create_error_asset2(ERROR_AGSO_6, a.demand.total, current_payment).c_str());
+                                a.demand.total -= current_payment;
+                            });
+                        } else {
+                            // we are consuming a sell-order so we decrement the supply
+                            o_summary.modify(*orders_ptr, ram_payer, [&](auto & a){
+                                a.supply.orders--;
+                                eosio_assert(a.supply.total.symbol == current_payment.symbol,
+                                    create_error_asset2(ERROR_AGSO_6, a.supply.total, current_payment).c_str());
+                                a.supply.total -= current_payment;
+                            });
+                        }
+
                     }
 
                     eosio_assert(remaining.symbol == current_total.symbol,
@@ -1100,7 +1064,7 @@ namespace vapaee {
                             a.supply.orders = 0;
                             a.supply.total = asset(0, payment.symbol);
                             a.demand.orders = 1;
-                            a.demand.total = remaining
+                            a.demand.total = remaining;
                         }
                     });
                 } else {
@@ -1252,13 +1216,6 @@ namespace vapaee {
             
             eosio_assert( from != to, "cannot swap deposits to self" );
             require_auth( from );
-            /*if (to == get_self()) {
-                PRINT("   to == get_self()  ---> require_auth( to ): ", to.to_string(), "\n");
-                require_auth( to );
-            } else {
-                PRINT("   to == get_self()  ---> require_auth( from ): ", from.to_string(), "\n");
-                require_auth( from );
-            }*/
             
             eosio_assert( is_account( to ), "to account does not exist");
             auto sym = quantity.symbol.code();
@@ -1343,29 +1300,32 @@ namespace vapaee {
             // create scope for the orders table
             name scope_buy = aux_get_scope_for_tokens(token_a, token_p);
             name scope_sell = aux_get_scope_for_tokens(token_p, token_a);
+            name scope = aux_get_canonical_scope_for_symbols(token_a, token_p);
 
             if (type == name("sell")) {
-                aux_cancel_sell_order(owner, scope_buy, orders);
+                aux_cancel_sell_order(owner, scope, scope_buy, orders);
             }
 
             if (type == name("buy")) {
-                aux_cancel_sell_order(owner, scope_sell, orders);
+                aux_cancel_sell_order(owner, scope, scope_sell, orders);
             }
 
             PRINT("vapaee::token::exchange::action_cancel() ...\n");
         }
 
-        void aux_cancel_sell_order(name owner, name scope, const std::vector<uint64_t> & orders) {
+        void aux_cancel_sell_order(name owner, name canonical, name scope, const std::vector<uint64_t> & orders) {
             PRINT("vapaee::token::exchange::aux_cancel_sell_order()\n");
             PRINT(" owner: ", owner.to_string(), "\n");
+            PRINT(" canonical: ", canonical.to_string(), "\n");
             PRINT(" scope: ", scope.to_string(), "\n");
             PRINT(" orders.size(): ", orders.size(), "\n");
 
             sellorders selltable(get_self(), scope.value);
             asset return_amount;
             
-            ordertables orderstables(get_self(), get_self().value);
-            auto order_itr = orderstables.find(scope.value);
+            ordersummary o_summary(get_self(), get_self().value);
+            auto orders_ptr = o_summary.find(canonical.value);
+            bool reverse_scope = canonical != scope;
 
             // Register event
             aux_register_event(owner, name("cancel.order"), scope.to_string() + "|" + std::to_string(orders.size()));
@@ -1384,23 +1344,37 @@ namespace vapaee {
                 auto buyer_itr = buyerorders.find(scope.value);
                 
                 eosio_assert(buyer_itr != buyerorders.end(), "ERROR: cómo que no existe? No fue registrado antes?");
+                // take the order out of the buyer personal order registry
+                buyerorders.modify(*buyer_itr, same_payer, [&](auto & a){
+                    std::vector<uint64_t> newlist;
+                    std::copy_if (a.ids.begin(), a.ids.end(), std::back_inserter(newlist), [&](uint64_t i){return i!=order_id;} );
+                    a.ids = newlist;
+                });
+                // if there's no orders left, erase the entire table entry
+                buyer_itr = buyerorders.find(scope.value);
+                if (buyer_itr != buyerorders.end() && buyer_itr->ids.size() == 0) {
+                    buyerorders.erase(*buyer_itr);
+                }
 
-                // take out the registry for this completed order
-                eosio_assert(order_itr != orderstables.end(), "ordertable does not exist for that scope");
-                if (order_itr->orders > 1) {
-                    buyerorders.modify(*buyer_itr, same_payer, [&](auto & a){
-                        std::vector<uint64_t> newlist;
-                        std::copy_if (a.ids.begin(), a.ids.end(), std::back_inserter(newlist), [&](uint64_t i){return i!=order_id;} );
-                        a.ids = newlist;
-                    });
-                    orderstables.modify(*order_itr, same_payer, [&](auto & a){
-                        a.orders--;
-                        a.total -= return_amount;
+                // take out the registry for this canceled order
+                eosio_assert(orders_ptr != o_summary.end(), "ordertable does not exist for that scope");
+                if (!reverse_scope) {
+                    // we are canceling a sell-order so we decrement the supply
+                    o_summary.modify(*orders_ptr, same_payer, [&](auto & a){
+                        a.supply.orders--;
+                        eosio_assert(a.supply.total.symbol == return_amount.symbol,
+                            create_error_asset2(ERROR_AGSO_6, a.supply.total, return_amount).c_str());
+                        a.supply.total -= return_amount;
                     });
                 } else {
-                    orderstables.erase(*order_itr);
-                    buyerorders.erase(*buyer_itr);
-                }               
+                    // we are consuming a sell-order so we decrement the demand
+                    o_summary.modify(*orders_ptr, same_payer, [&](auto & a){
+                        a.demand.orders--;
+                        eosio_assert(a.demand.total.symbol == return_amount.symbol,
+                            create_error_asset2(ERROR_AGSO_6, a.demand.total, return_amount).c_str());
+                        a.demand.total -= return_amount;
+                    });
+                }           
 
                 action(
                     permission_level{get_self(),name("active")},
@@ -1417,103 +1391,30 @@ namespace vapaee {
             }
         }
 
-        void action_droptokens() {
-            PRINT("vapaee::token::exchange::action_droptokens()\n");
-
-            require_auth(get_self());
-            
-            tokens tokenstable(get_self(), get_self().value);
-            
-            for (auto itr = tokenstable.begin(); itr != tokenstable.end(); itr = tokenstable.begin()) {
-                tokenstable.erase(*itr);
-            }
-            
-            PRINT("vapaee::token::exchange::action_droptokens() ...\n");
-        }
-
-        void action_clear_tables_orders_and_history() {
-            PRINT("vapaee::token::exchange::action_clear_tables_orders_and_history()\n");
-            require_auth(get_self());
-
-            ordertables orderstables(get_self(), get_self().value);
-            for (auto orders = orderstables.begin(); orders != orderstables.end(); orders = orderstables.begin()) {
-                PRINT(" -- deleting table: ", orders->table.to_string(),"\n");
-
-                tablesummary summary(get_self(), orders->table.value);
-                for (auto s_itr = summary.begin(); s_itr != summary.end(); s_itr = summary.begin()) {
-                    PRINT("   -- deleting summary: ", s_itr->label.to_string(),"\n");
-                    summary.erase(*s_itr);
-                }
-                
-                history history_table(get_self(), orders->table.value);
-                for (auto h_itr = history_table.begin(); h_itr != history_table.end(); h_itr = history_table.begin()) {
-                    PRINT("   -- deleting history: ", std::to_string((unsigned long long)h_itr->id),"\n");
-                    history_table.erase(*h_itr);
-                }
-
-                sellorders selltable(get_self(), orders->table.value);
-                for (auto order = selltable.begin(); order != selltable.end(); order = selltable.begin()) {
-                    aux_cancel_sell_order(order->owner, orders->table, {order->id});
-                }
-            }
-            
-            PRINT("vapaee::token::exchange::action_clear_tables_orders_and_history() ...\n");
-        }        
-
-        void action_return_all_deposits() {
-            PRINT("vapaee::token::exchange::action_return_all_deposits()\n");
-            require_auth(get_self());
-
-            depusers depuserstable(get_self(), get_self().value);
-            
-            for (auto user_itr = depuserstable.begin(); user_itr != depuserstable.end(); user_itr = depuserstable.begin()) {
-                name user = user_itr->account;
-                if (user == get_self()) continue;
-                depuserstable.erase(*user_itr);
-
-                deposits depositstable(get_self(), user.value);
-                for (auto dep_itr = depositstable.begin(); dep_itr != depositstable.end(); dep_itr = depositstable.begin()) {
-                    asset quantity = dep_itr->amount;
-                    depositstable.erase(*dep_itr);
-
-                    // send tokens
-                    tokens tokenstable(get_self(), get_self().value);
-                    auto ptk_itr = tokenstable.find(quantity.symbol.code().raw());
-                    eosio_assert(ptk_itr != tokenstable.end(), (string("Token ") + quantity.symbol.code().to_string() + " not registered registered").c_str());
-
-                    action(
-                        permission_level{get_self(),name("active")},
-                        ptk_itr->contract,
-                        name("transfer"),
-                        std::make_tuple(get_self(), user, quantity, string("withdraw deposits: ") + quantity.to_string())
-                    ).send();
-                    PRINT("   transfer ", quantity.to_string(), " to ", user.to_string(),"\n");
-                }
-            }
-
-            PRINT("vapaee::token::exchange::action_return_all_deposits() ...\n");
-        }
-        
-        void action_cancel_all_orders() {
-            PRINT("vapaee::token::exchange::action_cancel_all_orders()\n");
-            require_auth(get_self());
-
-            ordertables orderstables(get_self(), get_self().value);
-            for (auto orders = orderstables.begin(); orders != orderstables.end(); orders = orderstables.begin()) {
-                PRINT(" -- deleting table: ", orders->table.to_string(),"\n");
-                sellorders selltable(get_self(), orders->table.value);
-                for (auto order = selltable.begin(); order != selltable.end(); order = selltable.begin()) {
-                    aux_cancel_sell_order(order->owner, orders->table, {order->id});
-                }
-            }
-            
-            PRINT("vapaee::token::exchange::action_cancel_all_orders() ...\n");
-        }
-
         void action_hotfix(int num, name account, asset quantity) {
             PRINT("vapaee::token::exchange::action_poblate_user_orders_table()\n");
             require_auth(get_self());
-            int count = 0; 
+            int count = 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             // // Modificar orden de venta
             // sellorders table0(get_self(), name("tlosdac.tlos").value);
@@ -1553,11 +1454,12 @@ namespace vapaee {
             //     if (count++ > num) break;
             // }
 
-            // Borrar ordertables
+
+            // // Borrar ordertables
             // ordertables table(get_self(), get_self().value);
             // for (auto ptr = table.begin(); ptr != table.end(); ptr = table.begin()) {
             //     table.erase(*ptr);
-            //     if (count++ > num) break;
+            //     // if (count++ > num) break;
             // }
 
             // Update ordertables
@@ -1567,6 +1469,92 @@ namespace vapaee {
             //     a.blocks = 3;
             //     a.deals = 4;
             // });
+
+            // Borrar ordersummary
+            // ordersummary o_summary(get_self(), get_self().value);
+            // for (auto ptr = o_summary.begin(); ptr != o_summary.end(); ptr = o_summary.begin()) {
+            //     o_summary.erase(*ptr);
+            // }
+            
+            /*
+            // Adding ordertables table entries
+            ordertables table(get_self(), get_self().value);
+            table.emplace(get_self(), [&](auto & a){
+                a.table = name("tlos.tlosdac");
+                a.sell = symbol_code("TLOS");
+                a.pay = symbol_code("TLOSDAC");
+                a.total = asset(16521967110, symbol(a.sell, 8));
+                a.orders = 5;
+                a.deals = 0;
+                a.blocks = 0;
+            });
+            table.emplace(get_self(), [&](auto & a){
+                a.table = name("tlosdac.tlos");
+                a.sell = symbol_code("TLOSDAC");
+                a.pay = symbol_code("TLOS");
+                a.total = asset(499844711889, symbol(a.sell, 8));
+                a.orders = 9;
+                a.deals = 20;
+                a.blocks = 16;
+            });
+            */
+
+
+
+            
+            /*
+            ordersummary o_summary(get_self(), get_self().value);
+            ordertables table(get_self(), get_self().value);
+            for (auto ptr = table.begin(); ptr != table.end(); ptr++) {
+                PRINT(" ------------------ \n");
+                
+                            
+                name scope = ptr->table;
+                name can_scope = aux_get_canonical_scope_for_symbols(ptr->pay, ptr->sell);
+                bool reverse_scope = can_scope != scope;
+
+                auto orders_itr = o_summary.find(can_scope.value);
+                if (orders_itr == o_summary.end()) {
+                    o_summary.emplace(get_self(), [&]( auto& a ) {
+                        a.table = can_scope;
+                        a.demand.orders = 0;
+                        a.supply.orders = 0; 
+                        if (!reverse_scope) {
+                            a.sell = ptr->sell;
+                            a.pay = ptr->pay;
+                            a.supply.total = asset(0, symbol(a.sell, 8));
+                            a.demand.total = asset(0, symbol(a.pay, 8));
+                        } else {
+                            a.sell = ptr->pay;
+                            a.pay = ptr->sell;
+                            a.supply.total = asset(0, symbol(a.sell, 8));
+                            a.demand.total = asset(0, symbol(a.pay, 8));
+                        }
+                    });
+                    orders_itr = o_summary.find(can_scope.value);
+                }
+
+                PRINT("          scope: ", scope.to_string(), "\n");
+                PRINT("      can_scope: ", can_scope.to_string(), "\n");
+                PRINT("     ptr->total: ", ptr->total.to_string(), "\n");
+
+                o_summary.modify(*orders_itr, get_self(), [&]( auto& a ) {                    
+                    if (!reverse_scope) {
+                        PRINT(" a.supply.total: ", a.supply.total.to_string(), "\n");
+                        a.supply.total += ptr->total;
+                        a.supply.orders += ptr->orders;
+                        a.deals = ptr->deals; 
+                        a.blocks = ptr->blocks;
+                    } else {
+                        PRINT(" a.demand.total: ", a.demand.total.to_string(), "\n");
+                        a.demand.total += ptr->total;
+                        a.demand.orders += ptr->orders;
+                    }
+                });
+
+            }
+            */
+            
 
             // Delete fake Tokens balance
             // auto sym = quantity.symbol;

@@ -52,19 +52,5 @@ show_table() {
 }
 
 
-show_table vapaeetokens $token.tlos history
-show_table vapaeetokens $token.tlos tablesummary
-show_table vapaeetokens $token.tlos blockhistory
-
-show_table vapaeetokens $token.tlos ht2
-show_table vapaeetokens $token.tlos tst2
-show_table vapaeetokens $token.tlos bht2
-
-
-# show_table vapaeetokens vapaeetokens events
-
-
-# show_table vapaeetokens tlos.$token tablesummary
-# show_table vapaeetokens tlos.$token history
-# show_table vapaeetokens box.tlos tablesummary
-# show_table vapaeetokens box.tlos history
+show_table vapaeetokens vapaeetokens ordertables
+show_table vapaeetokens vapaeetokens ordersummary

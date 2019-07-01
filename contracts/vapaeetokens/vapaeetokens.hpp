@@ -199,30 +199,6 @@ CONTRACT vapaeetokens : public eosio::contract {
         // debugin ----------
         AUX_DEBUG_ACTIONS (
 
-            ACTION droptokens () {
-                PRINT("\nACTION vapaeetokens.droptokens()\n");
-                vapaee::token::exchange e;
-                e.action_droptokens();
-            };
-
-            ACTION cancelall () {
-                PRINT("\nACTION vapaeetokens.cancelall()\n");
-                vapaee::token::exchange e;
-                e.action_cancel_all_orders();
-            };
-
-            ACTION returnall () {
-                PRINT("\nACTION vapaeetokens.returnall()\n");
-                vapaee::token::exchange e;
-                e.action_return_all_deposits();
-            };
-
-            ACTION cleartables () {
-                PRINT("\nACTION vapaeetokens.cleartables()\n");
-                vapaee::token::exchange e;
-                e.action_clear_tables_orders_and_history();
-            };
-
             ACTION hotfix (int max, name scope, asset q) {
                 PRINT("\nACTION vapaeetokens.hotfix()\n");
                 vapaee::token::exchange e;

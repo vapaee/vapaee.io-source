@@ -49,20 +49,20 @@
     + ejecutar N veces el hotfix para pasar los datos a las nuevas tablas
     + ejecutar setdisabled(false)
 
-- sustituimos ordertables por odersummary en la lógica.
+- sustituimos ordertables por ordersummary en la lógica.
   + aux_register_transaction_in_history
-  - aux_generate_sell_order
-  - aux_cancel_sell_order
-  - action_clear_tables_orders_and_history
-  - action_cancel_all_orders
+  + aux_generate_sell_order
+  + aux_cancel_sell_order
+  + action_clear_tables_orders_and_history
+  + action_cancel_all_orders
 
-- pasar toda la data de ordertables a odersummary
-  - escribir hotfix que migre los datos de ordertables a odersummary pero sin borrar el original
-  - deployar en producción
-  - ejecutar los hotfix y efectuar la migración
++ pasar toda la data de ordertables a ordersummary
+  + escribir hotfix que migre los datos de ordertables a ordersummary pero sin borrar el original
+  + deployar en producción
+  + ejecutar los hotfix y efectuar la migración
 
 - adaptar la web para que se fume esos datos y funcione como antes.
-  - VapaeeService que consulta y trae la tabla ordertables ahora deberá hacerlo con odersummary
+  - VapaeeService que consulta y trae la tabla ordertables ahora deberá hacerlo con ordersummary
     - trade page
     - vpe-panel-orders que debe sacar los datos de la nueva estructura
     - vpe-panel-order-editor
@@ -95,7 +95,7 @@
 }
 
 
---------- vapaeetokens::odersummary(vapaeetokens) -------------------------------------------------
+--------- vapaeetokens::ordersummary(vapaeetokens) -------------------------------------------------
 {
   "rows": [{
       "table": "acorn.tlos",
