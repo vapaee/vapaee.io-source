@@ -4,7 +4,7 @@ import { LocalStringsService } from 'src/app/services/common/common.services';
 import { ScatterService } from 'src/app/services/scatter.service';
 import { ActivatedRoute } from '@angular/router';
 import { Token } from 'src/app/services/utils.service';
-import { VapaeeService, Asset, OrderRow, TokenOrders } from 'src/app/services/vapaee.service';
+import { VapaeeService, Asset, OrderRow, TokenOrders, Table } from 'src/app/services/vapaee.service';
 import { Subscriber } from 'rxjs';
 import { VpePanelOrderEditorComponent } from 'src/app/components/vpe-panel-order-editor/vpe-panel-order-editor.component';
 import { Feedback } from 'src/app/services/feedback.service';
@@ -87,53 +87,58 @@ export class TradePage implements OnInit, OnDestroy {
         return this.vapaee.balances;
     }
 
+    get table(): Table {
+        var table = this.scope ? this.vapaee.table(this.scope) : null;
+        return table;
+    }
+
     get history() {
-        var scope = this.vapaee.scopes[this.scope];
-        return scope ? scope.history : [];
+        var table = this.table;
+        return table ? table.history : [];
     }
 
     get orders() {
-        var scope = this.vapaee.scopes[this.scope];
-        return scope ? scope.orders : this._orders;
+        var table = this.table;
+        return table ? table.orders : this._orders;
     }
 
     get buyorders() {
-        var scope = this.vapaee.scopes[this.scope];
-        return scope ? scope.orders.buy : this._orders.buy;
+        var table = this.table;
+        return table ? table.orders.buy : this._orders.buy;
     }
 
     get sellorders() {
-        var scope = this.vapaee.scopes[this.scope];
-        return scope ? scope.orders.sell : this._orders.sell;
+        var table = this.table;
+        return table ? table.orders.sell : this._orders.sell;
     }
 
     get headers() {
-        var scope = this.vapaee.scopes[this.scope];
+        var table = this.table;
         var header = { 
             sell: {total:null, orders:0}, 
             buy: {total:null, orders:0}
         }
-        return scope ? (scope.header ? scope.header : header) : header;
+        return table ? (table.header ? table.header : header) : header;
     }
 
-    get iheaders() {
-        var scope = this.vapaee.scopes[this.vapaee.inverseScope(this.scope)];
+    /*get iheaders() {
+        var scope = this.vapaee.reverse(this.scope);
         var header = { 
             sell: {total:null, orders:0}, 
             buy: {total:null, orders:0}
         }
         return scope ? (scope.header ? scope.header : header) : header;
-    }
+    }*/
 
     get summary() {
-        var scope = this.vapaee.scopes[this.scope];
+        var table = this.table;
         var _summary = Object.assign({
             percent: 0,
             percent_str: "0%",
             price: this.vapaee.zero_telos.clone(),
             records: [],
             volume: this.vapaee.zero_telos.clone()
-        }, scope ? scope.summary : {});
+        }, table ? table.summary : {});
         return _summary;
         // return scope ? (scope.summary ? scope.summary : _summary) : _summary;
     }
@@ -143,20 +148,17 @@ export class TradePage implements OnInit, OnDestroy {
         return this._chartData;
     }
 
-    get scopes() {
-        return this.vapaee.scopes;
-    }
-
     get tokens() {
         return this.vapaee.tokens;
     }
 
     private regenerateChartData() {
-        if (this.vapaee.scopes[this.scope]) {
+        var table = this.table;
+        if (table) {
             // console.log("-----------------------------------------");
             // console.log(this.scope, this.vapaee.scopes[this.scope].blocklist);
             // console.log("-----------------------------------------");
-            this._chartData = this.vapaee.scopes[this.scope].blocklist;
+            this._chartData = table.blocklist;
             // console.log("this._chartData", this._chartData);
         } else {
             // console.error("No existe todavía el scope ", this.scope);

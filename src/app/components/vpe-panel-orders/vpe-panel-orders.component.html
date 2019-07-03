@@ -81,10 +81,10 @@
                 <div class="col-12">
                     <div class="pull-right">
                         <span class="text-muted">
-                            {{iheaders.sell ? iheaders.sell.orders : 0}} {{local.string.orders}}
+                            {{headers.buy ? headers.buy.orders : 0}} {{local.string.orders}}
                             <span [hidden]="split"> - </span>
                             <span [hidden]="!split"><br></span>
-                            {{iheaders.sell.total ? iheaders.sell.total.toString() : ""}}
+                            {{headers.buy.total ? headers.buy.total.toString() : ""}}
                         </span>
                     </div>
                     <span class="text-bold text-sm">{{local.string.buy_orders | titlecase}} </span>

@@ -16,7 +16,6 @@ import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 export class VpePanelTokensComponent implements OnChanges {
 
     @Input() public tokens: Token[];
-    @Input() public scopes: TableMap;
     @Input() public hideheader: boolean;
     @Input() public margintop: boolean;
     @Input() public expanded: boolean;
@@ -105,7 +104,7 @@ export class VpePanelTokensComponent implements OnChanges {
     }
 
     summary(_scope) {
-        var scope = this.scopes[_scope];
+        var scope = this.vapaee.table(_scope);
         var _summary = Object.assign({
             percent: 0,
             percent_str: "0%",

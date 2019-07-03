@@ -15,7 +15,6 @@ export class VpePanelOrdersComponent implements OnChanges {
     @Input() public orders: TokenOrders;
     @Input() public inverted: OrderRow[];
     @Input() public headers: TableHeader;
-    @Input() public iheaders: TableHeader;
     @Input() public hideheader: boolean;
     @Input() public margintop: boolean;
     @Input() public expanded: boolean;
@@ -46,6 +45,8 @@ export class VpePanelOrdersComponent implements OnChanges {
     }
 
     get orders_sell_inverted() {
+        // portrait display only
+        // this function invertes the sell order array to display it over buy-order, so the first one must be inversed (decreasing in price)
         if (!this.inverted || this.inverted.length != this.orders.sell.length) {
             this.inverted = this.orders.sell.map(x => x);
             // console.log("this.orders.sell[0]: ", this.orders.sell[0], "this.inverted[0]", this.inverted[0]);

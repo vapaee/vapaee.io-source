@@ -78,14 +78,14 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
     }
 
     summary(_scope) {
-        var scope = this.vapaee.scopes[_scope];
+        var table = this.vapaee.table(_scope);
         var _summary = Object.assign({
             percent: 0,
             percent_str: "0%",
             price: this.vapaee.zero_telos.clone(),
             records: [],
             volume: this.vapaee.zero_telos.clone()
-        }, scope ? scope.summary : {
+        }, table ? table.summary : {
             volume: new Asset(),
             price: new Asset(),
             max_price: new Asset(),

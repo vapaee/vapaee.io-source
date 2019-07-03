@@ -19,11 +19,12 @@ export class VapaeeService {
     - 'no-logged': Scatter detected but user is not logged
     - 'account-ok': user logger with scatter
     */
+    private _tables: TableMap;
+    private _reverse: TableMap;
 
     public zero_telos: Asset;
     public telos: Token;
     public tokens: Token[];
-    public scopes: TableMap;
     public utils: Utils;
     public feed: Feedback;
     public current: Account;
@@ -48,9 +49,9 @@ export class VapaeeService {
         list:EventLog[];
     };
     
-    private setOrdertables: Function;
-    public waitOrdertables: Promise<any> = new Promise((resolve) => {
-        this.setOrdertables = resolve;
+    private setOrderSummary: Function;
+    public waitOrderSummary: Promise<any> = new Promise((resolve) => {
+        this.setOrderSummary = resolve;
     });
 
     private setTokenstats: Function;
@@ -68,7 +69,8 @@ export class VapaeeService {
         public analytics: AnalyticsService,
         private datePipe: DatePipe
     ) {
-        this.scopes = {};
+        this._tables = {};
+        this._reverse = {};
         this.activity = {total:0, events:{}, list:[]};
         this.current = this.default;
         this.contract = this.vapaeetokens;
@@ -131,15 +133,6 @@ export class VapaeeService {
         return this.scatter.logged ? 
         this.scatter.account :
         this.scatter.default;
-    }
-
-    inverseScope(scope:string) {
-        if (!scope) return scope;
-        console.assert(typeof scope =="string", "ERROR: string scope expected, got ", typeof scope, scope);
-        var parts = scope.split(".");
-        console.assert(parts.length == 2, "ERROR: scope format expected is xxx.yyy, got: ", typeof scope, scope);
-        var inverse = parts[1] + "." + parts[0];
-        return inverse;
     }
 
     // -- User Log State ---------------------------------------------------
@@ -371,6 +364,139 @@ export class VapaeeService {
             });
         });        
     }
+
+
+    // --------------------------------------------------------------
+    // Scopes / Tables 
+    public hasScopes() {
+        return !!this._tables;
+    }
+
+    public table(scope:string): Table {
+        return this._tables[scope] || this.reverse(scope);
+    }
+
+    public reverse(scope:string): Table {
+        var comodity = this.getTokenNow(scope.split(".")[0]);
+        var currency = this.getTokenNow(scope.split(".")[1]);
+        var reverse_scope = this.getScopeFor(currency, comodity);
+        var reverse = this._reverse[reverse_scope];
+        if (!reverse && this._tables[scope]) {
+            this._reverse[reverse_scope] = this.createReverseTableFor(comodity, currency);
+        }
+        return this._reverse[reverse_scope];
+    }
+
+    public tableFor(comodity:Token, currency:Token): Table {
+        var scope = this.getScopeFor(comodity, currency);
+        return this.table(scope);
+    }
+
+    public createReverseTableFor(comodity:Token, currency:Token): Table {
+        var scope = this.getScopeFor(comodity, currency);
+        var reverse_scope = this.getScopeFor(currency, comodity);
+        var table:Table = this._tables[scope];
+
+        var inverse_history:HistoryTx[] = [];
+
+        for (var i in table.history) {
+            var hTx:HistoryTx = {
+                id: table.history[i].id,
+                price: table.history[i].inverse.clone(),
+                inverse: table.history[i].price.clone(),
+                amount: table.history[i].payment.clone(),
+                payment: table.history[i].amount.clone(),
+                buyer: table.history[i].seller,
+                seller: table.history[i].buyer,
+                buyfee: table.history[i].sellfee.clone(),
+                sellfee: table.history[i].buyfee.clone(),
+                date: table.history[i].date,
+                isbuy: !table.history[i].isbuy,
+            };
+            inverse_history.push(hTx);
+        }        
+
+        var reverse:Table = {
+            scope: reverse_scope,
+            block: table.block,
+            blocklist: table.blocklist,
+            blocks: table.blocks,
+            deals: table.deals,
+            header: {
+                sell: {
+                    total:table.header.buy.total.clone(),
+                    orders:table.header.buy.orders
+                },
+                buy: {
+                    total:table.header.sell.total.clone(),
+                    orders:table.header.sell.orders
+                }
+            },
+            history: inverse_history,
+            orders: {
+                sell: table.orders.buy,  // <<-- esto funciona así como está?
+                buy: table.orders.sell   // <<-- esto funciona así como está?
+            },
+            summary: {
+                price: table.summary.inverse,
+                inverse: table.summary.price,
+                max_inverse: table.summary.max_price,
+                max_price: table.summary.max_inverse,
+                min_inverse: table.summary.min_price,
+                min_price: table.summary.min_inverse,
+                records: table.summary.records,
+                volume: table.summary.amount,
+                amount: table.summary.volume,
+                percent: table.summary.ipercent,
+                ipercent: table.summary.percent,
+                percent_str: table.summary.ipercent_str,
+                ipercent_str: table.summary.percent_str,
+            },
+            tx: table.tx
+        }
+        return reverse;
+    }
+
+    public getScopeFor(comodity:Token, currency:Token) {
+        if (!comodity || !currency) return "";
+        return comodity.symbol.toLowerCase() + "." + currency.symbol.toLowerCase();
+    }
+
+    public inverseScope(scope:string) {
+        if (!scope) return scope;
+        console.assert(typeof scope =="string", "ERROR: string scope expected, got ", typeof scope, scope);
+        var parts = scope.split(".");
+        console.assert(parts.length == 2, "ERROR: scope format expected is xxx.yyy, got: ", typeof scope, scope);
+        var inverse = parts[1] + "." + parts[0];
+        return inverse;
+    }
+
+    public canonicalScope(scope:string) {
+        if (!scope) return scope;
+        console.assert(typeof scope =="string", "ERROR: string scope expected, got ", typeof scope, scope);
+        var parts = scope.split(".");
+        console.assert(parts.length == 2, "ERROR: scope format expected is xxx.yyy, got: ", typeof scope, scope);
+        var inverse = parts[1] + "." + parts[0];
+        if (parts[1] == "tlos") {
+            return scope;
+        }
+        if (parts[0] == "tlos") {
+            return inverse;
+        }
+        if (parts[0] < parts[1]) {
+            return scope;
+        } else {
+            return inverse;
+        }
+    }
+    
+
+    public isCanonical(scope:string) {
+        return this.canonicalScope(scope) == scope;
+    }
+
+    
+    
     // --------------------------------------------------------------
     // Getters 
 
@@ -440,6 +566,7 @@ export class VapaeeService {
     }
 
     getTokenNow(sym:string): Token {
+        if (!sym) return null;
         for (var i in this.tokens) {
             // there's a little bug. This is a justa  work arround
             if (this.tokens[i].symbol.toUpperCase() == "TLOS" && this.tokens[i].fiat) {
@@ -586,7 +713,7 @@ export class VapaeeService {
             this.getSellOrders(comodity, currency, true),
             this.getBuyOrders(comodity, currency, true),
             this.getTableSummary(comodity, currency, true),
-            this.getOrderTables(),
+            this.getOrderSummary(),
             updateUser ? this.updateCurrentUser(): null
         ]).then(r => {
             this.resortTokens();
@@ -611,8 +738,10 @@ export class VapaeeService {
     }
 
     private getBlockHistoryTotalPagesFor(scope:string, pagesize: number) {
-        if (!this.scopes || !this.scopes[scope]) return 0;
-        var total = this.scopes[scope].blocks;
+        if (!this._tables) return 0;
+        var table = this.table(scope);
+        if (!table) return 0;
+        var total = table.blocks;
         var mod = total % pagesize;
         var dif = total - mod;
         var pages = dif / pagesize;
@@ -624,8 +753,10 @@ export class VapaeeService {
     }
 
     private getHistoryTotalPagesFor(scope:string, pagesize: number) {
-        if (!this.scopes || !this.scopes[scope]) return 0;
-        var total = this.scopes[scope].deals;
+        if (!this._tables) return 0;
+        var table = this.table(scope);
+        if (!table) return 0;
+        var total = table.deals;
         var mod = total % pagesize;
         var dif = total - mod;
         var pages = dif / pagesize;
@@ -654,14 +785,11 @@ export class VapaeeService {
     }
 
     async getTransactionHistory(comodity:Token, currency:Token, page:number = -1, pagesize:number = -1, force:boolean = false): Promise<any> {
-        var scope:string = comodity.symbol.toLowerCase() + "." + currency.symbol.toLowerCase();
-        if (comodity == this.telos) {
-            scope = currency.symbol.toLowerCase() + "." + comodity.symbol.toLowerCase();
-        }        
+        var scope:string = this.canonicalScope(this.getScopeFor(comodity, currency));
         var aux = null;
         var result = null;
         this.feed.setLoading("history."+scope, true);
-        aux = this.waitOrdertables.then(async _ => {
+        aux = this.waitOrderSummary.then(async _ => {
             if (pagesize == -1) {
                 pagesize = 10;                
             }
@@ -677,15 +805,15 @@ export class VapaeeService {
                 this.fetchHistory(scope, page+2, pagesize)
             ]).then(_ => {
                 this.feed.setLoading("history."+scope, false);
-                return this.scopes[scope].history;
+                return this.table(scope).history;
             }).catch(e => {
                 this.feed.setLoading("history."+scope, false);
                 throw e;
             });
         });
 
-        if (this.scopes[scope] && !force) {
-            result = this.scopes[scope].history;
+        if (this.table(scope) && !force) {
+            result = this.table(scope).history;
         } else {
             result = aux;
         }
@@ -704,15 +832,12 @@ export class VapaeeService {
 
     async getBlockHistory(comodity:Token, currency:Token, page:number = -1, pagesize:number = -1, force:boolean = false): Promise<any> {
         console.log("VapaeeService.getBlockHistory()", comodity.symbol, page, pagesize);
-        var scope:string = comodity.symbol.toLowerCase() + "." + currency.symbol.toLowerCase();
-        if (comodity == this.telos) {
-            scope = currency.symbol.toLowerCase() + "." + comodity.symbol.toLowerCase();
-        }
+        var scope:string = this.canonicalScope(this.getScopeFor(comodity, currency));
         var aux = null;
         var result = null;
         this.feed.setLoading("block-history."+scope, true);
 
-        aux = this.waitOrdertables.then(async _ => {
+        aux = this.waitOrderSummary.then(async _ => {
             if (pagesize == -1) {
                 pagesize = 10;
             }
@@ -729,15 +854,16 @@ export class VapaeeService {
 
             return Promise.all(promises).then(_ => {
                 this.feed.setLoading("block-history."+scope, false);
-                this.scopes[scope].blocklist = [];
+                var table: Table = this.table(scope);
+                table.blocklist = [];
                 var now = new Date();
                 var hora = 1000 * 60 * 60;
                 var hour = Math.floor(now.getTime()/hora);
                 // console.log("->", hour);
                 var last_block = null;
                 var last_hour = null;
-                for (var i in this.scopes[scope].block) {
-                    var block:HistoryBlock = this.scopes[scope].block[i];
+                for (var i in table.block) {
+                    var block:HistoryBlock = table.block[i];
                     var label = this.auxHourToLabel(block.hour);
                     // console.log("->", i, label, block);
                     var obj:any[] = [label];
@@ -748,14 +874,14 @@ export class VapaeeService {
                             // console.log("-->", j, label_i, block);
                             var price = last_block.price.amount.toNumber();
                             var aux = [label_i, price, price, price, price];
-                            this.scopes[scope].blocklist.push(aux);
+                            table.blocklist.push(aux);
                         }
                     }
                     obj.push(block.max.amount.toNumber());
                     obj.push(block.entrance.amount.toNumber());
                     obj.push(block.price.amount.toNumber());
                     obj.push(block.min.amount.toNumber());
-                    this.scopes[scope].blocklist.push(obj);
+                    table.blocklist.push(obj);
                     last_block = block;
                 }
 
@@ -765,21 +891,21 @@ export class VapaeeService {
                         var label_i = this.auxHourToLabel(last_block.hour+j);
                         var price = last_block.price.amount.toNumber();
                         var aux = [label_i, price, price, price, price];
-                        this.scopes[scope].blocklist.push(aux);
+                        table.blocklist.push(aux);
                     }
                 }
                 
-                // console.log("---------------->", this.scopes[scope].blocklist);
-                this.onBlocklistChange.next(this.scopes[scope].blocklist);
-                return this.scopes[scope].block;
+                // console.log("---------------->", table.blocklist);
+                this.onBlocklistChange.next(table.blocklist);
+                return table.block;
             }).catch(e => {
                 this.feed.setLoading("block-history."+scope, false);
                 throw e;
             });
         });
 
-        if (this.scopes[scope] && !force) {
-            result = this.scopes[scope].block;
+        if (this.table(scope) && !force) {
+            result = this.table(scope).block;
         } else {
             result = aux;
         }
@@ -790,17 +916,19 @@ export class VapaeeService {
     }
 
     async getSellOrders(comodity:Token, currency:Token, force:boolean = false): Promise<any> {
-        var scope:string = comodity.symbol.toLowerCase() + "." + currency.symbol.toLowerCase();
+        var scope:string = this.getScopeFor(comodity, currency);
+        var canonical:string = this.canonicalScope(scope);
+        var reverse:string = this.inverseScope(canonical);
         var aux = null;
         var result = null;
         this.feed.setLoading("sellorders", true);
         aux = this.waitReady.then(async _ => {
-            var orders = await this.fetchOrders({scope:scope, limit:50, index_position: "2", key_type: "i64"});
-            this.scopes[scope] = this.auxAssertScope(scope);
+            var orders = await this.fetchOrders({scope:canonical, limit:100, index_position: "2", key_type: "i64"});
+            this._tables[scope] = this.auxAssertScope(canonical);
             // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("-------------");
             // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("Sell crudo:", orders);
             var sell: Order[] = this.auxProcessRowsToOrders(orders.rows);
-            sell.sort(function(a:Order, b:Order){
+            sell.sort(function(a:Order, b:Order) {
                 if(a.price.amount.isLessThan(b.price.amount)) return -11;
                 if(a.price.amount.isGreaterThan(b.price.amount)) return 1;
                 return 0;
@@ -850,16 +978,16 @@ export class VapaeeService {
                 order_row.sum = new Asset(sum, order_row.total.token);
             }
 
-            this.scopes[scope].orders.sell = list;
+            this._tables[canonical].orders.sell = list;
             // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("Sell final:", this.scopes[scope].orders.sell);
             // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("-------------");
 
             this.feed.setLoading("sellorders", false);            
-            return orders;
+            return this._tables[canonical].orders.sell;
         });
 
-        if (this.scopes[scope] && !force) {
-            result = this.scopes[scope].orders.sell;
+        if (this._tables[canonical] && !force) {
+            result = this._tables[canonical].orders.sell;
         } else {
             result = aux;
         }
@@ -867,14 +995,17 @@ export class VapaeeService {
     }
     
     async getBuyOrders(comodity:Token, currency:Token, force:boolean = false): Promise<any> {
-        var invere_scope:string = currency.symbol.toLowerCase() + "." + comodity.symbol.toLowerCase();
-        var scope:string = comodity.symbol.toLowerCase() + "." + currency.symbol.toLowerCase();
+        var scope:string = this.getScopeFor(comodity, currency);
+        var canonical:string = this.canonicalScope(scope);
+        var reverse:string = this.inverseScope(canonical);
+
+
         var aux = null;
         var result = null;
         this.feed.setLoading("buyorders", true);
         aux = this.waitReady.then(async _ => {
-            var orders = await await this.fetchOrders({scope:invere_scope, limit:50, index_position: "2", key_type: "i64"});
-            this.scopes[scope] = this.auxAssertScope(scope);
+            var orders = await await this.fetchOrders({scope:reverse, limit:50, index_position: "2", key_type: "i64"});
+            this._tables[canonical] = this.auxAssertScope(canonical);
             // console.log("-------------");
             // console.log("Buy crudo:", orders);            
             var buy: Order[] = this.auxProcessRowsToOrders(orders.rows);
@@ -930,55 +1061,50 @@ export class VapaeeService {
                 order_row.sum = new Asset(sum, order_row.total.token);
             }
 
-            this.scopes[scope].orders.buy = list;
+            this._tables[canonical].orders.buy = list;
             // console.log("Buy final:", this.scopes[scope].orders.buy);
             // console.log("-------------");
             this.feed.setLoading("buyorders", false);
-            return orders;
+            return this._tables[canonical].orders.buy;
         });
 
-        if (this.scopes[scope] && !force) {
-            result = this.scopes[scope].orders.buy;
+        if (this._tables[canonical] && !force) {
+            result = this._tables[canonical].orders.buy;
         } else {
             result = aux;
         }
         return result;
     }
     
-    async getOrderTables(): Promise<any> {
-        // console.log("VapaeeService.getOrderTables()");
-        var tables = await this.fetchOrderTables();
+    async getOrderSummary(): Promise<any> {
+        console.log("************ VapaeeService.getOrderSummary() ************");
+        var tables = await this.fetchOrderSummary();
 
         for (var i in tables.rows) {
             var scope:string = tables.rows[i].table;
             var comodity = scope.split(".")[0].toUpperCase();
             var currency = scope.split(".")[1].toUpperCase();
-            this.scopes[scope] = this.auxAssertScope(scope);
-            if (tables.rows[i].pay == comodity && tables.rows[i].sell == currency) {
-                this.scopes[scope].header.buy.total = new Asset(tables.rows[i].total, this);
-                this.scopes[scope].header.buy.orders = tables.rows[i].orders;
-            }
-            if (tables.rows[i].pay == currency && tables.rows[i].sell == comodity) {
-                this.scopes[scope].header.sell.total = new Asset(tables.rows[i].total, this);
-                this.scopes[scope].header.sell.orders = tables.rows[i].orders;
-                this.scopes[scope].deals = tables.rows[i].deals;
-                this.scopes[scope].blocks = tables.rows[i].blocks;
-            }
-        }
+            this._tables[scope] = this.auxAssertScope(scope);
 
-        // if (tables.rows.length > 0) {
-            this.setOrdertables();
-            this.waitOrdertables = new Promise((resolve) => {
-                this.setOrdertables = resolve;
-            });
-        // }
+            // console.log(i, tables.rows[i]);
+
+            this._tables[scope].header.sell.total = new Asset(tables.rows[i].supply.total, this);
+            this._tables[scope].header.sell.orders = tables.rows[i].supply.orders;
+            this._tables[scope].header.buy.total = new Asset(tables.rows[i].demand.total, this);
+            this._tables[scope].header.buy.orders = tables.rows[i].demand.orders;
+            this._tables[scope].deals = tables.rows[i].deals;
+            this._tables[scope].blocks = tables.rows[i].blocks;
+        }
+        
+        this.setOrderSummary();
+        this.waitOrderSummary = new Promise((resolve) => {
+            this.setOrderSummary = resolve;
+        });
+    
     }
 
     async getTableSummary(comodity:Token, currency:Token, force:boolean = false): Promise<any> {
-        var scope:string = comodity.symbol.toLowerCase() + "." + currency.symbol.toLowerCase();
-        if (comodity == this.telos) {
-            scope = currency.symbol.toLowerCase() + "." + comodity.symbol.toLowerCase();
-        }
+        var scope:string = this.canonicalScope(this.getScopeFor(comodity, currency));
         this.feed.setLoading("summary."+scope, true);
         var aux = null;
         var result = null;
@@ -987,10 +1113,12 @@ export class VapaeeService {
             // if(scope=="olive.tlos")console.log(scope, "---------------------------------------------------");
             // if(scope=="olive.tlos")console.log("Summary crudo:", summary.rows);
 
-            this.scopes[scope] = this.auxAssertScope(scope);
-            this.scopes[scope].summary = {
-                price: new Asset("0.0000 TLOS", this),
-                volume: new Asset("0.0000 TLOS", this),
+            this._tables[scope] = this.auxAssertScope(scope);
+            this._tables[scope].summary = {
+                price: new Asset(new BigNumber(0), currency),
+                inverse: new Asset(new BigNumber(0), comodity),
+                volume: new Asset(new BigNumber(0), currency),
+                amount: new Asset(new BigNumber(0), comodity),
                 percent: 0.3,
                 records: summary.rows
             };
@@ -1003,8 +1131,10 @@ export class VapaeeService {
             // if(scope=="olive.tlos")console.log("start_hour:", start_hour);
 
             // proceso los datos crudos 
-            var ZERO_TLOS = "0.00000000 TLOS";
-            var price = ZERO_TLOS;
+            var ZERO_COMODITY = "0.00000000 " + comodity.symbol;
+            var ZERO_CURRENCY = "0.00000000 " + currency.symbol;
+            var price = ZERO_CURRENCY;
+            var inverse = ZERO_COMODITY;
             var crude = {};
             var last_hh = 0;
             for (var i=0; i<summary.rows.length; i++) {
@@ -1016,6 +1146,7 @@ export class VapaeeService {
                     if (last_hh < hh && hh < start_hour) {
                         last_hh = hh;
                         price = summary.rows[i].price;
+                        inverse = summary.rows[i].inverse;
                         // if(scope=="olive.tlos")console.log("hh:", hh, "last_hh:", last_hh, "price:", price);
                     }    
                 }
@@ -1027,49 +1158,94 @@ export class VapaeeService {
 
             // genero una entrada por cada una de las últimas 24 horas
             var last_24h = {};
-            var volume = new Asset(ZERO_TLOS, this);
+            var volume = new Asset(ZERO_CURRENCY, this);
+            var amount = new Asset(ZERO_COMODITY, this);
             var price_asset = new Asset(price, this);
+            var inverse_asset = new Asset(inverse, this);
             // if(scope=="cnt.tlos")console.log("AAAAAAAAAAA------- price ", price);
             var max_price = price_asset.clone();
             var min_price = price_asset.clone();
-            var first:Asset = null;
+            var max_inverse = inverse_asset.clone();
+            var min_inverse = inverse_asset.clone();
+            var price_fst:Asset = null;
+            var inverse_fst:Asset = null;
             for (var i=0; i<24; i++) {
                 var current = start_hour+i;
                 var current_date = new Date(current * 3600 * 1000);
                 last_24h[current] = crude[current] || {
                     label: this.auxGetLabelForHour(current % 24),
                     price: price,
-                    volume: ZERO_TLOS,
+                    inverse: inverse,
+                    volume: ZERO_CURRENCY,
+                    amount: ZERO_COMODITY,
                     date: current_date.toISOString().split(".")[0],
                     hour: current
                 };
                 // if(scope=="olive.tlos")console.log("current_date:", current_date.toISOString(), current, last_24h[current]);
+
+                // coninical ----------------------------
                 price = last_24h[current].price;
                 var vol = new Asset(last_24h[current].volume, this);
+                console.assert(vol.token.symbol == volume.token.symbol, "ERROR: different tokens", vol.str, volume.str);
                 volume.amount = volume.amount.plus(vol.amount);
-                if (price != ZERO_TLOS && !first) {
-                    first = new Asset(price, this);
+                if (price != ZERO_CURRENCY && !price_fst) {
+                    price_fst = new Asset(price, this);
                 }
                 price_asset = new Asset(price, this);
+                console.assert(price_asset.token.symbol == max_price.token.symbol, "ERROR: different tokens", price_asset.str, max_price.str);
                 if (price_asset.amount.isGreaterThan(max_price.amount)) {
                     max_price = price_asset.clone();
                 }
+                console.assert(price_asset.token.symbol == min_price.token.symbol, "ERROR: different tokens", price_asset.str, min_price.str);
                 if (min_price.amount.isEqualTo(0) || price_asset.amount.isLessThan(min_price.amount)) {
                     min_price = price_asset.clone();
                 }
+
+                // reverse ----------------------------
+                inverse = last_24h[current].inverse;
+                var amo = new Asset(last_24h[current].amount, this);
+                console.assert(amo.token.symbol == amount.token.symbol, "ERROR: different tokens", amo.str, amount.str);
+                amount.amount = amount.amount.plus(amo.amount);
+                if (inverse != ZERO_COMODITY && !inverse_fst) {
+                    inverse_fst = new Asset(inverse, this);
+                }
+                inverse_asset = new Asset(inverse, this);
+                console.assert(inverse_asset.token.symbol == max_inverse.token.symbol, "ERROR: different tokens", inverse_asset.str, max_inverse.str);
+                if (inverse_asset.amount.isGreaterThan(max_inverse.amount)) {
+                    max_inverse = inverse_asset.clone();
+                }
+                console.assert(inverse_asset.token.symbol == min_inverse.token.symbol, "ERROR: different tokens", inverse_asset.str, min_inverse.str);
+                if (min_inverse.amount.isEqualTo(0) || inverse_asset.amount.isLessThan(min_inverse.amount)) {
+                    min_inverse = inverse_asset.clone();
+                }
             }
-            if (!first) {
-                first = new Asset(last_24h[start_hour].price, this);
+            // coninical ----------------------------
+            if (!price_fst) {
+                price_fst = new Asset(last_24h[start_hour].price, this);
             }
-            var last =  new Asset(last_24h[now_hour].price, this);
-            var diff = last.clone();
+            var last_price =  new Asset(last_24h[now_hour].price, this);
+            var diff = last_price.clone();
             // diff.amount 
-            diff.amount = last.amount.minus(first.amount);
+            diff.amount = last_price.amount.minus(price_fst.amount);
             var ratio:number = 0;
-            if (first.amount.toNumber() != 0) {
-                ratio = diff.amount.dividedBy(first.amount).toNumber();
-            }            
+            if (price_fst.amount.toNumber() != 0) {
+                ratio = diff.amount.dividedBy(price_fst.amount).toNumber();
+            }
             var percent = Math.floor(ratio * 10000) / 100;
+
+            // reverse ----------------------------
+            if (!inverse_fst) {
+                inverse_fst = new Asset(last_24h[start_hour].inverse, this);
+            }
+            var last_inverse =  new Asset(last_24h[now_hour].inverse, this);
+            var idiff = last_inverse.clone();
+            // diff.amount 
+            idiff.amount = last_inverse.amount.minus(inverse_fst.amount);
+            ratio = 0;
+            if (inverse_fst.amount.toNumber() != 0) {
+                ratio = diff.amount.dividedBy(inverse_fst.amount).toNumber();
+            }
+            var ipercent = Math.floor(ratio * 10000) / 100;
 
             // if(scope=="olive.tlos")console.log("last_24h:", [last_24h]);
             // if(scope=="olive.tlos")console.log("first:", first.toString(8));
@@ -1079,21 +1255,27 @@ export class VapaeeService {
             // if(scope=="olive.tlos")console.log("ratio:", ratio);
             // if(scope=="olive.tlos")console.log("volume:", volume.str);
 
-            this.scopes[scope].summary.price = last;
-            this.scopes[scope].summary.percent_str = (isNaN(percent) ? 0 : percent) + "%";
-            this.scopes[scope].summary.percent = isNaN(percent) ? 0 : percent;
-            this.scopes[scope].summary.volume = volume;
-            this.scopes[scope].summary.min_price = min_price;
-            this.scopes[scope].summary.max_price = max_price;
+            this._tables[scope].summary.price = last_price;
+            this._tables[scope].summary.inverse = last_inverse;
+            this._tables[scope].summary.percent_str = (isNaN(percent) ? 0 : percent) + "%";
+            this._tables[scope].summary.percent = isNaN(percent) ? 0 : percent;
+            this._tables[scope].summary.ipercent_str = (isNaN(ipercent) ? 0 : ipercent) + "%";
+            this._tables[scope].summary.ipercent = isNaN(ipercent) ? 0 : ipercent;
+            this._tables[scope].summary.volume = volume;
+            this._tables[scope].summary.amount = amount;
+            this._tables[scope].summary.min_price = min_price;
+            this._tables[scope].summary.max_price = max_price;
+            this._tables[scope].summary.min_inverse = min_inverse;
+            this._tables[scope].summary.max_inverse = max_inverse;
 
-            // if(scope=="olive.tlos")console.log("Summary final:", this.scopes[scope].summary);
+            // if(scope=="olive.tlos")console.log("Summary final:", this._tables[scope].summary);
             // if(scope=="olive.tlos")console.log("---------------------------------------------------");
             this.feed.setLoading("summary."+scope, false);
             return summary;
         });
 
-        if (this.scopes[scope] && !force) {
-            result = this.scopes[scope].summary;
+        if (this._tables[scope] && !force) {
+            result = this._tables[scope].summary;
         } else {
             result = aux;
         }
@@ -1193,7 +1375,7 @@ export class VapaeeService {
     private auxAssertScope(scope:string): Table {
         var comodity_sym = scope.split(".")[0].toUpperCase();
         var currency_sym = scope.split(".")[1].toUpperCase();
-        return this.scopes[scope] || {
+        return this._tables[scope] || {
             scope: scope,
             orders: { sell: [], buy: [] },
             deals: 0,
@@ -1247,22 +1429,23 @@ export class VapaeeService {
         });
     }
 
-    private fetchOrderTables(): Promise<TableResult> {
-        return this.utils.getTable("ordertables").then(result => {
+    private fetchOrderSummary(): Promise<TableResult> {
+        return this.utils.getTable("ordersummary").then(result => {
             return result;
         });
     }
 
     private fetchBlockHistory(scope:string, page:number = 0, pagesize:number = 25): Promise<TableResult> {
-        var pages = this.getBlockHistoryTotalPagesFor(scope, pagesize);
+        var canonical:string = this.canonicalScope(scope);
+        var pages = this.getBlockHistoryTotalPagesFor(canonical, pagesize);
         var id = page*pagesize;
         // console.log("VapaeeService.fetchBlockHistory(", scope, ",",page,",",pagesize,"): id:", id, "pages:", pages);
         if (page < pages) {
-            if (this.scopes[scope].block["id-" + id]) {
+            if (this._tables && this._tables[canonical] && this._tables[canonical].block["id-" + id]) {
                 var result:TableResult = {more:false,rows:[]};
                 for (var i=0; i<pagesize; i++) {
                     var id_i = id+i;
-                    var block = this.scopes[scope].block["id-" + id_i];
+                    var block = this._tables[canonical].block["id-" + id_i];
                     if (block) {
                         result.rows.push(block);
                     } else {
@@ -1277,41 +1460,44 @@ export class VapaeeService {
             }
         }
 
-        return this.utils.getTable("blockhistory", {scope:scope, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
+        return this.utils.getTable("blockhistory", {scope:canonical, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
             // console.log("**************");
             // console.log("block History crudo:", result);
-            this.scopes[scope] = this.auxAssertScope(scope);
-            this.scopes[scope].block = this.scopes[scope].block || {}; 
-            // console.log("this.scopes[scope].block:", this.scopes[scope].block);
+            this._tables[canonical] = this.auxAssertScope(canonical);
+            this._tables[canonical].block = this._tables[canonical].block || {}; 
+            // console.log("this._tables[scope].block:", this._tables[scope].block);
             for (var i=0; i < result.rows.length; i++) {
                 var block:HistoryBlock = {
                     id: result.rows[i].id,
                     hour: result.rows[i].hour,
                     price: new Asset(result.rows[i].price, this),
+                    inverse: new Asset(result.rows[i].inverse, this),
                     entrance: new Asset(result.rows[i].entrance, this),
                     max: new Asset(result.rows[i].max, this),
                     min: new Asset(result.rows[i].min, this),
                     volume: new Asset(result.rows[i].volume, this),
+                    amount: new Asset(result.rows[i].amount, this),
                     date: new Date(result.rows[i].date)
                 }
-                this.scopes[scope].block["id-" + block.id] = block;
+                this._tables[canonical].block["id-" + block.id] = block;
             }   
-            // console.log("block History final:", this.scopes[scope].block);
+            // console.log("block History final:", this._tables[scope].block);
             // console.log("-------------");
             return result;
         });
     }    
 
     private fetchHistory(scope:string, page:number = 0, pagesize:number = 25): Promise<TableResult> {
-        var pages = this.getHistoryTotalPagesFor(scope, pagesize);
+        var canonical:string = this.canonicalScope(scope);
+        var pages = this.getHistoryTotalPagesFor(canonical, pagesize);
         var id = page*pagesize;
         // console.log("VapaeeService.fetchHistory(", scope, ",",page,",",pagesize,"): id:", id, "pages:", pages);
         if (page < pages) {
-            if (this.scopes[scope].tx["id-" + id]) {
+            if (this._tables && this._tables[canonical] && this._tables[canonical].tx["id-" + id]) {
                 var result:TableResult = {more:false,rows:[]};
                 for (var i=0; i<pagesize; i++) {
                     var id_i = id+i;
-                    var trx = this.scopes[scope].tx["id-" + id_i];
+                    var trx = this._tables[canonical].tx["id-" + id_i];
                     if (trx) {
                         result.rows.push(trx);
                     } else {
@@ -1331,9 +1517,9 @@ export class VapaeeService {
             // console.log("**************");
             // console.log("History crudo:", result);
             
-            this.scopes[scope] = this.auxAssertScope(scope);
-            this.scopes[scope].history = [];
-            this.scopes[scope].tx = this.scopes[scope].tx || {}; 
+            this._tables[canonical] = this.auxAssertScope(scope);
+            this._tables[canonical].history = [];
+            this._tables[canonical].tx = this._tables[canonical].tx || {}; 
 
             // console.log("this.scopes[scope].tx:", this.scopes[scope].tx);
 
@@ -1345,19 +1531,20 @@ export class VapaeeService {
                     buyfee: new Asset(result.rows[i].buyfee, this),
                     sellfee: new Asset(result.rows[i].sellfee, this),
                     price: new Asset(result.rows[i].price, this),
+                    inverse: new Asset(result.rows[i].inverse, this),
                     buyer: result.rows[i].buyer,
                     seller: result.rows[i].seller,
                     date: new Date(result.rows[i].date),
                     isbuy: !!result.rows[i].isbuy
                 }
-                this.scopes[scope].tx["id-" + transaction.id] = transaction;
+                this._tables[canonical].tx["id-" + transaction.id] = transaction;
             }
 
-            for (var j in this.scopes[scope].tx) {
-                this.scopes[scope].history.push(this.scopes[scope].tx[j]);
+            for (var j in this._tables[canonical].tx) {
+                this._tables[canonical].history.push(this._tables[canonical].tx[j]);
             }
 
-            this.scopes[scope].history.sort(function(a:HistoryTx, b:HistoryTx){
+            this._tables[canonical].history.sort(function(a:HistoryTx, b:HistoryTx){
                 if(a.date < b.date) return 1;
                 if(a.date > b.date) return -1;
                 if(a.id < b.id) return 1;
@@ -1481,9 +1668,9 @@ export class VapaeeService {
     private resortTokens() {
         console.log("resortTokens()");
         this.tokens.sort((a:Token, b:Token) => {
-            if (this.scopes && this.scopes[a.scope] && this.scopes[b.scope]) {
-                var a_vol = this.scopes[a.scope].summary.volume;
-                var b_vol = this.scopes[b.scope].summary.volume;
+            if (this._tables && this._tables[a.scope] && this._tables[b.scope]) {
+                var a_vol = this._tables[a.scope].summary.volume;
+                var b_vol = this._tables[b.scope].summary.volume;
                 if(a_vol.amount.isGreaterThan(b_vol.amount)) return -1;
                 if(a_vol.amount.isLessThan(b_vol.amount)) return 1;    
             }
@@ -1501,9 +1688,6 @@ export class VapaeeService {
     }
 
 }
-
-
-
 
 export class Asset {
     amount:BigNumber;
@@ -1543,7 +1727,7 @@ export class Asset {
         this.token = vapaee.getTokenNow(sym);
         var amount_str = text.split(" ")[0];
         this.amount = new BigNumber(amount_str);
-        console.assert(!!this.token, "ERROR: string malformed of token not found:", text);
+        console.assert(!!this.token || !vapaee.tokens, "ERROR: string malformed of token not found:", text);
     }
 
     valueToString(decimals:number = -1, total:boolean = false): string {
@@ -1614,11 +1798,17 @@ export interface Table {
 
 export interface Summary {
     price?:Asset,
+    inverse?:Asset,
     min_price?:Asset,
     max_price?:Asset,
+    min_inverse?:Asset,
+    max_inverse?:Asset,
     volume?:Asset,
+    amount?:Asset,
     percent?:number,
     percent_str?:string,
+    ipercent?:number,
+    ipercent_str?:string,
     records?: any[]
 }
 
@@ -1640,6 +1830,7 @@ export interface TokenOrders {
 export interface HistoryTx {
     id: number;
     price: Asset;
+    inverse: Asset;
     amount: Asset;
     payment: Asset;
     buyfee: Asset;
@@ -1663,10 +1854,12 @@ export interface HistoryBlock {
     id: number;
     hour: number;
     price: Asset;
+    inverse: Asset;
     entrance: Asset;
     max: Asset;
     min: Asset;
     volume: Asset;
+    amount: Asset;
     date: Date;
 }
 

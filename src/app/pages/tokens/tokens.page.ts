@@ -28,10 +28,7 @@ export class TokensPage implements OnInit, OnDestroy {
     get tokens(): Token[] {
         return this.vapaee.tokens;
     }
-
-    get scopes(): TableMap {
-        return this.vapaee.scopes;
-    }
+    
     /*
     summary(_scope) {
         console.error("DEPRECATED");
