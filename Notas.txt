@@ -71,7 +71,8 @@
   
 --------- vapaeetokens::ordertables(vapaeetokens) -------------------------------------------------
 {
-  "rows": [{
+  "rows": [
+    {
       "table": "acorn.tlos",
       "sell": "ACORN",
       "pay": "TLOS",
@@ -115,16 +116,6 @@
   ],
   "more": false
 }
-
-
-
-
-
-
-
-
-
-
 
 
 -- UPDATING SCATTER LIBS --
