@@ -373,16 +373,20 @@ export class VapaeeService {
     }
 
     public table(scope:string): Table {
+        if (this._tables[scope]) return this._tables[scope];        // ---> direct
+        var reverse = this.inverseScope(scope);
+        if (this._reverse[reverse]) return this._reverse[reverse];  // ---> reverse
+        if (!this._tables[reverse]) return null;                    // ---> table does not exist (or has not been loaded yet)
         return this._tables[scope] || this.reverse(scope);
     }
 
-    public reverse(scope:string): Table {
-        var comodity = this.getTokenNow(scope.split(".")[0]);
-        var currency = this.getTokenNow(scope.split(".")[1]);
-        var reverse_scope = this.getScopeFor(currency, comodity);
-        var reverse = this._reverse[reverse_scope];
-        if (!reverse && this._tables[scope]) {
-            this._reverse[reverse_scope] = this.createReverseTableFor(comodity, currency);
+    private reverse(scope:string): Table {
+        var canonical = this.canonicalScope(scope);
+        var reverse_scope = this.inverseScope(canonical);
+        console.assert(canonical != reverse_scope, "ERROR: ", canonical, reverse_scope);
+        var reverse_table:Table = this._reverse[reverse_scope];
+        if (!reverse_table && this._tables[canonical]) {
+            this._reverse[reverse_scope] = this.createReverseTableFor(reverse_scope);
         }
         return this._reverse[reverse_scope];
     }
@@ -392,16 +396,18 @@ export class VapaeeService {
         return this.table(scope);
     }
 
-    public createReverseTableFor(comodity:Token, currency:Token): Table {
-        var scope = this.getScopeFor(comodity, currency);
-        var reverse_scope = this.getScopeFor(currency, comodity);
-        var table:Table = this._tables[scope];
+    public createReverseTableFor(scope:string): Table {
+        console.log("******************************************", scope);
+        var canonical = this.canonicalScope(scope);
+        var reverse_scope = this.inverseScope(canonical);
+        var table:Table = this._tables[canonical];
 
         var inverse_history:HistoryTx[] = [];
 
         for (var i in table.history) {
             var hTx:HistoryTx = {
                 id: table.history[i].id,
+                str: "",
                 price: table.history[i].inverse.clone(),
                 inverse: table.history[i].price.clone(),
                 amount: table.history[i].payment.clone(),
@@ -413,8 +419,41 @@ export class VapaeeService {
                 date: table.history[i].date,
                 isbuy: !table.history[i].isbuy,
             };
+            hTx.str = hTx.price.str + " " + hTx.amount.str;
             inverse_history.push(hTx);
-        }        
+        }
+        
+
+        console.log("buy", table.orders.buy);
+        console.log("sell", table.orders.sell);
+
+        
+            var inverse_orders:TokenOrders = {
+                buy: [], sell: []
+            };
+
+            for (var type in {buy:"buy", sell:"sell"}) {
+                for (var i in table.orders[type]) {
+                    var row = table.orders[type][i];
+                    var newrow:OrderRow = {
+                        inverse: row.price.clone(),
+                        orders: row.orders,
+                        owners: row.owners,
+                        price: row.inverse.clone(),
+                        str: row.inverse.str,
+                        sum: row.sumtelos.clone(),
+                        sumtelos: row.sum.clone(),
+                        telos: row.total.clone(),
+                        total: row.telos.clone(),
+                        // amount: row.sumtelos.total(), // <-- extra
+                    };
+                    inverse_orders[type].push(newrow);
+                }
+            }
+                
+        
+
+
 
         var reverse:Table = {
             scope: reverse_scope,
@@ -434,8 +473,8 @@ export class VapaeeService {
             },
             history: inverse_history,
             orders: {
-                sell: table.orders.buy,  // <<-- esto funciona así como está?
-                buy: table.orders.sell   // <<-- esto funciona así como está?
+                sell: inverse_orders.buy,  // <<-- esto funciona así como está?
+                buy: inverse_orders.sell   // <<-- esto funciona así como está?
             },
             summary: {
                 price: table.summary.inverse,
@@ -924,7 +963,7 @@ export class VapaeeService {
         this.feed.setLoading("sellorders", true);
         aux = this.waitReady.then(async _ => {
             var orders = await this.fetchOrders({scope:canonical, limit:100, index_position: "2", key_type: "i64"});
-            this._tables[scope] = this.auxAssertScope(canonical);
+            this._tables[canonical] = this.auxAssertScope(canonical);
             // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("-------------");
             // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("Sell crudo:", orders);
             var sell: Order[] = this.auxProcessRowsToOrders(orders.rows);
@@ -1077,11 +1116,13 @@ export class VapaeeService {
     }
     
     async getOrderSummary(): Promise<any> {
-        console.log("************ VapaeeService.getOrderSummary() ************");
+        console.log("VapaeeService.getOrderSummary()");
         var tables = await this.fetchOrderSummary();
 
         for (var i in tables.rows) {
             var scope:string = tables.rows[i].table;
+            var canonical = this.canonicalScope(scope);
+            console.assert(scope == canonical, "ERROR: scope is not canonical", scope, [i, tables]);
             var comodity = scope.split(".")[0].toUpperCase();
             var currency = scope.split(".")[1].toUpperCase();
             this._tables[scope] = this.auxAssertScope(scope);
@@ -1517,7 +1558,7 @@ export class VapaeeService {
             // console.log("**************");
             // console.log("History crudo:", result);
             
-            this._tables[canonical] = this.auxAssertScope(scope);
+            this._tables[canonical] = this.auxAssertScope(canonical);
             this._tables[canonical].history = [];
             this._tables[canonical].tx = this._tables[canonical].tx || {}; 
 
@@ -1526,6 +1567,7 @@ export class VapaeeService {
             for (var i=0; i < result.rows.length; i++) {
                 var transaction:HistoryTx = {
                     id: result.rows[i].id,
+                    str: "",
                     amount: new Asset(result.rows[i].amount, this),
                     payment: new Asset(result.rows[i].payment, this),
                     buyfee: new Asset(result.rows[i].buyfee, this),
@@ -1537,6 +1579,7 @@ export class VapaeeService {
                     date: new Date(result.rows[i].date),
                     isbuy: !!result.rows[i].isbuy
                 }
+                transaction.str = transaction.price.str + " " + transaction.amount.str;
                 this._tables[canonical].tx["id-" + transaction.id] = transaction;
             }
 
@@ -1829,6 +1872,7 @@ export interface TokenOrders {
 
 export interface HistoryTx {
     id: number;
+    str: string;
     price: Asset;
     inverse: Asset;
     amount: Asset;

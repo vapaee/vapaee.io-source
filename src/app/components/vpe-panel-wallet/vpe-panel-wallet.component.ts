@@ -115,7 +115,7 @@ export class VpePanelWalletComponent implements OnChanges {
 
         this.portrait = event.device.portrait;
         this.display = "normal";
-        console.log("updateSize() event.device.wide --->", event.device.wide);
+        // console.log("updateSize() event.device.wide --->", event.device.wide);
         if (event.device.wide) {
             if (event.width < 370) {
                 this.display = "medium";

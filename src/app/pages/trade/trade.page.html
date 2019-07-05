@@ -3,6 +3,10 @@
     
     <vpe-panel-chart [hideheader]="true" [zoom]="500" [height]="chartHeight" [margintop]="true" [data]="chartData"></vpe-panel-chart>
 
+    <div class="col-12 margin-top text-center">
+        <span class="btn btn-info" (click)="switchTokens()">Switch to {{vapaee.inverseScope(scope)}}</span>
+    </div>
+
 
     <div class="margin-top text-center" [ngClass]="{'d-none':vapaee.loginState != 'no-logged'}">
         <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
@@ -26,8 +30,8 @@
     <div class="card text-white bg-dark">
         <div class="card-header vpe-background-card-header padding">
             <div class="row">
-                <div class="col-sm-4 col-md-3 col-padding-right margin-top">
-                    
+                <div class="col-sm-4 col-md-3 col-padding-right margin-top text-center">
+                    <span class="btn btn-info" (click)="switchTokens()">Switch to {{vapaee.inverseScope(scope)}}</span>
                 </div>
                 <div class="col-sm-8 col-md-9 col-padding-left margin-top">
                     <span class="text-xl">
@@ -53,7 +57,7 @@
                     <vpe-panel-orders (onClickRow)="onClickRow($event)" (onClickPrice)="onClickPrice($event)" [headers]="headers" [orders]="orders"></vpe-panel-orders>
                 </div>
                 <div class="col-sm-4 col-md-3 col-padding-left">
-                    <vpe-panel-history [scope]="comodity ? comodity.scope : ''" [history]="history"></vpe-panel-history>
+                    <vpe-panel-history [scope]="scope" [history]="history"></vpe-panel-history>
                 </div>
             </div>
         </div>

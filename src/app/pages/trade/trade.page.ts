@@ -63,7 +63,7 @@ export class TradePage implements OnInit, OnDestroy {
     }
 
     async init() {
-        // console.log("TradePage.init() <-- ");
+        console.log("TradePage.init() <-- ");
         this.orderform_min ? this.orderform_min.reset() : null;
         this.orderform_full ? this.orderform_full.reset() : null;
         this.comodity = null;
@@ -94,6 +94,7 @@ export class TradePage implements OnInit, OnDestroy {
 
     get history() {
         var table = this.table;
+        // console.log("history()",this.scope, table.scope, table.history);
         return table ? table.history : [];
     }
 
@@ -255,4 +256,9 @@ export class TradePage implements OnInit, OnDestroy {
         console.log("TradePage.scopeChange()", scope);
         this.selectToken(scope);
     }
+
+    switchTokens() {
+        this.selectToken(this.vapaee.inverseScope(this.scope));
+    }
+
 }

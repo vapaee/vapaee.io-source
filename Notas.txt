@@ -1,122 +1,36 @@
+-- TODO --
++ pasar a trabajar con la blochcian local
+- poner un botón provisorio para switchear A/B por B/A
+- trade page
+  - history
+  - order book
+  - gráfica
+  - order form
+    - action call "order" 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 -- TODO (code) --
 - cuando termina de realizarse un depósito o un withdraw habría que cerrar automáticamente el miniformulario
 - Hay que traducir el nuevo modal
-
-
--- TODAY TODO LIST --
-+ respaldar las estructuras actuales de las tablas history, blockhistory y tablesummary
-+ modificarlas así:
-  + history
-    asset inverse;
-  + blockhistory:
-    asset inverse;
-    asset amount;
-  + tablesummary:
-    asset inverse;
-    asset amount;
-  + ordertables
-    por ordersummary
-    
-+ Adaptar aux_register_transaction_in_history
-  + tablesummary
-    + incluir el inverse y el amount
-  + blockhistory
-    + incluir el inverse y el amount
-  + history
-    + incluir el inverse
-
-+ resetaer toda la blockchain local y reiniciar el DEX
-+ hay que adaptar la web para que siga funcionando bien.
-  + hay algo para hacer?
-
-+ una vez que funcione bien, hay que pasar todo a producción
-  + hacer un build del código y deployarlo.
-  + pasar las tablas tablesummary, blockhistory y history a ts, bs y h2 respect.
-  + reproducir la vieja estructura
-  + implementar una variable "desabled" que si está en true no funciona ninguna action (está fuera de servicio)
-  + escribir una action hotfix que permita iterar sobre los datos y compiar de una tabla a la nueva borrando de la original
-  + deployar en producción
-    + sacar el PRINT
-    + subir código y abi
-    + ejecutar setdisabled(true)
-    + ejecutar N veces el hotfix para pasar los datos a las nuevas tablas
-  + clonar el código de las tablas nuevas (ts, bs y h2) y renombrarlas como las viejas (tablesummary, blockhistory y history)
-  + reescribir el hotfix para que haga el trabajo inverso: saque entries de las tablas nuevas y los ponga en las viejas.
-  + cambiar la logica del código para que opere con las tablas viejas (que ahora tienen la estructura nueva)
-  + deployar en producción
-    + sacar el PRINT
-    + subir código y abi
-    + ejecutar N veces el hotfix para pasar los datos a las nuevas tablas
-    + ejecutar setdisabled(false)
-
-- sustituimos ordertables por ordersummary en la lógica.
-  + aux_register_transaction_in_history
-  + aux_generate_sell_order
-  + aux_cancel_sell_order
-  + action_clear_tables_orders_and_history
-  + action_cancel_all_orders
-
-+ pasar toda la data de ordertables a ordersummary
-  + escribir hotfix que migre los datos de ordertables a ordersummary pero sin borrar el original
-  + deployar en producción
-  + ejecutar los hotfix y efectuar la migración
-
-- adaptar la web para que se fume esos datos y funcione como antes.
-  - VapaeeService que consulta y trae la tabla ordertables ahora deberá hacerlo con ordersummary
-    - trade page
-    - vpe-panel-orders que debe sacar los datos de la nueva estructura
-    - vpe-panel-order-editor
-  - VapaeeService que calcula cuantas páginas de history hay
-  - VapaeeService que calcula cuantas páginas de blockhistory hay
-  
---------- vapaeetokens::ordertables(vapaeetokens) -------------------------------------------------
-{
-  "rows": [
-    {
-      "table": "acorn.tlos",
-      "sell": "ACORN",
-      "pay": "TLOS",
-      "total": "268.00000001 ACORN",
-      "fees": [],
-      "orders": 10,
-      "deals": 23,
-      "blocks": 12
-    },{
-      "table": "tlos.acorn",
-      "sell": "TLOS",
-      "pay": "ACORN",
-      "total": "21.48381716 TLOS",
-      "fees": [],
-      "orders": 7,
-      "deals": 0,
-      "blocks": 0
-    }
-  ],
-  "more": false
-}
-
-
---------- vapaeetokens::ordersummary(vapaeetokens) -------------------------------------------------
-{
-  "rows": [{
-      "table": "acorn.tlos",
-      "sell": "ACORN",
-      "pay": "TLOS",
-      "supply": {
-          "total": "268.00000001 ACORN",
-          "orders": 10
-      },
-      "demand": {
-          "total": "21.48381716 TLOS",
-          "orders": 7
-      },
-      "deals": 23,
-      "blocks": 12
-    }
-  ],
-  "more": false
-}
-
 
 -- UPDATING SCATTER LIBS --
 npm i -S scatterjs-core scatterjs-plugin-eosjs2 eosjs@20.0.0-beta3
