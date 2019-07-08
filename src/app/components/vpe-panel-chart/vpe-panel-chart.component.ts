@@ -26,8 +26,9 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
     
     closed:boolean;
     component:GoogleChartComponentInterface;
-    zomm_min: number = 5;
+    zoom_min: number = 5;
     bgStyle: any;
+    limit: number;
 
     @Input() public height: number;
     @Input() public zoom: number;
@@ -53,8 +54,14 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         this.bgStyle = {"height": this.height + "px"};
         if (this.service.device.width >= 1200) {
             this.height = 298;
+            this.limit = 1024;
         } else {
             this.height = 295;
+            if (this.service.device.width >= 700) {
+                this.limit = 512;
+            } else {
+                this.limit = 256;
+            }
         }        
     }
     
@@ -69,8 +76,14 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         this.closed = false;
         if (this.service.device.width >= 1200) {
             this.height = 298;
+            this.limit = 1024;
         } else {
             this.height = 295;
+            if (this.service.device.width >= 700) {
+                this.limit = 512;
+            } else {
+                this.limit = 256;
+            }
         }
         // console.log("event.width", event.width, "event.device.width",  event.device.width);
         var data = this.recreateDataTable();
@@ -113,40 +126,41 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         //console.log("mouseOut", event);
     }
 
-    private recreateDataTable() {        
+    
+    level: number;
+    private updateLevel() {
+        var lev;
+        var zoom = this.zoom;
+        for (lev = 0; lev < this.data.length-1 &&zoom > this.limit; lev++) {
+            zoom = Math.floor(zoom/2);
+        }
+        this.level = lev;
+    }
+    private getLevel() {
+        this.updateLevel();
+        return this.data[this.level];
+    }    
+    private recreateDataTable() {
+        var level = this.getLevel();
         var data = [];
-        var zoom = this.zoom
-        if (zoom > this.data.length) {
-            zoom = this.data.length;
+        var zoom = this.zoom;
+        if (zoom > this.data[0].length) zoom = this.data[0].length;
+        if (zoom < this.zoom_min) zoom = this.zoom_min;
+        for (var i=0; i<this.level; i++) {
+            zoom = Math.floor(zoom/2);
         }
+        if (zoom > level.length) zoom = level.length;
         for (var i=0; i<zoom; i++) {
-            data.push(this.data[this.data.length - zoom + i]);    
+            data.push(level[level.length - zoom + i]);    
         }
-        // console.log("********************* recreateDataTable()", data);
+        // console.log("********************* recreateDataTable()", zoom, this.zoom, this.level, [data]);
         return data;
     }
 
-    private prepareChartDataStyles() {
-        var current = "green";
-        for (var i=0; i<this.data.length; i++) {
-            var row = this.data[i];
-            // console.log("--->", this.data[i]);
-            if (row[2] > row[3]) {
-                current = "red";
-            } else if (row[2] < row[3]) {
-                current = "green";
-            }
-            // this.data[i].push("color: blue");
-        }        
-    }
-
     mouseWheel(event) {
-        //console.log("mouseWheel", event);
         this.zoom -= Math.floor(event.delta * (this.zoom / 10));
-        if (this.zoom < this.zomm_min) this.zoom = this.zomm_min;
-        if (this.zoom > this.data.length) this.zoom = this.data.length;
-        // this.recreateChartData();
-        //console.log(this._chartData);
+        if (this.zoom > this.data[0].length) this.zoom = this.data[0].length;
+        if (this.zoom < this.zoom_min) this.zoom = this.zoom_min;
         if (this.component) this.component.redraw(this.recreateDataTable(), null);
     }
 
@@ -158,38 +172,39 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
     cache: any;
     ngOnChanges() {
         this.bgStyle = {"height": this.height + "px"};
-        // console.log("********************* ngOnChanges()", [this.data, this._chartData.options.height]);
+        // console.log("********************* ngOnChanges()", [this.data, this._chartData?this._chartData.options.height:0]);
         // if (this.data && this.data.length > 0) {
         
         this.cache = this.cache || {};
-        if (this.cache.data_length == this.data.length) {
-            var last = this.data[this.data.length-1];
-            var equals = true;
-            for (var i in this.cache.last_block) {
-                if (this.cache.last_block[i] != last[i]) {
-                    equals = false;
-                    break;
-                }
-            }
-            if (this._chartData.options.height != this.height) {
-                equals = false;
-            }
-            if (equals) {
-                console.log("skip", [this.cache]);
-                return;    
-            } 
-        }
-
-        this.cache.data_length =  this.data.length;
-        this.cache.last_block =  this.data[this.data.length-1];
-
         if (this.data) {
+            if (this.cache.data_length == this.data[0].length) {
+                var last = this.data[0][this.data[0].length-1];
+                var equals = true;
+                for (var i in this.cache.last_block) {
+                    if (this.cache.last_block[i] != last[i]) {
+                        equals = false;
+                        break;
+                    }
+                }
+                if (this._chartData.options.height != this.height) {
+                    equals = false;
+                }
+                if (equals) {
+                    console.log("skip", [this.cache]);
+                    return;    
+                } 
+            }
+            this.cache.data_length =  this.data[0].length;
+            this.cache.last_block =  this.data[0][this.data[0].length-1];    
+        
             this._chartData = null;
             clearTimeout(this.timer);
             this.timer = setTimeout(_ => {
-                if (this.data.length > 0 && this.data[0].length == 5 ){
+                /*
+                if (this.data.length > 0 && this.data[0].length > 0 && this.data[0][0].length == 5 ){
                     this.prepareChartDataStyles();
                 }
+                */
                 var data = this.recreateDataTable();
                 var baseline = 0; 
                 if (data.length > 0) {

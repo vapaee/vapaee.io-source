@@ -1,24 +1,27 @@
 #!/bin/bash
 
-token=cnt
-TOKEN=CNT
+token1=cnt
+TOKEN1=CNT
 if [ "$1" != "" ]; then
 if [ "$1" != "test" ]; then
 if [ "$1" != "prod" ]; then
-   token=$1
-   token=${token,,}
-   TOKEN=${token^^}
+   token1=$1
+   token1=${token,,}
+   TOKEN1=${token^^}
 fi
 fi
 fi
 
-NET=
-if [ "$1" == "test" ]; then
-   NET='--url https://testnet.telos.caleos.io'
+token2=robo
+TOKEN2=ROBO
+if [ "$2" != "" ]; then
+if [ "$2" != "test" ]; then
+if [ "$2" != "prod" ]; then
+   token2=$1
+   token2=${token,,}
+   TOKEN2=${token^^}
 fi
-
-if [ "$2" == "test" ]; then
-   NET='--url https://testnet.telos.caleos.io'
+fi
 fi
 
 if [ "$1" == "prod" ]; then
@@ -26,6 +29,10 @@ if [ "$1" == "prod" ]; then
 fi
 
 if [ "$2" == "prod" ]; then
+   NET='--url https://telos.eos.barcelona'
+fi
+
+if [ "$3" == "prod" ]; then
    NET='--url https://telos.eos.barcelona'
 fi
 
@@ -54,3 +61,6 @@ show_table() {
 
 show_table vapaeetokens vapaeetokens ordertables
 show_table vapaeetokens vapaeetokens ordersummary
+
+show_table vapaeetokens $token2.$token1 sellorders
+show_table vapaeetokens $token1.$token2 sellorders

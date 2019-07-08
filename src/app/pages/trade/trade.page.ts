@@ -23,7 +23,7 @@ export class TradePage implements OnInit, OnDestroy {
     _orders:TokenOrders;
     timer:number;
     chartHeight: number;
-    _chartData:any[];
+    _chartData:any[][][];
     private onStateSubscriber: Subscriber<string>;
     private onBlocklistSubscriber: Subscriber<any[][]>;
 
@@ -68,7 +68,7 @@ export class TradePage implements OnInit, OnDestroy {
         this.orderform_full ? this.orderform_full.reset() : null;
         this.comodity = null;
         this.currency = null;
-        this._chartData = [];
+        this._chartData = [[]];
         
         setTimeout(_ => { this.updateAll(true); }, 0);
         this.timer = window.setInterval(_ => { this.updateAll(false); }, 15000);
@@ -159,7 +159,16 @@ export class TradePage implements OnInit, OnDestroy {
             // console.log("-----------------------------------------");
             // console.log(this.scope, this.vapaee.scopes[this.scope].blocklist);
             // console.log("-----------------------------------------");
-            this._chartData = table.blocklist;
+            this._chartData = table.blocklevels;
+
+            if (
+                table.blocklist.length == 0 && table.blocks > 0
+            ) {
+                setTimeout(_ => {
+                    console.log("CHART this._chartData = [[]];");
+                    this._chartData = [[]];
+                }, 1200);
+            }            
             // console.log("this._chartData", this._chartData);
         } else {
             // console.error("No existe todavía el scope ", this.scope);
@@ -176,7 +185,7 @@ export class TradePage implements OnInit, OnDestroy {
     ngOnInit() {
         this.init();
         this.app.onStateChange.subscribe(this.onStateSubscriber);
-        this.vapaee.onBlocklistChange.subscribe(this.onBlocklistSubscriber);
+        this.vapaee.onTradeUpdated.subscribe(this.onBlocklistSubscriber);
     }
 
     onClickRow(e:{type:string, row:OrderRow}) {

@@ -2,6 +2,12 @@ export interface Feed {
     msg?:string;
     msgtype?:string;
     loading?:boolean;
+    start?:Date;
+    marks?:{
+        label:string,
+        sec:number,
+        millisec:number
+    }[]
 }
 
 export class Feedback {
@@ -15,15 +21,46 @@ export class Feedback {
 
     private updateScopes() {
         for (var i in this.keys) {
-            this.scopes[this.keys[i]] = this.scopes[this.keys[i]] || {
-                loading: false
-            }
+            this.scopes[this.keys[i]] = this.scopes[this.keys[i]] || {}
         }
     }
 
     private addKey(key:string) {
         this.keys.push(key);
         this.updateScopes();
+    }
+
+    startChrono(key:string) {
+        if (this.scopes[key]) {
+            this.scopes[key].start = new Date();
+            this.scopes[key].marks = [];
+        } else {
+            this.addKey(key);
+            this.startChrono(key);
+        }
+    }
+
+    setMarck(key:string, label:string) {
+        if (this.scopes[key]) {
+            var elapsedTime:Date = new Date();
+            var millisec = elapsedTime.getTime() - this.scopes[key].start.getTime();
+            var sec = millisec / 1000;
+            this.scopes[key].marks.push({ label, sec, millisec });
+        } else {
+            console.error("ERROR: key not present", key, this.scopes);
+        }        
+    }
+
+    printChrono(key:string, lastMark:boolean = true) {
+        if (this.scopes[key]) {
+            console.log("Chronometer marks for ", key);
+            this.setMarck(key, "total");
+            for (var i in this.scopes[key].marks) {
+                console.log("- ",this.scopes[key].marks[i]);
+            }
+        } else {
+            console.error("ERROR: key not present", key, this.scopes);
+        }        
     }
 
     setLoading(key:string, value:boolean) {

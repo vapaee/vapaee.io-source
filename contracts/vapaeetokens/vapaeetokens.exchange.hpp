@@ -830,7 +830,7 @@ namespace vapaee {
                 eosio_assert(b_ptr->price.symbol == inverse.symbol,
                     create_error_asset2(ERROR_AGSO_1, b_ptr->price, inverse).c_str());
                 PRINT(" compare: (price<=inverse) ??  - (", b_ptr->price.to_string(), " <= ", inverse.to_string(), ") ??? \n");
-                if (b_ptr->price.amount <= inverse.amount) {
+                if (b_ptr->price.amount <= inverse.amount) { 
                     // transaction !!!
                     current_price = b_ptr->price;   // TLOS
                     PRINT("TRANSACTION!! price: ", current_price.to_string(),"\n");
@@ -864,14 +864,16 @@ namespace vapaee {
                             PRINT("        a.total:  ", a.demand.total.to_string(),"\n");
                             PRINT("        payment:  ", current_payment.to_string(),"\n");
                             
-                            eosio_assert(a.demand.total.symbol == current_payment.symbol,
-                                create_error_asset2(ERROR_AGSO_5, a.demand.total, current_payment).c_str());
-
+                                // ERROR -----> [4.36500000 TLOS], [1250.00000000 CNT]
                             if (!reverse_scope) {
                                 // we are consuming part of a buy-order so we decrement the demand
+                                eosio_assert(a.demand.total.symbol == current_payment.symbol,
+                                    create_error_asset2(ERROR_AGSO_5, a.demand.total, current_payment).c_str());                                
                                 a.demand.total -= current_payment;
                             } else {
                                 // we are consuming part of a sell-order so we decrement the supply
+                                eosio_assert(a.supply.total.symbol == current_payment.symbol,
+                                    create_error_asset2(ERROR_AGSO_5, a.supply.total, current_payment).c_str());
                                 a.supply.total -= current_payment;
                             }
                         });

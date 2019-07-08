@@ -85,7 +85,7 @@ export class AppComponent {
         public vapaee: VapaeeService,
         public local: LocalStringsService
     ) {
-        this.app.init("v2.0.10");
+        this.app.init("v2.1.0");
     }
     
     ngOnInit() {
