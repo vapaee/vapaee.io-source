@@ -1,5 +1,5 @@
 #define HANDLER void 
-#define EOSIO_DISPATCH_VAPAEETOKENS( TYPE, MEMBERS, HANDLERS ) \
+#define EOSIO_DISPATCH_VAPAEE( TYPE, MEMBERS, HANDLERS ) \
 extern "C" { \
    void apply( uint64_t receiver, uint64_t code, uint64_t action ) { \
       if( code == receiver ) { \

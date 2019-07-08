@@ -159,9 +159,9 @@ CONTRACT vapaeetokens : public eosio::contract {
             MAINTENANCE();
             PRINT("\nHANDLER vapaeetokens.htransfer()\n");
 
-            // skipp handling outcoming transfers from this contract to outside
+            // skip handling outcoming transfers from this contract to outside
             if (from == get_self()) {
-                print(from.to_string(), " to ", to.to_string(), ": ", quantity.to_string(), " vapaee::token::exchange::handler_transfer() skip...\n");
+                PRINT(from.to_string(), " to ", to.to_string(), ": ", quantity.to_string(), " vapaee::token::exchange::handler_transfer() skip...\n");
                 return;
             }
             

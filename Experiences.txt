@@ -165,7 +165,9 @@ Resulta que no puedo cargar con RAM al usuario, si registro ese evento lo tengo 
         buffer.pushName(name);
         return new BigNumber(buffer.getUint64AsNumber());
     }
-    - Habría que hablar del deposit-then-spend patter de los smart contracts.
-      https://t.me/c/1139062279/168657
-      Este pibe necesitaba que sus usuarios pudieran ejecutar una orden de compra directaemnte desde el memo de una transacción (sin usar el deposit patter)
-      
+- Habría que hablar del deposit-then-spend patter de los smart contracts.
+    https://t.me/c/1139062279/168657
+    Este pibe necesitaba que sus usuarios pudieran ejecutar una orden de compra directaemnte desde el memo de una transacción (sin usar el deposit patter)
+- tener cuidado de declarar las actions en el dispatcher (actionname)
+  te puede pasar que escribas una action y esté perfecta, compila y todo, pero cuando la llamás a pesar de no dar errores no se ejecuta.
+  Si usás el EOSIO_DISPATCH macro y no agregás la action ahi (actionname) el handler ignora cualquier intento de ejecución de actionname action
