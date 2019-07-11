@@ -48,6 +48,7 @@
     "cantbtraded": "Este token no puede ser comercializado",
     "tinallowed": "Este token no está verificado aún en vapaee.io DEX",
     "Tokens": "Monedas",
+    "markets": "mercados",
     "token": "moneda",
     "volume": "volumen",
     "vol": "vol.",

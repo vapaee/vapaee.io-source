@@ -56,10 +56,19 @@
                                 </div>
                             </div>
                             <div class="col-sm-12 text-center margin-top-lg" [hidden]="this.user_voted_us || feed.loading('voting')">
-                                <button type="button" class="btn btn-warning text-md" (click)="voteForUs()">
+                                <!--button type="button" class="btn btn-warning text-md" (click)="voteForUs()">
                                     <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('user-voted')"></span>
                                     <span>Please, support this project !!</span>
-                                </button>
+                                </button-->
+                                <div class="alert alert-secondary margin-top-xl" role="alert">
+                                    <h3>IMPORTANT</h3>
+                                    <p class="margin-top">
+                                        For reasons of development delay I have decided not to claim the funds of the second cycle of this WP until the next version is effectively finished and delivered.
+                                    </p>
+                                    <p>
+                                        Thanks to everyone who has supported my work so far, I will not disappoint you!                                    
+                                    </p>
+                                </div>
                             </div>
 
                             <div class="col-sm-12 text-center margin-top-lg" [hidden]="this.user_voted_us || !feed.loading('voting')">

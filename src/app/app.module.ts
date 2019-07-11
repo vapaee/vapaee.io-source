@@ -28,6 +28,7 @@ import { RootPage } from './pages/root/root.page';
 import { HomePage } from './pages/home/home.page';
 import { TradePage } from './pages/trade/trade.page';
 import { TokensPage } from './pages/tokens/tokens.page';
+import { MarketsPage } from './pages/markets/markets.page';
 import { AccountPage } from './pages/account/account.page';
 import { NotFoundPage } from './pages/not-found/not-found.page';
 import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
@@ -44,6 +45,7 @@ import { environment } from '../environments/environment';
         HomePage,
         TradePage,
         TokensPage,
+        MarketsPage,
         AccountPage,
         NotFoundPage,
         ComingSoonPage,

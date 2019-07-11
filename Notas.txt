@@ -10,9 +10,9 @@
     + action call "order" invertida
     + hacer pruebas (comprar, vender, colocar orden sin hacer deal, cancelar)
 
-- WP:
-  - aclarar que el cobro del segundo ciclo está detenido para poder ponerme al día
-  - sacar (temporalmente) el botón de "Support This project"
++ WP:
+  + aclarar que el cobro del segundo ciclo está detenido para poder ponerme al día
+  + sacar (temporalmente) el botón de "Support This project"
 
 - Markets Page (new)
   - titulo Markets

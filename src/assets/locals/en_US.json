@@ -48,6 +48,7 @@
     "cantbtraded": "This token can't be traded",
     "tinallowed": "This token is not allowed yet in vapaee.io DEX",
     "Tokens": "Tokens",
+    "markets": "markets",
     "token": "token",
     "volume": "volume",
     "vol": "vol.",

@@ -20,22 +20,27 @@ import { LocalStringsService } from './services/common/common.services';
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('home')}" (click)="app.closeSideMenu()">
                         <a class="nav-link" routerLink="{{'/exchange/home'}}" >
-                            <i class="material-icons"> navigate_next </i>{{local.string.Home}}
+                            <i class="material-icons"> navigate_next </i>{{local.string.Home | titlecase}}
                         </a>
                     </li>
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('tokens')}" (click)="app.closeSideMenu()">
                         <a class="nav-link" [routerLink]="'/exchange/tokens'" >
-                            <i class="material-icons"> navigate_next </i>{{local.string.Tokens}}
+                            <i class="material-icons"> navigate_next </i>{{local.string.Tokens | titlecase}}
+                        </a>
+                    </li>
+                    <li class="nav-item" [ngClass]="{active: app.stateStartsWith('markets')}" (click)="app.closeSideMenu()">
+                        <a class="nav-link" [routerLink]="'/exchange/markets'" >
+                            <i class="material-icons"> navigate_next </i>{{local.string.markets | titlecase}}
                         </a>
                     </li>
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('trade')}" (click)="app.closeSideMenu()">
                         <a class="nav-link" routerLink="{{'/exchange/trade/' + (app.getGlobal('last-market') || 'cnt.tlos') }}" >
-                            <i class="material-icons"> navigate_next </i>{{local.string.Trade}}
+                            <i class="material-icons"> navigate_next </i>{{local.string.Trade | titlecase}}
                         </a>
                     </li>
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('account')}" (click)="app.closeSideMenu()">
                         <a class="nav-link" [routerLink]="'/exchange/account/' + vapaee.current.name" >
-                            <i class="material-icons"> navigate_next </i>{{local.string.Account}}
+                            <i class="material-icons"> navigate_next </i>{{local.string.Account | titlecase}}
                         </a>
                     </li>
                     <li class="nav-item highlight" [ngClass]="{active: app.stateStartsWith('wp')}" (click)="app.closeSideMenu()">
@@ -44,7 +49,7 @@ import { LocalStringsService } from './services/common/common.services';
                         </a>
                     </li>
                     <li class="nav-item dropdown" ngbDropdown>
-                        <a ngbDropdownToggle class="nav-link dropdown-toggle cursor-pointer" data-toggle="dropdown" id="language">{{local.string.Language}} <span class="caret"></span></a>
+                        <a ngbDropdownToggle class="nav-link dropdown-toggle cursor-pointer" data-toggle="dropdown" id="language">{{local.string.Language | titlecase}} <span class="caret"></span></a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="language">
                             <span class="cursor-pointer dropdown-item" (click)="local.setLocal('en_US'); debug();">English</span>
                             <span class="cursor-pointer dropdown-item" (click)="local.setLocal('es_ES'); debug();">Español</span>
