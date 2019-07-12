@@ -23,6 +23,16 @@
 
 
 
+
+-- Futbol Tokens --
+- contrato
+- escudos (peñarol y nacional)
+- eos lynx
+
+
+
+
+
 -- TODO (code) --
 - cuando termina de realizarse un depósito o un withdraw habría que cerrar automáticamente el miniformulario
 - Hay que traducir el nuevo modal
