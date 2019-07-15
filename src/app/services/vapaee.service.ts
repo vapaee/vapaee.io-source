@@ -481,29 +481,10 @@ export class VapaeeService {
             }
         }
 
-        /*
-        console.log("  table.reverseblocks ---------------------------->", [table.reverseblocks]);
-        if (
-            table.reverseblocks.length == 0 && table.blocks > 0 ||
-            table.blocklist.length == 0 && table.blocks > 0
-        ) {
-            
-            setTimeout(_ => {
-                console.log("VAPAEE this._reverse = {};");
-                this._reverse = {};
-            }, 1000);
-        } else {
-            
-            console.log(" table.blocks", table.blocks);
-            console.log(" table.blocklist.length", table.blocklist.length);
-            console.log(" table.reverseblocks.length", table.reverseblocks.length);
-        }
-        */
-
         var reverse:Table = {
             scope: reverse_scope,
-            comodity: reverse.currency,
-            currency: reverse.comodity,
+            comodity: table.currency,
+            currency: table.comodity,
             block: table.block,
             blocklist: table.reverseblocks,
             reverseblocks: table.blocklist,
@@ -1334,11 +1315,13 @@ export class VapaeeService {
     async getTableSummary(comodity:Token, currency:Token, force:boolean = false): Promise<MarketSummary> {
         var scope:string = this.getScopeFor(comodity, currency);
         var canonical:string = this.canonicalScope(scope);
+        var inverse:string = this.inverseScope(canonical);
 
         var ZERO_COMODITY = "0.00000000 " + comodity.symbol;
         var ZERO_CURRENCY = "0.00000000 " + currency.symbol;
 
-        this.feed.setLoading("summary."+scope, true);
+        this.feed.setLoading("summary."+canonical, true);
+        this.feed.setLoading("summary."+inverse, true);
         var aux = null;
         var result:MarketSummary = null;
         aux = this.waitTokensLoaded.then(async _ => {
@@ -1502,6 +1485,8 @@ export class VapaeeService {
 
             this._tables[canonical].summary.price = last_price;
             this._tables[canonical].summary.inverse = last_inverse;
+            this._tables[canonical].summary.price_24h_ago = price_fst;
+            this._tables[canonical].summary.inverse_24h_ago = inverse_fst;
             this._tables[canonical].summary.percent_str = (isNaN(percent) ? 0 : percent) + "%";
             this._tables[canonical].summary.percent = isNaN(percent) ? 0 : percent;
             this._tables[canonical].summary.ipercent_str = (isNaN(ipercent) ? 0 : ipercent) + "%";
@@ -1516,6 +1501,7 @@ export class VapaeeService {
             // if(canonical=="olive.tlos")console.log("Summary final:", this._tables[canonical].summary);
             // if(canonical=="olive.tlos")console.log("---------------------------------------------------");
             this.feed.setLoading("summary."+canonical, false);
+            this.feed.setLoading("summary."+inverse, false);
             return this._tables[canonical].summary;
         });
 
@@ -1915,38 +1901,52 @@ export class VapaeeService {
     
     private updateTokensSummary() {
         console.log("**********************************");
-        console.log("Vapaee.updateTokensSummary()");
+        console.log("Vapaee.updateTokensSummary()"); 
         console.log("**********************************");
         return Promise.all([
             this.waitTokensLoaded,
             this.waitOrderSummary
         ]).then(_ => {
-            console.log(this.tokens);
-            console.log(this._tables);
 
-            // primero tengo que paasr por todos los mercados XXX.TELOS para dar un primer valor (si no lo tienen) a cada token
-            // luego para cada token buscar los markes en que participa y sumar el volume total y el precio ciendo una ponderación por market según volumen
+            // mapping of how much (amount of) tokens have been traded agregated in all markets
+            var amount_map:{[key:string]:Asset} = {};
+
+            // a cada token le asigno un price que sale de verificar su price en el mercado principal XXX/TLOS
             for (var i in this.tokens) {
-                if (this.tokens[i].offchain) continue;
+                if (this.tokens[i].offchain) continue; // discard tokens that are not on-chain
+                
                 var token = this.tokens[i];
-                if (token.summary) continue; // this coken already has a summary;
+                var quantity:Asset = new Asset(0, token);
 
                 for (var j in this._tables) {
                     if (j.indexOf(".") == -1) continue;
-                    var table = this._tables[j];
+                    var table:Table = this._tables[j];
+                    
+                    if (table.comodity.symbol == token.symbol) {
+                        quantity = quantity.plus(table.summary.amount);
+                    }
+                    if (table.currency.symbol == token.symbol) {
+                        quantity = quantity.plus(table.summary.volume);
+                    }
+
                     if (table.currency.symbol == this.telos.symbol) {
                         token.summary = token.summary || {
                             price: table.summary.price.clone(),
-                            volume: table.summary.price.clone()
+                            volume: table.summary.volume.clone(),
+                            percent: table.summary.percent,
+                            percent_str: table.summary.percent_str,
                         }
                     }
-                }                
-            }
+                }
 
+                amount_map[token.symbol] = quantity;
+            }
+            
             for (var i in this.tokens) {
                 if (this.tokens[i].offchain) continue;
-                
                 var token = this.tokens[i];
+                
+
                 if (token.symbol == "ACORN") console.log("TOKEN: -------- ", [token] );
                 for (var j in this._tables) {
                     if (j.indexOf(".") == -1) continue;
@@ -1991,6 +1991,10 @@ export class VapaeeService {
             if (this._tables && this._tables[a.scope] && this._tables[b.scope]) {
                 var a_vol = this._tables[a.scope].summary.volume;
                 var b_vol = this._tables[b.scope].summary.volume;
+
+                if (!a_vol) console.error("a_vol es undefined: ", a.scope);
+                if (!b_vol) console.error("b_vol es undefined: ", b.scope);
+
                 if(a_vol.amount.isGreaterThan(b_vol.amount)) return -1;
                 if(a_vol.amount.isLessThan(b_vol.amount)) return 1;    
             }
@@ -2035,6 +2039,18 @@ export class Asset {
         if (b instanceof VapaeeService) {
             this.parse(a,b);
         }
+    }
+
+    plus(b:Asset) {
+        console.assert(b.token.symbol == this.token.symbol, "ERROR: trying to sum assets with different tokens: " + this.str + " and " + b.str);
+        var amount = this.amount.plus(b.amount);
+        return new Asset(amount, this.token);
+    }
+
+    minus(b:Asset) {
+        console.assert(b.token.symbol == this.token.symbol, "ERROR: trying to substract assets with different tokens: " + this.str + " and " + b.str);
+        var amount = this.amount.minus(b.amount);
+        return new Asset(amount, this.token);
     }
 
     clone(): Asset {
@@ -2125,6 +2141,8 @@ export interface MarketSummary {
     scope:string,
     price?:Asset,
     inverse?:Asset,
+    price_24h_ago?:Asset,
+    inverse_24h_ago?:Asset,
     min_price?:Asset,
     max_price?:Asset,
     min_inverse?:Asset,

@@ -38,16 +38,16 @@
                         <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('token-stat-'+token.symbol) && !vapaee.feed.loading('summary.'+token.scope)"></span>
                     </div>
                     <div class="nowrap col-sm-3 text-right col-padding-right col-padding-left">
-                        {{summary(token.scope).volume.valueToString(volume_digits, true)}}
+                        {{token.summary.volume.valueToString(volume_digits, true)}}
                     </div>
                     <div class="nowrap col-sm-3 text-right col-padding-right col-padding-left">
-                        {{summary(token.scope).price.valueToString(price_digits, true)}}
+                        {{token.summary.price.valueToString(price_digits, true)}}
                     </div>
                     <div
                         class="nowrap col-sm-3 text-right padding-right-lg"
-                        [ngClass]="{'text-success': summary(token.scope).percent > 0, 'text-danger': summary(token.scope).percent < 0, 'text-muted': summary(token.scope).percent  == 0}"
+                        [ngClass]="{'text-success': token.summary.percent > 0, 'text-danger': token.summary.percent < 0, 'text-muted': token.summary.percent  == 0}"
                     >
-                        {{summary(token.scope).percent_str}}
+                        {{token.summary.percent_str}}
                     </div>
                 </div>
             </perfect-scrollbar>

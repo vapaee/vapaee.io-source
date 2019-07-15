@@ -149,7 +149,7 @@
                             <div class="nowrap col-5 text-right col-padding-right col-padding-left"
                                 [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
                                 >
-                                {{order.deposit.toString(orders_decimals)}}
+                                {{order.total.toString(orders_decimals)}}
                             </div>
                         
                             <div class="nowrap col-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
@@ -171,7 +171,7 @@
                             <div class="nowrap col-5 text-right col-padding-right col-padding-left"
                                 [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
                                 >
-                                {{order.deposit.toString(orders_decimals)}}
+                                {{order.total.toString(orders_decimals)}}
                             </div>
                         
                             <div class="nowrap col-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
@@ -364,7 +364,7 @@
                     <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left"
                         [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
                         >
-                        {{order.deposit.toString(8)}}
+                        {{order.total.toString(8)}}
                     </div>
                 
                     <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
@@ -386,7 +386,7 @@
                     <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left"
                         [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
                         >
-                        {{order.deposit.toString(8)}}
+                        {{order.total.toString(8)}}
                     </div>
                 
                     <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
