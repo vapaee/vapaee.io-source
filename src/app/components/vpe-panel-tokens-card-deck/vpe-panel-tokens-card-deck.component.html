@@ -44,8 +44,8 @@
                                         </div>
                                         <div class="col-6 text-right">
                                             <div class="text-right" *ngIf="token.symbol != 'TLOS' && token.verified">
-                                                <div><small class="nowrap text-muted">max: {{summary(token.scope).max_price.valueToString(4)}} {{summary(token.scope).max_price.token.symbol}}</small></div>
-                                                <div><small class="nowrap text-muted">min: {{summary(token.scope).min_price.valueToString(4)}} {{summary(token.scope).min_price.token.symbol}}</small></div>
+                                                <div><small class="nowrap text-muted">max: {{summary(token.scope).max_price?.valueToString(4)}} {{summary(token.scope).max_price?.token.symbol}}</small></div>
+                                                <div><small class="nowrap text-muted">min: {{summary(token.scope).min_price?.valueToString(4)}} {{summary(token.scope).min_price?.token.symbol}}</small></div>
                                             </div>
                                             <div *ngIf="token.symbol == 'TLOS' || !token.verified"><div>&nbsp;</div><div>&nbsp;</div></div>
                                         </div>

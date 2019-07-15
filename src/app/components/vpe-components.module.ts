@@ -34,7 +34,7 @@ import { VpePanelChartComponent } from './vpe-panel-chart/vpe-panel-chart.compon
 import { VpePanelTokensComponent } from './vpe-panel-tokens/vpe-panel-tokens.component';
 import { VpePanelOrderEditorComponent } from './vpe-panel-order-editor/vpe-panel-order-editor.component';
 import { VpeTokenInputComponent } from './vpe-token-input/vpe-token-input.component';
-import { VpeFIatComboboxComponent } from './vpe-fiat-combobox/vpe-fiat-combobox.component';
+import { VpeOffChainComboboxComponent } from './vpe-offchain-combobox/vpe-offchain-combobox.component';
 import { VpePanelActivityLogComponent } from './vpe-panel-activity-log/vpe-panel-activity-log.component';
 import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-panel-token-selector.component';
 
@@ -55,7 +55,7 @@ import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-p
         VpePanelChartComponent,
         VpePanelTokensComponent,
         VpePanelOrderEditorComponent,
-        VpeFIatComboboxComponent,
+        VpeOffChainComboboxComponent,
         VpeTokenInputComponent,
         VpePanelActivityLogComponent,
         VpePanelTokenSelectorComponent
@@ -88,7 +88,7 @@ import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-p
         VpePanelChartComponent,
         VpePanelTokensComponent,
         VpePanelOrderEditorComponent,
-        VpeFIatComboboxComponent,
+        VpeOffChainComboboxComponent,
         VpeTokenInputComponent,
         VpePanelActivityLogComponent,
         VpePanelTokenSelectorComponent

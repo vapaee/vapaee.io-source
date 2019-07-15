@@ -51,7 +51,7 @@
                     <div class="text-md nowrap  margin-top-xs" [hidden]="!current.data.total_balance">
 
                         <div class="pull-right">
-                            <vpe-fiat-combobox [btn]="'xs'"></vpe-fiat-combobox>
+                            <vpe-offchain-combobox [btn]="'xs'"></vpe-offchain-combobox>
                         </div> 
 
                         <span class="text-sm color-yellow d-sm d-md-none"> {{service.getTelosInCurrentCurrency(current.data.total_balance)}} </span>
@@ -100,7 +100,7 @@
                             </span><br>
                             <span>{{local.string.noWallet}}</span>
                             <br>
-                            <vpe-fiat-combobox></vpe-fiat-combobox>
+                            <vpe-offchain-combobox></vpe-offchain-combobox>
                         </div>
                     </div>
 
@@ -113,7 +113,7 @@
                             </span>
                             <br>
                             <br>
-                            <vpe-fiat-combobox></vpe-fiat-combobox>         
+                            <vpe-offchain-combobox></vpe-offchain-combobox>         
                         </div>
                     </div>
 
@@ -157,7 +157,7 @@
                         <span class="text-sm color-yellow d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
 
                         <div class="pull-right" [hidden]="!vapaee.logged || vapaee.loginState == 'no-scatter'">
-                            <vpe-fiat-combobox></vpe-fiat-combobox>
+                            <vpe-offchain-combobox></vpe-offchain-combobox>
                         </div>                    
                     </div>
                     <div class="text-md nowrap" [hidden]="!current.data.total_balance">

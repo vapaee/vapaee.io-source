@@ -39,7 +39,7 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
         this.expanded = true; 
         this.hidebackground = false;
         this.limit = 0;
-        this.vapaee.waitReady.then(_ => {
+        this.vapaee.waitTokensLoaded.then(_ => {
             setTimeout(_ => {
                 if (this.limit == 0) {
                     this.limit = this.vapaee.tokens.length;
@@ -52,7 +52,7 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
         var tokens = []
         for (var i in this.tokens) {
             var token = this.tokens[i];
-            if (!token.fiat) {
+            if (!token.offchain) {
                 tokens.push(token);
             }
         }
@@ -78,6 +78,14 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
     }
 
     summary(_scope) {
+        return this.tokenSummary(_scope);
+    }
+
+    tokenSummary(_scope) {
+        return this.marketSummary(_scope);
+    }
+
+    marketSummary(_scope) {
         var table = this.vapaee.table(_scope);
         var _summary = Object.assign({
             percent: 0,
@@ -91,6 +99,12 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
             max_price: new Asset(),
             min_price: new Asset(),
         });
+
+        _summary.volume = _summary.volume || new Asset();
+        _summary.price = _summary.price || new Asset();
+        _summary.max_price = _summary.max_price || new Asset();
+        _summary.min_price = _summary.min_price || new Asset();
+        
         return _summary;
     }
 

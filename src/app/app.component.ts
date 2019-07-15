@@ -100,7 +100,7 @@ export class AppComponent {
         this.onWindowsResize();
         
         this.coingecko.onUpdate.subscribe((p:any) => {
-            this.vapaee.waitReady.then(_ => {
+            this.vapaee.waitTokensLoaded.then(_ => {
                 var prices:PriceMap = {};
                 for (var curreny in p) {
                     var price = p[curreny];
@@ -116,11 +116,11 @@ export class AppComponent {
             });
         });
 
-        this.vapaee.addFiatToken({ symbol: "USD", appname: "US Dollar", precision: 4 });
-        this.vapaee.addFiatToken({ symbol: "EUR", appname: "Euro", precision: 4 });
-        this.vapaee.addFiatToken({ symbol: "BTC", appname: "Bitcoin", precision: 8 });
-        this.vapaee.addFiatToken({ symbol: "EOS", appname: "EOS", precision: 4 });
-        this.vapaee.addFiatToken({ symbol: "TLOS", appname: "Telos", precision: 4 });
+        this.vapaee.addOffChainToken({ symbol: "USD", appname: "US Dollar", precision: 4 });
+        this.vapaee.addOffChainToken({ symbol: "EUR", appname: "Euro", precision: 4 });
+        this.vapaee.addOffChainToken({ symbol: "BTC", appname: "Bitcoin", precision: 8 });
+        this.vapaee.addOffChainToken({ symbol: "EOS", appname: "EOS", precision: 4 });
+        this.vapaee.addOffChainToken({ symbol: "TLOS", appname: "Telos", precision: 4 });
         
         this.vapaee.onTokensReady.subscribe((tokens:Token[]) => {
             var tokenPrices:PriceMap = {}

@@ -56,7 +56,7 @@ export class VpePanelWalletComponent implements OnChanges {
     ) {
         this.digits = {
             amount:8,
-            fiat:4
+            offchain:4
         };
         this.feed = new Feedback();
         this.show_prices_top = true;
@@ -99,7 +99,7 @@ export class VpePanelWalletComponent implements OnChanges {
         if (this._nonfake_balances) return this._nonfake_balances;
         this._nonfake_balances = this._nonfake_balances || [];
         for (var i in this.balances) {
-            if (!this.balances[i].token.fake && !this.balances[i].token.fiat) {
+            if (!this.balances[i].token.fake && !this.balances[i].token.offchain) {
                 this._nonfake_balances.push(this.balances[i]);
             }
         }
@@ -110,7 +110,7 @@ export class VpePanelWalletComponent implements OnChanges {
     async updateSize(event:ResizeEvent) {
         this.digits = {
             amount:8,
-            fiat:4
+            offchain:4
         };
 
         this.portrait = event.device.portrait;
@@ -124,20 +124,20 @@ export class VpePanelWalletComponent implements OnChanges {
                 this.digits.amount = 7;
             }
             if (event.width < 350) {
-                this.digits.fiat = 3;
+                this.digits.offchain = 3;
             }
             if (event.width < 320) {
                 this.display = "small";
             }
             if (event.width < 300) {
                 this.digits.amount = 6;
-                this.digits.fiat = 2;
+                this.digits.offchain = 2;
             }
             if (event.width < 280) {
                 this.digits.amount = 5;
             }
             if (event.width < 260) {
-                this.digits.fiat = 1;
+                this.digits.offchain = 1;
             }
             if (event.width < 250) {
                 this.display = "tiny";
@@ -150,13 +150,13 @@ export class VpePanelWalletComponent implements OnChanges {
             }
         } else {
             this.digits.amount = 8;
-            this.digits.fiat = 4;
+            this.digits.offchain = 4;
             if (event.width < 370) {
                 this.display = "medium";
             }
             if (event.width < 300) {
                 this.digits.amount = 6;
-                this.digits.fiat = 2;
+                this.digits.offchain = 2;
             }
         }
 

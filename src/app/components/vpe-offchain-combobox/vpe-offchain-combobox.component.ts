@@ -7,11 +7,11 @@ import { Token } from 'src/app/services/utils.service';
 
 
 @Component({
-    selector: 'vpe-fiat-combobox',
-    templateUrl: './vpe-fiat-combobox.component.html',
-    styleUrls: ['./vpe-fiat-combobox.component.scss']
+    selector: 'vpe-offchain-combobox',
+    templateUrl: './vpe-offchain-combobox.component.html',
+    styleUrls: ['./vpe-offchain-combobox.component.scss']
 })
-export class VpeFIatComboboxComponent implements OnChanges {
+export class VpeOffChainComboboxComponent implements OnChanges {
 
     @Input() public btn: string;
 

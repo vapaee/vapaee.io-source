@@ -9,6 +9,9 @@
     + panel
     + action call "order" invertida
     + hacer pruebas (comprar, vender, colocar orden sin hacer deal, cancelar)
+  - http://localhost:4200/exchange/trade/olive.acorn
+    tengo una orden de compra de 2 OLIVEs a precio 10 ACORNs pero en la orden me aparece cualquiera.
+    Hay que verificar que diga lo que tiene que decir.
 
 + WP:
   + aclarar que el cobro del segundo ciclo está detenido para poder ponerme al día
@@ -21,13 +24,6 @@
   - lista de los todos los markets sobre la currency elegida, ordenados descendentemente por volumen
 
 
-
-
-
--- Futbol Tokens --
-- contrato
-- escudos (peñarol y nacional)
-- eos lynx
 
 
 

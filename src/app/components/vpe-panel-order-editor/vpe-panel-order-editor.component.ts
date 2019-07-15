@@ -202,6 +202,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         // if (what == "buy" && !this.can_buy) return;
         this.wants = what;
 
+        // set price only when is 0
         if (this.price.amount.isEqualTo(0)) {
             if (what == "sell" && this.buyorders && takeprice) {
                 console.log("wantsTo",what, this.buyorders);
@@ -286,10 +287,10 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             this.calculate();
         }
 
-        // console.log("this.orders ------------------>", this.sellorders, this.buyorders);
+        console.log("this.orders ------------------>", this.sellorders, this.buyorders);
 
         if (this.sellorders && this.own.sell.length == 0) {
-            // console.log("this.sellorders.length", this.sellorders.length);
+            // console.log("this.sellorders.length", this.sellorders);
             for (var i=0; i<this.sellorders.length; i++) {
                 var sell = this.sellorders[i];
                 for (var j=0; j<sell.orders.length; j++) {
@@ -318,7 +319,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         // console.log("VpePanelOrderEditorComponent.ngOnChanges()");
         this.own = {sell:[],buy:[]};
         // changes from outside
-        return this.vapaee.waitReady.then(_ => this.restaure());
+        return this.vapaee.waitTokensLoaded.then(_ => this.restaure());
     }
 
     debug() {

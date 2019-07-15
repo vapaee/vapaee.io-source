@@ -62,7 +62,7 @@ export class VpeComponentsService {
         this.prices = {};
         this.currencies = [];
         this.tokens_prices = {};
-        this.current = this.cookie.get("fiat") || "usd";
+        this.current = this.cookie.get("offchain") || "usd";
     }
 
     // Getters ------------------------------------
@@ -103,7 +103,7 @@ export class VpeComponentsService {
     // Change State -----------------------------------
     setCurrentCurrency(currency:string) {
         this.current = currency;
-        this.cookie.set("fiat", currency);
+        this.cookie.set("offchain", currency);
         this.setTelosPrices(this.prices);
     }
 
@@ -183,7 +183,7 @@ export class VpeComponentsService {
             return {
                 symbol: "AUX",
                 appname: "Auxiliar Token",
-                fiat: true,
+                offchain: true,
                 verified:false
             };
         } else {

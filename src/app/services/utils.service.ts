@@ -3,6 +3,7 @@ import BigNumber from "bignumber.js";
 import { Scatter, ScatterService } from "./scatter.service";
 import { Serialize } from "eosjs";
 import * as Long from 'long';
+import { Asset } from "./vapaee.service";
 
 // vapaee exchange -------------------
 
@@ -17,7 +18,7 @@ export interface Token {
     logolg?: string,
     verified?: boolean,
     fake?: boolean,
-    fiat?: boolean,
+    offchain?: boolean,
     scope?: string,
     stat?: {
         supply: string,
@@ -25,7 +26,12 @@ export interface Token {
         issuer?: string,
         owner?: string,
         issuers?: string[]
+    },
+    summary?: {
+        volume: Asset,
+        price: Asset
     }
+
 }
 
 // -------------------

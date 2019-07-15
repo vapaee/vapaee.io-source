@@ -36,7 +36,7 @@ export class VapaeeService {
     public onLoggedAccountChange:Subject<string> = new Subject();
     public onCurrentAccountChange:Subject<string> = new Subject();
     public onHistoryChange:Subject<string> = new Subject();
-    public onSummaryChange:Subject<string> = new Subject();
+    public onSummaryChange:Subject<MarketSummary> = new Subject();
     // public onBlocklistChange:Subject<any[][]> = new Subject();
     public onTokensReady:Subject<Token[]> = new Subject();
     public onTradeUpdated:Subject<any> = new Subject();
@@ -60,9 +60,9 @@ export class VapaeeService {
         this.setTokenstats = resolve;
     });
 
-    private setReady: Function;
-    public waitReady: Promise<any> = new Promise((resolve) => {
-        this.setReady = resolve;
+    private setTokensLoaded: Function;
+    public waitTokensLoaded: Promise<any> = new Promise((resolve) => {
+        this.setTokensLoaded = resolve;
     });
     constructor(
         private scatter: ScatterService,
@@ -105,10 +105,26 @@ export class VapaeeService {
             });
             this.resortTokens();
             this.zero_telos = new Asset("0.0000 TLOS", this);
-            this.setReady();
+            this.setTokensLoaded();
             this.fetchTokensStats();
+            this.getOrderSummary();
             this.getAllTablesSumaries();
-        });        
+        });
+
+        // this.waitTokensLoaded.then(_ => {
+        // })
+
+
+        var timer;
+        this.onSummaryChange.subscribe(summary => {
+            clearTimeout(timer);
+            timer = setTimeout(_ => {
+                this.updateTokensSummary();
+            }, 100);
+        });    
+
+
+
     }
 
     // getters -------------------------------------------------------------
@@ -347,21 +363,20 @@ export class VapaeeService {
     }
 
     // Tokens --------------------------------------------------------------
-    addFiatToken(fiat: Token) {
-        // console.log("VapaeeService.addFiatToken()", fiat);
-        this.waitReady.then(_ => {
+    addOffChainToken(offchain: Token) {
+        this.waitTokensLoaded.then(_ => {
             this.tokens.push({
-                symbol: fiat.symbol,
-                precision: fiat.precision || 4,
+                symbol: offchain.symbol,
+                precision: offchain.precision || 4,
                 contract: "nocontract",
-                appname: fiat.appname,
+                appname: offchain.appname,
                 website: "",
                 logo:"",
                 logolg: "",
                 scope: "",
                 stat: null,
                 verified: false,
-                fiat: true
+                offchain: true
             });
         });        
     }
@@ -430,11 +445,29 @@ export class VapaeeService {
         };
 
         for (var type in {buy:"buy", sell:"sell"}) {
+            var row_orders:Order[];
+            var row_order:Order;
+
             for (var i in table.orders[type]) {
                 var row = table.orders[type][i];
+
+                row_orders = [];
+                for (var j=0; j<row.orders.length; j++) {
+                    row_order = {
+                        deposit: row.orders[j].deposit.clone(),
+                        id: row.orders[j].id,
+                        inverse: row.orders[j].price.clone(),
+                        price: row.orders[j].inverse.clone(),
+                        owner: row.orders[j].owner,
+                        telos: row.orders[j].total,
+                        total: row.orders[j].telos
+                    }
+                    row_orders.push(row_order);
+                }
+
                 var newrow:OrderRow = {
                     inverse: row.price.clone(),
-                    orders: row.orders,
+                    orders: row_orders,
                     owners: row.owners,
                     price: row.inverse.clone(),
                     str: row.inverse.str,
@@ -469,6 +502,8 @@ export class VapaeeService {
 
         var reverse:Table = {
             scope: reverse_scope,
+            comodity: reverse.currency,
+            currency: reverse.comodity,
             block: table.block,
             blocklist: table.reverseblocks,
             reverseblocks: table.blocklist,
@@ -492,6 +527,7 @@ export class VapaeeService {
                 buy: inverse_orders.sell   // <<-- esto funciona así como está?
             },
             summary: {
+                scope: this.inverseScope(table.summary.scope),
                 price: table.summary.inverse,
                 inverse: table.summary.price,
                 max_inverse: table.summary.max_price,
@@ -623,7 +659,7 @@ export class VapaeeService {
         if (!sym) return null;
         for (var i in this.tokens) {
             // there's a little bug. This is a justa  work arround
-            if (this.tokens[i].symbol.toUpperCase() == "TLOS" && this.tokens[i].fiat) {
+            if (this.tokens[i].symbol.toUpperCase() == "TLOS" && this.tokens[i].offchain) {
                 // this solves attaching wrong tlos token to asset
                 continue;
             }
@@ -636,7 +672,7 @@ export class VapaeeService {
     }
 
     async getToken(sym:string): Promise<Token> {
-        return this.waitReady.then(_ => {
+        return this.waitTokensLoaded.then(_ => {
             return this.getTokenNow(sym);
         });
     }
@@ -644,7 +680,7 @@ export class VapaeeService {
     async getDeposits(account:string = null): Promise<any> {
         console.log("VapaeeService.getDeposits()");
         this.feed.setLoading("deposits", true);
-        return this.waitReady.then(async _ => {
+        return this.waitTokensLoaded.then(async _ => {
             var deposits: Asset[] = [];
             if (!account && this.current.name) {
                 account = this.current.name;
@@ -664,7 +700,7 @@ export class VapaeeService {
     async getBalances(account:string = null): Promise<any> {
         console.log("VapaeeService.getBalances()");
         this.feed.setLoading("balances", true);
-        return this.waitReady.then(async _ => {
+        return this.waitTokensLoaded.then(async _ => {
             var balances: Asset[];
             if (!account && this.current.name) {
                 account = this.current.name;
@@ -681,7 +717,7 @@ export class VapaeeService {
 
     async getThisSellOrders(table:string, ids:number[]): Promise<any[]> {
         this.feed.setLoading("thisorders", true);
-        return this.waitReady.then(async _ => {
+        return this.waitTokensLoaded.then(async _ => {
             var result = [];
             for (var i in ids) {
                 var id = ids[i];
@@ -707,7 +743,7 @@ export class VapaeeService {
     async getUserOrders(account:string = null) {
         console.log("VapaeeService.getUserOrders()");
         this.feed.setLoading("userorders", true);
-        return this.waitReady.then(async _ => {
+        return this.waitTokensLoaded.then(async _ => {
             var userorders: TableResult;
             if (!account && this.current.name) {
                 account = this.current.name;
@@ -1116,7 +1152,7 @@ export class VapaeeService {
         var aux = null;
         var result = null;
         this.feed.setLoading("sellorders", true);
-        aux = this.waitReady.then(async _ => {
+        aux = this.waitTokensLoaded.then(async _ => {
             var orders = await this.fetchOrders({scope:canonical, limit:100, index_position: "2", key_type: "i64"});
             this._tables[canonical] = this.auxAssertScope(canonical);
             // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("-------------");
@@ -1197,7 +1233,7 @@ export class VapaeeService {
         var aux = null;
         var result = null;
         this.feed.setLoading("buyorders", true);
-        aux = this.waitReady.then(async _ => {
+        aux = this.waitTokensLoaded.then(async _ => {
             var orders = await await this.fetchOrders({scope:reverse, limit:50, index_position: "2", key_type: "i64"});
             this._tables[canonical] = this.auxAssertScope(canonical);
             // console.log("-------------");
@@ -1293,13 +1329,9 @@ export class VapaeeService {
         }
         
         this.setOrderSummary();
-        this.waitOrderSummary = new Promise((resolve) => {
-            this.setOrderSummary = resolve;
-        });
-    
     }
 
-    async getTableSummary(comodity:Token, currency:Token, force:boolean = false): Promise<any> {
+    async getTableSummary(comodity:Token, currency:Token, force:boolean = false): Promise<MarketSummary> {
         var scope:string = this.getScopeFor(comodity, currency);
         var canonical:string = this.canonicalScope(scope);
 
@@ -1308,14 +1340,15 @@ export class VapaeeService {
 
         this.feed.setLoading("summary."+scope, true);
         var aux = null;
-        var result = null;
-        aux = this.waitReady.then(async _ => {
+        var result:MarketSummary = null;
+        aux = this.waitTokensLoaded.then(async _ => {
             var summary = await this.fetchSummary(canonical);
             // if(scope=="olive.tlos")console.log(scope, "---------------------------------------------------");
             // if(scope=="olive.tlos")console.log("Summary crudo:", summary.rows);
 
             this._tables[canonical] = this.auxAssertScope(canonical);
             this._tables[canonical].summary = {
+                scope: canonical,
                 price: new Asset(new BigNumber(0), currency),
                 inverse: new Asset(new BigNumber(0), comodity),
                 volume: new Asset(new BigNumber(0), currency),
@@ -1483,13 +1516,13 @@ export class VapaeeService {
             // if(canonical=="olive.tlos")console.log("Summary final:", this._tables[canonical].summary);
             // if(canonical=="olive.tlos")console.log("---------------------------------------------------");
             this.feed.setLoading("summary."+canonical, false);
-            return summary;
+            return this._tables[canonical].summary;
         });
 
         if (this._tables[canonical] && !force) {
             result = this._tables[canonical].summary;
         } else {
-            result = aux;
+            result = await aux;
         }
 
         this.onSummaryChange.next(result);
@@ -1498,16 +1531,22 @@ export class VapaeeService {
     }
 
     async getAllTablesSumaries(): Promise<any> {
-        return this.waitReady.then(async _ => {
+        return this.waitOrderSummary.then(async _ => {
             var promises = [];
 
-            for (var i in this.tokens) {
+            for (var i in this._tables) {
+                if (i.indexOf(".") == -1) continue;
+                var p = this.getTableSummary(this._tables[i].comodity, this._tables[i].currency, true);
+                promises.push(p);
+            }
+
+            /*for (var i in this.tokens) {
                 var token = this.tokens[i];
                 if (token != this.telos) {
                     var p = this.getTableSummary(token, this.telos, true);
                     promises.push(p);
                 }
-            }
+            }*/
 
             return Promise.all(promises).then(_ => {
                 this.resortTokens();    
@@ -1594,6 +1633,8 @@ export class VapaeeService {
         var currency_sym = scope.split(".")[1].toUpperCase();
         return this._tables[scope] || {
             scope: scope,
+            comodity: this.getTokenNow(comodity_sym),
+            currency: this.getTokenNow(currency_sym),
             orders: { sell: [], buy: [] },
             deals: 0,
             history: [],
@@ -1604,7 +1645,9 @@ export class VapaeeService {
             blocklevels: [[]],
             reverseblocks: [],
             reverselevels: [[]],
-            summary: {},
+            summary: {
+                scope: scope
+            },
             header: { 
                 sell: {total:new Asset("0.0 " + comodity_sym, this), orders:0}, 
                 buy: {total:new Asset("0.0 " + currency_sym, this), orders:0}
@@ -1619,11 +1662,11 @@ export class VapaeeService {
     }
 
     private async fetchBalances(account): Promise<any> {
-        return this.waitReady.then(async _ => {
+        return this.waitTokensLoaded.then(async _ => {
             var contracts = {};
             var balances = [];
             for (var i in this.tokens) {
-                if (this.tokens[i].fiat) continue;
+                if (this.tokens[i].offchain) continue;
                 contracts[this.tokens[i].contract] = true;
             }
             for (var contract in contracts) {
@@ -1853,11 +1896,11 @@ export class VapaeeService {
     private fetchTokensStats(extended: boolean = true) {
         console.log("Vapaee.fetchTokens()");
         this.feed.setLoading("token-stats", true);
-        return this.waitReady.then(_ => {
+        return this.waitTokensLoaded.then(_ => {
 
             var priomises = [];
             for (var i in this.tokens) {
-                if (this.tokens[i].fiat) continue;
+                if (this.tokens[i].offchain) continue;
                 priomises.push(this.fetchTokenStats(this.tokens[i]));
             }
 
@@ -1868,7 +1911,60 @@ export class VapaeeService {
             });            
         });
 
-    }    
+    }
+    
+    private updateTokensSummary() {
+        console.log("**********************************");
+        console.log("Vapaee.updateTokensSummary()");
+        console.log("**********************************");
+        return Promise.all([
+            this.waitTokensLoaded,
+            this.waitOrderSummary
+        ]).then(_ => {
+            console.log(this.tokens);
+            console.log(this._tables);
+
+            // primero tengo que paasr por todos los mercados XXX.TELOS para dar un primer valor (si no lo tienen) a cada token
+            // luego para cada token buscar los markes en que participa y sumar el volume total y el precio ciendo una ponderación por market según volumen
+            for (var i in this.tokens) {
+                if (this.tokens[i].offchain) continue;
+                var token = this.tokens[i];
+                if (token.summary) continue; // this coken already has a summary;
+
+                for (var j in this._tables) {
+                    if (j.indexOf(".") == -1) continue;
+                    var table = this._tables[j];
+                    if (table.currency.symbol == this.telos.symbol) {
+                        token.summary = token.summary || {
+                            price: table.summary.price.clone(),
+                            volume: table.summary.price.clone()
+                        }
+                    }
+                }                
+            }
+
+            for (var i in this.tokens) {
+                if (this.tokens[i].offchain) continue;
+                
+                var token = this.tokens[i];
+                if (token.symbol == "ACORN") console.log("TOKEN: -------- ", [token] );
+                for (var j in this._tables) {
+                    if (j.indexOf(".") == -1) continue;
+                    var table = this._tables[j];
+                    if (table.comodity.symbol == token.symbol || table.currency.symbol == token.symbol) {
+                        if (token.symbol == "ACORN") if (table.comodity.symbol == "ACORN" || table.currency.symbol == "ACRON") {
+                            console.log("table ", [table] );
+                        }
+
+                        // ---
+
+
+                    }
+                }
+
+            }
+        });        
+    }
 
     private fetchTokens(extended: boolean = true) {
         console.log("Vapaee.fetchTokens()");
@@ -2008,6 +2104,8 @@ export interface TableMap {
 
 export interface Table {
     scope: string;
+    comodity: Token,
+    currency: Token,
     deals: number;
     blocks: number;
     blocklevels: any[][][];
@@ -2019,11 +2117,12 @@ export interface Table {
     history: HistoryTx[];
     tx: {[id:string]:HistoryTx};
     
-    summary: Summary;
+    summary: MarketSummary;
     header: TableHeader;
 }
 
-export interface Summary {
+export interface MarketSummary {
+    scope:string,
     price?:Asset,
     inverse?:Asset,
     min_price?:Asset,
@@ -2040,11 +2139,11 @@ export interface Summary {
 }
 
 export interface TableHeader {
-    sell:TableSummary,
-    buy:TableSummary
+    sell:OrdersSummary,
+    buy:OrdersSummary
 }
 
-export interface TableSummary {
+export interface OrdersSummary {
     total: Asset;
     orders: number;    
 }
