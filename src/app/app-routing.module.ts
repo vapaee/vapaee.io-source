@@ -22,7 +22,7 @@ const routes: Routes = [
       { path: 'tokens',                  data: { state: "tokens" }, component: TokensPage, children: [
           { path: ':symbol',             data: { state: "edit" }, component: TokensPage }
       ] },
-      { path: 'markets',                 data: { state: "markets" }, component: MarketsPage},
+      { path: 'markets',                 data: { state: "markets" }, component: ComingSoonPage},
       { path: 'account',                 data: { state: "guest" }, component: AccountPage},
       { path: 'account/:name',           data: { state: "account" }, component: AccountPage }
     ]

@@ -610,7 +610,7 @@ export class ScatterService {
         if (!this.account) {
             console.error("ScatterService.setIdentity()", [identity]);
         }
-        console.log("ScatterService.setIdentity() -> ScatterService.queryAccountData() : " , [this.account.name]);
+        // console.log("ScatterService.setIdentity() -> ScatterService.queryAccountData() : " , [this.account.name]);
         this.queryAccountData(this.account.name).then(account => {
             this.account.data = account;
             this.onLogggedStateChange.next(true);

@@ -4,7 +4,7 @@ import { LocalStringsService } from 'src/app/services/common/common.services';
 import { ScatterService } from 'src/app/services/scatter.service';
 import { ActivatedRoute } from '@angular/router';
 import { Token } from 'src/app/services/utils.service';
-import { VapaeeService, Asset, OrderRow, TokenOrders, Table } from 'src/app/services/vapaee.service';
+import { VapaeeService, Asset, OrderRow, TokenOrders, Market } from 'src/app/services/vapaee.service';
 import { Subscriber } from 'rxjs';
 import { VpePanelOrderEditorComponent } from 'src/app/components/vpe-panel-order-editor/vpe-panel-order-editor.component';
 import { Feedback } from 'src/app/services/feedback.service';
@@ -87,39 +87,39 @@ export class TradePage implements OnInit, OnDestroy {
         return this.vapaee.balances;
     }
 
-    get table(): Table {
-        var table = this.scope ? this.vapaee.table(this.scope) : null;
-        return table;
+    get market(): Market {
+        var market = this.scope ? this.vapaee.market(this.scope) : null;
+        return market;
     }
 
     get history() {
-        var table = this.table;
+        var market = this.market;
         // console.log("history()",this.scope, table.scope, table.history);
-        return table ? table.history : [];
+        return market ? market.history : [];
     }
 
     get orders() {
-        var table = this.table;
-        return table ? table.orders : this._orders;
+        var market = this.market;
+        return market ? market.orders : this._orders;
     }
 
     get buyorders() {
-        var table = this.table;
-        return table ? table.orders.buy : this._orders.buy;
+        var market = this.market;
+        return market ? market.orders.buy : this._orders.buy;
     }
 
     get sellorders() {
-        var table = this.table;
-        return table ? table.orders.sell : this._orders.sell;
+        var market = this.market;
+        return market ? market.orders.sell : this._orders.sell;
     }
 
     get headers() {
-        var table = this.table;
+        var market = this.market;
         var header = { 
             sell: {total:null, orders:0}, 
             buy: {total:null, orders:0}
         }
-        return table ? (table.header ? table.header : header) : header;
+        return market ? (market.header ? market.header : header) : header;
     }
 
     /*get iheaders() {
@@ -132,14 +132,14 @@ export class TradePage implements OnInit, OnDestroy {
     }*/
 
     get summary() {
-        var table = this.table;
+        var market = this.market;
         var _summary = Object.assign({
             percent: 0,
             percent_str: "0%",
             price: this.vapaee.zero_telos.clone(),
             records: [],
             volume: this.vapaee.zero_telos.clone()
-        }, table ? table.summary : {});
+        }, market ? market.summary : {});
         return _summary;
         // return scope ? (scope.summary ? scope.summary : _summary) : _summary;
     }
@@ -154,15 +154,15 @@ export class TradePage implements OnInit, OnDestroy {
     }
 
     private regenerateChartData() {
-        var table = this.table;
-        if (table) {
+        var market = this.market;
+        if (market) {
             // console.log("-----------------------------------------");
             // console.log(this.scope, this.vapaee.scopes[this.scope].blocklist);
             // console.log("-----------------------------------------");
-            this._chartData = table.blocklevels;
+            this._chartData = market.blocklevels;
 
             if (
-                table.blocklist.length == 0 && table.blocks > 0
+                market.blocklist.length == 0 && market.blocks > 0
             ) {
                 setTimeout(_ => {
                     console.log("CHART this._chartData = [[]];");
@@ -256,18 +256,18 @@ export class TradePage implements OnInit, OnDestroy {
         this.app.navigate('/exchange/account/' + this.vapaee.current.name);
     }
 
-    selectToken(scope: string) {
-        console.log("TradePage.selectToken()", scope);
+    selectMarket(scope: string) {
+        console.log("TradePage.selectMarket()", scope);
         this.app.navigate('/exchange/trade/' + scope);
     }
 
     scopeChange(scope) {
         console.log("TradePage.scopeChange()", scope);
-        this.selectToken(scope);
+        this.selectMarket(scope);
     }
 
     switchTokens() {
-        this.selectToken(this.vapaee.inverseScope(this.scope));
+        this.selectMarket(this.vapaee.inverseScope(this.scope));
     }
 
 }

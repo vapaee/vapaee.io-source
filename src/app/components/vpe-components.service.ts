@@ -97,7 +97,7 @@ export class VpeComponentsService {
         this.tokens_prices = prices;
         this.onTokenPricesUpdate.next(this.tokens_prices);
         this.cacheTIC = {};
-        console.log("VpeComponentsService.setTokensPrices() ------------------->", this.tokens_prices);
+        // console.log("VpeComponentsService.setTokensPrices() ------------------->", this.tokens_prices);
     }
 
     // Change State -----------------------------------

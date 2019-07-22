@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { ScatterService } from 'src/app/services/scatter.service';
-import { VapaeeService, TableMap } from 'src/app/services/vapaee.service';
+import { VapaeeService } from 'src/app/services/vapaee.service';
 import { Token } from 'src/app/services/utils.service';
 import { Subscriber } from 'rxjs';
 

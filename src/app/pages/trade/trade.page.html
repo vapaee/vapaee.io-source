@@ -4,7 +4,8 @@
     <vpe-panel-chart [hideheader]="true" [zoom]="500" [height]="chartHeight" [margintop]="true" [data]="chartData"></vpe-panel-chart>
 
     <div class="col-12 margin-top text-center">
-        <span class="btn btn-info" (click)="switchTokens()">Switch to {{vapaee.inverseScope(scope)}}</span>
+        <!--INVERSE -->
+        <!-- span class="btn btn-info" (click)="switchTokens()">Switch to {{vapaee.inverseScope(scope)}}</span -->
     </div>
 
 
@@ -31,7 +32,8 @@
         <div class="card-header vpe-background-card-header padding">
             <div class="row">
                 <div class="col-sm-4 col-md-3 col-padding-right margin-top text-center">
-                    <span class="btn btn-info" (click)="switchTokens()">Switch to {{vapaee.inverseScope(scope)}}</span>
+                    <!--INVERSE -->
+                    <!-- span class="btn btn-info" (click)="switchTokens()">Switch to {{vapaee.inverseScope(scope)}}</span -->
                 </div>
                 <div class="col-sm-8 col-md-9 col-padding-left margin-top">
                     <span class="text-xl">
@@ -46,7 +48,7 @@
 
     <div class="row">
         <div class="col-sm-4 col-md-3  col-padding-right">
-            <vpe-panel-tokens [tokens]="tokens" (selectToken)="selectToken($event)"></vpe-panel-tokens>
+            <vpe-panel-markets [tokens]="tokens" (selectMarket)="selectMarket($event)"></vpe-panel-markets>
             <vpe-panel-wallet [deposits]="deposits" [balances]="balances" (confirmWithdraw)="onWalletConfirmWithdraw($event)" (confirmDeposit)="onWalletConfirmDeposit($event)" (gotoAccount)="gotoAccount()" [deposit_error]="deposit_error" [withdraw_error]="withdraw_error" [loading]="loading" [actions]="true"></vpe-panel-wallet>
         </div>
         <div class="col-sm-8 col-md-9 col-padding-left">

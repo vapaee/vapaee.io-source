@@ -30,6 +30,7 @@ export interface Token {
     summary?: {
         volume: Asset,
         price: Asset,
+        price_24h_ago: Asset,
         percent?:number,
         percent_str?:string
     }

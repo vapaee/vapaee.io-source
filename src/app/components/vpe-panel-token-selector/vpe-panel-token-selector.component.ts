@@ -1,11 +1,10 @@
-import { Component, Input, OnChanges, Output, HostBinding, Inject } from '@angular/core';
+import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Token } from 'src/app/services/utils.service';
-import { Subscriber } from 'rxjs';
-import { VapaeeService, TableMap } from 'src/app/services/vapaee.service';
+import { VapaeeService } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({

@@ -23,11 +23,22 @@
   - lista de las currencies más populares (sobre las que hay más markets: TLOS, EOS, CUSD)
   - lista de los todos los markets sobre la currency elegida, ordenados descendentemente por volumen
 
+- Token Page
+  - al calcular el token.summary hay que hacer una lista de los mercados en el que paricipa ordenado por quantity, en todos los casos debe ser comodity.
+  - vpe-panel-tokens-card-deck:
+    - ícono más grande
+    - Alinear el título con el porcentaje
+    - Max supply
+    - Total supply
+    - Botones:
+      - Trade: -> XXX/TLOS
+      - Info: -> tokens/page
+      - Markets: agranda el card visualizando la lista entera de markets en el que participa y un micro resumen de cada uno (volume, precio (USD), percent)
 
 
 
 Checkear esto después:
-http://arthere0.com/
+http://arthere0.com/  <<< MUY BUEN EFECTO DE PARTÍCULAS
 https://t.me/HelloTelos/80516
 
 

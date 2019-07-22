@@ -15,9 +15,9 @@
                                     <div class="pull-right" [hidden]="token.symbol == 'TLOS'">
                                         <div
                                             class="nowrap text-right"
-                                            [ngClass]="{'text-success': summary(token.scope).percent > 0, 'text-danger': summary(token.scope).percent < 0, 'text-muted': summary(token.scope).percent  == 0}"
+                                            [ngClass]="{'text-success': token.summary?.percent > 0, 'text-danger': token.summary?.percent < 0, 'text-muted': token.summary?.percent  == 0}"
                                         >
-                                            <small><b>{{summary(token.scope).percent_str}}</b></small>
+                                            <small><b>{{token.summary?.percent_str}}</b></small>
                                         </div>
                                     </div>                            
                                     <img style="height:20px; width: 20px; margin-top:-3px" [src]="token.logo">
@@ -44,8 +44,8 @@
                                         </div>
                                         <div class="col-6 text-right">
                                             <div class="text-right" *ngIf="token.symbol != 'TLOS' && token.verified">
-                                                <div><small class="nowrap text-muted">max: {{summary(token.scope).max_price?.valueToString(4)}} {{summary(token.scope).max_price?.token.symbol}}</small></div>
-                                                <div><small class="nowrap text-muted">min: {{summary(token.scope).min_price?.valueToString(4)}} {{summary(token.scope).min_price?.token.symbol}}</small></div>
+                                                <div><small class="nowrap text-muted">max: {{token.summary?.max_price?.valueToString(4)}} {{token.summary?.max_price?.token.symbol}}</small></div>
+                                                <div><small class="nowrap text-muted">min: {{token.summary?.min_price?.valueToString(4)}} {{token.summary?.min_price?.token.symbol}}</small></div>
                                             </div>
                                             <div *ngIf="token.symbol == 'TLOS' || !token.verified"><div>&nbsp;</div><div>&nbsp;</div></div>
                                         </div>
@@ -55,10 +55,10 @@
                                 <div class="col-xs-12 margin-top">
                                     <div class="row" style="flex-grow: 1">
                                         <div class="col-6 text-left col-padding-right" *ngIf="token.symbol != 'TLOS' && token.verified">
-                                            <small class="text-muted">{{local.string.vol}}: {{summary(token.scope).volume.valueToString(4)}}  {{summary(token.scope).volume.token.symbol}}</small>
+                                            <small class="text-muted">{{local.string.vol}}: {{token.summary?.volume.valueToString(4)}}  {{token.summary?.volume.token.symbol}}</small>
                                         </div>
                                         <div class="col-6 text-right col-padding-left" *ngIf="token.symbol != 'TLOS' && token.verified">
-                                            <small class="bold">{{summary(token.scope).price.valueToString(4)}}  {{summary(token.scope).price.token.symbol}}</small>
+                                            <small class="bold">{{token.summary?.price.valueToString(4)}}  {{token.summary?.price.token.symbol}}</small>
                                         </div>
                                         <div class="col-12 text-right" *ngIf="token.symbol == 'TLOS'"> &nbsp; </div>
                                         <div class="col-12 text-right" *ngIf="!token.verified"> {{local.string.cantbtraded}} </div>

@@ -3,7 +3,7 @@ import { AppService } from './services/common/app.service';
 import { VpeComponentsService, PriceMap } from './components/vpe-components.service';
 import { VirtualTimeScheduler } from 'rxjs';
 import { CoingeckoService } from './services/coingecko.service';
-import { VapaeeService, Table } from './services/vapaee.service';
+import { VapaeeService, Market } from './services/vapaee.service';
 import { Token } from './services/utils.service';
 import { LocalStringsService } from './services/common/common.services';
 
@@ -90,7 +90,7 @@ export class AppComponent {
         public vapaee: VapaeeService,
         public local: LocalStringsService
     ) {
-        this.app.init("v2.1.0");
+        this.app.init("v2.1.1");
     }
     
     ngOnInit() {
@@ -126,10 +126,10 @@ export class AppComponent {
             var tokenPrices:PriceMap = {}
             if (!this.vapaee.hasScopes()) return;
             for (var i in tokens) {
-                var table:Table = this.vapaee.table(tokens[i].scope);
-                if (table) {
+                var market:Market = this.vapaee.market(tokens[i].scope);
+                if (market) {
                     tokenPrices[tokens[i].symbol] = {
-                        price: table.summary.price.toNumber(),
+                        price: market.summary ? market.summary.price.toNumber() : 0,
                         token: tokens[i]
                     }
                 }

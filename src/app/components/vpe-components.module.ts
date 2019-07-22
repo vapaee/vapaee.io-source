@@ -32,11 +32,13 @@ import { VpePanelAccountResourcesComponent } from './vpe-panel-account-resources
 import { VpePanelAccountHeaderComponent } from './vpe-panel-account-header/vpe-panel-account-header.component';
 import { VpePanelChartComponent } from './vpe-panel-chart/vpe-panel-chart.component';
 import { VpePanelTokensComponent } from './vpe-panel-tokens/vpe-panel-tokens.component';
+import { VpePanelMarketsComponent } from './vpe-panel-markets/vpe-panel-markets.component';
 import { VpePanelOrderEditorComponent } from './vpe-panel-order-editor/vpe-panel-order-editor.component';
 import { VpeTokenInputComponent } from './vpe-token-input/vpe-token-input.component';
 import { VpeOffChainComboboxComponent } from './vpe-offchain-combobox/vpe-offchain-combobox.component';
 import { VpePanelActivityLogComponent } from './vpe-panel-activity-log/vpe-panel-activity-log.component';
 import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-panel-token-selector.component';
+
 
 
 @NgModule({
@@ -54,6 +56,7 @@ import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-p
         VpePanelAccountHeaderComponent,
         VpePanelChartComponent,
         VpePanelTokensComponent,
+        VpePanelMarketsComponent,
         VpePanelOrderEditorComponent,
         VpeOffChainComboboxComponent,
         VpeTokenInputComponent,
@@ -87,6 +90,7 @@ import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-p
         VpePanelAccountHeaderComponent,
         VpePanelChartComponent,
         VpePanelTokensComponent,
+        VpePanelMarketsComponent,
         VpePanelOrderEditorComponent,
         VpeOffChainComboboxComponent,
         VpeTokenInputComponent,

@@ -9,11 +9,11 @@ import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 
 
 @Component({
-    selector: 'vpe-panel-tokens',
-    templateUrl: './vpe-panel-tokens.component.html',
-    styleUrls: ['./vpe-panel-tokens.component.scss']
+    selector: 'vpe-panel-markets',
+    templateUrl: './vpe-panel-markets.component.html',
+    styleUrls: ['./vpe-panel-markets.component.scss']
 })
-export class VpePanelTokensComponent implements OnChanges, OnInit, OnDestroy {
+export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
 
     @Input() public tokens: Token[];
     @Input() public hideheader: boolean;
@@ -21,7 +21,7 @@ export class VpePanelTokensComponent implements OnChanges, OnInit, OnDestroy {
     @Input() public expanded: boolean;
     @Input() public complete: boolean;
     @Input() public search: string;
-    @Output() selectToken: EventEmitter<string> = new EventEmitter();
+    @Output() selectMarket: EventEmitter<string> = new EventEmitter();
     token_filter:string;
     
     @HostBinding('class') display;
@@ -122,8 +122,8 @@ export class VpePanelTokensComponent implements OnChanges, OnInit, OnDestroy {
         return _summary;
     }
 
-    clickOnToken(scope:string) {
-        this.selectToken.next(scope);
+    clickOnMarket(scope:string) {
+        this.selectMarket.next(scope);
     }
     
 

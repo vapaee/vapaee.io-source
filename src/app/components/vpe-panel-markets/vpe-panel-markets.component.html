@@ -1,4 +1,4 @@
-<vpe-panel class="max-height-100" [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.Tokenlist">
+<vpe-panel class="max-height-100" [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.marketlist">
     <div class="row" *ngIf="search != 'no-search'">
         <div class="col-sm-12 input-group">
             <input
@@ -29,8 +29,8 @@
                 <div class="row cursor-pointer margin-bottom active-on-hover" 
                     *ngFor="let token of get_tokens | filter:token_filter"
                     [hidden]="token.symbol == 'TLOS'"
-                    (click)="clickOnToken(token.scope)"
-                    (tap)="clickOnToken(token.scope)"
+                    (click)="clickOnMarket(token.scope)"
+                    (tap)="clickOnMarket(token.scope)"
                 >
                     <div class="nowrap col-sm-3 col-padding-right">
                         <img style="height:16px; width: 16px; margin-top:-2px" [src]="token.logo">
@@ -55,8 +55,8 @@
                 <div class="row cursor-pointer margin-bottom active-on-hover" 
                     *ngFor="let token of get_tokens | filter:token_filter"
                     [hidden]="token.symbol == 'TLOS'"
-                    (click)="clickOnToken(token.scope)"
-                    (tap)="clickOnToken(token.scope)"
+                    (click)="clickOnMarket(token.scope)"
+                    (tap)="clickOnMarket(token.scope)"
                 >
                     <div class="nowrap text-md col-sm-12 margin-top margin-bottom">
                         <img style="height:20px; width: 20px; margin-top:-2px" [src]="token.logo">

@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { TokenOrders, VapaeeService, OrderRow, TableHeader, UserOrders } from 'src/app/services/vapaee.service';
+import { TokenOrders, VapaeeService, OrderRow, MarketHeader, UserOrders } from 'src/app/services/vapaee.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 
@@ -13,7 +13,7 @@ import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 export class VpePanelUserOrdersComponent implements OnChanges {
 
     @Input() public orders: TokenOrders;
-    @Input() public headers: TableHeader;
+    @Input() public headers: MarketHeader;
     @Input() public hideheader: boolean;
     @Input() public margintop: boolean;
     @Input() public expanded: boolean;
