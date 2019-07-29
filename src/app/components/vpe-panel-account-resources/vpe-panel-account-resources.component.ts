@@ -1,9 +1,10 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeService, Asset } from 'src/app/services/vapaee.service';
+import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { Account } from 'src/app/services/scatter.service';
+import { Account } from 'src/app/services/@vapaee/scatter/scatter.service';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
+import { AssetDEX } from 'src/app/services/@vapaee/dex/asset-dex.class';
 
 
 @Component({
@@ -25,10 +26,10 @@ export class VpePanelAccountResourcesComponent implements OnChanges {
     @Output() confirmDeposit: EventEmitter<any> = new EventEmitter();
     @Output() confirmWithdraw: EventEmitter<any> = new EventEmitter();
     public current_mode: boolean;
-    public deposit: Asset;
-    public withdraw: Asset;
+    public deposit: AssetDEX;
+    public withdraw: AssetDEX;
     constructor(
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
@@ -36,7 +37,7 @@ export class VpePanelAccountResourcesComponent implements OnChanges {
         this.hideheader = false;
         this.margintop = true;
         this.expanded = true; 
-        this.current = this.vapaee.default;
+        this.current = this.dex.default;
     }
 
     async updateSize(event:ResizeEvent) {

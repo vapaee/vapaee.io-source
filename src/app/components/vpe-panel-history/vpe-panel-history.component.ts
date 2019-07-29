@@ -1,6 +1,5 @@
-import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { HistoryTx, VapaeeService } from 'src/app/services/vapaee.service';
+import { Component, Input, OnChanges, HostBinding } from '@angular/core';
+import { HistoryTx, VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 
@@ -22,7 +21,7 @@ export class VpePanelHistoryComponent implements OnChanges {
     public digits: number;
     public timeformat: string;
     constructor(
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {

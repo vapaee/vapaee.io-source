@@ -5,19 +5,19 @@
 
     <div class="col-12 margin-top text-center">
         <!--INVERSE -->
-        <!-- span class="btn btn-info" (click)="switchTokens()">Switch to {{vapaee.inverseScope(scope)}}</span -->
+        <!-- span class="btn btn-info" (click)="switchTokens()">Switch to {{dex.inverseScope(scope)}}</span -->
     </div>
 
 
-    <div class="margin-top text-center" [ngClass]="{'d-none':vapaee.loginState != 'no-logged'}">
-        <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
-            <span class="spinner-border spinner-border-xs" [hidden]="!vapaee.feed.loading('login') && !vapaee.feed.loading('log-state')"></span>
+    <div class="margin-top text-center" [ngClass]="{'d-none':dex.loginState != 'no-logged'}">
+        <span class="btn btn-sm btn-primary" (click)="dex.login()">
+            <span class="spinner-border spinner-border-xs" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
             {{local.string.login | titlecase}}
         </span><br>
         <span class="text-sm">{{local.string.NotLogged}} </span>
     </div>
 
-    <vpe-panel-order-editor [hidden]="!vapaee.logged" #orderform_min [deposits]="deposits" [comodity]="comodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="vapaee.logged"></vpe-panel-order-editor>
+    <vpe-panel-order-editor [hidden]="!dex.logged" #orderform_min [deposits]="deposits" [comodity]="comodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="dex.logged"></vpe-panel-order-editor>
 
     <vpe-panel-orders [expanded]='false' (onClickRow)="onClickRow($event)" (onClickPrice)="onClickPrice($event)" [headers]="headers" [orders]="orders"></vpe-panel-orders>
 
@@ -33,7 +33,7 @@
             <div class="row">
                 <div class="col-sm-4 col-md-3 col-padding-right margin-top text-center">
                     <!--INVERSE -->
-                    <!-- span class="btn btn-info" (click)="switchTokens()">Switch to {{vapaee.inverseScope(scope)}}</span -->
+                    <!-- span class="btn btn-info" (click)="switchTokens()">Switch to {{dex.inverseScope(scope)}}</span -->
                 </div>
                 <div class="col-sm-8 col-md-9 col-padding-left margin-top">
                     <span class="text-xl">
@@ -53,7 +53,7 @@
         </div>
         <div class="col-sm-8 col-md-9 col-padding-left">
             <vpe-panel-chart [data]="chartData"></vpe-panel-chart>
-            <vpe-panel-order-editor [hidden]="!vapaee.logged" #orderform_full [deposits]="deposits" [comodity]="comodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="vapaee.logged"></vpe-panel-order-editor>
+            <vpe-panel-order-editor [hidden]="!dex.logged" #orderform_full [deposits]="deposits" [comodity]="comodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="dex.logged"></vpe-panel-order-editor>
             <div class="row">
                 <div class="col-sm-8 col-md-9 col-padding-right">
                     <vpe-panel-orders (onClickRow)="onClickRow($event)" (onClickPrice)="onClickPrice($event)" [headers]="headers" [orders]="orders"></vpe-panel-orders>

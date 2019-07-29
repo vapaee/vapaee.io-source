@@ -3,7 +3,7 @@
     <div class="row" [hidden]="lines == 2">
         <div class="nowrap text-bold text-sm col-2 col-padding-right">
                 {{local.string.activity | titlecase}}
-            <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('activity')"></span>
+            <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('activity')"></span>
         </div>
         <div class="nowrap text-bold text-sm-left col-2 col-padding-right col-padding-left">{{local.string.user | titlecase}}</div>
         <div class="nowrap text-bold text-sm-left col-6 col-padding-right col-padding-left">{{local.string.detail | titlecase}}</div>
@@ -12,7 +12,7 @@
     <div class="row"[hidden]="lines == 1">
         <div class="nowrap text-bold text-sm col-5 col-padding-right">
             {{local.string.activity | titlecase}}
-            <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('activity')"></span>
+            <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('activity')"></span>
         </div>
         <div class="nowrap text-bold text-sm-left col-4 col-padding-right col-padding-left">{{local.string.user | titlecase}}</div>
         <div class="nowrap text-bold text-sm-right col-3 col-padding-left">{{local.string.date | titlecase}}</div>
@@ -23,7 +23,7 @@
             
                 <div class="row padding-top margin-bottom activity-event" 
                     [ngClass]="{'text-success': event.event=='transaction' && getOrdertype(event) == 'buy', 'text-danger':  event.event=='transaction' && getOrdertype(event) == 'sell'}"
-                    *ngFor="let event of vapaee.activity.list"
+                    *ngFor="let event of dex.activity.list"
                     [hidden]="lines == 2"
                 >
                     <div class="text-sm      col-2 col-padding-right text-bold"
@@ -45,7 +45,7 @@
 
                 <div class="row padding-top margin-bottom activity-event" 
                     [ngClass]="{'text-success': event.event=='transaction' && getOrdertype(event) == 'buy', 'text-danger':  event.event=='transaction' && getOrdertype(event) == 'sell'}"
-                    *ngFor="let event of vapaee.activity.list"
+                    *ngFor="let event of dex.activity.list"
                     [hidden]="lines == 1"
                 >
                     <div class="text-sm      col-5 col-padding-right text-bold"

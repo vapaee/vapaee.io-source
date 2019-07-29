@@ -35,7 +35,7 @@
                     <div class="nowrap col-sm-3 col-padding-right">
                         <img style="height:16px; width: 16px; margin-top:-2px" [src]="token.logo">
                         {{token.symbol}}
-                        <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('token-stat-'+token.symbol) && !vapaee.feed.loading('summary.'+token.scope)"></span>
+                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('token-stat-'+token.symbol) && !dex.feed.loading('summary.'+token.scope)"></span>
                     </div>
                     <div class="nowrap col-sm-3 text-right col-padding-right col-padding-left">
                         {{token.summary?.volume.valueToString(volume_digits, true)}}

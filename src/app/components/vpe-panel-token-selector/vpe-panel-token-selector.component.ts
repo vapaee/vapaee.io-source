@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { Token } from 'src/app/services/utils.service';
-import { VapaeeService } from 'src/app/services/vapaee.service';
+import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { TokenDEX } from 'src/app/services/@vapaee/dex/token-dex.class';
 
 
 @Component({
@@ -14,8 +14,8 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 })
 export class VpePanelTokenSelectorComponent implements OnChanges {
 
-    @Input() public tokens: Token[];
-    @Input() public current: Token;
+    @Input() public tokens: TokenDEX[];
+    @Input() public current: TokenDEX;
     @Input() public hideheader: boolean;
     @Input() public margintop: boolean;
     @Input() public expanded: boolean;
@@ -28,7 +28,7 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
     price_digits: number;
     
     constructor(
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService,
         private modalService: NgbModal
@@ -72,13 +72,13 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
     }
 
     summary(_scope) {
-        var scope = this.vapaee.table(_scope);
+        var scope = this.dex.table(_scope);
         var _summary = Object.assign({
             percent: 0,
             percent_str: "0%",
-            price: this.vapaee.zero_telos.clone(),
+            price: this.dex.zero_telos.clone(),
             records: [],
-            volume: this.vapaee.zero_telos.clone()
+            volume: this.dex.zero_telos.clone()
         }, scope ? scope.summary : {});
         return _summary;
     }

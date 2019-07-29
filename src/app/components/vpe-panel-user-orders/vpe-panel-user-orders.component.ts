@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { TokenOrders, VapaeeService, OrderRow, MarketHeader, UserOrders } from 'src/app/services/vapaee.service';
+import { TokenOrders, VapaeeDEX, OrderRow, MarketHeader, UserOrders } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 
@@ -25,7 +25,7 @@ export class VpePanelUserOrdersComponent implements OnChanges {
     c_loading: {[scope_id:string]:boolean};
     error:string;
     constructor(
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
@@ -114,7 +114,7 @@ export class VpePanelUserOrdersComponent implements OnChanges {
         
         if (order.deposit.token.symbol != order.telos.token.symbol) {
             this.c_loading[key] = true;
-            this.vapaee.cancelOrder("sell", order.deposit.token, order.telos.token, [order.id]).then(_ => {
+            this.dex.cancelOrder("sell", order.deposit.token, order.telos.token, [order.id]).then(_ => {
                 // success
                 this.c_loading[key] = false;
             }).catch(e => {
@@ -129,7 +129,7 @@ export class VpePanelUserOrdersComponent implements OnChanges {
         }
         if (order.deposit.token.symbol == order.telos.token.symbol) {
             this.c_loading[key] = true;
-            this.vapaee.cancelOrder("buy", order.total.token, order.telos.token, [order.id]).then(_ => {
+            this.dex.cancelOrder("buy", order.total.token, order.telos.token, [order.id]).then(_ => {
                 // success
                 this.c_loading[key] = false;
             }).catch(e => {

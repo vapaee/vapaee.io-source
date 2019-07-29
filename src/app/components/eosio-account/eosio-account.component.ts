@@ -1,6 +1,5 @@
-import { Component, Input, OnChanges, Output } from '@angular/core';
+import { Component, Input, OnChanges} from '@angular/core';
 import { EosioTokenMathService } from 'src/app/services/eosio.token-math.service';
-import { EventEmitter } from '@angular/core';
 
 declare var jdenticon:any;
 declare var $:any;

@@ -1,9 +1,10 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeService, Asset } from 'src/app/services/vapaee.service';
+import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { Account, ScatterService } from 'src/app/services/scatter.service';
+import { Account, VapaeeScatter } from 'src/app/services/@vapaee/scatter/scatter.service';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
+import { AssetDEX } from 'src/app/services/@vapaee/dex/asset-dex.class';
 
 
 @Component({
@@ -24,13 +25,13 @@ export class VpePanelAccountHeaderComponent implements OnChanges {
 
     @Output() confirmDeposit: EventEmitter<any> = new EventEmitter();
     @Output() confirmWithdraw: EventEmitter<any> = new EventEmitter();
-    public deposit: Asset;
-    public withdraw: Asset;
+    public deposit: AssetDEX;
+    public withdraw: AssetDEX;
     public loading_fake: boolean;
     public portrait: boolean;
     constructor(
-        public vapaee: VapaeeService,
-        public scatter: ScatterService,
+        public dex: VapaeeDEX,
+        public scatter: VapaeeScatter,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
@@ -39,7 +40,7 @@ export class VpePanelAccountHeaderComponent implements OnChanges {
         this.margintop = true;
         this.expanded = true; 
         this.loading_fake = false;
-        this.current = this.vapaee.default;
+        this.current = this.dex.default;
     }
 
     ngOnChanges() {
@@ -52,7 +53,7 @@ export class VpePanelAccountHeaderComponent implements OnChanges {
 
     freeFakeTokens() {
         this.loading_fake = true;
-        this.vapaee.getSomeFreeFakeTokens().then(_ => {
+        this.dex.getSomeFreeFakeTokens().then(_ => {
             this.loading_fake = false;
         }).catch(_ => {
             this.loading_fake = false;

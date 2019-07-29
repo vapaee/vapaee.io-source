@@ -64,7 +64,7 @@
                     <a class="nav-link" routerLink="{{'/exchange/trade/' + (app.getGlobal('last-market') || 'cnt.tlos') }}" >{{local.string.Trade | titlecase}}</a>
                 </li>
                 <li class="nav-item" [ngClass]="{active: app.stateStartsWith('account')}">
-                    <a class="nav-link" [routerLink]="'/exchange/account/' + vapaee.current.name" >{{local.string.Account | titlecase}}</a>
+                    <a class="nav-link" [routerLink]="'/exchange/account/' + dex.current.name" >{{local.string.Account | titlecase}}</a>
                 </li>
                 <li class="nav-item highlight" [ngClass]="{active: app.stateStartsWith('wp')}">
                     <a class="nav-link" [routerLink]="'/exchange/wp'" >WP</a>

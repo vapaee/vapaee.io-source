@@ -25,7 +25,7 @@
                                 </h4>
                                 <div class="card-text">
                                     <div>
-                                        <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('token-stat-'+token.symbol) && !vapaee.feed.loading('summary.'+token.scope)"></span>
+                                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('token-stat-'+token.symbol) && !dex.feed.loading('summary.'+token.scope)"></span>
                                         <span class="nowrap"> {{token.stat ? token.stat.max_supply : ('0 ' + token.symbol)}} </span>
                                     </div>
                                     <div>

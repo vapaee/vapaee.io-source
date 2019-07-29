@@ -1,3 +1,6 @@
+import { Component, Injectable, Pipe, Directive } from "@angular/core";
+import { Type } from "@angular/compiler";
+
 export interface Feed {
     msg?:string;
     msgtype?:string;
@@ -10,13 +13,26 @@ export interface Feed {
     }[]
 }
 
+export interface FeedMap {
+    [key:string]:Feed
+};
+
+@Injectable({
+    providedIn:"root"
+})
 export class Feedback {
     public keys: string[];
-    private scopes: {[key:string]:Feed};
+    private scopes: FeedMap;
 
-    constructor(keys:string[] = []) {
-        this.keys = keys;
+    constructor() {
+        this.keys = []
         this.scopes = {};
+    }
+
+    static create(keys:string[] = []) {
+        var feed = new Feedback();
+        feed.keys = keys;
+        return feed;
     }
 
     private updateScopes() {
@@ -125,3 +141,17 @@ export class Feedback {
     }
 
 }
+
+/*
+@Injectable({
+    providedIn: "root"
+})
+export class FeedbackService {
+    
+    constructor(){}
+
+    create(keys:string[] = []) {
+        return new Feedback(keys);
+    }
+}
+*/

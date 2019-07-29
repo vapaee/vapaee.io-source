@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { ScatterService } from 'src/app/services/scatter.service';
-import { VapaeeService } from 'src/app/services/vapaee.service';
+import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
 
 @Component({
     selector: 'markets-page',
@@ -14,8 +13,7 @@ export class MarketsPage implements OnInit, OnDestroy {
     constructor(
         public app: AppService,
         public local: LocalStringsService,
-        public scatter: ScatterService,
-        public vapaee: VapaeeService
+        public dex: VapaeeDEX
     ) {
         
     }

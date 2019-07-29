@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, Output, OnDestroy, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { VapaeeService } from 'src/app/services/vapaee.service';
+import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Subscriber, Subject } from 'rxjs';
 import { VpeComponentsService, Device, ResizeEvent } from '../vpe-components.service';
@@ -33,7 +33,7 @@ export class VpePanelComponent implements OnChanges, OnDestroy, AfterViewInit {
     private element: ElementRef;
 
     constructor(
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService,
         private el: ElementRef

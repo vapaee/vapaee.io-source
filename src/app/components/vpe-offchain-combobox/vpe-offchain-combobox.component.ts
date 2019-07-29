@@ -1,8 +1,7 @@
-import { Component, Input, OnChanges, Output } from '@angular/core';
-import { VapaeeService } from 'src/app/services/vapaee.service';
+import { Component, Input, OnChanges } from '@angular/core';
+import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService } from '../vpe-components.service';
-import { Token } from 'src/app/services/utils.service';
 
 
 
@@ -16,7 +15,7 @@ export class VpeOffChainComboboxComponent implements OnChanges {
     @Input() public btn: string;
 
     constructor(
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {

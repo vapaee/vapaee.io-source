@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, Output, OnInit, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeService, EventLog } from 'src/app/services/vapaee.service';
+import { VapaeeDEX, EventLog } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, StringMap, ResizeEvent } from '../vpe-components.service';
 import { Subscriber } from 'rxjs';
@@ -28,7 +28,7 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
     
     private onLocalChangeSubscriber: Subscriber<string>;
     constructor(
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService,
         private cdr: ChangeDetectorRef
@@ -55,7 +55,7 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
     }
 
     get activity() {
-        return this.vapaee.activity.list;
+        return this.dex.activity.list;
     }
 
     async updateSize(event:ResizeEvent) {
@@ -69,7 +69,7 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
     }
 
     ngOnChanges() {
-        // this.vapaee.activity.events[""].processed
+        // this.dex.activity.events[""].processed
     }
 
     onLocalChange() {
@@ -232,7 +232,7 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
     }
 
     psYReachEnd() {
-        this.vapaee.loadMoreActivity().then(_ => {
+        this.dex.loadMoreActivity().then(_ => {
             this.cdr.detectChanges();
         });
     }

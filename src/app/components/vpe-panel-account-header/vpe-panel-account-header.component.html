@@ -11,17 +11,17 @@
                 <div class="col col-padding-left">
                     <div class="pull-right text-center" [hidden]="current.name != 'guest'">
 
-                        <div [ngClass]="{'d-none':vapaee.loginState != 'no-scatter'}">
-                            <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
-                                <span class="spinner-border spinner-border-xs" [hidden]="!vapaee.feed.loading('log-state') && !scatter.feed.loading('connect')"></span>
+                        <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}">
+                            <span class="btn btn-sm btn-primary" (click)="dex.login()">
+                                <span class="spinner-border spinner-border-xs" [hidden]="!dex.feed.loading('log-state') && !scatter.feed.loading('connect')"></span>
                                 {{local.string.retry | titlecase}}
                             </span><br>
                             <span class="text-sm">{{local.string.noWallet}} </span>
                         </div>
 
-                        <div [ngClass]="{'d-none':vapaee.loginState != 'no-logged'}">
-                            <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
-                                <span class="spinner-border spinner-border-xs" [hidden]="!vapaee.feed.loading('login') && !vapaee.feed.loading('log-state')"></span>
+                        <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}">
+                            <span class="btn btn-sm btn-primary" (click)="dex.login()">
+                                <span class="spinner-border spinner-border-xs" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
                                 {{local.string.login | titlecase}}
                             </span><br>
                             <span class="text-sm">{{local.string.NotLogged}} </span>
@@ -29,9 +29,9 @@
 
                     </div>                    
                     <div class="pull-right" style="margin-top: 8px;">
-                        <span [ngClass]="{'d-none':!vapaee.logged}">
-                            <span class="btn btn-xs btn-primary margin-left" (click)="vapaee.logout()">
-                                <span class="spinner-border spinner-border-xs" [hidden]="!vapaee.feed.loading('logout') && !vapaee.feed.loading('log-state')"></span> 
+                        <span [ngClass]="{'d-none':!dex.logged}">
+                            <span class="btn btn-xs btn-primary margin-left" (click)="dex.logout()">
+                                <span class="spinner-border spinner-border-xs" [hidden]="!dex.feed.loading('logout') && !dex.feed.loading('log-state')"></span> 
                                 <span> {{local.string.logout}} </span>
                             </span>
                         </span>
@@ -60,19 +60,19 @@
                 </div>
 
                 <div class="col-12 text-right" [hidden]="current.name == 'guest'">
-                    <div [ngClass]="{'d-none':vapaee.loginState != 'no-scatter'}">
+                    <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}">
                         <hr class="line" />
                         <span class="text-md">{{local.string.noWallet}} </span>
-                        <span class="btn btn-xs btn-primary" (click)="vapaee.login()">
-                            <span class="spinner-border spinner-border-xs" [hidden]="!vapaee.feed.loading('log-state') && !scatter.feed.loading('connect')"></span>
+                        <span class="btn btn-xs btn-primary" (click)="dex.login()">
+                            <span class="spinner-border spinner-border-xs" [hidden]="!dex.feed.loading('log-state') && !scatter.feed.loading('connect')"></span>
                             {{local.string.retry | titlecase}}
                         </span>
                     </div>
-                    <div [ngClass]="{'d-none':vapaee.loginState != 'no-logged'}">
+                    <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}">
                         <hr class="line" />
                         <span class="text-md">{{local.string.NotLogged}} </span>
-                        <span class="btn btn-xs btn-primary" (click)="vapaee.login()">
-                            <span class="spinner-border spinner-border-xs" [hidden]="!vapaee.feed.loading('login') && !vapaee.feed.loading('log-state')"></span>
+                        <span class="btn btn-xs btn-primary" (click)="dex.login()">
+                            <span class="spinner-border spinner-border-xs" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
                             {{local.string.LoginWScOrSq}}
                         </span>
                     </div>
@@ -92,10 +92,10 @@
                     <identicon-comp [value]="current.name"></identicon-comp>
                 </div>
                 <div class="col col-padding-left">
-                    <div [ngClass]="{'d-none':vapaee.loginState != 'no-scatter'}">
+                    <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}">
                         <div class="pull-right text-center" [hidden]="!current.data.total_balance">
-                            <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
-                                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('log-state')"></span>
+                            <span class="btn btn-sm btn-primary" (click)="dex.login()">
+                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('log-state')"></span>
                                 {{local.string.retry | titlecase}}
                             </span><br>
                             <span>{{local.string.noWallet}}</span>
@@ -105,10 +105,10 @@
                     </div>
 
                     <!-- current != guest - Wallet detected but not logged -->
-                    <div [ngClass]="{'d-none':vapaee.loginState != 'no-logged'}">
+                    <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}">
                         <div class="pull-right text-right"  [hidden]="!current.data.total_balance">
-                            <span class="btn btn-sm btn-success" (click)="vapaee.login()">
-                                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('login') && !vapaee.feed.loading('log-state')"></span>
+                            <span class="btn btn-sm btn-success" (click)="dex.login()">
+                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
                                 {{local.string.LoginWScOrSq}}
                             </span>
                             <br>
@@ -120,18 +120,18 @@
 
                     <div class="text-xl">
                         {{current.name}}
-                        <span [ngClass]="{'d-none':!vapaee.logged}">
-                            <span class="btn btn-sm btn-primary margin-left" (click)="vapaee.logout()">
-                                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('logout') && !vapaee.feed.loading('log-state')"></span> 
+                        <span [ngClass]="{'d-none':!dex.logged}">
+                            <span class="btn btn-sm btn-primary margin-left" (click)="dex.logout()">
+                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('logout') && !dex.feed.loading('log-state')"></span> 
                                 <span> {{local.string.logout}} </span>
                             </span>
                         </span>
                     </div>
 
                     <!-- No Wallet detected -->
-                    <div [ngClass]="{'d-none':vapaee.loginState != 'no-scatter'}" [hidden]="current.data.total_balance">
+                    <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}" [hidden]="current.data.total_balance">
                         <div class="pull-right text-center">
-                            <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
+                            <span class="btn btn-sm btn-primary" (click)="dex.login()">
                                 <span class="spinner-border spinner-border-sm" [hidden]="!scatter.feed.loading('connect')"></span>
                                 {{local.string.retry | titlecase}}
                             </span>
@@ -140,10 +140,10 @@
                     </div>
 
                     <!-- Wallet detected but not logged -->
-                    <div [ngClass]="{'d-none':vapaee.loginState != 'no-logged'}" [hidden]="current.data.total_balance">
+                    <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}" [hidden]="current.data.total_balance">
                         <div class="pull-right text-center">
-                            <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
-                                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('login') && !vapaee.feed.loading('log-state')"></span>
+                            <span class="btn btn-sm btn-primary" (click)="dex.login()">
+                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
                                 {{local.string.LoginWScOrSq}}
                             </span>
                         </div>
@@ -156,7 +156,7 @@
                         <span class="text-md"> {{current.data.total_balance}} </span>
                         <span class="text-sm color-yellow d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
 
-                        <div class="pull-right" [hidden]="!vapaee.logged || vapaee.loginState == 'no-scatter'">
+                        <div class="pull-right" [hidden]="!dex.logged || dex.loginState == 'no-scatter'">
                             <vpe-offchain-combobox></vpe-offchain-combobox>
                         </div>                    
                     </div>

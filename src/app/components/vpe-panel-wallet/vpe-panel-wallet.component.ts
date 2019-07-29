@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeService, Asset } from 'src/app/services/vapaee.service';
+import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { Subscriber } from 'rxjs';
-import { Feedback } from 'src/app/services/feedback.service';
+import { AssetDEX } from 'src/app/services/@vapaee/dex/asset-dex.class';
+import { Feedback } from 'projects/vapaee/feedback/src/public_api';
 
 
 @Component({
@@ -14,11 +14,11 @@ import { Feedback } from 'src/app/services/feedback.service';
 })
 export class VpePanelWalletComponent implements OnChanges {
 
-    @Input() public deposits: Asset[];
-    @Input() public balances: Asset[];
-    @Input() public _fake_balances: Asset[];
-    @Input() public _nonfake_balances: Asset[];
-    @Input() public _fake_tlos_balance: Asset;
+    @Input() public deposits: AssetDEX[];
+    @Input() public balances: AssetDEX[];
+    @Input() public _fake_balances: AssetDEX[];
+    @Input() public _nonfake_balances: AssetDEX[];
+    @Input() public _fake_tlos_balance: AssetDEX;
     @Input() public actions: boolean;
     @Input() public hideuser: boolean;
     @Input() public hideheader: boolean;
@@ -35,8 +35,8 @@ export class VpePanelWalletComponent implements OnChanges {
 
     
     
-    public deposit: Asset;
-    public withdraw: Asset;
+    public deposit: AssetDEX;
+    public withdraw: AssetDEX;
     public alert_msg:string;
     public loading_fake_tlos: boolean;
     public loading_fake: boolean;
@@ -50,7 +50,7 @@ export class VpePanelWalletComponent implements OnChanges {
     digits: {[key:string]:number};
 
     constructor(
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
@@ -61,15 +61,15 @@ export class VpePanelWalletComponent implements OnChanges {
         this.feed = new Feedback();
         this.show_prices_top = true;
         this.show_prices_bottom = true;
-        this._fake_tlos_balance = new Asset();
+        this._fake_tlos_balance = new AssetDEX();
         this.hideuser = false;
         this.hideheader = false;
         this.margintop = true;
         this.expanded = true; 
         this.actions = false;
         this.alert_msg = "";
-        this.deposit = new Asset();
-        this.withdraw = new Asset();
+        this.deposit = new AssetDEX();
+        this.withdraw = new AssetDEX();
     }   
 
     get get_fake_tlos_balance() {
@@ -81,7 +81,7 @@ export class VpePanelWalletComponent implements OnChanges {
                 }
             }
         }
-        return this._fake_tlos_balance || new Asset();
+        return this._fake_tlos_balance || new AssetDEX();
     }    
 
     get get_fake_balances() {
@@ -179,7 +179,7 @@ export class VpePanelWalletComponent implements OnChanges {
             return;
         }
         if (this.balances.length == 1) {
-            var asset:Asset = this.balances[0];
+            var asset:AssetDEX = this.balances[0];
             this.depositForm(asset);
         }
         if (this.balances.length > 1) {
@@ -187,38 +187,38 @@ export class VpePanelWalletComponent implements OnChanges {
         }        
     }
 
-    depositForm(asset:Asset) {
+    depositForm(asset:AssetDEX) {
         this.alert_msg = "";
-        if (!this.vapaee.logged) return;
+        if (!this.dex.logged) return;
         if (!this.actions) return;
         if (!asset.token.verified) {
             this.alert_msg = this.local.string.tinallowed;
-            this.deposit = new Asset();
+            this.deposit = new AssetDEX();
             return;
         }
         if (this.deposit.token.symbol == asset.token.symbol) {
-            this.deposit = new Asset();
+            this.deposit = new AssetDEX();
         } else {
             this.deposit = asset.clone();
         }        
-        this.withdraw = new Asset();
+        this.withdraw = new AssetDEX();
     }
 
-    withdrawForm(asset:Asset) {
-        if (!this.vapaee.logged) return;
+    withdrawForm(asset:AssetDEX) {
+        if (!this.dex.logged) return;
         if (!this.actions) return;
         if (this.withdraw.token.symbol == asset.token.symbol) {
-            this.withdraw = new Asset();
+            this.withdraw = new AssetDEX();
         } else {
             this.withdraw = asset.clone();
         }
-        this.deposit = new Asset();
+        this.deposit = new AssetDEX();
     }
 
     hasNoFake() {
         var resutl = true;
-        for (var i in this.vapaee.tokens) {
-            if (this.vapaee.tokens[i].fake) {
+        for (var i in this.dex.tokens) {
+            if (this.dex.tokens[i].fake) {
                 resutl = false;
                 break;
             }
@@ -227,14 +227,14 @@ export class VpePanelWalletComponent implements OnChanges {
     }
 
     private setquiet(name:string) {
-        this.deposit = new Asset();
+        this.deposit = new AssetDEX();
         this.loading_fake = false;
         this.loading_fake_tlos = false;
     }
 
     freeFakeTokens() {
         this.loading_fake = true;
-        this.vapaee.getSomeFreeFakeTokens().then(_ => {
+        this.dex.getSomeFreeFakeTokens().then(_ => {
             this.loading_fake = false;
         }).catch(_ => {
             this.loading_fake = false;
@@ -244,7 +244,7 @@ export class VpePanelWalletComponent implements OnChanges {
     freeFakeTelos() {
         console.log("freeFakeTelos()");
         this.loading_fake_tlos = true;
-        this.vapaee.getSomeFreeFakeTokens("TLOS").then(_ => {
+        this.dex.getSomeFreeFakeTokens("TLOS").then(_ => {
             this.loading_fake_tlos = false;
         }).catch(_ => {
             this.loading_fake_tlos = false;

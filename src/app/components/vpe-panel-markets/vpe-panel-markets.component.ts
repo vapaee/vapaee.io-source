@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, Output, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { Token } from 'src/app/services/utils.service';
 import { Subscriber } from 'rxjs';
-import { VapaeeService } from 'src/app/services/vapaee.service';
+import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
+import { TokenDEX } from 'src/app/services/@vapaee/dex/token-dex.class';
 
 
 
@@ -15,7 +15,7 @@ import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 })
 export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
 
-    @Input() public tokens: Token[];
+    @Input() public tokens: TokenDEX[];
     @Input() public hideheader: boolean;
     @Input() public margintop: boolean;
     @Input() public expanded: boolean;
@@ -27,11 +27,11 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
     @HostBinding('class') display;
     volume_digits: number;
     price_digits: number;
-    public verified_tokens: Token[];
+    public verified_tokens: TokenDEX[];
     private onTokensChangeSubscriber: Subscriber<any>;
 
     constructor(
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
@@ -111,13 +111,13 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     summary(_scope) {
-        var scope = this.vapaee.table(_scope);
+        var scope = this.dex.table(_scope);
         var _summary = Object.assign({
             percent: 0,
             percent_str: "0%",
-            price: this.vapaee.zero_telos.clone(),
+            price: this.dex.zero_telos.clone(),
             records: [],
-            volume: this.vapaee.zero_telos.clone()
+            volume: this.dex.zero_telos.clone()
         }, scope ? scope.summary : {});
         return _summary;
     }
@@ -132,7 +132,7 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.vapaee.onTokensReady.subscribe(this.onTokensChangeSubscriber);
+        this.dex.onTokensReady.subscribe(this.onTokensChangeSubscriber);
     }
 
     ngOnDestroy() {

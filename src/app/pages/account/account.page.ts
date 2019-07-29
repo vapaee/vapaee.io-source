@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { ScatterService } from 'src/app/services/scatter.service';
 import { Subscriber } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { Profile, Utils } from 'src/app/services/utils.service';
-import { VapaeeService, Asset, UserOrders, UserOrdersMap } from 'src/app/services/vapaee.service';
+import { Utils } from 'src/app/services/@vapaee/scatter/utils.class';
+import { VapaeeDEX, UserOrdersMap } from 'src/app/services/@vapaee/dex/dex.service';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
+import { AssetDEX } from 'src/app/services/@vapaee/dex/asset-dex.class';
 
 
 @Component({
@@ -24,9 +24,8 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         public app: AppService,
         public local: LocalStringsService,
-        public scatter: ScatterService,
         public route: ActivatedRoute,
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public components: VpeComponentsService
     ) {
         this.subscriber = new Subscriber<string>(this.onCntCurrentAccountChange.bind(this));
@@ -34,16 +33,16 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
 
-    get deposits(): Asset[] {
-        return this.vapaee.deposits;
+    get deposits(): AssetDEX[] {
+        return this.dex.deposits;
     }
 
-    get balances(): Asset[] {
-        return this.vapaee.balances;
+    get balances(): AssetDEX[] {
+        return this.dex.balances;
     }    
 
     get userorders(): UserOrdersMap {
-        return this.vapaee.userorders;
+        return this.dex.userorders;
     }
     
     ngAfterViewInit()  {
@@ -62,14 +61,14 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnInit() {
         console.log("VpeAccountPage.ngOnInit()");
-        this.vapaee.onCurrentAccountChange.subscribe(this.subscriber);
+        this.dex.onCurrentAccountChange.subscribe(this.subscriber);
         var name = this.route.snapshot.paramMap.get('name');
         setTimeout(_ => {
             if (!name) {
                 name = "guest";
                 this.onCntCurrentAccountChange(name);
             } else {
-                this.vapaee.resetCurrentAccount(name);
+                this.dex.resetCurrentAccount(name);
             };
 
             var utils:Utils = new Utils("",null);
@@ -90,17 +89,17 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     get withdraw_error() {
-        return this.vapaee.feed.error('withdraw');
+        return this.dex.feed.error('withdraw');
     }
 
     get deposit_error() {
-        return this.vapaee.feed.error('deposit');
+        return this.dex.feed.error('deposit');
     }    
 
-    onWalletConfirmDeposit(amount: Asset) {
+    onWalletConfirmDeposit(amount: AssetDEX) {
         // console.log("------------------>", amount.toString());
         this.loading = true;
-        this.vapaee.deposit(amount).then(_ => {
+        this.dex.deposit(amount).then(_ => {
             // console.log("------------------>", amount.toString());
             this.loading = false;
         }).catch(e => {
@@ -109,10 +108,10 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    onWalletConfirmWithdraw(amount: Asset) {
+    onWalletConfirmWithdraw(amount: AssetDEX) {
         // console.log("------------------>", amount.toString());
         this.loading = true;
-        this.vapaee.withdraw(amount).then(_ => {
+        this.dex.withdraw(amount).then(_ => {
             // console.log("------------------>", amount.toString());
             this.loading = false;
         }).catch(e => {

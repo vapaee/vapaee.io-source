@@ -3,7 +3,7 @@
         <div class="col-sm-12">
             <div class="text-lg text-center">
                 {{title | titlecase}}
-                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('userorders')"></span>
+                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('userorders')"></span>
             </div>
         </div>
         <div class="col-sm-12" *ngFor="let scope of user_orders">
@@ -30,7 +30,7 @@
                         {{order.deposit.toString(8)}}
                     </div>
                     
-                    <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
+                    <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
                         <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[scope.buy.table + order.id]">cancel</i>
                         <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[scope.buy.table + order.id]"></span>
                     </div>
@@ -63,7 +63,7 @@
                         {{order.deposit.toString(8)}}
                     </div>
                     
-                    <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
+                    <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
                         <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[scope.sell.table + order.id]">cancel</i>
                         <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[scope.sell.table + order.id]"></span>
                     </div>

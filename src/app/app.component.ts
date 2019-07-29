@@ -3,9 +3,9 @@ import { AppService } from './services/common/app.service';
 import { VpeComponentsService, PriceMap } from './components/vpe-components.service';
 import { VirtualTimeScheduler } from 'rxjs';
 import { CoingeckoService } from './services/coingecko.service';
-import { VapaeeService, Market } from './services/vapaee.service';
-import { Token } from './services/utils.service';
+import { VapaeeDEX, Market } from './services/@vapaee/dex/dex.service';
 import { LocalStringsService } from './services/common/common.services';
+import { TokenDEX } from './services/@vapaee/dex/token-dex.class';
 
 @Component({
     selector: 'app-root',
@@ -39,7 +39,7 @@ import { LocalStringsService } from './services/common/common.services';
                         </a>
                     </li>
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('account')}" (click)="app.closeSideMenu()">
-                        <a class="nav-link" [routerLink]="'/exchange/account/' + vapaee.current.name" >
+                        <a class="nav-link" [routerLink]="'/exchange/account/' + dex.current.name" >
                             <i class="material-icons"> navigate_next </i>{{local.string.Account | titlecase}}
                         </a>
                     </li>
@@ -87,7 +87,7 @@ export class AppComponent {
         public app: AppService,
         public components: VpeComponentsService,
         public coingecko: CoingeckoService,
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService
     ) {
         this.app.init("v2.1.1");
@@ -100,11 +100,11 @@ export class AppComponent {
         this.onWindowsResize();
         
         this.coingecko.onUpdate.subscribe((p:any) => {
-            this.vapaee.waitTokensLoaded.then(_ => {
+            this.dex.waitTokensLoaded.then(_ => {
                 var prices:PriceMap = {};
                 for (var curreny in p) {
                     var price = p[curreny];
-                    var token = this.vapaee.getTokenNow(curreny.toUpperCase());
+                    var token = this.dex.getTokenNow(curreny.toUpperCase());
                     if (token) {
                         prices[curreny] = {
                             price: price,
@@ -116,17 +116,17 @@ export class AppComponent {
             });
         });
 
-        this.vapaee.addOffChainToken({ symbol: "USD", appname: "US Dollar", precision: 4 });
-        this.vapaee.addOffChainToken({ symbol: "EUR", appname: "Euro", precision: 4 });
-        this.vapaee.addOffChainToken({ symbol: "BTC", appname: "Bitcoin", precision: 8 });
-        this.vapaee.addOffChainToken({ symbol: "EOS", appname: "EOS", precision: 4 });
-        this.vapaee.addOffChainToken({ symbol: "TLOS", appname: "Telos", precision: 4 });
+        this.dex.addOffChainToken(new TokenDEX({ symbol: "USD", appname: "US Dollar", precision: 4 }));
+        this.dex.addOffChainToken(new TokenDEX({ symbol: "EUR", appname: "Euro", precision: 4 }));
+        this.dex.addOffChainToken(new TokenDEX({ symbol: "BTC", appname: "Bitcoin", precision: 8 }));
+        this.dex.addOffChainToken(new TokenDEX({ symbol: "EOS", appname: "EOS", precision: 4 }));
+        this.dex.addOffChainToken(new TokenDEX({ symbol: "TLOS", appname: "Telos", precision: 4 }));
         
-        this.vapaee.onTokensReady.subscribe((tokens:Token[]) => {
+        this.dex.onTokensReady.subscribe((tokens:TokenDEX[]) => {
             var tokenPrices:PriceMap = {}
-            if (!this.vapaee.hasScopes()) return;
+            if (!this.dex.hasScopes()) return;
             for (var i in tokens) {
-                var market:Market = this.vapaee.market(tokens[i].scope);
+                var market:Market = this.dex.market(tokens[i].scope);
                 if (market) {
                     tokenPrices[tokens[i].symbol] = {
                         price: market.summary ? market.summary.price.toNumber() : 0,
@@ -149,7 +149,7 @@ export class AppComponent {
 
     debug(){
         console.log("--------------------------------");
-        console.log("VPE", [this.vapaee]);
+        console.log("VPE", [this.dex]);
         console.log("Components", [this.components]);
         console.log("--------------------------------");
     }

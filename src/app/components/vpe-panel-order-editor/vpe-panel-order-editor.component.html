@@ -111,7 +111,7 @@
         </div>
 
         <!-- orders portrait -->
-        <div class="col-12" [hidden]="!vapaee.logged || (own.sell.length == 0 && own.buy.length == 0)">
+        <div class="col-12" [hidden]="!dex.logged || (own.sell.length == 0 && own.buy.length == 0)">
             <div class="row">
 
                 <div class="col-12">
@@ -152,9 +152,9 @@
                                 {{order.total.toString(orders_decimals)}}
                             </div>
                         
-                            <div class="nowrap col-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
-                                <i class="material-icons" style="font-size: 100%;" [hidden]="vapaee.feed.loading('cancel-buy-'+order.id)">cancel</i>
-                                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('cancel-buy-'+order.id)"></span>
+                            <div class="nowrap col-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
+                                <i class="material-icons" style="font-size: 100%;" [hidden]="dex.feed.loading('cancel-buy-'+order.id)">cancel</i>
+                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('cancel-buy-'+order.id)"></span>
                             </div>
             
                         </div>
@@ -174,9 +174,9 @@
                                 {{order.total.toString(orders_decimals)}}
                             </div>
                         
-                            <div class="nowrap col-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
-                                <i class="material-icons" style="font-size: 100%;" [hidden]="vapaee.feed.loading('cancel-sell-'+order.id)">cancel</i>
-                                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('cancel-sell-'+order.id)"></span>
+                            <div class="nowrap col-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
+                                <i class="material-icons" style="font-size: 100%;" [hidden]="dex.feed.loading('cancel-sell-'+order.id)">cancel</i>
+                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('cancel-sell-'+order.id)"></span>
                             </div>
         
                         </div>
@@ -200,16 +200,16 @@
     <!-- ----------- wide screen ------------- -->
     <div class="row" *ngIf="!portrait">
   
-        <div class="col-sm-12" [hidden]="vapaee.logged">
+        <div class="col-sm-12" [hidden]="dex.logged">
             <div  class="pull-right margin-top">
-                <span class="btn btn-sm btn-primary text-sm" (click)="vapaee.login()">
-                    <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('login') && !vapaee.feed.loading('log-state')"></span>
+                <span class="btn btn-sm btn-primary text-sm" (click)="dex.login()">
+                    <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
                     {{local.string.LoginWScatter}}
                 </span>
             </div>
         </div>
 
-        <div class="col-sm-12" [hidden]="!vapaee.logged">
+        <div class="col-sm-12" [hidden]="!dex.logged">
             <div class="form-row text-sm">
                 <div class="col-sm-4">
                     {{local.string.Price | titlecase}}
@@ -329,7 +329,7 @@
 
         <!-- ------------------ orders ------------------- -->
         
-        <div class="col-sm-12" [hidden]="!vapaee.logged || (own.sell.length == 0 && own.buy.length == 0)">
+        <div class="col-sm-12" [hidden]="!dex.logged || (own.sell.length == 0 && own.buy.length == 0)">
             <hr class="line">
         </div>
 
@@ -344,7 +344,7 @@
             </div>
         </div>
 
-        <div class="col-sm-12 d-lg-none margin-top" [hidden]="!vapaee.logged || (own.sell.length == 0 && own.buy.length == 0)">
+        <div class="col-sm-12 d-lg-none margin-top" [hidden]="!dex.logged || (own.sell.length == 0 && own.buy.length == 0)">
             <label>{{local.string.orders | titlecase}}</label>
             <div class="row">
                 <div class="nowrap col-sm-4 text-right col-padding-right padding-left-lg">{{local.string.price}}</div>
@@ -367,7 +367,7 @@
                         {{order.total.toString(8)}}
                     </div>
                 
-                    <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
+                    <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
                         <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.price.token.table + order.id]">cancel</i>
                         <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.price.token.table + order.id]"></span>
                     </div>
@@ -389,7 +389,7 @@
                         {{order.total.toString(8)}}
                     </div>
                 
-                    <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!vapaee.logged">
+                    <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
                         <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.price.token.table + order.id]">cancel</i>
                         <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.price.token.table + order.id]"></span>
                     </div>
@@ -400,7 +400,7 @@
         </div>
 
         <div class="d-sm-none d-lg-block col-lg-12 margin-top">
-            <div class="row" [hidden]="!vapaee.logged || (own.sell.length == 0 && own.buy.length == 0)">
+            <div class="row" [hidden]="!dex.logged || (own.sell.length == 0 && own.buy.length == 0)">
                 <div class="col-sm-6">
                     <label>{{local.string.sell_orders | titlecase}}</label>
                     <div class="row">

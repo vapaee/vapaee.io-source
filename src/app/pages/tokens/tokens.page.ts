@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { ScatterService } from 'src/app/services/scatter.service';
-import { VapaeeService } from 'src/app/services/vapaee.service';
-import { Token } from 'src/app/services/utils.service';
-import { Subscriber } from 'rxjs';
+import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
+import { TokenDEX } from 'src/app/services/@vapaee/dex/token-dex.class';
 
 
 @Component({
@@ -19,14 +17,13 @@ export class TokensPage implements OnInit, OnDestroy {
     constructor(
         public app: AppService,
         public local: LocalStringsService,
-        public scatter: ScatterService,
-        public vapaee: VapaeeService
+        public dex: VapaeeDEX
     ) {
         
     }
 
-    get tokens(): Token[] {
-        return this.vapaee.tokens;
+    get tokens(): TokenDEX[] {
+        return this.dex.tokens;
     }
     
     /*
@@ -36,15 +33,15 @@ export class TokensPage implements OnInit, OnDestroy {
         var _summary = Object.assign({
             percent: 0,
             percent_str: "0%",
-            price: this.vapaee.zero_telos.clone(),
+            price: this.dex.zero_telos.clone(),
             records: [],
-            volume: this.vapaee.zero_telos.clone()
+            volume: this.dex.zero_telos.clone()
         }, scope ? scope.summary : {});
         return _summary;
     }
     */
 
-    tradeToken(token:Token) {
+    tradeToken(token:TokenDEX) {
         this.app.navigate('/exchange/trade/'+token.symbol.toLowerCase()+'.tlos');
     }
 

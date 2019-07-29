@@ -16,8 +16,8 @@ import { EosioTokenMathService } from './services/eosio.token-math.service';
 import { LoadingOverall } from './services/common/app.service';
 
 
-import { ScatterService } from './services/scatter.service';
-import { VapaeeService } from './services/vapaee.service';
+import { VapaeeScatter } from './services/@vapaee/scatter/scatter.service';
+import { VapaeeDEX } from './services/@vapaee/dex/dex.service';
 import { CoingeckoService } from './services/coingecko.service';
 
 
@@ -34,6 +34,7 @@ import { NotFoundPage } from './pages/not-found/not-found.page';
 import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { VapaeeFeedbackModule } from 'projects/vapaee/feedback/src/public_api';
 
 
 
@@ -62,14 +63,15 @@ import { environment } from '../environments/environment';
         HttpClientModule,
         CommonServicesModule,
         VpeComponentsModule,
+        VapaeeFeedbackModule,
         ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
         SidebarModule.forRoot()
     ],
     providers: [
         DatePipe,
         CookieService,
-        ScatterService,
-        VapaeeService,
+        VapaeeScatter,
+        VapaeeDEX,
         HttpClient,
         CoingeckoService,
         EosioTokenMathService

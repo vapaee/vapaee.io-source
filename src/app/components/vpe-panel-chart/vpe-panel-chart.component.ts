@@ -1,10 +1,7 @@
-import { Component, Input, OnChanges, Output, OnInit, OnDestroy, ViewChild, ElementRef, ViewContainerRef, Renderer } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { VapaeeService } from 'src/app/services/vapaee.service';
+import { Component, Input, OnChanges, OnDestroy, ElementRef, Renderer } from '@angular/core';
+import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { GoogleChartInterface, GoogleChartComponentInterface } from 'src/app/components/vpe-panel-chart/google-chart-service/google-charts-interfaces';
-import { GoogleChartComponent } from 'src/app/components/vpe-panel-chart/google-chart-service';
-import { Subscriber } from 'rxjs';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 
 
@@ -40,7 +37,7 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
     // @ViewContainerRef('vpe-panel-chart', {read: ElementRef}) elref: ElementRef;
 
     constructor(
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService,
         private _element:ElementRef,
         private renderer:Renderer,

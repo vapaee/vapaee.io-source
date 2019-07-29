@@ -1,13 +1,12 @@
 import { Component, Input, OnChanges, Output, OnInit, OnDestroy, HostBinding } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { Asset, VapaeeService } from 'src/app/services/vapaee.service';
+import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { ResizeEvent, VpeComponentsService, Device } from '../vpe-components.service';
+import { VpeComponentsService, Device } from '../vpe-components.service';
 import { Subscriber } from 'rxjs';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { BoundingBox } from '../vpe-panel-chart/google-chart-service';
 import BigNumber from 'bignumber.js';
-import { AssertNotNull } from '@angular/compiler';
+import { AssetDEX } from 'src/app/services/@vapaee/dex/asset-dex.class';
 
 
 @Component({
@@ -18,7 +17,7 @@ import { AssertNotNull } from '@angular/compiler';
 export class VpeTokenInputComponent implements OnChanges, OnInit, OnDestroy {
 
     private prev: string;
-    @Input() public asset: Asset;
+    @Input() public asset: AssetDEX;
     @Input() public placeholder: string;
     @Input() public button: string;
     @Input() public precision: number;
@@ -31,7 +30,7 @@ export class VpeTokenInputComponent implements OnChanges, OnInit, OnDestroy {
     public text: string;
     @HostBinding('class') class = '';
     constructor(
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService,
         private modalService: NgbModal
@@ -58,7 +57,7 @@ export class VpeTokenInputComponent implements OnChanges, OnInit, OnDestroy {
     private updateAsset(ctrl:any, text:any) {
         try {
             if (this.asset && text.length > 0) {
-                var newAsset = new Asset(text + " " + this.asset.token.symbol, this.vapaee);
+                var newAsset = new AssetDEX(text + " " + this.asset.token.symbol, this.dex);
                 this.asset.amount = newAsset.amount;
                 this.ngOnChanges();
             }
@@ -127,7 +126,7 @@ export class VpeTokenInputComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     newtext: string;
-    newasset: Asset;
+    newasset: AssetDEX;
     typing: string;
     onFinish(confirm:boolean) {
         if (confirm) {
@@ -156,7 +155,7 @@ export class VpeTokenInputComponent implements OnChanges, OnInit, OnDestroy {
         var aux:any = null;
         try {
             aux = new BigNumber(this.newtext);
-            aux = new Asset(aux, this.asset.token);
+            aux = new AssetDEX(aux, this.asset.token);
             this.newasset = aux;
         } catch (e) {}
     }
@@ -171,7 +170,7 @@ export class VpeTokenInputComponent implements OnChanges, OnInit, OnDestroy {
             x = new BigNumber(0);
         }
         
-        var aux = new Asset(x, this.asset.token);
+        var aux = new AssetDEX(x, this.asset.token);
         this.newasset = aux;
         this.newtext = aux.valueToString(this.precision);
     }

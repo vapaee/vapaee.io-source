@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { ScatterService } from 'src/app/services/scatter.service';
-import { VapaeeService } from 'src/app/services/vapaee.service';
-import { Token, Utils } from 'src/app/services/utils.service';
-import { Feedback } from 'src/app/services/feedback.service';
+import { VapaeeScatter } from 'src/app/services/@vapaee/scatter/scatter.service';
+import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
+import { Utils } from 'src/app/services/@vapaee/scatter/utils.class';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscriber } from 'rxjs';
+import { Feedback } from 'projects/vapaee/feedback/src/public_api';
 
 
 @Component({
@@ -26,8 +26,8 @@ export class WPPage implements OnInit, OnDestroy {
     constructor(
         public app: AppService,
         public local: LocalStringsService,
-        public scatter: ScatterService,
-        public vapaee: VapaeeService,
+        public scatter: VapaeeScatter,
+        public dex: VapaeeDEX,
         public cookie: CookieService
     ) {
         this.subscriber = new Subscriber<string>(this.onAccountChange.bind(this));
@@ -42,7 +42,7 @@ export class WPPage implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-         this.vapaee.onCurrentAccountChange.subscribe(this.subscriber);
+         this.dex.onCurrentAccountChange.subscribe(this.subscriber);
     }
 
     resetError() {
@@ -138,11 +138,11 @@ export class WPPage implements OnInit, OnDestroy {
         this.feed.setLoading("voting", true);
         this.feed.setLoading("mirrorcast", true);
         this.feed.setLoading("regvoter", true);
-        if (this.vapaee.logged) {
+        if (this.dex.logged) {
             return this._voteForUs();
         }
-        return this.vapaee.login().then(_ => {
-            this.onAccountChange(this.vapaee.logged).then(_ => {
+        return this.dex.login().then(_ => {
+            this.onAccountChange(this.dex.logged).then(_ => {
                 if (this.user_voted_us) return this.feed.setLoading("voting", false);
                 return this._voteForUs();
             });
@@ -169,7 +169,7 @@ export class WPPage implements OnInit, OnDestroy {
         this.user_is_registered = false;
         this.feed.setLoading("user-registered", true);
 
-        var encodedName = this.utils.encodeName(account || this.vapaee.current.name);
+        var encodedName = this.utils.encodeName(account || this.dex.current.name);
 
         console.assert(encodedName.toString() == "4399453885987553280", encodedName.toString(), "4399453885987553280");
 
@@ -195,7 +195,7 @@ export class WPPage implements OnInit, OnDestroy {
         console.log("findOutIfUserVotedUs(",account,")");
         this.user_voted_us = false;
         this.feed.setLoading("user-voted", true);
-        return this.utils.getTable("votereceipts", {scope:account || this.vapaee.current.name, limit:1, lower_bound:this.proposalID}).then(result => {
+        return this.utils.getTable("votereceipts", {scope:account || this.dex.current.name, limit:1, lower_bound:this.proposalID}).then(result => {
             // console.log("**********************", result);
             if (result.rows.length > 0) {
                 console.assert(result.rows[0].ballot_id == this.proposalID, result.rows[0].ballot_id, typeof result.rows[0].ballot_id, this.proposalID, typeof this.proposalID);

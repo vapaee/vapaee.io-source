@@ -1,9 +1,10 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeService, Asset } from 'src/app/services/vapaee.service';
+import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { Token } from 'src/app/services/utils.service';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
+import { TokenDEX } from 'src/app/services/@vapaee/dex/token-dex.class';
+import { AssetDEX } from 'src/app/services/@vapaee/dex/asset-dex.class';
 
 
 @Component({
@@ -13,7 +14,7 @@ import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 })
 export class VpePanelTokensCardDeckComponent implements OnChanges {
 
-    @Input() public tokens: Token[];
+    @Input() public tokens: TokenDEX[];
     @Input() public hideheader: boolean;
     @Input() public margintop: boolean;
     @Input() public expanded: boolean;
@@ -26,11 +27,11 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
 
     @Output() confirmDeposit: EventEmitter<any> = new EventEmitter();
     @Output() confirmWithdraw: EventEmitter<any> = new EventEmitter();
-    @Output() tradeToken: EventEmitter<Token> = new EventEmitter();
-    public deposit: Asset;
-    public withdraw: Asset;
+    @Output() tradeToken: EventEmitter<TokenDEX> = new EventEmitter();
+    public deposit: AssetDEX;
+    public withdraw: AssetDEX;
     constructor(
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
@@ -39,10 +40,10 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
         this.expanded = true; 
         this.hidebackground = false;
         this.limit = 0;
-        this.vapaee.waitTokensLoaded.then(_ => {
+        this.dex.waitTokensLoaded.then(_ => {
             setTimeout(_ => {
                 if (this.limit == 0) {
-                    this.limit = this.vapaee.tokens.length;
+                    this.limit = this.dex.tokens.length;
                 }    
             });
         });
@@ -86,24 +87,24 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
     }
 
     marketSummary(_scope) {
-        var market = this.vapaee.market(_scope);
+        var market = this.dex.market(_scope);
         var _summary = Object.assign({
             percent: 0,
             percent_str: "0%",
-            price: this.vapaee.zero_telos.clone(),
+            price: this.dex.zero_telos.clone(),
             records: [],
-            volume: this.vapaee.zero_telos.clone()
+            volume: this.dex.zero_telos.clone()
         }, market ? market.summary : {
-            volume: new Asset(),
-            price: new Asset(),
-            max_price: new Asset(),
-            min_price: new Asset(),
+            volume: new AssetDEX(),
+            price: new AssetDEX(),
+            max_price: new AssetDEX(),
+            min_price: new AssetDEX(),
         });
 
-        _summary.volume = _summary.volume || new Asset();
-        _summary.price = _summary.price || new Asset();
-        _summary.max_price = _summary.max_price || new Asset();
-        _summary.min_price = _summary.min_price || new Asset();
+        _summary.volume = _summary.volume || new AssetDEX();
+        _summary.price = _summary.price || new AssetDEX();
+        _summary.max_price = _summary.max_price || new AssetDEX();
+        _summary.min_price = _summary.min_price || new AssetDEX();
         
         return _summary;
     }
@@ -116,7 +117,7 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
         this.confirmDeposit.next(this.deposit);
     }
 
-    goToTradeToken(token:Token) {
+    goToTradeToken(token:TokenDEX) {
         this.tradeToken.next(token);
     }
 }

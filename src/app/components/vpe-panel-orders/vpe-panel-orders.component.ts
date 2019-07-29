@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { TokenOrders, VapaeeService, OrderRow, MarketHeader } from 'src/app/services/vapaee.service';
+import { TokenOrders, VapaeeDEX, OrderRow, MarketHeader } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 
@@ -28,7 +28,7 @@ export class VpePanelOrdersComponent implements OnChanges {
     portrait: boolean;
     @HostBinding('class') display;
     constructor(
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {

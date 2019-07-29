@@ -1,10 +1,11 @@
 import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeService, Asset, TokenOrders, Order, OrderRow } from 'src/app/services/vapaee.service';
+import { VapaeeDEX, Order, OrderRow } from 'src/app/services/@vapaee/dex/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { Token } from 'src/app/services/utils.service';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { Feedback } from 'src/app/services/feedback.service';
+import { AssetDEX } from 'src/app/services/@vapaee/dex/asset-dex.class';
+import { TokenDEX } from 'src/app/services/@vapaee/dex/token-dex.class';
+import { Feedback } from 'projects/vapaee/feedback/src/public_api';
 
 
 @Component({
@@ -14,10 +15,10 @@ import { Feedback } from 'src/app/services/feedback.service';
 })
 export class VpePanelOrderEditorComponent implements OnChanges {
 
-    payment: Asset;
-    fee: Asset;
-    money: Asset;
-    asset: Asset;
+    payment: AssetDEX;
+    fee: AssetDEX;
+    money: AssetDEX;
+    asset: AssetDEX;
     can_sell: boolean;
     can_buy: boolean;
     feed: Feedback;
@@ -28,13 +29,13 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     c_loading: {[id:string]:boolean};
     wants: string;
 
-    deposits_comodity: Asset;
-    deposits_currency: Asset;
+    deposits_comodity: AssetDEX;
+    deposits_currency: AssetDEX;
 
     @Input() public owner: string;
-    @Input() public comodity: Token;
-    @Input() public currency: Token;
-    @Input() public deposits: Asset[];
+    @Input() public comodity: TokenDEX;
+    @Input() public currency: TokenDEX;
+    @Input() public deposits: AssetDEX[];
     @Input() public buyorders: OrderRow[];
     @Input() public sellorders: OrderRow[];
     @Input() public hideheader: boolean;
@@ -42,13 +43,13 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     @Input() public expanded: boolean;
 
     public own: {sell:Order[], buy:Order[]};
-    price: Asset;
-    amount: Asset;
+    price: AssetDEX;
+    amount: AssetDEX;
 
     @HostBinding('class') display;
     
     constructor(
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
@@ -58,8 +59,8 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         this.feed = new Feedback();
         this.loading = false;
         this.c_loading = {};
-        this.deposits_comodity = new Asset();
-        this.deposits_currency = new Asset();
+        this.deposits_comodity = new AssetDEX();
+        this.deposits_currency = new AssetDEX();
     }
 
     get get_currency() {
@@ -69,10 +70,10 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         return this.comodity || {};
     }
     get get_amount() {
-        return this.amount || new Asset();
+        return this.amount || new AssetDEX();
     }
     get get_payment() {
-        return this.payment || new Asset();
+        return this.payment || new AssetDEX();
     }
 
     orders_decimals: number
@@ -126,15 +127,15 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             this.toolow = false;
             // console.log("calculate");
 
-            this.deposits_comodity = new Asset("0 " + this.comodity.symbol, this.vapaee);
-            this.deposits_currency = new Asset("0 " + this.currency.symbol, this.vapaee);
+            this.deposits_comodity = new AssetDEX("0 " + this.comodity.symbol, this.dex);
+            this.deposits_currency = new AssetDEX("0 " + this.currency.symbol, this.dex);
 
 
             var a = this.price.amount;
             this.payment.amount = this.price.amount.multipliedBy(this.amount.amount);
     
             // check if the user can sell. Does he/she have comodity?
-            this.asset = new Asset("0.0 " + this.comodity.symbol, this.vapaee);
+            this.asset = new AssetDEX("0.0 " + this.comodity.symbol, this.dex);
             this.can_sell = false;
             for (var i in this.deposits) {
                 if (this.deposits[i].token == this.comodity) {
@@ -153,7 +154,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             }
     
             // check if the user can buy. Does he/she have currency?
-            this.money = new Asset("0.0 " + this.currency.symbol, this.vapaee);
+            this.money = new AssetDEX("0.0 " + this.currency.symbol, this.dex);
             this.can_buy = false;
             for (var i in this.deposits) {
                 if (this.deposits[i].token == this.currency) {
@@ -226,12 +227,12 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         this.calculate();
     }
 
-    setPrice(a:Asset) {
+    setPrice(a:AssetDEX) {
         this.price = a;
         this.ngOnChanges();
     }
     
-    setAmount(a:Asset) {
+    setAmount(a:AssetDEX) {
         this.feed.clearError("form");
         this.amount = a;
         this.ngOnChanges();
@@ -252,7 +253,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         } else {
             this.payment.amount = this.deposits_currency.amount.minus(0.0001);
             var amount = this.payment.amount.dividedBy(this.price.amount);
-            this.setAmount(new Asset(amount, this.deposits_comodity.token));    
+            this.setAmount(new AssetDEX(amount, this.deposits_comodity.token));    
         }
     }
     
@@ -272,15 +273,15 @@ export class VpePanelOrderEditorComponent implements OnChanges {
 
     private restaure() {
         if (this.comodity && !this.amount) {
-            this.amount = new Asset("0.0000 " + this.comodity.symbol, this.vapaee);
+            this.amount = new AssetDEX("0.0000 " + this.comodity.symbol, this.dex);
         }
 
         if (this.currency && !this.payment) {
-            this.payment = new Asset("0.0000 " + this.currency.symbol, this.vapaee);
+            this.payment = new AssetDEX("0.0000 " + this.currency.symbol, this.dex);
         }
 
         if (this.currency && !this.price) {
-            this.price = new Asset("0.0000 " + this.currency.symbol, this.vapaee);
+            this.price = new AssetDEX("0.0000 " + this.currency.symbol, this.dex);
         }
 
         if (this.price && this.amount && this.deposits && this.deposits.length > 0) {
@@ -319,7 +320,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         // console.log("VpePanelOrderEditorComponent.ngOnChanges()");
         this.own = {sell:[],buy:[]};
         // changes from outside
-        return this.vapaee.waitTokensLoaded.then(_ => this.restaure());
+        return this.dex.waitTokensLoaded.then(_ => this.restaure());
     }
 
     debug() {
@@ -335,7 +336,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         console.log("BUY");
         this.loading = true;
         this.feed.clearError("form");
-        this.vapaee.createOrder("buy", this.amount, this.price).then(_ => {
+        this.dex.createOrder("buy", this.amount, this.price).then(_ => {
             // success
             this.loading = false;
         }).catch(e => {
@@ -355,7 +356,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         console.log("SELL");
         this.loading = true;
         this.feed.clearError("form");
-        this.vapaee.createOrder("sell", this.amount, this.price).then(_ => {
+        this.dex.createOrder("sell", this.amount, this.price).then(_ => {
             // success
             this.loading = false;
         }).catch(e => {
@@ -374,7 +375,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         this.feed.clearError("orders");
         if (order.deposit.token.symbol != order.telos.token.symbol) {
             this.c_loading[key] = true;
-            this.vapaee.cancelOrder("sell", order.deposit.token, order.telos.token, [order.id]).then(_ => {
+            this.dex.cancelOrder("sell", order.deposit.token, order.telos.token, [order.id]).then(_ => {
                 // success
                 this.c_loading[key] = false;
             }).catch(e => {
@@ -389,7 +390,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         }
         if (order.deposit.token.symbol == order.telos.token.symbol) {
             this.c_loading[key] = true;
-            this.vapaee.cancelOrder("buy", order.total.token, order.telos.token, [order.id]).then(_ => {
+            this.dex.cancelOrder("buy", order.total.token, order.telos.token, [order.id]).then(_ => {
                 // success
                 this.c_loading[key] = false;
             }).catch(e => {

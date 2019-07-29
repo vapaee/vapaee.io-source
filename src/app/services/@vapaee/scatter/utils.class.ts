@@ -1,44 +1,9 @@
 import BigNumber from "bignumber.js";
-// import Eos from 'eosjs';
-import { Scatter, ScatterService } from "./scatter.service";
-import { Serialize } from "eosjs";
+import { VapaeeScatter } from "./scatter.service";
 import * as Long from 'long';
-import { Asset } from "./vapaee.service";
-
-// vapaee exchange -------------------
 
 
-export interface Token {
-    symbol: string,
-    precision?: number,
-    contract?: string,
-    appname?: string,
-    website?: string,
-    logo?: string,
-    logolg?: string,
-    verified?: boolean,
-    fake?: boolean,
-    offchain?: boolean,
-    scope?: string,
-    stat?: {
-        supply: string,
-        max_supply: string,
-        issuer?: string,
-        owner?: string,
-        issuers?: string[]
-    },
-    summary?: {
-        volume: Asset,
-        price: Asset,
-        price_24h_ago: Asset,
-        percent?:number,
-        percent_str?:string
-    }
-
-}
-
-// -------------------
-
+// ------------------
 export interface TableParams {
     contract?:string, 
     scope?:string, 
@@ -74,7 +39,7 @@ export interface Profile {
 
 export class Utils {
     contract: string;
-    scatter: ScatterService;
+    scatter: VapaeeScatter;
     code_0:number;
     code_1:number;
     code_4:number;
@@ -83,7 +48,7 @@ export class Utils {
     code_f:number;
     code_z:number;
     
-    constructor(contract: string = "", scatter: ScatterService = null) {
+    constructor(contract: string = "", scatter: VapaeeScatter = null) {
         this.contract = contract;
         this.scatter = scatter;
         this.code_0 = "0".charCodeAt(0);
@@ -306,7 +271,7 @@ export class Utils {
         buffer.pushName(name);
         var number = buffer.getUint64AsNumber();
         */
-       var number = this.oldEosjsEncodeName(name)
+        var number = this.oldEosjsEncodeName(name);
         return new BigNumber(number);
     }
 

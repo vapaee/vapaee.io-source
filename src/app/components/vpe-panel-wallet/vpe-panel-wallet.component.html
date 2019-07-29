@@ -7,10 +7,10 @@
         </div>
 
         <!-- login header -->
-        <div class="col-sm-12" [hidden]="vapaee.logged || hideuser">
+        <div class="col-sm-12" [hidden]="dex.logged || hideuser">
             <div class="pull-right margin-top">
-                <span class="btn btn-sm btn-primary" (click)="vapaee.login()">
-                    <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('login') && !vapaee.feed.loading('log-state')"></span>
+                <span class="btn btn-sm btn-primary" (click)="dex.login()">
+                    <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
                     {{local.string.LoginWScOrSq}}
                 </span>
             </div>
@@ -19,20 +19,20 @@
         <div class="col-sm-12">
             <!-- account header -->
             <div>
-                <div class="pull-right" [hidden]="hideuser || !vapaee.logged">
+                <div class="pull-right" [hidden]="hideuser || !dex.logged">
                     <small class="text-muted cursor-pointer" (click)="clickOnAccount()">
-                        {{local.string.LoggedAs}} '{{vapaee.logged}}'
+                        {{local.string.LoggedAs}} '{{dex.logged}}'
                     </small>
                 </div>
             </div>
             <!-- deposits header -->
             <div class="text-md margin-top-xl">
                 {{local.string.deposits | titlecase}}
-                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('deposits')"></span>
+                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('deposits')"></span>
 
                 <!-- withdraw toggle buttons -->
                 <div class="pull-right" [hidden]="!hideuser || !deposits || deposits.length == 0">
-                    <span class="btn btn-sm btn-primary" [hidden]="!show_prices_top || (hideuser && !vapaee.logged)" (click)="show_prices_top=false">
+                    <span class="btn btn-sm btn-primary" [hidden]="!show_prices_top || (hideuser && !dex.logged)" (click)="show_prices_top=false">
                         {{local.string.withdraw | titlecase}}
                         <i class="material-icons">arrow_downward</i>
                     </span>
@@ -50,7 +50,7 @@
                             <label>{{local.string.thesnodeps}}</label>
                         </div>
                         <div class="col-sm-12 margin-top text-center text-danger">
-                            <span class="btn btn-sm btn-primary" [hidden]="!show_prices_bottom || !vapaee.logged"
+                            <span class="btn btn-sm btn-primary" [hidden]="!show_prices_bottom || !dex.logged"
                                   (click)="first_deposit()">{{local.string.deposit | titlecase}}</span>
                             <div class="col-sm-12 margin-top" [hidden]="!feed.error('first_deposit')">
                                 <div class="alert alert-danger">
@@ -76,7 +76,7 @@
                                 </div>                                 
                                 <img [src]="deposit.token.logo" style="width: 20px; height: 20px; margin-top:-1px">
                                 {{deposit.toString(digits.amount)}}
-                                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('deposits')"></span>
+                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('deposits')"></span>
                             </div>
                             <div class="row" [hidden]="deposit.token.symbol != withdraw.token.symbol">
                                 <div class="col-sm-12 margin-top">
@@ -103,15 +103,15 @@
             <!-- withdraw header -->
             <div class="text-md">
                 {{local.string.balances | titlecase}}
-                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('balances')"></span>
+                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('balances')"></span>
 
                 <!-- deposit toggle buttons -->
                 <div class="pull-right" [hidden]="!deposits || deposits.length == 0">
-                    <span class="btn btn-sm btn-primary" [hidden]="!show_prices_bottom || hideuser || vapaee.logged" (click)="clickOnAccount()">
+                    <span class="btn btn-sm btn-primary" [hidden]="!show_prices_bottom || hideuser || dex.logged" (click)="clickOnAccount()">
                         {{local.string.deposit | titlecase}}
                         <i class="material-icons">call_made</i>
                     </span>
-                    <span class="btn btn-sm btn-primary" [hidden]="!show_prices_bottom || !vapaee.logged" (click)="show_prices_bottom=false">
+                    <span class="btn btn-sm btn-primary" [hidden]="!show_prices_bottom || !dex.logged" (click)="show_prices_bottom=false">
                         {{local.string.deposit | titlecase}}
                         <i class="material-icons">arrow_downward</i>
                     </span>
@@ -146,7 +146,7 @@
                                 </div>
                                 <img [src]="balance.token.logo" style="width: 20px; height: 20px; margin-top:-1px">
                                 {{balance.toString()}}
-                                <span class="spinner-border spinner-border-sm" [hidden]="!vapaee.feed.loading('balances-'+balance.token.contract) && !vapaee.feed.loading('token-stat-'+balance.token.symbol)"></span>
+                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('balances-'+balance.token.contract) && !dex.feed.loading('token-stat-'+balance.token.symbol)"></span>
                             </div>
                             <div class="row" [hidden]="balance.token.symbol != deposit.token.symbol">
                                 <div class="col-sm-12 margin-top">

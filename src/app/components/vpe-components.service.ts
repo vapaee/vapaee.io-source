@@ -1,8 +1,9 @@
 import { Injectable, ElementRef } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Asset, VapaeeService } from '../services/vapaee.service';
-import { Token } from '../services/utils.service';
+import { VapaeeDEX } from '../services/@vapaee/dex/dex.service';
 import { CookieService } from 'ngx-cookie-service';
+import { TokenDEX } from '../services/@vapaee/dex/token-dex.class';
+import { AssetDEX } from '../services/@vapaee/dex/asset-dex.class';
 
 
 
@@ -11,7 +12,7 @@ export interface StringMap {[key:string]: string};
 export interface PriceMap {
     [key:string]: {
         price: number;
-        token: Token;
+        token: TokenDEX;
     };
 }
 
@@ -49,13 +50,13 @@ export class VpeComponentsService {
     public onPricesUpdate:Subject<PriceMap> = new Subject();
     public onTokenPricesUpdate:Subject<PriceMap> = new Subject();
     prices: PriceMap;
-    public currencies: Token[];
+    public currencies: TokenDEX[];
     tokens_prices: PriceMap;
     current: string;
     public device:Device;
 
     constructor(
-        private vapaee: VapaeeService,
+        private dex: VapaeeDEX,
         public cookie: CookieService
     ) {
         this.device = {};
@@ -85,7 +86,7 @@ export class VpeComponentsService {
         this.prices = prices;
         this.currencies = [];
         for (var i in this.prices) {
-            var token:Token = this.prices[i].token;
+            var token:TokenDEX = this.prices[i].token;
             this.currencies.push(token);
         }
         this.onPricesUpdate.next(this.prices);
@@ -109,47 +110,47 @@ export class VpeComponentsService {
 
     // Quesries -----------------------------------
     cacheTIC:any = {};
-    public getTelosInCurrentCurrency(value: Asset | string) {
-        var asset: Asset;
-        if (value == "") return new Asset();
-        if (value instanceof Asset) {
+    public getTelosInCurrentCurrency(value: AssetDEX | string) {
+        var asset: AssetDEX;
+        if (value == "") return new AssetDEX();
+        if (value instanceof AssetDEX) {
             asset = value;
             value = asset.toString();
         }
         if (typeof value == "string") {
             if (this.cacheTIC[value]) return this.cacheTIC[value];
-            asset = new Asset(value, this.vapaee);
+            asset = new AssetDEX(value, this.dex);
         }
         
         var cur_price = this.getCurrentPrice();
         var amount = asset.amount.toNumber();
         // console.log("*********** VpeComponentsService.getTelosInCurrentCurrency() amount", amount, "cur_price", cur_price);
         var number = amount * cur_price;
-        asset = new Asset(number, this.getCurrentToken());
+        asset = new AssetDEX(number, this.getCurrentToken());
         this.cacheTIC[value] = asset;
         return asset;
     }
 
-    public getTokenInCurrentCurrency(value: Asset | string) {
-        var asset: Asset;
-        var telos: Asset;
-        if (value == "") return new Asset();
-        if (value instanceof Asset) {
+    public getTokenInCurrentCurrency(value: AssetDEX | string) {
+        var asset: AssetDEX;
+        var telos: AssetDEX;
+        if (value == "") return new AssetDEX();
+        if (value instanceof AssetDEX) {
             asset = value;
             value = asset.toString();
         }
         if (typeof value == "string") {
             if (this.cacheTIC[value]) return this.cacheTIC[value];
-            asset = new Asset(value, this.vapaee);
+            asset = new AssetDEX(value, this.dex);
         }
 
-        if (asset.token == this.vapaee.telos) {
+        if (asset.token == this.dex.telos) {
             telos = asset;
         } else {
             var cur_price = this.getTokenCurrentPrice(asset.token.symbol);
             var amount = asset.amount.toNumber();
             var number = amount * cur_price;
-            telos = new Asset(number, this.vapaee.telos);
+            telos = new AssetDEX(number, this.dex.telos);
         }
         
         asset = this.getTelosInCurrentCurrency(telos);
@@ -178,14 +179,14 @@ export class VpeComponentsService {
         }        
     }
 
-    private getCurrentToken(): Token {
+    private getCurrentToken(): TokenDEX {
         if (!this.prices[this.current]) {
-            return {
+            return new TokenDEX({
                 symbol: "AUX",
                 appname: "Auxiliar Token",
                 offchain: true,
                 verified:false
-            };
+            });
         } else {
             return this.prices[this.current].token;
         }        

@@ -1,13 +1,12 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { ScatterService } from 'src/app/services/scatter.service';
 import { ActivatedRoute } from '@angular/router';
-import { Token } from 'src/app/services/utils.service';
-import { VapaeeService, Asset, OrderRow, TokenOrders, Market } from 'src/app/services/vapaee.service';
+import { VapaeeDEX, OrderRow, TokenOrders, Market } from 'src/app/services/@vapaee/dex/dex.service';
 import { Subscriber } from 'rxjs';
 import { VpePanelOrderEditorComponent } from 'src/app/components/vpe-panel-order-editor/vpe-panel-order-editor.component';
-import { Feedback } from 'src/app/services/feedback.service';
+import { TokenDEX } from 'src/app/services/@vapaee/dex/token-dex.class';
+import { AssetDEX } from 'src/app/services/@vapaee/dex/asset-dex.class';
 
 
 @Component({
@@ -18,8 +17,8 @@ import { Feedback } from 'src/app/services/feedback.service';
 export class TradePage implements OnInit, OnDestroy {
 
     scope:string;
-    comodity:Token;
-    currency:Token;
+    comodity:TokenDEX;
+    currency:TokenDEX;
     _orders:TokenOrders;
     timer:number;
     chartHeight: number;
@@ -31,7 +30,7 @@ export class TradePage implements OnInit, OnDestroy {
     public error: string;
 
     // temporal
-    public asset: Asset =  new Asset();
+    public asset: AssetDEX =  new AssetDEX();
 
     @ViewChild(VpePanelOrderEditorComponent) orderform_min: VpePanelOrderEditorComponent;
     @ViewChild(VpePanelOrderEditorComponent) orderform_full: VpePanelOrderEditorComponent;
@@ -39,8 +38,7 @@ export class TradePage implements OnInit, OnDestroy {
     constructor(
         public app: AppService,
         public local: LocalStringsService,
-        public scatter: ScatterService,
-        public vapaee: VapaeeService,
+        public dex: VapaeeDEX,
         public route: ActivatedRoute
 
     ) {
@@ -56,9 +54,9 @@ export class TradePage implements OnInit, OnDestroy {
         this.scope = this.route.snapshot.paramMap.get('scope');
         var com:string = this.scope.split(".")[0];
         var cur:string = this.scope.split(".")[1];
-        this.comodity = await this.vapaee.getToken(com);
-        this.currency = await this.vapaee.getToken(cur);
-        this.vapaee.updateTrade(this.comodity, this.currency, updateUser);
+        this.comodity = await this.dex.getToken(com);
+        this.currency = await this.dex.getToken(cur);
+        this.dex.updateTrade(this.comodity, this.currency, updateUser);
         this.app.setGlobal("last-market", this.scope);
     }
 
@@ -79,16 +77,16 @@ export class TradePage implements OnInit, OnDestroy {
         clearInterval(this.timer);
     }
 
-    get deposits(): Asset[] {
-        return this.vapaee.deposits;
+    get deposits(): AssetDEX[] {
+        return this.dex.deposits;
     }
 
-    get balances(): Asset[] {
-        return this.vapaee.balances;
+    get balances(): AssetDEX[] {
+        return this.dex.balances;
     }
 
     get market(): Market {
-        var market = this.scope ? this.vapaee.market(this.scope) : null;
+        var market = this.scope ? this.dex.market(this.scope) : null;
         return market;
     }
 
@@ -123,7 +121,7 @@ export class TradePage implements OnInit, OnDestroy {
     }
 
     /*get iheaders() {
-        var scope = this.vapaee.reverse(this.scope);
+        var scope = this.dex.reverse(this.scope);
         var header = { 
             sell: {total:null, orders:0}, 
             buy: {total:null, orders:0}
@@ -136,9 +134,9 @@ export class TradePage implements OnInit, OnDestroy {
         var _summary = Object.assign({
             percent: 0,
             percent_str: "0%",
-            price: this.vapaee.zero_telos.clone(),
+            price: this.dex.zero_telos.clone(),
             records: [],
-            volume: this.vapaee.zero_telos.clone()
+            volume: this.dex.zero_telos.clone()
         }, market ? market.summary : {});
         return _summary;
         // return scope ? (scope.summary ? scope.summary : _summary) : _summary;
@@ -150,14 +148,14 @@ export class TradePage implements OnInit, OnDestroy {
     }
 
     get tokens() {
-        return this.vapaee.tokens;
+        return this.dex.tokens;
     }
 
     private regenerateChartData() {
         var market = this.market;
         if (market) {
             // console.log("-----------------------------------------");
-            // console.log(this.scope, this.vapaee.scopes[this.scope].blocklist);
+            // console.log(this.scope, this.dex.scopes[this.scope].blocklist);
             // console.log("-----------------------------------------");
             this._chartData = market.blocklevels;
 
@@ -185,7 +183,7 @@ export class TradePage implements OnInit, OnDestroy {
     ngOnInit() {
         this.init();
         this.app.onStateChange.subscribe(this.onStateSubscriber);
-        this.vapaee.onTradeUpdated.subscribe(this.onBlocklistSubscriber);
+        this.dex.onTradeUpdated.subscribe(this.onBlocklistSubscriber);
     }
 
     onClickRow(e:{type:string, row:OrderRow}) {
@@ -221,17 +219,17 @@ export class TradePage implements OnInit, OnDestroy {
     // wallet actions 
 
     get withdraw_error() {
-        return this.vapaee.feed.error('withdraw');
+        return this.dex.feed.error('withdraw');
     }
 
     get deposit_error() {
-        return this.vapaee.feed.error('deposit');
+        return this.dex.feed.error('deposit');
     }    
 
-    onWalletConfirmDeposit(amount: Asset) {
+    onWalletConfirmDeposit(amount: AssetDEX) {
         // console.log("------------------>", amount.toString());
         this.loading = true;
-        this.vapaee.deposit(amount).then(_ => {
+        this.dex.deposit(amount).then(_ => {
             // console.log("------------------>", amount.toString());
             this.loading = false;
         }).catch(e => {
@@ -240,10 +238,10 @@ export class TradePage implements OnInit, OnDestroy {
         });
     }
 
-    onWalletConfirmWithdraw(amount: Asset) {
+    onWalletConfirmWithdraw(amount: AssetDEX) {
         // console.log("------------------>", amount.toString());
         this.loading = true;
-        this.vapaee.withdraw(amount).then(_ => {
+        this.dex.withdraw(amount).then(_ => {
             // console.log("------------------>", amount.toString());
             this.loading = false;
         }).catch(e => {
@@ -253,7 +251,7 @@ export class TradePage implements OnInit, OnDestroy {
     }
 
     gotoAccount() {
-        this.app.navigate('/exchange/account/' + this.vapaee.current.name);
+        this.app.navigate('/exchange/account/' + this.dex.current.name);
     }
 
     selectMarket(scope: string) {
@@ -267,7 +265,7 @@ export class TradePage implements OnInit, OnDestroy {
     }
 
     switchTokens() {
-        this.selectMarket(this.vapaee.inverseScope(this.scope));
+        this.selectMarket(this.dex.inverseScope(this.scope));
     }
 
 }

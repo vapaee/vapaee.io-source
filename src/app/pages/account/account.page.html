@@ -8,16 +8,16 @@
 -->
 <div class="container" [hidden]="!app.device.portrait">
 
-    <vpe-panel-account-header [current]="vapaee.current"></vpe-panel-account-header>
+    <vpe-panel-account-header [current]="dex.current"></vpe-panel-account-header>
 
-    <div class="row" [hidden]="vapaee.current.name == vapaee.default.name">
+    <div class="row" [hidden]="dex.current.name == dex.default.name">
         <div class="col-12">
 
             <vpe-panel-wallet (confirmWithdraw)="onWalletConfirmWithdraw($event)" (confirmDeposit)="onWalletConfirmDeposit($event)"  [deposit_error]="deposit_error" [withdraw_error]="withdraw_error" [loading]="loading" [actions]="true" [hideuser]="true" [hideheader]="true" [title]="local.string.wallet" [deposits]="deposits" [balances]="balances"></vpe-panel-wallet>
 
-            <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [current]="vapaee.current"> </vpe-panel-account-resources>
+            <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [current]="dex.current"> </vpe-panel-account-resources>
                 
-            <vpe-panel-balance-breakdown [title]="local.string.balbreak" [hideheader]="true" [current]="vapaee.current"></vpe-panel-balance-breakdown>
+            <vpe-panel-balance-breakdown [title]="local.string.balbreak" [hideheader]="true" [current]="dex.current"></vpe-panel-balance-breakdown>
 
             <!--vpe-panel-user-orders [userorders]="userorders" [hideheader]="true" [title]="local.string.orders"></vpe-panel-user-orders-->
         </div>
@@ -31,12 +31,12 @@
 
 <div class="container" [hidden]="app.device.portrait">
 
-    <vpe-panel-account-header [current]="vapaee.current"></vpe-panel-account-header>
+    <vpe-panel-account-header [current]="dex.current"></vpe-panel-account-header>
 
-    <div class="row" [hidden]="vapaee.current.name == vapaee.default.name">
+    <div class="row" [hidden]="dex.current.name == dex.default.name">
         <div class="col-6 col-padding-right">
-            <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [current]="vapaee.current"> </vpe-panel-account-resources>
-            <vpe-panel-balance-breakdown [title]="local.string.balbreak" [hideheader]="true" [current]="vapaee.current"></vpe-panel-balance-breakdown>
+            <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [current]="dex.current"> </vpe-panel-account-resources>
+            <vpe-panel-balance-breakdown [title]="local.string.balbreak" [hideheader]="true" [current]="dex.current"></vpe-panel-balance-breakdown>
             <vpe-panel-user-orders (onTableSelected)="navigateToTable($event)" [userorders]="userorders" [hideheader]="true" [title]="local.string.orders"></vpe-panel-user-orders>
         </div>
         <div class="col-6 col-padding-left">

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { EosioTokenMathService } from './eosio.token-math.service';
-import { Feedback } from './feedback.service';
+import { EosioTokenMathService } from '../../eosio.token-math.service';
 
 // scatter libraries
 /*/
@@ -15,11 +13,12 @@ import {JsonRpc, Api} from 'eosjs';
 import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs'
 import Eos from 'eosjs';
+import { Feedback } from 'projects/vapaee/feedback/src/public_api';
 //*/
 
 // declare var ScatterJS:any;
 
-// eosjs2
+// eosjs / eosjs2
 export interface RPC {
     endpoint: string;
     fetchBuiltin: Function;
@@ -77,6 +76,7 @@ export interface EOS {
     hasRequiredTaposFields: Function;    
 }
 /*/
+// eosjs
 export interface EOS {
     getInfo:Function,
     getAccount:Function,
@@ -283,6 +283,10 @@ export interface Network {
     endpoints: Endpoint[]
 }
 
+export interface NetworkMap {
+    [key:string]:Network
+};
+
 export interface ScatterJSDef {
     plugins?:any,
     scatter?:any
@@ -290,18 +294,18 @@ export interface ScatterJSDef {
 
 
 @Injectable()
-export class ScatterService {
+export class VapaeeScatter {
     
     public error: string;
     private appTitle: string;
     private symbol: string;
     private _connected: boolean;
     private lib: Scatter;
-    private rpc: RPC;
+    private rpc: RPC; // eosjs2
     public feed: Feedback;
     private ScatterJS: ScatterJSDef;
     private _network: Network;
-    private _networks: {[key:string]:Network};
+    private _networks: NetworkMap;
     private _networks_slugs: string[];
     private _account_queries: {[key:string]:Promise<AccountData>};
     private eos: EOS;
@@ -324,13 +328,13 @@ export class ScatterService {
     public waitEosjs: Promise<any> = new Promise((resolve) => {
         this.setEosjs = resolve;
     });
-    private setEndpoints: Function;
+    private setEndpointsReady: Function;
     public waitEndpoints: Promise<any> = new Promise((resolve) => {
-        this.setEndpoints = resolve;
+        this.setEndpointsReady = resolve;
     });    
     
     constructor(
-        private http: HttpClient,
+        
         public tokenMath: EosioTokenMathService
     ) {
         this.feed = new Feedback();
@@ -349,15 +353,9 @@ export class ScatterService {
         };
         
         this.symbol = "EOS";
-        //this.waitReady.then(() => console.log("ScatterService.setReady()"));
+        // this.waitReady.then(() => console.log("ScatterService.setReady()"));
         // console.error("scatter interrumpido --------------------------------");
-        this.http.get<any>("assets/endpoints.json").toPromise().then((response) => {
-            this._networks = response;
-            for (var i in this._networks) {
-                this._networks_slugs.push(i);
-            }
-            this.setEndpoints();
-        });
+        
         this._account_queries = {};
     }
 
@@ -371,6 +369,8 @@ export class ScatterService {
     }
 
     get default(): Account {
+        // default data before loading data
+        // TODO: fill out with better default data.
         return {
             name:'guest',
             data: {
@@ -382,7 +382,15 @@ export class ScatterService {
                 total_resources: {}
             }
         }
-    }    
+    }
+    
+    public setEndpoints(endpoints: NetworkMap) {
+        this._networks = endpoints || this._networks;
+        for (var i in this._networks) {
+            this._networks_slugs.push(i);
+        }
+        this.setEndpointsReady();
+    }
 
     setNetwork(name:string, index: number = 0) {
         console.log("ScatterService.setNetwork("+name+","+index+")");
@@ -495,6 +503,7 @@ export class ScatterService {
     initScatter() {
         console.log("ScatterService.initScatter()");
         /*/
+        // eosjs2
         this.error = "";
         if ((<any>window).ScatterJS) {
             this.ScatterJS = (<any>window).ScatterJS;
@@ -517,6 +526,7 @@ export class ScatterService {
 
         this.setEosjs("eosjs");
         /*/
+        // eosjs
         console.log("ScatterService.initScatter()");
         this.error = "";
         if ((<any>window).ScatterJS) {
@@ -630,7 +640,7 @@ export class ScatterService {
         return parseFloat(balance.split(" ")[0]);
     }
 
-    // add balance1 to balance2 and return de result
+    // add balance1:"0.1000 TLOS" to balance2:"9.9000 TLOS" and return de result "10.0000 TLOS"
     private add(balance1:string, balance2:string) {
         // console.log("add(",balance1, balance2, ")");
         var symbol = balance1.split(" ")[1];
@@ -697,6 +707,7 @@ export class ScatterService {
                 // eosjs2
                 this.rpc.get_account(name).
                 /*/
+                // eosjs
                 this.eos.getAccount({account_name: name}).
                 //*/
                 
