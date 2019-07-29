@@ -5,7 +5,7 @@
         <div class="card-header vpe-background-card-header" *ngIf="portrait">
             <div class="row">
                 <div class="col-auto col-padding-right">
-                    <identicon-comp class="portrait" [value]="current.name"></identicon-comp>
+                    <vpe-identicon class="portrait" [value]="current.name"></vpe-identicon>
                 </div>
 
                 <div class="col col-padding-left">
@@ -89,7 +89,7 @@
         <div class="card-header vpe-background-card-header" *ngIf="!portrait">
             <div class="row">
                 <div class="col-sm-auto col-padding-right">
-                    <identicon-comp [value]="current.name"></identicon-comp>
+                    <vpe-identicon [value]="current.name"></vpe-identicon>
                 </div>
                 <div class="col col-padding-left">
                     <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}">

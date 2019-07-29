@@ -4,11 +4,11 @@ declare var jdenticon:any;
 declare var $:any;
 
 @Component({
-    selector: 'identicon-comp',
-    templateUrl: './identicon.component.html',
-    styleUrls: ['./identicon.component.scss']
+    selector: 'vpe-identicon',
+    templateUrl: './vpe-identicon.component.html',
+    styleUrls: ['./vpe-identicon.component.scss']
 })
-export class IdenticonComponent implements OnChanges {
+export class VpeIdenticonComponent implements OnChanges {
 
     @ViewChild('svg') private svg;
     @Input() value: string;

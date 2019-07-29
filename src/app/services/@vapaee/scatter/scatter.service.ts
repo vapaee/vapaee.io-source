@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { EosioTokenMathService } from './eosio.token-math.service';
+// import { EosioTokenMathService } from './eosio.token-math.service';
 import { Feedback } from '@vapaee/feedback';
 
 // scatter libraries
@@ -14,6 +14,7 @@ import {JsonRpc, Api} from 'eosjs';
 import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs'
 import Eos from 'eosjs';
+import { Asset } from './asset.class';
 //*/
 
 // declare var ScatterJS:any;
@@ -174,7 +175,6 @@ export interface Scatter {
 }
 
 export interface AccountData {
-    dummie?: boolean,
     account_name?: string,
     head_block_num?: number,
     head_block_time?: string,
@@ -182,10 +182,12 @@ export interface AccountData {
     last_code_update?: string,
     created?: string,
     core_liquid_balance?: string,
+    core_liquid_balance_asset?: Asset,
     ram_quota?: number,
     net_weight?: number,
     cpu_weight?: number,
     total_balance: string,
+    total_balance_asset: Asset,
     ram_limit?: {
         percentStr?: string,
         used?: number,
@@ -221,22 +223,30 @@ export interface AccountData {
     total_resources?: {
         owner?: string,
         net_weight?: string,
+        net_weight_asset?: Asset,
         cpu_weight?: string,
+        cpu_weight_asset?: Asset,
         ram_bytes?: number
     },
     self_delegated_bandwidth?: {
         from?: string,
         to?: string,
         total?: string,
+        total_asset?: Asset,
         net_weight?: string,
-        cpu_weight?: string
+        net_weight_asset?: Asset,
+        cpu_weight?: string,
+        cpu_weight_asset?: Asset,
     },
     refund_request?: {
         owner?: string,
-        total?: string,
         request_time?: string,
+        total?: string,
+        total_asset?: Asset,
         net_amount?: string,
-        cpu_amount?: string
+        net_amount_asset?: Asset,
+        cpu_amount?: string,
+        cpu_amount_asset?: Asset
     },
     voter_info?: {
         owner?: string,
@@ -334,8 +344,6 @@ export class VapaeeScatter {
     });    
     
     constructor(
-        
-        public tokenMath: EosioTokenMathService
     ) {
         this.feed = new Feedback();
         this._networks_slugs = [];
@@ -375,6 +383,7 @@ export class VapaeeScatter {
             name:'guest',
             data: {
                 total_balance: "",
+                total_balance_asset: new Asset(),
                 cpu_limit: {},
                 net_limit: {},
                 ram_limit: {},
@@ -630,6 +639,7 @@ export class VapaeeScatter {
         });
     }
 
+    /*
     // ----- account data (resources, staking, refunding) -------
     // extract the float part of an valid asset string representation like: "123.2424 EOS" -> returns 123.2424
     private extractNumber (balance) {
@@ -640,6 +650,7 @@ export class VapaeeScatter {
         return parseFloat(balance.split(" ")[0]);
     }
 
+    
     // add balance1:"0.1000 TLOS" to balance2:"9.9000 TLOS" and return de result "10.0000 TLOS"
     private add(balance1:string, balance2:string) {
         // console.log("add(",balance1, balance2, ")");
@@ -656,16 +667,15 @@ export class VapaeeScatter {
         tot += " " + symbol;
         // console.log("add(",balance1, balance2, ") --> ", tot);
         return tot;
-    }
+    }*/
 
     calculateTotalBalance(account) {
-        return this.tokenMath.addAll([
-            account.core_liquid_balance,
-            account.refund_request.net_amount,
-            account.refund_request.cpu_amount,
-            account.self_delegated_bandwidth.cpu_weight,
-            account.self_delegated_bandwidth.net_weight
-        ]);
+        return new Asset("0.0000 " + this.symbol)
+            .plus(account.core_liquid_balance_asset)
+            .plus(account.refund_request.net_amount_asset)
+            .plus(account.refund_request.cpu_amount_asset)
+            .plus(account.self_delegated_bandwidth.cpu_weight_asset)
+            .plus(account.self_delegated_bandwidth.net_weight_asset);
     }
 
     calculateResourceLimit(limit) {
@@ -720,39 +730,56 @@ export class VapaeeScatter {
                     } else {
                         accountdata.core_liquid_balance = "0.0000 " + this.symbol;
                     }
+                    accountdata.core_liquid_balance_asset = new Asset(accountdata.core_liquid_balance);
                     
-                    // --
+
+                    // ----- refund_request -----
                     accountdata.refund_request = accountdata.refund_request || {
                         total: "0.0000 " + this.symbol,
                         net_amount: "0.0000 " + this.symbol,
                         cpu_amount: "0.0000 " + this.symbol,
                         request_time: "2018-11-18T18:09:53"
                     }
-                    
-                    accountdata.refund_request.total =
-                        this.add(accountdata.refund_request.net_amount, accountdata.refund_request.cpu_amount);
-
-                    // --
+                    accountdata.refund_request.cpu_amount_asset = new Asset(accountdata.refund_request.cpu_amount);
+                    accountdata.refund_request.net_amount_asset = new Asset(accountdata.refund_request.net_amount);
+                    accountdata.refund_request.total_asset = 
+                        accountdata.refund_request.cpu_amount_asset.plus(accountdata.refund_request.net_amount_asset)
+                    accountdata.refund_request.total = accountdata.refund_request.total_asset.toString();
+                        
+                    // ----- self_delegated_bandwidth ----
                     accountdata.self_delegated_bandwidth = accountdata.self_delegated_bandwidth || {
                         total: "0.0000 " + this.symbol,
                         net_weight: "0.0000 " + this.symbol,
                         cpu_weight: "0.0000 " + this.symbol
-                    }
-                    accountdata.self_delegated_bandwidth.total =
-                        this.add(accountdata.self_delegated_bandwidth.net_weight, accountdata.self_delegated_bandwidth.cpu_weight);
+                    }                    
+                    accountdata.self_delegated_bandwidth.net_weight_asset = new Asset(accountdata.self_delegated_bandwidth.net_weight);
+                    accountdata.self_delegated_bandwidth.cpu_weight_asset = new Asset(accountdata.self_delegated_bandwidth.cpu_weight);
+                    accountdata.self_delegated_bandwidth.total_asset = 
+                        accountdata.self_delegated_bandwidth.cpu_weight_asset.plus(accountdata.self_delegated_bandwidth.net_weight_asset);
+                    accountdata.self_delegated_bandwidth.total = accountdata.self_delegated_bandwidth.total_asset.toString();
+                    
 
-                    // --
+                    // ----- total_resources -----
                     accountdata.total_resources = accountdata.total_resources || {
                         net_weight: "0.0000 " + this.symbol,
                         cpu_weight: "0.0000 " + this.symbol
                     }
-                    
-                    accountdata.total_balance = this.calculateTotalBalance(accountdata);
+                    accountdata.total_resources.net_weight_asset = new Asset(accountdata.total_resources.net_weight);
+                    accountdata.total_resources.cpu_weight_asset = new Asset(accountdata.total_resources.cpu_weight);
+
+                    accountdata.total_balance_asset = this.calculateTotalBalance(accountdata);
+                    accountdata.total_balance = accountdata.total_balance_asset.toString();
+
                     accountdata.cpu_limit = this.calculateResourceLimit(accountdata.cpu_limit);
                     accountdata.net_limit = this.calculateResourceLimit(accountdata.net_limit);
                     accountdata.ram_limit = this.calculateResourceLimit({
                         max: accountdata.ram_quota, used: accountdata.ram_usage
                     });
+
+
+                    // console.log("-------------------------------");
+                    // console.log("accountdata: ", accountdata);
+                    // console.log("-------------------------------");
 
                     resolve(accountdata);
                 }).catch((err) => {

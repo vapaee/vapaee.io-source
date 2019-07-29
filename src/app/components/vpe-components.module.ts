@@ -19,8 +19,8 @@ import { DatePipe } from '@angular/common';
 
 import { VpeComponentsService } from './vpe-components.service';
 
-import { IdenticonComponent } from './identicon/identicon.component';
-import { EosioAccountComponent } from './eosio-account/eosio-account.component';
+
+import { VpeIdenticonComponent } from './vpe-identicon/vpe-identicon.component';
 import { VpePanelComponent } from './vpe-panel/vpe-panel.component';
 import { VpePanelOrdersComponent } from './vpe-panel-orders/vpe-panel-orders.component';
 import { VpePanelUserOrdersComponent } from './vpe-panel-user-orders/vpe-panel-user-orders.component';
@@ -43,8 +43,7 @@ import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-p
 
 @NgModule({
     declarations: [
-        IdenticonComponent,
-        EosioAccountComponent,
+        VpeIdenticonComponent,
         VpePanelComponent,
         VpePanelOrdersComponent,
         VpePanelUserOrdersComponent,
@@ -77,8 +76,7 @@ import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-p
         { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG },
     ],
     exports: [
-        IdenticonComponent,
-        EosioAccountComponent,
+        VpeIdenticonComponent,
         VpePanelComponent,
         VpePanelOrdersComponent,
         VpePanelUserOrdersComponent,

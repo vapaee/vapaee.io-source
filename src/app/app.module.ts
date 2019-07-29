@@ -12,7 +12,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { DatePipe } from '@angular/common';
  
 import { AppComponent } from './app.component';
-import { EosioTokenMathService } from './services/eosio.token-math.service';
 import { LoadingOverall } from './services/common/app.service';
 
 
@@ -35,6 +34,7 @@ import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { VapaeeFeedbackModule } from 'projects/vapaee/feedback/src/public_api';
+
 
 
 
@@ -73,8 +73,7 @@ import { VapaeeFeedbackModule } from 'projects/vapaee/feedback/src/public_api';
         VapaeeScatter,
         VapaeeDEX,
         HttpClient,
-        CoingeckoService,
-        EosioTokenMathService
+        CoingeckoService
     ],
     bootstrap: [AppComponent]
 })
