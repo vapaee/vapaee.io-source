@@ -1,6 +1,3 @@
-import { Component, Injectable, Pipe, Directive } from "@angular/core";
-import { Type } from "@angular/compiler";
-
 export interface Feed {
     msg?:string;
     msgtype?:string;
@@ -17,9 +14,6 @@ export interface FeedMap {
     [key:string]:Feed
 };
 
-@Injectable({
-    providedIn:"root"
-})
 export class Feedback {
     public keys: string[];
     private scopes: FeedMap;

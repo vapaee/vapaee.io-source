@@ -22,6 +22,12 @@
       ],
       "@vapaee/feedback/*": [
         "dist/vapaee/feedback/*"
+      ],
+      "@vapaee/scatter": [
+        "dist/vapaee/scatter"
+      ],
+      "@vapaee/scatter/*": [
+        "dist/vapaee/scatter/*"
       ]
     }
   }

@@ -175,6 +175,46 @@
           }
         }
       }
+    },
+    "@vapaee/scatter": {
+      "root": "projects/vapaee/scatter",
+      "sourceRoot": "projects/vapaee/scatter/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/vapaee/scatter/tsconfig.lib.json",
+            "project": "projects/vapaee/scatter/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/vapaee/scatter/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/vapaee/scatter/src/test.ts",
+            "tsConfig": "projects/vapaee/scatter/tsconfig.spec.json",
+            "karmaConfig": "projects/vapaee/scatter/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/vapaee/scatter/tsconfig.lib.json",
+              "projects/vapaee/scatter/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "vapaee.io"

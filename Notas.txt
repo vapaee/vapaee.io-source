@@ -2,11 +2,25 @@
 CREAR LOS PAQUETES. COMO SE HACE?
 https://docs.npmjs.com/creating-and-publishing-scoped-public-packages
 
+
+-- Como hacer una library para Angular --
+- primero hay que registrarse como usuario en https://www.npmjs.com/
+- dentro del proyecto que estás laburando generás un sub proyecto library:
+  ng generate library @vapaee/libname
+- migrás el código de la library local a nuevo sub proyecto consu propio Module
+- le hacés un build:
+  ng build @vapaee/libname --prop
+- actualizale la versión en el package y publicalo:
+  cd dist/vapaee/libname
+  npm adduser  <<-- loguearse como vapaee
+  npm publish --access public
+
+
 - @vapaee/feedback
 - @vapaee/scatter
   - VapaeeScatter
   - ScatterUtils: Utils renombrado
-  - Token: <-- tiene que poder manejar un objeto con propiedades {symbol, contract, preciosion}
+  - Token: <-- tiene que poder manejar un objeto con propiedades {symbol, contract, precision}
   - Asset 
 - @vapaee/dex 
   - VapaeeDEX

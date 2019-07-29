@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { EosioTokenMathService } from '../../eosio.token-math.service';
+import { EosioTokenMathService } from './eosio.token-math.service';
+import { Feedback } from '@vapaee/feedback';
 
 // scatter libraries
 /*/
@@ -13,7 +14,6 @@ import {JsonRpc, Api} from 'eosjs';
 import ScatterJS from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs'
 import Eos from 'eosjs';
-import { Feedback } from 'projects/vapaee/feedback/src/public_api';
 //*/
 
 // declare var ScatterJS:any;
