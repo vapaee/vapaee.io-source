@@ -28,6 +28,12 @@
       ],
       "@vapaee/scatter/*": [
         "dist/vapaee/scatter/*"
+      ],
+      "@vapaee/dex": [
+        "dist/vapaee/dex"
+      ],
+      "@vapaee/dex/*": [
+        "dist/vapaee/dex/*"
       ]
     }
   }

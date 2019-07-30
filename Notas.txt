@@ -6,10 +6,10 @@ https://docs.npmjs.com/creating-and-publishing-scoped-public-packages
 -- Como hacer una library para Angular --
 - primero hay que registrarse como usuario en https://www.npmjs.com/
 - dentro del proyecto que estás laburando generás un sub proyecto library:
-  ng generate library @vapaee/scatter
+  ng generate library @vapaee/dex
 - migrás el código de la library local a nuevo sub proyecto consu propio Module
 - le hacés un build:
-  ng build @vapaee/scatter --prop
+  ng build @vapaee/dex --prop
 - actualizale la versión en el package y publicalo:
   cd dist/vapaee/libname
   npm adduser  <<-- loguearse como vapaee

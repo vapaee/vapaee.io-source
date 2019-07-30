@@ -3,10 +3,9 @@ import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Subscriber } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { Utils } from 'src/app/services/@vapaee/scatter/utils.class';
-import { VapaeeDEX, UserOrdersMap } from 'src/app/services/@vapaee/dex/dex.service';
+import { VapaeeDEX, UserOrdersMap } from 'projects/vapaee/dex/src/lib/dex.service';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
-import { AssetDEX } from 'src/app/services/@vapaee/dex/asset-dex.class';
+import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
 
 
 @Component({
@@ -70,9 +69,6 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
             } else {
                 this.dex.resetCurrentAccount(name);
             };
-
-            var utils:Utils = new Utils("",null);
-            var encodedName = utils.encodeName(name);
         }, 0);
     }
 

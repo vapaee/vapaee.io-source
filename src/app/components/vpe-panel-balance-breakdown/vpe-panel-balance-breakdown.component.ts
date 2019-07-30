@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
+import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { Account } from 'src/app/services/@vapaee/scatter/scatter.service';
+import { Account } from '@vapaee/scatter';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { AssetDEX } from 'src/app/services/@vapaee/dex/asset-dex.class';
+import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
 
 
 @Component({

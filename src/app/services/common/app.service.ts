@@ -3,7 +3,6 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { AnalyticsService } from './analytics.service';
 import { DomService } from './dom.service';
 import { Subject } from 'rxjs';
-import { Network } from '../@vapaee/scatter/scatter.service';
 
 export interface Device {
     fullhd?:boolean, // >= 1600px

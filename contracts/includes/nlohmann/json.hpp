@@ -19195,7 +19195,7 @@ class basic_json
     @sa @ref from_ubjson(detail::input_adapter&&, const bool, const bool) for the
         related UBJSON format
 
-    @since version 2.0.9; parameter @a start_index since 2.1.1; changed to
+    @since version 2.0.9; parameter @a start_index since 2.2.0; changed to
            consume input adapters, removed start_index parameter, and added
            @a strict parameter since 3.0.0; added @a allow_exceptions parameter
            since 3.2.0
@@ -19300,7 +19300,7 @@ class basic_json
     @sa @ref from_bson(detail::input_adapter&&, const bool, const bool) for
         the related BSON format
 
-    @since version 2.0.9; parameter @a start_index since 2.1.1; changed to
+    @since version 2.0.9; parameter @a start_index since 2.2.0; changed to
            consume input adapters, removed start_index parameter, and added
            @a strict parameter since 3.0.0; added @a allow_exceptions parameter
            since 3.2.0

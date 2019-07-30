@@ -1,8 +1,8 @@
 import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
-import { LocalStringsService } from 'src/app/services/common/common.services';
-import { VapaeeScatter, NetworkMap } from 'src/app/services/@vapaee/scatter/scatter.service';
-import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
+import { LocalStringsService, AnalyticsService } from 'src/app/services/common/common.services';
+import { VapaeeScatter, NetworkMap } from '@vapaee/scatter';
+import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 import { HttpClient } from '@angular/common/http';
 
@@ -25,6 +25,7 @@ export class RootPage implements OnInit {
         public elRef: ElementRef,
         public scatter: VapaeeScatter,
         public dex: VapaeeDEX,
+        public analytics: AnalyticsService,
         private components: VpeComponentsService
     ) {
         
@@ -43,6 +44,10 @@ export class RootPage implements OnInit {
                 this.scatter.connectApp("Vapaée - Telos DEX").catch(err => console.error(err));
             }
     
+        });
+
+        this.dex.onLoggedAccountChange.subscribe(logged => {
+            this.analytics.setUserId(logged ? logged : 0);
         });
 
     }

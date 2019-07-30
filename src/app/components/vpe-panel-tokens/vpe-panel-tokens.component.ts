@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, Output, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Subscriber } from 'rxjs';
-import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
+import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { TokenDEX } from 'src/app/services/@vapaee/dex/token-dex.class';
+import { TokenDEX } from 'projects/vapaee/dex/src/lib/token-dex.class';
 
 
 

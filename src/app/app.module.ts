@@ -14,13 +14,14 @@ import { DatePipe } from '@angular/common';
 import { AppComponent } from './app.component';
 import { LoadingOverall } from './services/common/app.service';
 
-
-import { VapaeeScatter } from './services/@vapaee/scatter/scatter.service';
-import { VapaeeDEX } from './services/@vapaee/dex/dex.service';
 import { CoingeckoService } from './services/coingecko.service';
 
 
-import { VpeComponentsModule } from './components/vpe-components.module';
+import { VapaeeComponentsModule } from './components/vpe-components.module';
+import { VapaeeFeedbackModule } from '@vapaee/feedback';
+import { VapaeeScatterModule } from '@vapaee/scatter';
+import { VapaeeDexModule } from '@vapaee/dex';
+
 
 import { WPPage } from './pages/wp/wp.page';
 import { RootPage } from './pages/root/root.page';
@@ -33,7 +34,6 @@ import { NotFoundPage } from './pages/not-found/not-found.page';
 import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { VapaeeFeedbackModule } from 'projects/vapaee/feedback/src/public_api';
 
 
 
@@ -62,16 +62,16 @@ import { VapaeeFeedbackModule } from 'projects/vapaee/feedback/src/public_api';
         AppRoutingModule,
         HttpClientModule,
         CommonServicesModule,
-        VpeComponentsModule,
+        VapaeeComponentsModule,
         VapaeeFeedbackModule,
+        VapaeeScatterModule,
+        VapaeeDexModule,
         ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
         SidebarModule.forRoot()
     ],
     providers: [
         DatePipe,
         CookieService,
-        VapaeeScatter,
-        VapaeeDEX,
         HttpClient,
         CoingeckoService
     ],

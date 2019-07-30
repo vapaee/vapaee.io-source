@@ -1,16 +1,17 @@
 {
   "name": "vapaee.io-source",
-  "version": "v2.1.1",
+  "version": "v2.2.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --poll=2000 -o",
     "serve": "ng serve --poll=2000 -o",
-    "build": "ng build --aot --buildOptimizer --prod",
+    "libs": "ng build @vapaee/feedback && ng build @vapaee/scatter && ng build @vapaee/dex",
+    "build": "ng build --watch",
     "local": "ng build --aot --buildOptimizer --prod && cp .htaccess /var/www/vapaee.io/.htaccess && cp cert/* /var/www/vapaee.io/ && cd /var/www/vapaee.io && git add -A && git commit -m 'save' && git push && amazon_server_console",
     "postinstall": "node src/patch.js; cd contracts/_examples; if [ ! -d 'eosio.contracts' ]; then git clone https://github.com/Telos-Foundation/eosio.contracts; fi; npm run serve",
     "save": "git add -A; git commit -m 'on development'; git push;",
     "pull": "git pull; cp ../airdrop-on-telos/* ./airdrop-on-telos/ -R;",
-    "prod": "git checkout prod && git merge master -m 'merge master' && ng build --aot --buildOptimizer --prod && git add -A && git commit -m 'update' && git push && amazon_server_console;"
+    "prod": "ng build --aot --buildOptimizer --prod"
   },
   "private": true,
   "dependencies": {

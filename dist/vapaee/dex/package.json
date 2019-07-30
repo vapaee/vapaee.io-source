@@ -1,0 +1,27 @@
+{
+  "name": "@vapaee/dex",
+  "version": "2.2.0",
+  "peerDependencies": {
+    "ngx-cookie-service": "^2.1.0",
+    "rxjs": "^6.2.1",
+    "rxjs-compat": "^6.3.3",
+    "@vapaee/scatter": "1.0.0",
+    "@vapaee/feedback": "1.0.0",
+    "bignumber.js": "8.0.2",
+    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
+  },
+  "main": "bundles/vapaee-dex.umd.js",
+  "module": "fesm5/vapaee-dex.js",
+  "es2015": "fesm2015/vapaee-dex.js",
+  "esm5": "esm5/vapaee-dex.js",
+  "esm2015": "esm2015/vapaee-dex.js",
+  "fesm5": "fesm5/vapaee-dex.js",
+  "fesm2015": "fesm2015/vapaee-dex.js",
+  "typings": "vapaee-dex.d.ts",
+  "metadata": "vapaee-dex.metadata.json",
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^1.9.0"
+  }
+}

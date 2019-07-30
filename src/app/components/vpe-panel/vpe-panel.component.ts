@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, Output, OnDestroy, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
+import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Subscriber, Subject } from 'rxjs';
 import { VpeComponentsService, Device, ResizeEvent } from '../vpe-components.service';

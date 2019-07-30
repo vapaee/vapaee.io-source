@@ -2,11 +2,11 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { ActivatedRoute } from '@angular/router';
-import { VapaeeDEX, OrderRow, TokenOrders, Market } from 'src/app/services/@vapaee/dex/dex.service';
+import { VapaeeDEX, OrderRow, TokenOrders, Market } from 'projects/vapaee/dex/src/lib/dex.service';
 import { Subscriber } from 'rxjs';
 import { VpePanelOrderEditorComponent } from 'src/app/components/vpe-panel-order-editor/vpe-panel-order-editor.component';
-import { TokenDEX } from 'src/app/services/@vapaee/dex/token-dex.class';
-import { AssetDEX } from 'src/app/services/@vapaee/dex/asset-dex.class';
+import { TokenDEX } from 'projects/vapaee/dex/src/lib/token-dex.class';
+import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
 
 
 @Component({

@@ -123,23 +123,23 @@ div.title.vpe-background-panel-title {
 
  // ng-sidebar  -----------------------
  app-root > ng-sidebar-container#sidebar {
-    height: calc(100% - 51px);
+    height: calc(100% - 38px);
     display: block;
     position: relative;
-    top: 51px;
+    top: 38px;
 }
 
 @media (min-width: 576px) {
     app-root > ng-sidebar-container#sidebar {
-        height: calc(100% - 51px);
-        top: 51px;
+        height: calc(100% - 50px);
+        top: 50px;
     }
 }
 
 @media (min-width: 768px) {
     app-root > ng-sidebar-container#sidebar {
-        height: calc(100% - 51px);
-        top: 51px;
+        height: calc(100% - 50px);
+        top: 50px;
     }
 }
 

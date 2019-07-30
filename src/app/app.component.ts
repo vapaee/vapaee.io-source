@@ -3,9 +3,9 @@ import { AppService } from './services/common/app.service';
 import { VpeComponentsService, PriceMap } from './components/vpe-components.service';
 import { VirtualTimeScheduler } from 'rxjs';
 import { CoingeckoService } from './services/coingecko.service';
-import { VapaeeDEX, Market } from './services/@vapaee/dex/dex.service';
+import { VapaeeDEX, Market } from '../../projects/vapaee/dex/src/lib/dex.service';
 import { LocalStringsService } from './services/common/common.services';
-import { TokenDEX } from './services/@vapaee/dex/token-dex.class';
+import { TokenDEX } from '../../projects/vapaee/dex/src/lib/token-dex.class';
 
 @Component({
     selector: 'app-root',
@@ -90,7 +90,7 @@ export class AppComponent {
         public dex: VapaeeDEX,
         public local: LocalStringsService
     ) {
-        this.app.init("v2.1.1");
+        this.app.init("v2.2.0");
     }
     
     ngOnInit() {

@@ -96,4 +96,4 @@ import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-p
         VpePanelTokenSelectorComponent
     ]
 })
-export class VpeComponentsModule { }
+export class VapaeeComponentsModule { }

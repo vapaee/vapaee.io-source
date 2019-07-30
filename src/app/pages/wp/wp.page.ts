@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { VapaeeScatter } from 'src/app/services/@vapaee/scatter/scatter.service';
-import { VapaeeDEX } from 'src/app/services/@vapaee/dex/dex.service';
-import { Utils } from 'src/app/services/@vapaee/scatter/utils.class';
+import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscriber } from 'rxjs';
 import { Feedback } from 'projects/vapaee/feedback/src/public_api';
+import { SmartContract, VapaeeScatter } from '@vapaee/scatter';
+
 
 
 @Component({
@@ -16,7 +16,7 @@ import { Feedback } from 'projects/vapaee/feedback/src/public_api';
 })
 export class WPPage implements OnInit, OnDestroy {
 
-    public utils: Utils;
+    public contract: SmartContract;
     public feed: Feedback;
     public proposalID: string = "17";
     public user_is_registered: boolean;
@@ -32,7 +32,7 @@ export class WPPage implements OnInit, OnDestroy {
     ) {
         this.subscriber = new Subscriber<string>(this.onAccountChange.bind(this));
         this.user_dismiss = !!this.cookie.get("user_dismiss");
-        this.utils = new Utils("eosio.trail", this.scatter);
+        this.contract = this.scatter.getSmartContract("eosio.trail");
         this.feed = new Feedback();
         this.onAccountChange(null);
     }
@@ -70,7 +70,7 @@ export class WPPage implements OnInit, OnDestroy {
             this.feed.setLoading("regvoter", false);
         } else {
             if (this.user_voted_us) return this.feed.setLoading("voting", false);
-            wait_registered = this.utils.excecute("regvoter", {
+            wait_registered = this.contract.excecute("regvoter", {
                 voter:  this.scatter.account.name,
                 token_symbol: "4,VOTE"
             }).then(_ => {
@@ -90,13 +90,13 @@ export class WPPage implements OnInit, OnDestroy {
 
         return wait_registered.then(_ => {
             if (this.user_voted_us) return this.feed.setLoading("voting", false);
-            return this.utils.excecute("mirrorcast", {
+            return this.contract.excecute("mirrorcast", {
                 voter:  this.scatter.account.name,
                 token_symbol: "4,TLOS"
             }).then(async result => {
                 this.feed.setLoading("mirrorcast", false);
                 if (this.user_voted_us) return this.feed.setLoading("voting", false);
-                return this.utils.excecute("castvote", {
+                return this.contract.excecute("castvote", {
                     voter:  this.scatter.account.name,
                     ballot_id: this.proposalID,
                     direction: 1
@@ -169,12 +169,12 @@ export class WPPage implements OnInit, OnDestroy {
         this.user_is_registered = false;
         this.feed.setLoading("user-registered", true);
 
-        var encodedName = this.utils.encodeName(account || this.dex.current.name);
+        var encodedName = this.scatter.utils.encodeName(account || this.dex.current.name);
 
         console.assert(encodedName.toString() == "4399453885987553280", encodedName.toString(), "4399453885987553280");
 
         
-        return this.utils.getTable("balances", {
+        return this.contract.getTable("balances", {
             scope:"VOTE",
             lower_bound: encodedName.toString(), 
             upper_bound: encodedName.toString(), 
@@ -195,7 +195,7 @@ export class WPPage implements OnInit, OnDestroy {
         console.log("findOutIfUserVotedUs(",account,")");
         this.user_voted_us = false;
         this.feed.setLoading("user-voted", true);
-        return this.utils.getTable("votereceipts", {scope:account || this.dex.current.name, limit:1, lower_bound:this.proposalID}).then(result => {
+        return this.contract.getTable("votereceipts", {scope:account || this.dex.current.name, limit:1, lower_bound:this.proposalID}).then(result => {
             // console.log("**********************", result);
             if (result.rows.length > 0) {
                 console.assert(result.rows[0].ballot_id == this.proposalID, result.rows[0].ballot_id, typeof result.rows[0].ballot_id, this.proposalID, typeof this.proposalID);
