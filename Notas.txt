@@ -3,17 +3,11 @@ CREAR LOS PAQUETES. COMO SE HACE?
 https://docs.npmjs.com/creating-and-publishing-scoped-public-packages
 
 
--- Como hacer una library para Angular --
-- primero hay que registrarse como usuario en https://www.npmjs.com/
-- dentro del proyecto que estás laburando generás un sub proyecto library:
-  ng generate library @vapaee/dex
-- migrás el código de la library local a nuevo sub proyecto consu propio Module
-- le hacés un build:
-  ng build @vapaee/dex --prop
-- actualizale la versión en el package y publicalo:
-  cd dist/vapaee/libname
-  npm adduser  <<-- loguearse como vapaee
-  npm publish --access public
+
+// Instalar las bibliotecas de vapaee
+npm i --save @vapaee/feedback @vapaee/scatter @vapaee/dex
+npm i --save ngx-cookie-service@^2.1.0 rxjs-compat@^6.3.3 bignumber.js@8.0.2 scatterjs-core@2.3.8 scatterjs-plugin-eosjs@1.3.10 eosjs@16.0.9
+npm i -D @babel/runtime
 
 
 - @vapaee/feedback
@@ -502,6 +496,21 @@ telosmain get table snapshots.tf 1 snapshots --lower viterbotelos
 cleos --url https://telos.eos.barcelona get table snapshots.tf 1 snapshots --lower geytinzygige
 
  
+
+
+-- Como hacer una library para Angular --
+- primero hay que registrarse como usuario en https://www.npmjs.com/
+- dentro del proyecto que estás laburando generás un sub proyecto library:
+  ng generate library @vapaee/dex
+- migrás el código de la library local a nuevo sub proyecto consu propio Module
+- le hacés un build:
+  ng build @vapaee/dex --prod
+- actualizale la versión en el package y publicalo:
+  cd dist/vapaee/libname
+  npm adduser  <<-- loguearse como vapaee
+  npm publish --access public
+
+
 
 Phaser con Angular para videojuegos
 https://github.com/weichen2046/phaser3-angular6-helloworld
