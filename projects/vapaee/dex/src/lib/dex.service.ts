@@ -7,6 +7,8 @@ import { TokenDEX } from './token-dex.class';
 import { AssetDEX } from './asset-dex.class';
 import { Feedback } from '@vapaee/feedback';
 import { VapaeeScatter, Account, AccountData, SmartContract, TableResult, TableParams } from '@vapaee/scatter';
+import { MarketMap, UserOrdersMap, MarketSummary, EventLog, Market, HistoryTx, TokenOrders, Order, UserOrders, OrderRow, HistoryBlock } from './types-dex';
+
 
 @Injectable({
     providedIn: "root"
@@ -130,6 +132,7 @@ export class VapaeeDEX {
             clearTimeout(timer);
             timer = setTimeout(_ => {
                 this.updateTokensSummary();
+                this.updateTokensMarkets();
             }, 100);
         });    
 
@@ -399,9 +402,9 @@ export class VapaeeDEX {
     public market(scope:string): Market {
         if (this._markets[scope]) return this._markets[scope];        // ---> direct
         var reverse = this.inverseScope(scope);
-        if (this._reverse[reverse]) return this._reverse[reverse];  // ---> reverse
-        if (!this._markets[reverse]) return null;                    // ---> table does not exist (or has not been loaded yet)
-        return this._markets[scope] || this.reverse(scope);
+        if (this._reverse[reverse]) return this._reverse[reverse];    // ---> reverse
+        if (!this._markets[reverse]) return null;                     // ---> table does not exist (or has not been loaded yet)
+        return this.reverse(scope);
     }
 
     public table(scope:string): Market {
@@ -1935,6 +1938,47 @@ export class VapaeeDEX {
         });
 
     }
+
+    private updateTokensMarkets() {
+        return Promise.all([
+            this.waitTokensLoaded,
+            this.waitMarketSummary
+        ]).then(_ => {
+            // a cada token le asigno un price que sale de verificar su price en el mercado principal XXX/TLOS
+            for (var i in this.tokens) {
+                if (this.tokens[i].offchain) continue; // discard tokens that are not on-chain
+                
+                var token = this.tokens[i];
+                var quantity:AssetDEX = new AssetDEX(0, token);
+                token.markets = [];
+
+                for (var scope in this._markets) {
+                    if (scope.indexOf(".") == -1) continue;
+                    var table:Market = this._markets[scope];
+
+                    if (table.currency.symbol == token.symbol) {
+                        table = this.market(this.inverseScope(scope));
+                    }
+
+                    if (table.comodity.symbol == token.symbol) {
+                        token.markets.push(table);
+                    }
+                }
+            }
+
+            token.markets.sort((a:Market, b:Market) => {
+                // push offchain tokens to the end of the token list
+                var a_vol = a.summary ? a.summary.volume : new AssetDEX();
+                var b_vol = b.summary ? b.summary.volume : new AssetDEX();
+    
+                if(a_vol.amount.isGreaterThan(b_vol.amount)) return -1;
+                if(a_vol.amount.isLessThan(b_vol.amount)) return 1;
+
+                return 0;
+            });
+
+        });   
+    }
     
     private updateTokensSummary(times: number = 20) {
         if (times > 1) {
@@ -2172,129 +2216,4 @@ export class VapaeeDEX {
 }
 
 
-export interface MarketMap {
-    [key:string]: Market;
-}
 
-export interface Market {
-    scope: string;
-    comodity: TokenDEX,
-    currency: TokenDEX,
-    deals: number;
-    blocks: number;
-    blocklevels: any[][][];
-    blocklist: any[][];
-    reverselevels: any[][][];
-    reverseblocks: any[][];
-    block: {[id:string]:HistoryBlock};
-    orders: TokenOrders;
-    history: HistoryTx[];
-    tx: {[id:string]:HistoryTx};
-    
-    summary: MarketSummary;
-    header: MarketHeader;
-}
-
-export interface MarketSummary {
-    scope:string,
-    price:AssetDEX,
-    inverse:AssetDEX,
-    price_24h_ago:AssetDEX,
-    inverse_24h_ago:AssetDEX,
-    min_price?:AssetDEX,
-    max_price?:AssetDEX,
-    min_inverse?:AssetDEX,
-    max_inverse?:AssetDEX,
-    volume:AssetDEX,
-    amount?:AssetDEX,
-    percent?:number,
-    percent_str?:string,
-    ipercent?:number,
-    ipercent_str?:string,
-    records?: any[]
-}
-
-export interface MarketHeader {
-    sell:OrdersSummary,
-    buy:OrdersSummary
-}
-
-export interface OrdersSummary {
-    total: AssetDEX;
-    orders: number;    
-}
-
-export interface TokenOrders {
-    sell:OrderRow[],
-    buy:OrderRow[]
-}
-
-export interface HistoryTx {
-    id: number;
-    str: string;
-    price: AssetDEX;
-    inverse: AssetDEX;
-    amount: AssetDEX;
-    payment: AssetDEX;
-    buyfee: AssetDEX;
-    sellfee: AssetDEX;
-    buyer: string;
-    seller: string;
-    date: Date;
-    isbuy: boolean;
-}
-
-export interface EventLog {
-    id: number;
-    user: string;
-    event: string;
-    params: string;
-    date: Date;
-    processed?: any;
-}
-
-export interface HistoryBlock {
-    id: number;
-    hour: number;
-    str: string;
-    price: AssetDEX;
-    inverse: AssetDEX;
-    entrance: AssetDEX;
-    max: AssetDEX;
-    min: AssetDEX;
-    volume: AssetDEX;
-    amount: AssetDEX;
-    date: Date;
-}
-
-export interface Order {
-    id: number;
-    price: AssetDEX;
-    inverse: AssetDEX;
-    total: AssetDEX;
-    deposit: AssetDEX;
-    telos: AssetDEX;
-    owner: string;
-}
-
-export interface UserOrdersMap {
-    [key:string]: UserOrders;
-}
-
-export interface UserOrders {
-    table: string;
-    ids: number[];
-    orders?:any[];
-}
-
-export interface OrderRow {
-    str: string;
-    price: AssetDEX;
-    orders: Order[];
-    inverse: AssetDEX;
-    total: AssetDEX;
-    sum: AssetDEX;
-    sumtelos: AssetDEX;
-    telos: AssetDEX;
-    owners: {[key:string]:boolean}
-}

@@ -1,10 +1,11 @@
 import { Component, Input, OnChanges, Output, OnInit, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeDEX, EventLog } from 'projects/vapaee/dex/src/lib/dex.service';
+import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, StringMap, ResizeEvent } from '../vpe-components.service';
 import { Subscriber } from 'rxjs';
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
+import { EventLog } from 'projects/vapaee/dex/src/public_api';
 
 
 @Component({

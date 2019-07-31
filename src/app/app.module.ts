@@ -34,6 +34,7 @@ import { NotFoundPage } from './pages/not-found/not-found.page';
 import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { TokenPage } from './pages/token/token.page';
 
 
 
@@ -46,6 +47,7 @@ import { environment } from '../environments/environment';
         HomePage,
         TradePage,
         TokensPage,
+        TokenPage,
         MarketsPage,
         AccountPage,
         NotFoundPage,

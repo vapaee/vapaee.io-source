@@ -13,6 +13,7 @@ import { VpeComponentsService } from '../vpe-components.service';
 export class VpeOffChainComboboxComponent implements OnChanges {
 
     @Input() public btn: string;
+    @Input() public hideprice: boolean;
 
     constructor(
         public dex: VapaeeDEX,
@@ -20,6 +21,7 @@ export class VpeOffChainComboboxComponent implements OnChanges {
         public service: VpeComponentsService
     ) {
         this.btn = "sm";
+        this.hideprice = false;
     }
 
     ngOnChanges() {

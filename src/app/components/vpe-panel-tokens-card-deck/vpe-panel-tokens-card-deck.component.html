@@ -9,29 +9,59 @@
             <div class="card-deck">
                 <div class="row" style="flex-grow: 1;">
                     <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let token of get_tokens; let i=index">
+
+
                         <div class="card token-card text-white bg-dark margin-top" *ngIf="i<limit">
                             <div class="card-body vpe-background-card-body">
-                                <h4 class="card-title">
-                                    <div class="pull-right" [hidden]="token.symbol == 'TLOS'">
+                                <div class="text-center">
+                                    <img style="height:64px; width: 64px; margin-top:-3px" [src]="token.logolg">
+                                    <div style="position: absolute; right: 20px; top: 12px;" class="text-lg" [hidden]="token.symbol == 'TLOS'">
                                         <div
                                             class="nowrap text-right"
                                             [ngClass]="{'text-success': token.summary?.percent > 0, 'text-danger': token.summary?.percent < 0, 'text-muted': token.summary?.percent  == 0}"
                                         >
                                             <small><b>{{token.summary?.percent_str}}</b></small>
                                         </div>
-                                    </div>                            
-                                    <img style="height:20px; width: 20px; margin-top:-3px" [src]="token.logo">
-                                    {{token.appname}}
-                                </h4>
-                                <div class="card-text">
+                                    </div>                                       
+                                </div>
+                                <div class="text-center margin-top">
+                                    <span class="card-title text-lg">
+                                        {{token.appname}}
+                                    </span>
+                                </div>
+                                <div class="text-center">
+                                    <a [href]="token.website" target="_blank"><small class="text-muted">{{token.website}} &nbsp;</small></a>
+                                </div>
+                                <div class="card-text margin-top">
                                     <div>
                                         <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('token-stat-'+token.symbol) && !dex.feed.loading('summary.'+token.scope)"></span>
-                                        <span class="nowrap"> {{token.stat ? token.stat.max_supply : ('0 ' + token.symbol)}} </span>
-                                    </div>
-                                    <div>
-                                        <a [href]="token.website" target="_blank"><small class="text-muted">{{token.website}} &nbsp;</small></a>
+                                        <span class="text-xs label">max:</span><span class="text-xs nowrap"> {{token.stat ? token.stat.max_supply : ('0 ' + token.symbol)}} </span><br>
+                                        <span class="text-xs label">total:</span><span class="text-xs nowrap"> {{token.stat ? token.stat.supply : ('0 ' + token.symbol)}} </span>
                                     </div>
                                 </div>
+                                <div>
+                                    <div class="row margin-top">
+                                        <div class="col-4 text-left">
+                                            <span [hidden]="token.symbol != 'TLOS' && token.verified"
+                                                class="btn disabled btn-primary btn-sm margin-top">{{local.string.trade}}</span>                            
+                                            <span [hidden]="token.symbol == 'TLOS' || !token.verified"
+                                                class="btn btn-primary btn-sm margin-top"
+                                                (click)="goToTradeToken(token)"
+                                                >{{local.string.trade}}</span>
+                                        </div>
+                                        <div class="col-4 text-center">
+                                            <span [hidden]="token.symbol == 'TLOS' || !token.verified"
+                                                (click)="goToTokenPage(token)"
+                                                class="btn btn-primary btn-sm margin-top">{{local.string.info}}</span>   
+                                        </div>
+                                        <div class="col-4 text-right">
+                                            <span [hidden]="token.symbol == 'TLOS' || !token.verified"
+                                                class="btn btn-primary btn-sm margin-top    ">{{local.string.markets}}</span>   
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--
                                 <div>
                                     <div class="row">
                                         <div class="col-6 text-left">
@@ -43,14 +73,17 @@
                                                 >trade</span>
                                         </div>
                                         <div class="col-6 text-right">
+                                            
                                             <div class="text-right" *ngIf="token.symbol != 'TLOS' && token.verified">
                                                 <div><small class="nowrap text-muted">max: {{token.summary?.max_price?.valueToString(4)}} {{token.summary?.max_price?.token.symbol}}</small></div>
                                                 <div><small class="nowrap text-muted">min: {{token.summary?.min_price?.valueToString(4)}} {{token.summary?.min_price?.token.symbol}}</small></div>
                                             </div>
                                             <div *ngIf="token.symbol == 'TLOS' || !token.verified"><div>&nbsp;</div><div>&nbsp;</div></div>
+                                            
                                         </div>
                                     </div>
                                 </div>
+                                -->
 
                                 <div class="col-xs-12 margin-top">
                                     <div class="row" style="flex-grow: 1">
@@ -58,7 +91,9 @@
                                             <small class="text-muted">{{local.string.vol}}: {{token.summary?.volume.valueToString(4)}}  {{token.summary?.volume.token.symbol}}</small>
                                         </div>
                                         <div class="col-6 text-right col-padding-left" *ngIf="token.symbol != 'TLOS' && token.verified">
-                                            <small class="bold">{{token.summary?.price.valueToString(4)}}  {{token.summary?.price.token.symbol}}</small>
+                                            <!-- <small class="bold">{{token.summary?.price.valueToString(4)}}  {{token.summary?.price.token.symbol}}</small> -->
+
+                                            <span class="color-yellow bold" [ngClass]="{'text-xs':!portrait, 'text-sm':portrait}"> {{service.getTokenInCurrentCurrency(token.summary?.price || "0.0000 TLOS").toString()}} </span>
                                         </div>
                                         <div class="col-12 text-right" *ngIf="token.symbol == 'TLOS'"> &nbsp; </div>
                                         <div class="col-12 text-right" *ngIf="!token.verified"> {{local.string.cantbtraded}} </div>
@@ -66,6 +101,10 @@
                                 </div>
                             </div>
                         </div>
+
+
+
+
                     </div>
                 </div>
             </div>

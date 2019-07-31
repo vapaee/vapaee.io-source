@@ -46,6 +46,8 @@
     "Home": "Home",
     "Demo": "Demo",
     "Trade": "Trade",
+    "trade": "trade",
+    "info": "info",
     "cantbtraded": "This token can't be traded",
     "tinallowed": "This token is not allowed yet in vapaee.io DEX",
     "Tokens": "Tokens",

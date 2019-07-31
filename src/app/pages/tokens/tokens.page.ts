@@ -45,6 +45,10 @@ export class TokensPage implements OnInit, OnDestroy {
         this.app.navigate('/exchange/trade/'+token.symbol.toLowerCase()+'.tlos');
     }
 
+    tokenPage(token:TokenDEX) {
+        this.app.navigate('/exchange/token/'+token.symbol.toLowerCase());
+    }
+
     ngOnDestroy() {
     }
 

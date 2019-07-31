@@ -9,6 +9,7 @@ import { AccountPage } from './pages/account/account.page';
 import { NotFoundPage } from './pages/not-found/not-found.page';
 import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
 import { MarketsPage } from './pages/markets/markets.page';
+import { TokenPage } from './pages/token/token.page';
 
 //*
 const routes: Routes = [
@@ -19,9 +20,8 @@ const routes: Routes = [
       { path: 'wp',                      data: { state: "wp" }, component: WPPage },
       { path: 'home',                    data: { state: "home" }, component: HomePage },
       { path: 'trade/:scope',            data: { state: "trade" }, component: TradePage },
-      { path: 'tokens',                  data: { state: "tokens" }, component: TokensPage, children: [
-          { path: ':symbol',             data: { state: "edit" }, component: TokensPage }
-      ] },
+      { path: 'tokens',                  data: { state: "tokens" }, component: TokensPage },
+      { path: 'token/:symbol',           data: { state: "token" }, component: TokenPage },
       { path: 'markets',                 data: { state: "markets" }, component: ComingSoonPage},
       { path: 'account',                 data: { state: "guest" }, component: AccountPage},
       { path: 'account/:name',           data: { state: "account" }, component: AccountPage }

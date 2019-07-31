@@ -46,6 +46,8 @@
     "Home": "Inicio",
     "Demo": "Demo",
     "Trade": "Intercambio",
+    "trade": "comerciar",
+    "info": "info",    
     "cantbtraded": "Este token no puede ser comercializado",
     "tinallowed": "Este token no está verificado aún en vapaee.io DEX",
     "Tokens": "Monedas",

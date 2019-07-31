@@ -1,5 +1,6 @@
 import { Token } from '@vapaee/scatter';
 import { AssetDEX } from "./asset-dex.class";
+import { Market } from './types-dex';
 export declare class TokenDEX extends Token {
     appname: string;
     website: string;
@@ -23,5 +24,6 @@ export declare class TokenDEX extends Token {
         percent?: number;
         percent_str?: string;
     };
+    markets: Market[];
     constructor(obj?: any);
 }

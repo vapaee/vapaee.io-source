@@ -2,12 +2,16 @@
     <div class="card text-white bg-dark margin-top-md">
         <div class="card-header vpe-background-card-header text-xl" [hidden]="!app.device.portrait">
             <img style="height:25px; width: 25px;" src="/assets/logos/telos.png"> Telos tokens
+
+            <div class="pull-right"> <vpe-offchain-combobox [hideprice]="true"  [btn]="'sm'"></vpe-offchain-combobox> </div>
         </div>
         <div class="card-header vpe-background-card-header" [hidden]="app.device.portrait">
-            <h1><img style="height:32px; width: 32px;" src="/assets/logos/telos.png"> Telos tokens</h1>
+            
+            <span class="text-lg"><img style="height:32px; width: 32px;" src="/assets/logos/telos.png"> Telos tokens</span>
+            <div class="pull-right"> <vpe-offchain-combobox class="margin-top-xs" [btn]="'sm'"></vpe-offchain-combobox> </div>
         </div>
     </div>
 
-    <vpe-panel-tokens-card-deck (tradeToken)="tradeToken($event)" [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
+    <vpe-panel-tokens-card-deck  (tokenPage)="tokenPage($event)" (tradeToken)="tradeToken($event)" [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
 
 </div>

@@ -1,5 +1,6 @@
 import { Token } from '@vapaee/scatter';
 import { AssetDEX } from "./asset-dex.class";
+import { Market } from './types-dex';
 
 /*
 export interface Token {
@@ -60,7 +61,9 @@ export class TokenDEX extends Token {
         price_24h_ago: AssetDEX,
         percent?:number,
         percent_str?:string
-    }    
+    }
+    
+    markets: Market[];
 
     constructor(obj:any = null) {
         super(obj);

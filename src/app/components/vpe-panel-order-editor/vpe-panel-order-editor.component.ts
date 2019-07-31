@@ -1,11 +1,12 @@
 import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeDEX, Order, OrderRow } from 'projects/vapaee/dex/src/lib/dex.service';
+import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
 import { TokenDEX } from 'projects/vapaee/dex/src/lib/token-dex.class';
 import { Feedback } from 'projects/vapaee/feedback/src/public_api';
+import { OrderRow, Order } from 'projects/vapaee/dex/src/public_api';
 
 
 @Component({

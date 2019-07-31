@@ -28,6 +28,7 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
     @Output() confirmDeposit: EventEmitter<any> = new EventEmitter();
     @Output() confirmWithdraw: EventEmitter<any> = new EventEmitter();
     @Output() tradeToken: EventEmitter<TokenDEX> = new EventEmitter();
+    @Output() tokenPage: EventEmitter<TokenDEX> = new EventEmitter();
     public deposit: AssetDEX;
     public withdraw: AssetDEX;
     constructor(
@@ -119,5 +120,9 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
 
     goToTradeToken(token:TokenDEX) {
         this.tradeToken.next(token);
+    }
+
+    goToTokenPage(token:TokenDEX) {
+        this.tokenPage.next(token);
     }
 }
