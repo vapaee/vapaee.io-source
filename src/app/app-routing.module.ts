@@ -22,7 +22,7 @@ const routes: Routes = [
       { path: 'trade/:scope',            data: { state: "trade" }, component: TradePage },
       { path: 'tokens',                  data: { state: "tokens" }, component: TokensPage },
       { path: 'token/:symbol',           data: { state: "token" }, component: TokenPage },
-      { path: 'markets',                 data: { state: "markets" }, component: ComingSoonPage},
+      { path: 'markets',                 data: { state: "markets" }, component: MarketsPage},
       { path: 'account',                 data: { state: "guest" }, component: AccountPage},
       { path: 'account/:name',           data: { state: "account" }, component: AccountPage }
     ]

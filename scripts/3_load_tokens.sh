@@ -34,10 +34,10 @@ cleos push action eosio.token issue '["kate", "1000.0000 TLOS", "memo 1000 TLOS"
 echo "-------- acornaccount (ACORN) ---------"
 cleos set contract acornaccount $PWD -p acornaccount@active
 cleos push action acornaccount create '[ "eosio", "461168601842738.0000 ACORN"]' -p acornaccount@active
-cleos push action acornaccount issue '["alice", "100.0000 ACORN", "memo ACORN"]' -p eosio@active
-cleos push action acornaccount issue '["bob", "100.0000 ACORN", "memo ACORN"]' -p eosio@active
-cleos push action acornaccount issue '["tom", "100.0000 ACORN", "memo ACORN"]' -p eosio@active
-cleos push action acornaccount issue '["kate", "100.0000 ACORN", "memo ACORN"]' -p eosio@active
+cleos push action acornaccount issue '["alice", "1000.0000 ACORN", "memo ACORN"]' -p eosio@active
+cleos push action acornaccount issue '["bob", "1000.0000 ACORN", "memo ACORN"]' -p eosio@active
+cleos push action acornaccount issue '["tom", "1000.0000 ACORN", "memo ACORN"]' -p eosio@active
+cleos push action acornaccount issue '["kate", "1000.0000 ACORN", "memo ACORN"]' -p eosio@active
 
 echo "-------- oliveaccount (OLIVE) ---------"
 cleos set contract oliveaccount $PWD -p oliveaccount@active

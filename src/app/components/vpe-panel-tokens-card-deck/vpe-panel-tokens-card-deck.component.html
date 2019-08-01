@@ -35,8 +35,8 @@
                                 <div class="card-text margin-top">
                                     <div>
                                         <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('token-stat-'+token.symbol) && !dex.feed.loading('summary.'+token.scope)"></span>
-                                        <span class="text-xs label">max:</span><span class="text-xs nowrap"> {{token.stat ? token.stat.max_supply : ('0 ' + token.symbol)}} </span><br>
-                                        <span class="text-xs label">total:</span><span class="text-xs nowrap"> {{token.stat ? token.stat.supply : ('0 ' + token.symbol)}} </span>
+                                        <small><span class="label">max:</span><span class="nowrap"> {{token.stat ? token.stat.max_supply : ('0 ' + token.symbol)}} </span></small><br>
+                                        <small><span class="label">total:</span><span class="nowrap"> {{token.stat ? token.stat.supply : ('0 ' + token.symbol)}} </span></small>
                                     </div>
                                 </div>
                                 <div>
@@ -56,7 +56,7 @@
                                         </div>
                                         <div class="col-4 text-right">
                                             <span [hidden]="token.symbol == 'TLOS' || !token.verified"
-                                                class="btn btn-primary btn-sm margin-top    ">{{local.string.markets}}</span>   
+                                                class="btn btn-primary btn-sm margin-top">{{local.string.markets}}</span>   
                                         </div>
                                     </div>
                                 </div>
@@ -91,9 +91,7 @@
                                             <small class="text-muted">{{local.string.vol}}: {{token.summary?.volume.valueToString(4)}}  {{token.summary?.volume.token.symbol}}</small>
                                         </div>
                                         <div class="col-6 text-right col-padding-left" *ngIf="token.symbol != 'TLOS' && token.verified">
-                                            <!-- <small class="bold">{{token.summary?.price.valueToString(4)}}  {{token.summary?.price.token.symbol}}</small> -->
-
-                                            <span class="color-yellow bold" [ngClass]="{'text-xs':!portrait, 'text-sm':portrait}"> {{service.getTokenInCurrentCurrency(token.summary?.price || "0.0000 TLOS").toString()}} </span>
+                                            <small class="color-yellow bold"> {{service.getTokenInCurrentCurrency(token.summary?.price || "0.0000 TLOS").toString()}} </small>
                                         </div>
                                         <div class="col-12 text-right" *ngIf="token.symbol == 'TLOS'"> &nbsp; </div>
                                         <div class="col-12 text-right" *ngIf="!token.verified"> {{local.string.cantbtraded}} </div>

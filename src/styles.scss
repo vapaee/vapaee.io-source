@@ -120,6 +120,14 @@ div.title.vpe-background-panel-title {
     background: linear-gradient(to bottom, #3a423a 0%,#545a54 100%);
 }
 
+.card {
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.card-deck .card {
+    margin-bottom: 10px;
+}
 
  // ng-sidebar  -----------------------
  app-root > ng-sidebar-container#sidebar {

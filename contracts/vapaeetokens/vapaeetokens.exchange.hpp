@@ -484,8 +484,9 @@ namespace vapaee {
             return name("error");
         }
 
-        void aux_register_transaction_in_history(name buyer, name seller, asset price, asset inverse, asset payment, asset amount, asset buyfee, asset sellfee) {
+        void aux_register_transaction_in_history(bool inverted, name buyer, name seller, asset price, asset inverse, asset payment, asset amount, asset buyfee, asset sellfee) {
             PRINT("vapaee::token::exchange::aux_register_transaction_in_history()\n");
+            PRINT(" inverted: ", std::to_string(inverted), "\n");
             PRINT(" buyer: ", buyer.to_string(), "\n");
             PRINT(" seller: ", seller.to_string(), "\n");
             PRINT(" amount: ", amount.to_string(), "\n");   // 0.00047800 TLOS
@@ -504,10 +505,13 @@ namespace vapaee {
             symbol_code A = amount.symbol.code();
             symbol_code B = payment.symbol.code();
             name scope = aux_get_canonical_scope_for_symbols(A, B);
+            name actual_scope = aux_get_scope_for_tokens(B, A);
             
             bool is_buy = false;
             PRINT(" -> scope: ", scope.to_string(), "\n");
-            if (scope == aux_get_scope_for_tokens(B, A)) {
+
+            if (scope == actual_scope) {
+                PRINT(" ********* INVERTIMOS POR SER UN SCOPE INVERSO *********\n");
                 // swap buyer / seller names
                 tmp_name = buyer;
                 buyer = seller;
@@ -530,6 +534,11 @@ namespace vapaee {
 
                 // swap to "sell" type of transaction
                 is_buy = true;
+
+                inverted = !inverted;
+                if (inverted) {
+                    actual_scope = aux_get_scope_for_tokens(A, B);
+                }
 
                 // PRINT(" -> buyer: ", buyer.to_string(), "\n");
                 // PRINT(" -> seller: ", seller.to_string(), "\n");
@@ -558,7 +567,13 @@ namespace vapaee {
             });
 
             // register event for activity log
-            aux_register_event(owner, name("transaction"), scope.to_string() + "|" + buyer.to_string() + "|" + seller.to_string() + "|" + amount.to_string() + "|" + payment.to_string() + "|" + price.to_string() );
+            if (!inverted) {
+                aux_register_event(owner, name("transaction"), actual_scope.to_string() + "|" + buyer.to_string() + "|" + seller.to_string() + "|" + amount.to_string() + "|" + payment.to_string() + "|" + price.to_string() );
+            } else {
+                aux_register_event(owner, name("transaction"), actual_scope.to_string() + "|" + buyer.to_string() + "|" + seller.to_string() + "|" + payment.to_string() + "|" + amount.to_string() + "|" + inverse.to_string() );
+            }
+            
+
 
             // find out last price
             asset last_price = price;
@@ -761,9 +776,10 @@ namespace vapaee {
             aux_register_event(owner, name(type.to_string() + ".order"), total.to_string() + "|" + price.to_string() );
             
             if (type == name("sell")) {
-                aux_generate_sell_order(owner, scope_sell, scope_buy, total, payment, price, inverse, ram_payer);
+                aux_generate_sell_order(false, owner, scope_sell, scope_buy, total, payment, price, inverse, ram_payer);
             } else if (type == name("buy")) {
-                aux_generate_sell_order(owner, scope_buy, scope_sell, payment, total, inverse, price, ram_payer);
+                PRINT(" ********* INVERTIMOS POR SER UNA COMPRA -> AHORA ES UNA VENTA *********\n");
+                aux_generate_sell_order(true, owner, scope_buy, scope_sell, payment, total, inverse, price, ram_payer);
             } else {
                 eosio_assert(false, (string("type must be 'sell' or 'buy' in lower case, got: ") + type.to_string()).c_str());
             }
@@ -771,8 +787,9 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::aux_generate_order() ...\n");
         }
 
-        void aux_generate_sell_order(name owner, name scope_buy, name scope_sell, asset total, asset payment, asset price, asset inverse, name ram_payer) {
+        void aux_generate_sell_order(bool inverted, name owner, name scope_buy, name scope_sell, asset total, asset payment, asset price, asset inverse, name ram_payer) {
             PRINT("vapaee::token::exchange::aux_generate_sell_order()\n");
+            PRINT(" inverted: ", std::to_string(inverted), "\n");
             PRINT(" owner: ", owner.to_string(), "\n");
             PRINT(" scope_buy: ", scope_buy.to_string(), "\n");
             PRINT(" scope_sell: ", scope_sell.to_string(), "\n");
@@ -1005,7 +1022,7 @@ namespace vapaee {
                     // PRINT("   - inverse:         ", inverse.to_string(), "\n");
                     // PRINT("   - current_price:   ", current_price.to_string(), "\n");    // 0.00047800 TLOS
                     // PRINT("   - current_inverse: ", current_inverse.to_string(), "\n");
-                    aux_register_transaction_in_history(buyer, seller, current_inverse, current_price, current_payment, current_total, buyer_fee, seller_fee);
+                    aux_register_transaction_in_history(inverted, buyer, seller, current_inverse, current_price, current_payment, current_total, buyer_fee, seller_fee);
                     
                 } else {
                     break;

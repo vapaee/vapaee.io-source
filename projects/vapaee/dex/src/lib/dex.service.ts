@@ -1318,8 +1318,6 @@ export class VapaeeDEX {
             var scope:string = tables.rows[i].table;
             var canonical = this.canonicalScope(scope);
             console.assert(scope == canonical, "ERROR: scope is not canonical", scope, [i, tables]);
-            var comodity = scope.split(".")[0].toUpperCase();
-            var currency = scope.split(".")[1].toUpperCase();
             this._markets[scope] = this.auxAssertScope(scope);
 
             // console.log(i, tables.rows[i]);
@@ -1335,10 +1333,13 @@ export class VapaeeDEX {
         this.setOrderSummary();
     }
 
-    async getTableSummary(comodity:TokenDEX, currency:TokenDEX, force:boolean = false): Promise<MarketSummary> {
-        var scope:string = this.getScopeFor(comodity, currency);
+    async getTableSummary(token_a:TokenDEX, token_b:TokenDEX, force:boolean = false): Promise<MarketSummary> {
+        var scope:string = this.getScopeFor(token_a, token_b);
         var canonical:string = this.canonicalScope(scope);
         var inverse:string = this.inverseScope(canonical);
+
+        var comodity = this.auxGetComodityToken(canonical); 
+        var currency = this.auxGetCurrencyToken(canonical);
 
         var ZERO_COMODITY = "0.00000000 " + comodity.symbol;
         var ZERO_CURRENCY = "0.00000000 " + currency.symbol;
@@ -1385,8 +1386,11 @@ export class VapaeeDEX {
                     crude[hh] = summary.rows[i];
                     if (last_hh < hh && hh < start_hour) {
                         last_hh = hh;
-                        price = (scope == canonical) ? summary.rows[i].price : summary.rows[i].inverse;
-                        inverse = (scope == canonical) ? summary.rows[i].inverse : summary.rows[i].price;
+                        price = summary.rows[i].price;
+                        inverse = summary.rows[i].inverse;
+
+                        // price = (scope == canonical) ? summary.rows[i].price : summary.rows[i].inverse;
+                        // inverse = (scope == canonical) ? summary.rows[i].inverse : summary.rows[i].price;
                         // if(canonical=="acorn.tlos")console.log("hh:", hh, "last_hh:", last_hh, "price:", price);
                     }    
                 }
@@ -1414,14 +1418,7 @@ export class VapaeeDEX {
                 var current_date = new Date(current * 3600 * 1000);
                 var nuevo:any = crude[current];
                 if (nuevo) {
-                    var s_price = (scope == canonical) ? nuevo.price : nuevo.inverse;
-                    var s_inverse = (scope == canonical) ? nuevo.inverse : nuevo.price;
-                    var s_volume = (scope == canonical) ? nuevo.volume : nuevo.amount;
-                    var s_amount = (scope == canonical) ? nuevo.amount : nuevo.volume;
-                    nuevo.price = s_price;
-                    nuevo.inverse = s_inverse;
-                    nuevo.volume = s_volume;
-                    nuevo.amount = s_amount;
+                    
                 } else {
                     nuevo = {
                         label: this.auxGetLabelForHour(current % 24),
@@ -1632,11 +1629,25 @@ export class VapaeeDEX {
         return hours[hh];
     }
 
-    private auxAssertScope(scope:string): Market {
-        var comodity_sym = scope.split(".")[0].toUpperCase();
+    private auxGetCurrencyToken(scope: string) {
+        console.assert(!!scope, "ERROR: invalid scope: '"+ scope +"'");
+        console.assert(scope.split(".").length == 2, "ERROR: invalid scope: '"+ scope +"'");
         var currency_sym = scope.split(".")[1].toUpperCase();
-        var comodity = this.getTokenNow(comodity_sym);
         var currency = this.getTokenNow(currency_sym);
+        return currency;
+    }
+
+    private auxGetComodityToken(scope: string) {
+        console.assert(!!scope, "ERROR: invalid scope: '"+ scope +"'");
+        console.assert(scope.split(".").length == 2, "ERROR: invalid scope: '"+ scope +"'");
+        var comodity_sym = scope.split(".")[0].toUpperCase();
+        var comodity = this.getTokenNow(comodity_sym);
+        return comodity;        
+    }
+
+    private auxAssertScope(scope:string): Market {
+        var comodity = this.auxGetComodityToken(scope);
+        var currency = this.auxGetCurrencyToken(scope);
         var aux_asset_com = new AssetDEX(0, comodity);
         var aux_asset_cur = new AssetDEX(0, currency);
 
@@ -2026,6 +2037,14 @@ export class VapaeeDEX {
                             percent_str: table.summary.percent_str,
                         }
                     }
+                }
+
+                token.summary = token.summary || {
+                    price: new AssetDEX(0, this.telos),
+                    price_24h_ago: new AssetDEX(0, this.telos),
+                    volume: new AssetDEX(0, this.telos),
+                    percent: 0,
+                    percent_str: "0%",
                 }
 
                 amount_map[token.symbol] = quantity;

@@ -68,6 +68,7 @@ show_balance viterbotelos
 show_table vapaeetokens vapaeetokens depusers
 show_table vapaeetokens vapaeetokens ordertables
 show_table vapaeetokens vapaeetokens earnings
+show_table vapaeetokens vapaeetokens events
 show_table vapaeetokens $token.tlos history
 show_table vapaeetokens $token.tlos tablesummary
 show_table vapaeetokens $token.tlos blockhistory

@@ -7,6 +7,7 @@ import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
 import { UserOrdersMap } from 'projects/vapaee/dex/src/public_api';
+import { VpePanelWalletComponent } from 'src/app/components/vpe-panel-wallet/vpe-panel-wallet.component';
 
 
 @Component({
@@ -93,24 +94,22 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
         return this.dex.feed.error('deposit');
     }    
 
-    onWalletConfirmDeposit(amount: AssetDEX) {
-        // console.log("------------------>", amount.toString());
+    onWalletConfirmDeposit(amount: AssetDEX, wallet: VpePanelWalletComponent) {
         this.loading = true;
         this.dex.deposit(amount).then(_ => {
-            // console.log("------------------>", amount.toString());
             this.loading = false;
+            wallet.closeInputs();
         }).catch(e => {
             console.error(typeof e, e);
             this.loading = false;
         });
     }
 
-    onWalletConfirmWithdraw(amount: AssetDEX) {
-        // console.log("------------------>", amount.toString());
+    onWalletConfirmWithdraw(amount: AssetDEX, wallet: VpePanelWalletComponent) {
         this.loading = true;
         this.dex.withdraw(amount).then(_ => {
-            // console.log("------------------>", amount.toString());
             this.loading = false;
+            wallet.closeInputs();
         }).catch(e => {
             console.error(typeof e, e);
             this.loading = false;

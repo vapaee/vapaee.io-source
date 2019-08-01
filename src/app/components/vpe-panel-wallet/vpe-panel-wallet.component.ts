@@ -198,6 +198,7 @@ export class VpePanelWalletComponent implements OnChanges {
         }
         if (this.deposit.token.symbol == asset.token.symbol) {
             this.deposit = new AssetDEX();
+            this.deposit_error = "";
         } else {
             this.deposit = asset.clone();
         }        
@@ -209,6 +210,7 @@ export class VpePanelWalletComponent implements OnChanges {
         if (!this.actions) return;
         if (this.withdraw.token.symbol == asset.token.symbol) {
             this.withdraw = new AssetDEX();
+            this.withdraw_error = "";
         } else {
             this.withdraw = asset.clone();
         }
@@ -272,5 +274,12 @@ export class VpePanelWalletComponent implements OnChanges {
 
     onConfirmDeposit() {
         this.confirmDeposit.next(this.deposit);
+    }
+
+    closeInputs() {
+        this.withdraw = new AssetDEX();
+        this.withdraw_error = "";
+        this.deposit = new AssetDEX();
+        this.deposit_error = "";        
     }
 }

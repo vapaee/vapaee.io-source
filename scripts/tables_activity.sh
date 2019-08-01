@@ -1,27 +1,24 @@
 #!/bin/bash
 
-token1=cnt
-TOKEN1=CNT
+token=cnt
+TOKEN=CNT
 if [ "$1" != "" ]; then
 if [ "$1" != "test" ]; then
 if [ "$1" != "prod" ]; then
-   token1=$1
-   token1=${token1,,}
-   TOKEN1=${token1^^}
+   token=$1
+   token=${token,,}
+   TOKEN=${token^^}
 fi
 fi
 fi
 
-token2=robo
-TOKEN2=ROBO
-if [ "$2" != "" ]; then
-if [ "$2" != "test" ]; then
-if [ "$2" != "prod" ]; then
-   token2=$2
-   token2=${token2,,}
-   TOKEN2=${token2^^}
+NET=
+if [ "$1" == "test" ]; then
+   NET='--url https://testnet.telos.caleos.io'
 fi
-fi
+
+if [ "$2" == "test" ]; then
+   NET='--url https://testnet.telos.caleos.io'
 fi
 
 if [ "$1" == "prod" ]; then
@@ -29,10 +26,6 @@ if [ "$1" == "prod" ]; then
 fi
 
 if [ "$2" == "prod" ]; then
-   NET='--url https://telos.eos.barcelona'
-fi
-
-if [ "$3" == "prod" ]; then
    NET='--url https://telos.eos.barcelona'
 fi
 
@@ -58,16 +51,9 @@ show_table() {
     cleos $NET get table $code $scope $table -l 1000
 }
 
-
+show_table vapaeetokens vapaeetokens tokens
+show_table vapaeetokens vapaeetokens depusers
 show_table vapaeetokens vapaeetokens ordertables
-show_table vapaeetokens vapaeetokens ordersummary
+show_table vapaeetokens vapaeetokens earnings
+show_table vapaeetokens vapaeetokens events
 
-show_table vapaeetokens $token2.$token1 sellorders
-show_table vapaeetokens $token1.$token2 sellorders
-
-show_table vapaeetokens $token2.$token1 history
-show_table vapaeetokens $token1.$token2 history
-show_table vapaeetokens $token2.$token1 tablesummary
-show_table vapaeetokens $token1.$token2 tablesummary
-show_table vapaeetokens $token2.$token1 blockhistory
-show_table vapaeetokens $token1.$token2 blockhistory
