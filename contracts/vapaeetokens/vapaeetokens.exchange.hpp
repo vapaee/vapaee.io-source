@@ -505,12 +505,12 @@ namespace vapaee {
             symbol_code A = amount.symbol.code();
             symbol_code B = payment.symbol.code();
             name scope = aux_get_canonical_scope_for_symbols(A, B);
-            name actual_scope = aux_get_scope_for_tokens(B, A);
+
             
             bool is_buy = false;
             PRINT(" -> scope: ", scope.to_string(), "\n");
 
-            if (scope == actual_scope) {
+            if (scope == aux_get_scope_for_tokens(B, A)) {
                 PRINT(" ********* INVERTIMOS POR SER UN SCOPE INVERSO *********\n");
                 // swap buyer / seller names
                 tmp_name = buyer;
@@ -536,10 +536,6 @@ namespace vapaee {
                 is_buy = true;
 
                 inverted = !inverted;
-                if (inverted) {
-                    actual_scope = aux_get_scope_for_tokens(A, B);
-                }
-
                 // PRINT(" -> buyer: ", buyer.to_string(), "\n");
                 // PRINT(" -> seller: ", seller.to_string(), "\n");
                 // PRINT(" -> amount: ", amount.to_string(), "\n");
@@ -568,8 +564,12 @@ namespace vapaee {
 
             // register event for activity log
             if (!inverted) {
-                aux_register_event(owner, name("transaction"), actual_scope.to_string() + "|" + buyer.to_string() + "|" + seller.to_string() + "|" + amount.to_string() + "|" + payment.to_string() + "|" + price.to_string() );
+                aux_register_event(owner, name("transaction"), scope.to_string() + "|" + buyer.to_string() + "|" + seller.to_string() + "|" + amount.to_string() + "|" + payment.to_string() + "|" + price.to_string() );
             } else {
+                name actual_scope = aux_get_scope_for_tokens(A, B);
+                if (scope == actual_scope) {
+                    actual_scope = aux_get_scope_for_tokens(B, A);
+                }
                 aux_register_event(owner, name("transaction"), actual_scope.to_string() + "|" + buyer.to_string() + "|" + seller.to_string() + "|" + payment.to_string() + "|" + amount.to_string() + "|" + inverse.to_string() );
             }
             

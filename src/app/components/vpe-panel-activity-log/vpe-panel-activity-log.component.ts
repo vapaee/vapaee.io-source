@@ -149,7 +149,11 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
                     data.amount = parts[3];
                     data.payment = parts[4];
                     data.price = parts[5];
-                    data.ordertype = (e.user == data.seller) ? "sell" : "buy";
+                    if (data.scope == this.dex.canonicalScope(data.scope)) {
+                        data.ordertype = (e.user == data.seller) ? "sell" : "buy";
+                    } else {
+                        data.ordertype = (e.user != data.seller) ? "sell" : "buy";
+                    }
                     break;
                 case "cancel.order":
                     // cancel sell order: cnt.tlos|1
