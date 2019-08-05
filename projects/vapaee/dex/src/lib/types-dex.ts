@@ -11,6 +11,8 @@ export interface Market {
     currency: TokenDEX,
     deals: number;
     blocks: number;
+    direct: number;
+    inverse: number;
     blocklevels: any[][][];
     blocklist: any[][];
     reverselevels: any[][][];

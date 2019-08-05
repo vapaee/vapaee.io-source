@@ -9,7 +9,54 @@
             <div class="card-deck">
                 <div class="row" style="flex-grow: 1;">
                     <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let market of get_markets; let i=index">
-                        <div>{{market.summary.scope}}</div>
+
+                        <div class="card market-card text-white bg-dark margin-top" *ngIf="i<limit">
+                            <div class="card-body vpe-background-card-body">
+                                
+                                <div class="text-left">
+                                    <img style="height:16px; width: 16px; margin-top:-8px" [src]="market.comodity.logo">
+                                    <span class="card-title text-md">
+                                        {{market.comodity.symbol}}
+                                    </span>
+
+                                    <span class="text-muted"> / </span>
+
+                                    <img style="height:16px; width: 16px; margin-top:-8px" [src]="market.currency.logo">
+                                    <span class="card-title text-md">
+                                        {{market.currency.symbol}}
+                                    </span>
+
+                                    <div style="position: absolute; right: 20px; top: 12px;" class="text-lg">
+                                        <div
+                                            class="nowrap text-right"
+                                            [ngClass]="{'text-success': market.summary?.percent > 0, 'text-danger': market.summary?.percent < 0, 'text-muted': market.summary?.percent  == 0}"
+                                        >
+                                            <small><b>{{market.summary?.percent_str}}</b></small>
+                                        </div>
+                                    </div>                                       
+                                </div>
+
+
+                                <div class="row margin-top">
+                                    <div class="col-6 text-left">                         
+                                        <span
+                                            class="btn btn-primary btn-sm"
+                                            (click)="goToTradeMarket(market)"
+                                            >{{local.string.trade}}</span>
+                                    </div>
+                                    <div class="col-6 text-right">
+
+                                        <div class="text-right">
+                                            <div><small class="nowrap text-muted">max: {{market.summary?.max_price}}</small></div>
+                                            <div><small class="nowrap text-muted">min: {{market.summary?.min_price}}</small></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
                         <!--
                         <div class="card market-card text-white bg-dark margin-top" *ngIf="i<limit">
                             <div class="card-body vpe-background-card-body">

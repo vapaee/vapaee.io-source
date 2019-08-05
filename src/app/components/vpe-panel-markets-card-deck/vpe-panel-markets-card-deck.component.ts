@@ -25,7 +25,7 @@ export class VpePanelMarketsCardDeckComponent implements OnChanges {
     @Input() public hidebackground: boolean;
     @Input() public limit: number;
 
-    @Output() tradeMarket: EventEmitter<TokenDEX> = new EventEmitter();
+    @Output() tradeMarket: EventEmitter<string> = new EventEmitter();
     
     public deposit: AssetDEX;
     public withdraw: AssetDEX;
@@ -101,8 +101,8 @@ export class VpePanelMarketsCardDeckComponent implements OnChanges {
         return _summary;
     }
 
-    goToTradeMarket(token:TokenDEX) {
-        this.tradeMarket.next(token);
+    goToTradeMarket(market:Market) {
+        this.tradeMarket.next(market.scope);
     }
 
 }

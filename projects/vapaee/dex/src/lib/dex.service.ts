@@ -511,6 +511,8 @@ export class VapaeeDEX {
             reverselevels: table.blocklevels,
             blocks: table.blocks,
             deals: table.deals,
+            direct: table.inverse,
+            inverse: table.direct,
             header: {
                 sell: {
                     total:table.header.buy.total.clone(),
@@ -812,6 +814,7 @@ export class VapaeeDEX {
         ]).then(r => {
             this._reverse = {};
             this.resortTokens();
+            this.resortTopMarkets();
             // this.feed.printChrono(chrono_key);
             this.onTradeUpdated.next(null);
             return r;
@@ -1325,6 +1328,8 @@ export class VapaeeDEX {
             this._markets[canonical].header.buy.orders = tables.rows[i].demand.orders;
             this._markets[canonical].deals = tables.rows[i].deals;
             this._markets[canonical].blocks = tables.rows[i].blocks;
+            this._markets[canonical].direct = tables.rows[i].demand.ascurrency;
+            this._markets[canonical].inverse = tables.rows[i].supply.ascurrency;
         }
         
         this.setOrderSummary();
@@ -1674,6 +1679,8 @@ export class VapaeeDEX {
             currency: currency,
             orders: { sell: [], buy: [] },
             deals: 0,
+            direct: 0,
+            inverse: 0,
             history: [],
             tx: {},
             blocks: 0,
@@ -2232,46 +2239,51 @@ export class VapaeeDEX {
     }
 
     private resortTopMarkets() {
-        this.topmarkets = [];
-        var aux;
+        this.waitTokenSummary.then(_ => {
 
-        
-        
-        try {
+            this.topmarkets = [];
+            var inverse: string;
+            var market:Market;
             for (var scope in this._markets) {
-                this.topmarkets.push(this._markets[scope]);
-                if (!this._markets[scope].summary) return;
-                aux = this._markets[scope].summary.volume.token.summary.price.amount;
-                aux = this._markets[scope].summary.price.token.summary.price.amount;
-            }
-        } catch(e) {
-            console.log("resortTopMarkets CANCELED: ", e);
-            return;
-        }
-
-        this.topmarkets.sort((a:Market, b:Market) => {
-            
-            var a_vol = a.summary ? a.summary.volume : new AssetDEX();
-            var b_vol = b.summary ? b.summary.volume : new AssetDEX();
-
-            if (a_vol.token != this.telos) {
-                a_vol = new AssetDEX(a_vol.amount.multipliedBy(a_vol.token.summary.price.amount),this.telos);
-            }
-            if (b_vol.token != this.telos) {
-                b_vol = new AssetDEX(b_vol.amount.multipliedBy(b_vol.token.summary.price.amount),this.telos);
+                market = this._markets[scope];
+                if (market.direct >= market.inverse) {
+                    this.topmarkets.push(market);
+                } else {
+                    inverse = this.inverseScope(scope);
+                    market = this.market(inverse);
+                    this.topmarkets.push(market);
+                }
             }
 
-            console.assert(b_vol.token == this.telos, "ERROR: voluem misscalculated");
-            console.assert(a_vol.token == this.telos, "ERROR: voluem misscalculated");
+            this.topmarkets.sort((a:Market, b:Market) => {
+                
+                var a_vol = a.summary ? a.summary.volume : new AssetDEX();
+                var b_vol = b.summary ? b.summary.volume : new AssetDEX();
 
-            if(a_vol.amount.isGreaterThan(b_vol.amount)) return -1;
-            if(a_vol.amount.isLessThan(b_vol.amount)) return 1;
+                if (a_vol.token != this.telos) {
+                    a_vol = new AssetDEX(a_vol.amount.multipliedBy(a_vol.token.summary.price.amount),this.telos);
+                }
+                if (b_vol.token != this.telos) {
+                    b_vol = new AssetDEX(b_vol.amount.multipliedBy(b_vol.token.summary.price.amount),this.telos);
+                }
 
+                console.assert(b_vol.token == this.telos, "ERROR: volume misscalculated");
+                console.assert(a_vol.token == this.telos, "ERROR: volume misscalculated");
 
+                if(a_vol.amount.isGreaterThan(b_vol.amount)) return -1;
+                if(a_vol.amount.isLessThan(b_vol.amount)) return 1;
 
+                if(a.currency == this.telos && b.currency != this.telos) return -1;
+                if(b.currency == this.telos && a.currency != this.telos) return 1;
+
+                if(a.comodity.appname < b.comodity.appname) return -1;
+                if(a.comodity.appname > b.comodity.appname) return 1;
+    
+            });
+
+            this.onTopMarketsReady.next(this.topmarkets); 
         });
 
-        this.onTopMarketsReady.next(this.topmarkets); 
     }
 
 
