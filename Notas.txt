@@ -46,11 +46,13 @@ npm i -D @babel/runtime
 - Markets Page (new)
   + titulo Markets
   - contract:
-    - actualmente el activity log registra actividad inconsistente:
+    + actualmente el activity log registra actividad inconsistente:
       cuando registra una orden toma en cuenta el scope tal cual viene
       cuando registra una transacción (deal) siempre lo hace usando el canonical scope
-      - hay que registrar la transacción sin pasar el scope a canonical
-    - registrar 
+    + cambiar la estructura de la tabla ordersummary:
+      dentro de supply y demand agregar un dato "ascurrency" int que cuente las vece suqe se usó cómo currency
+      ahora tlos debe tener el mismo número que deals y el otro 0. 
+      de aquí en más la suma de ambos debe ser ugual a deals
   @vapaee/dex:
     - hacer una lista de los mercados más populares.
     - hacer una lista de las currencies más populares.

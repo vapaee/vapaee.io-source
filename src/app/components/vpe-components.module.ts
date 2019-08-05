@@ -25,6 +25,7 @@ import { VpePanelComponent } from './vpe-panel/vpe-panel.component';
 import { VpePanelOrdersComponent } from './vpe-panel-orders/vpe-panel-orders.component';
 import { VpePanelUserOrdersComponent } from './vpe-panel-user-orders/vpe-panel-user-orders.component';
 import { VpePanelTokensCardDeckComponent } from './vpe-panel-tokens-card-deck/vpe-panel-tokens-card-deck.component';
+import { VpePanelMarketsCardDeckComponent } from './vpe-panel-markets-card-deck/vpe-panel-markets-card-deck.component';
 import { VpePanelHistoryComponent } from './vpe-panel-history/vpe-panel-history.component';
 import { VpePanelWalletComponent } from './vpe-panel-wallet/vpe-panel-wallet.component';
 import { VpePanelBalanceBreakdawnComponent } from './vpe-panel-balance-breakdown/vpe-panel-balance-breakdown.component';
@@ -48,6 +49,7 @@ import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-p
         VpePanelOrdersComponent,
         VpePanelUserOrdersComponent,
         VpePanelTokensCardDeckComponent,
+        VpePanelMarketsCardDeckComponent,
         VpePanelHistoryComponent,
         VpePanelWalletComponent,
         VpePanelBalanceBreakdawnComponent,
@@ -81,6 +83,7 @@ import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-p
         VpePanelOrdersComponent,
         VpePanelUserOrdersComponent,
         VpePanelTokensCardDeckComponent,
+        VpePanelMarketsCardDeckComponent,
         VpePanelHistoryComponent,
         VpePanelWalletComponent,
         VpePanelBalanceBreakdawnComponent,

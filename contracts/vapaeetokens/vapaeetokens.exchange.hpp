@@ -501,6 +501,11 @@ namespace vapaee {
             asset tmp_asset;
             asset tmp_pay;
             name owner = seller;
+
+            symbol_code currency = price.symbol.code();
+            if (inverted) {
+                currency = inverse.symbol.code();
+            }
             
             symbol_code A = amount.symbol.code();
             symbol_code B = payment.symbol.code();
@@ -714,6 +719,12 @@ namespace vapaee {
             o_summary.modify(*orders_itr, same_payer, [&](auto & a){
                 a.deals = h_id+1;
                 a.blocks = bh_id+1;
+
+                if (currency == a.pay) {
+                    a.demand.ascurrency += 1;
+                } else {
+                    a.supply.ascurrency += 1;
+                }
             });
 
             PRINT("vapaee::token::exchange::aux_register_transaction_in_history() ...\n");
@@ -1489,11 +1500,12 @@ namespace vapaee {
             //     a.deals = 4;
             // });
 
-            // Borrar ordersummary
+            // // Borrar ordersummary
             // ordersummary o_summary(get_self(), get_self().value);
             // for (auto ptr = o_summary.begin(); ptr != o_summary.end(); ptr = o_summary.begin()) {
             //     o_summary.erase(*ptr);
             // }
+
             
             /*
             // Adding ordertables table entries
@@ -1517,9 +1529,49 @@ namespace vapaee {
                 a.blocks = 16;
             });
             */
+            
+            
+            // ordersum o_sum(get_self(), get_self().value);
+            // ordersummary o_summary(get_self(), get_self().value);
+            // for (auto ptr = o_sum.begin(); ptr != o_sum.end(); ptr = o_sum.begin()) {
+            //     o_summary.emplace(get_self(), [&]( auto& a ) {
+            //         a.table = ptr->table;
+            //         a.demand.orders = ptr->demand.orders;
+            //         a.supply.orders = ptr->supply.orders;
+            //         a.demand.total = ptr->demand.total;
+            //         a.supply.total = ptr->supply.total;
+            //         a.supply.ascurrency = ptr->supply.ascurrency;
+            //         a.demand.ascurrency = ptr->demand.ascurrency;
+            //         a.sell = ptr->sell;
+            //         a.pay = ptr->pay;
+            //         a.deals = ptr->deals;
+            //         a.blocks = ptr->blocks;
+            //     });
+            //     o_sum.erase(*ptr);
+            // }
+            
+            
 
-
-
+            /*
+            // copy from old structure to newone
+            ordersummary o_summary(get_self(), get_self().value);
+            ordersum o_sum(get_self(), get_self().value);
+            for (auto ptr = o_summary.begin(); ptr != o_summary.end(); ptr++) {
+                o_sum.emplace(get_self(), [&]( auto& a ) {
+                    a.table = ptr->table;
+                    a.demand.orders = ptr->demand.orders;
+                    a.supply.orders = ptr->supply.orders;
+                    a.demand.total = ptr->demand.total;
+                    a.supply.total = ptr->supply.total;
+                    a.supply.ascurrency = 0;
+                    a.demand.ascurrency = ptr->deals;
+                    a.sell = ptr->sell;
+                    a.pay = ptr->pay;
+                    a.deals = ptr->deals;
+                    a.blocks = ptr->blocks;
+                });
+            }
+            */
             
             /*
             ordersummary o_summary(get_self(), get_self().value);

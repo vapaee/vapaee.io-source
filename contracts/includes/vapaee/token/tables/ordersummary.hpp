@@ -4,6 +4,7 @@
         struct booksummary {
             asset total;
             int orders;
+            uint64_t ascurrency;
         };
 
         // TABLE ordersummary -----------
@@ -21,6 +22,3 @@
         typedef eosio::multi_index< "ordersummary"_n, ordersummary_table > ordersummary;
         // ------------------------------------
 
-
-
-        

@@ -179,7 +179,10 @@
 .padding-right-xxxl { padding-right:80px; }
 .padding-left-xxxl { padding-left:80px; }
 .padding-bottom-xxxl { padding-bottom:80px; }
-
+.overflow-hidden { overflow: hidden !important; }
+.overflow-visible { overflow: visible !important; }
+.overflow-auto { overflow: auto !important; }
+.overflow-scroll { overflow: scroll !important; }
 .nowrap {white-space: nowrap }
 .ellipsis{
     width: 100%;

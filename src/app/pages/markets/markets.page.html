@@ -6,5 +6,7 @@
         <div class="card-header vpe-background-card-header" [hidden]="app.device.portrait">
             <h1><img style="height:38px; width: 38px; margin-top: -3px;" src="/assets/img/coins.png"> {{local.string.markets | titlecase}}</h1>
         </div>
-    </div>   
+    </div>
+
+    <vpe-panel-markets-card-deck (tradeMarket)="tradeMarket($event)" [limit]="3" [hidebackground]="true" [hideheader]="true" [markets]="markets"></vpe-panel-markets-card-deck>
 </div>

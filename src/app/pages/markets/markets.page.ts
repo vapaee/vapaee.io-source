@@ -18,9 +18,17 @@ export class MarketsPage implements OnInit, OnDestroy {
         
     }
 
+    get markets() {
+        return this.dex.topmarkets;
+    }
+
     ngOnDestroy() {
     }
 
     ngOnInit() {
+    }
+
+    tradeMarket(scope:string) {
+        this.app.navigate('/exchange/trade/'+scope);
     }
 }

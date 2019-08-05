@@ -24,6 +24,7 @@ export class VapaeeDEX {
     */
     private _markets: MarketMap;
     private _reverse: MarketMap;
+    public topmarkets: Market[];
 
     public zero_telos: AssetDEX;
     public telos: TokenDEX;
@@ -42,7 +43,7 @@ export class VapaeeDEX {
     public onMarketSummary:Subject<MarketSummary> = new Subject();
     // public onBlocklistChange:Subject<any[][]> = new Subject();
     public onTokensReady:Subject<TokenDEX[]> = new Subject();
-    public onMarketReady:Subject<TokenDEX[]> = new Subject();
+    public onTopMarketsReady:Subject<Market[]> = new Subject();
     public onTradeUpdated:Subject<any> = new Subject();
     vapaeetokens:string = "vapaeetokens";
 
@@ -134,10 +135,7 @@ export class VapaeeDEX {
                 this.updateTokensSummary();
                 this.updateTokensMarkets();
             }, 100);
-        });    
-
-
-
+        });
     }
 
     // getters -------------------------------------------------------------
@@ -583,7 +581,6 @@ export class VapaeeDEX {
             return inverse;
         }
     }
-    
 
     public isCanonical(scope:string) {
         return this.canonicalScope(scope) == scope;
@@ -810,7 +807,7 @@ export class VapaeeDEX {
             this.getBlockHistory(comodity, currency, -1, -1, true).then(_ => this.feed.setMarck(chrono_key, "getBlockHistory()")),
             this.getSellOrders(comodity, currency, true).then(_ => this.feed.setMarck(chrono_key, "getSellOrders()")),
             this.getBuyOrders(comodity, currency, true).then(_ => this.feed.setMarck(chrono_key, "getBuyOrders()")),
-            this.getTableSummary(comodity, currency, true).then(_ => this.feed.setMarck(chrono_key, "getTableSummary()")),
+            this.getMarketSummary(comodity, currency, true).then(_ => this.feed.setMarck(chrono_key, "getMarketSummary()")),
             this.getOrderSummary().then(_ => this.feed.setMarck(chrono_key, "getOrderSummary()")),
         ]).then(r => {
             this._reverse = {};
@@ -1318,22 +1315,22 @@ export class VapaeeDEX {
             var scope:string = tables.rows[i].table;
             var canonical = this.canonicalScope(scope);
             console.assert(scope == canonical, "ERROR: scope is not canonical", scope, [i, tables]);
-            this._markets[scope] = this.auxAssertScope(scope);
+            this._markets[canonical] = this.auxAssertScope(canonical);
 
             // console.log(i, tables.rows[i]);
 
-            this._markets[scope].header.sell.total = new AssetDEX(tables.rows[i].supply.total, this);
-            this._markets[scope].header.sell.orders = tables.rows[i].supply.orders;
-            this._markets[scope].header.buy.total = new AssetDEX(tables.rows[i].demand.total, this);
-            this._markets[scope].header.buy.orders = tables.rows[i].demand.orders;
-            this._markets[scope].deals = tables.rows[i].deals;
-            this._markets[scope].blocks = tables.rows[i].blocks;
+            this._markets[canonical].header.sell.total = new AssetDEX(tables.rows[i].supply.total, this);
+            this._markets[canonical].header.sell.orders = tables.rows[i].supply.orders;
+            this._markets[canonical].header.buy.total = new AssetDEX(tables.rows[i].demand.total, this);
+            this._markets[canonical].header.buy.orders = tables.rows[i].demand.orders;
+            this._markets[canonical].deals = tables.rows[i].deals;
+            this._markets[canonical].blocks = tables.rows[i].blocks;
         }
         
         this.setOrderSummary();
     }
 
-    async getTableSummary(token_a:TokenDEX, token_b:TokenDEX, force:boolean = false): Promise<MarketSummary> {
+    async getMarketSummary(token_a:TokenDEX, token_b:TokenDEX, force:boolean = false): Promise<MarketSummary> {
         var scope:string = this.getScopeFor(token_a, token_b);
         var canonical:string = this.canonicalScope(scope);
         var inverse:string = this.inverseScope(canonical);
@@ -1533,6 +1530,7 @@ export class VapaeeDEX {
             result = await aux;
         }
 
+        this.resortTopMarkets();
         this.setMarketSummary();
         this.onMarketSummary.next(result);
 
@@ -1545,7 +1543,7 @@ export class VapaeeDEX {
 
             for (var i in this._markets) {
                 if (i.indexOf(".") == -1) continue;
-                var p = this.getTableSummary(this._markets[i].comodity, this._markets[i].currency, true);
+                var p = this.getMarketSummary(this._markets[i].comodity, this._markets[i].currency, true);
                 promises.push(p);
             }
 
@@ -1950,6 +1948,7 @@ export class VapaeeDEX {
 
     }
 
+    // for each tokens this sorts its markets based on volume
     private updateTokensMarkets() {
         return Promise.all([
             this.waitTokensLoaded,
@@ -1979,11 +1978,12 @@ export class VapaeeDEX {
 
             token.markets.sort((a:Market, b:Market) => {
                 // push offchain tokens to the end of the token list
-                var a_vol = a.summary ? a.summary.volume : new AssetDEX();
-                var b_vol = b.summary ? b.summary.volume : new AssetDEX();
+                var a_amount = a.summary ? a.summary.amount : new AssetDEX();
+                var b_amount = b.summary ? b.summary.amount : new AssetDEX();
     
-                if(a_vol.amount.isGreaterThan(b_vol.amount)) return -1;
-                if(a_vol.amount.isLessThan(b_vol.amount)) return 1;
+                console.assert(a_amount.token.symbol == b_amount.token.symbol, "ERROR: comparing two different tokens " + a_amount.str + ", " + b_amount.str)
+                if(a_amount.amount.isGreaterThan(b_amount.amount)) return -1;
+                if(a_amount.amount.isLessThan(b_amount.amount)) return 1;
 
                 return 0;
             });
@@ -2229,6 +2229,49 @@ export class VapaeeDEX {
         // console.log("(end) ------------------------------------------------------------");
 
         this.onTokensReady.next(this.tokens);        
+    }
+
+    private resortTopMarkets() {
+        this.topmarkets = [];
+        var aux;
+
+        
+        
+        try {
+            for (var scope in this._markets) {
+                this.topmarkets.push(this._markets[scope]);
+                if (!this._markets[scope].summary) return;
+                aux = this._markets[scope].summary.volume.token.summary.price.amount;
+                aux = this._markets[scope].summary.price.token.summary.price.amount;
+            }
+        } catch(e) {
+            console.log("resortTopMarkets CANCELED: ", e);
+            return;
+        }
+
+        this.topmarkets.sort((a:Market, b:Market) => {
+            
+            var a_vol = a.summary ? a.summary.volume : new AssetDEX();
+            var b_vol = b.summary ? b.summary.volume : new AssetDEX();
+
+            if (a_vol.token != this.telos) {
+                a_vol = new AssetDEX(a_vol.amount.multipliedBy(a_vol.token.summary.price.amount),this.telos);
+            }
+            if (b_vol.token != this.telos) {
+                b_vol = new AssetDEX(b_vol.amount.multipliedBy(b_vol.token.summary.price.amount),this.telos);
+            }
+
+            console.assert(b_vol.token == this.telos, "ERROR: voluem misscalculated");
+            console.assert(a_vol.token == this.telos, "ERROR: voluem misscalculated");
+
+            if(a_vol.amount.isGreaterThan(b_vol.amount)) return -1;
+            if(a_vol.amount.isLessThan(b_vol.amount)) return 1;
+
+
+
+        });
+
+        this.onTopMarketsReady.next(this.topmarkets); 
     }
 
 
