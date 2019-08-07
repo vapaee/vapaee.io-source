@@ -17,12 +17,14 @@ cd $HOME/contracts/_examples/eosio.contracts/eosio.trail
 if [[ src/eosio.trail.cpp -nt eosio.trail.wasm ]]; then
     eosio-cpp -o eosio.trail.wasm src/eosio.trail.cpp --abigen -I include
 fi
-echo "-------- eosio.token (standar token) ---------"
 cleos set contract eosio.trail $PWD -p eosio.trail@active
+
+echo "-------- eosio.token (standar token) ---------"
 cd $HOME/contracts/_examples/eosio.contracts/eosio.token
 if [[ src/eosio.token.cpp -nt eosio.token.wasm ]]; then
     eosio-cpp -o eosio.token.wasm src/eosio.token.cpp --abigen -I include
 fi
+
 echo "-------- eosio.token (TLOS) ---------"
 cleos set contract eosio.token $PWD -p eosio.token@active
 cleos push action eosio.token create '[ "eosio", "1000000000.0000 TLOS"]' -p eosio.token@active
@@ -101,6 +103,15 @@ cleos push action proxibotstkn issue '["alice", "100.0000 ROBO", "memo ROBO"]' -
 cleos push action proxibotstkn issue '["bob", "100.0000 ROBO", "memo ROBO"]' -p eosio@active
 cleos push action proxibotstkn issue '["tom", "100.0000 ROBO", "memo ROBO"]' -p eosio@active
 cleos push action proxibotstkn issue '["kate", "100.0000 ROBO", "memo ROBO"]' -p eosio@active
+
+
+echo "-------- stablecarbon (CUSD) ---------"
+cleos set contract stablecarbon $PWD -p stablecarbon@active
+cleos push action stablecarbon create '[ "eosio", "1000000000.00 CUSD"]' -p stablecarbon@active
+cleos push action stablecarbon issue '["alice", "1000.00 CUSD", "memo CUSD"]' -p eosio@active
+cleos push action stablecarbon issue '["bob", "1000.00 CUSD", "memo CUSD"]' -p eosio@active
+cleos push action stablecarbon issue '["tom", "1000.00 CUSD", "memo CUSD"]' -p eosio@active
+cleos push action stablecarbon issue '["kate", "1000.00 CUSD", "memo CUSD"]' -p eosio@active
 
 
 echo "----- loading tokens ----"

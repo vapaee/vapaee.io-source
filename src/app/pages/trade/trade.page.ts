@@ -153,6 +153,10 @@ export class TradePage implements OnInit, OnDestroy {
         return this.dex.tokens;
     }
 
+    get markets() {
+        return this.dex.topmarkets;
+    }
+
     private regenerateChartData() {
         var market = this.market;
         if (market) {
@@ -168,7 +172,7 @@ export class TradePage implements OnInit, OnDestroy {
                     console.log("CHART this._chartData = [[]];");
                     this._chartData = [[]];
                 }, 1200);
-            }            
+            }
             // console.log("this._chartData", this._chartData);
         } else {
             // console.error("No existe todavía el scope ", this.scope);

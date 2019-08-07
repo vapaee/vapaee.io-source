@@ -48,7 +48,7 @@
 
     <div class="row">
         <div class="col-sm-4 col-md-3  col-padding-right">
-            <vpe-panel-markets [tokens]="tokens" (selectMarket)="selectMarket($event)"></vpe-panel-markets>
+            <vpe-panel-markets [markets]="markets" (selectMarket)="selectMarket($event)"></vpe-panel-markets>
             <vpe-panel-wallet #wallet [deposits]="deposits" [balances]="balances" (confirmWithdraw)="onWalletConfirmWithdraw($event, wallet)" (confirmDeposit)="onWalletConfirmDeposit($event, wallet)" (gotoAccount)="gotoAccount()" [deposit_error]="deposit_error" [withdraw_error]="withdraw_error" [loading]="loading" [actions]="true"></vpe-panel-wallet>
         </div>
         <div class="col-sm-8 col-md-9 col-padding-left">

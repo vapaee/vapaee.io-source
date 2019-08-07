@@ -29,6 +29,7 @@ export class VapaeeDEX {
     public zero_telos: AssetDEX;
     public telos: TokenDEX;
     public tokens: TokenDEX[];
+    public currencies: TokenDEX[];
     public contract: SmartContract;
     public feed: Feedback;
     public current: Account;
@@ -94,7 +95,35 @@ export class VapaeeDEX {
         this.scatter.onLogggedStateChange.subscribe(this.onLoggedChange.bind(this));
         this.updateLogState();
         this.fetchTokens().then(data => {
-            this.tokens = data.tokens;
+            this.tokens = [];
+            for (let i in data.tokens) {
+                let tdata = data.tokens[i];
+                let token = new TokenDEX(tdata);
+                this.tokens.push(token);
+                if (token.symbol == "TLOS") {
+                    this.telos = token;
+                }                
+            }
+
+            // hardoded temporary inserted tokens ------------------------------
+            let carbon = new TokenDEX({
+                appname: "Carbon",
+                contract: "stablecarbon",
+                logo: "/assets/logos/carbon.svg",
+                logolg: "/assets/logos/carbon.svg",
+                precision: 2,
+                scope: "cusd.tlos",
+                symbol: "CUSD",
+                verified: false,
+                website: "https://www.carbon.money"
+            });
+            this.tokens.push(carbon);
+
+            // TODO: make this dynamic and not hardcoded ----------------
+            this.currencies = [ this.telos, carbon ];
+            // ----------------------------------------------------------
+
+            
             this.tokens.push(new TokenDEX({
                 appname: "Viitasphere",
                 contract: "viitasphere1",
@@ -2001,8 +2030,9 @@ export class VapaeeDEX {
     private updateTokensSummary(times: number = 20) {
         if (times > 1) {
             for (var i = times; i>0; i--) this.updateTokensSummary(1);
+            this.resortTokens();
             return;
-        } 
+        }
         return Promise.all([
             this.waitTokensLoaded,
             this.waitMarketSummary
@@ -2185,9 +2215,8 @@ export class VapaeeDEX {
             }
             
             // console.log("(end) ---------------------------------------------");
-            this.resortTokens();
             this.setTokenSummary();
-        });        
+        });
     }
 
     private fetchTokens(extended: boolean = true) {
@@ -2200,9 +2229,6 @@ export class VapaeeDEX {
 
             for (var i in data.tokens) {
                 data.tokens[i].scope = data.tokens[i].symbol.toLowerCase() + ".tlos";
-                if (data.tokens[i].symbol == "TLOS") {
-                    this.telos = data.tokens[i];
-                }
             }
 
             return data;
@@ -2215,8 +2241,8 @@ export class VapaeeDEX {
         // console.log("this.tokens[0]", this.tokens[0].summary);
         this.tokens.sort((a:TokenDEX, b:TokenDEX) => {
             // push offchain tokens to the end of the token list
-            if (a.offchain) return 1;
-            if (b.offchain) return -1;
+            if (a.offchain || !a.verified) return 1;
+            if (b.offchain || !b.verified) return -1;
 
             // console.log(" --- ", a.symbol, "-", b.symbol, " --- ");
             // console.log("     ", a.summary ? a.summary.volume.str : "0", "-", b.summary ? b.summary.volume.str : "0");

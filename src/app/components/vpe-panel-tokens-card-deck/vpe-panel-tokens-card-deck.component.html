@@ -41,7 +41,7 @@
                                 </div>
                                 <div>
                                     <div class="row margin-top">
-                                        <div class="col-4 text-left">
+                                        <div class="col-4 text-left col-padding-right">
                                             <span [hidden]="token.symbol != 'TLOS' && token.verified"
                                                 class="btn disabled btn-primary btn-sm margin-top">{{local.string.trade}}</span>                            
                                             <span [hidden]="token.symbol == 'TLOS' || !token.verified"
@@ -49,12 +49,12 @@
                                                 (click)="goToTradeToken(token)"
                                                 >{{local.string.trade}}</span>
                                         </div>
-                                        <div class="col-4 text-center">
+                                        <div class="col-4 text-center col-padding-left col-padding-right">
                                             <span [hidden]="token.symbol == 'TLOS' || !token.verified"
                                                 (click)="goToTokenPage(token)"
                                                 class="btn btn-primary btn-sm margin-top">{{local.string.info}}</span>   
                                         </div>
-                                        <div class="col-4 text-right">
+                                        <div class="col-4 text-right col-padding-left">
                                             <span [hidden]="token.symbol == 'TLOS' || !token.verified"
                                                 class="btn btn-primary btn-sm margin-top">{{local.string.markets}}</span>   
                                         </div>

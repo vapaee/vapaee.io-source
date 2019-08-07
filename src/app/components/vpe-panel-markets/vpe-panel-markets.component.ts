@@ -5,6 +5,7 @@ import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 import { TokenDEX } from 'projects/vapaee/dex/src/lib/token-dex.class';
+import { Market } from '@vapaee/dex';
 
 
 
@@ -15,7 +16,9 @@ import { TokenDEX } from 'projects/vapaee/dex/src/lib/token-dex.class';
 })
 export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
 
-    @Input() public tokens: TokenDEX[];
+    @Input() public markets: Market[];
+    @Input() public currencies: TokenDEX[];
+    @Input() public currency: TokenDEX;
     @Input() public hideheader: boolean;
     @Input() public margintop: boolean;
     @Input() public expanded: boolean;
@@ -28,6 +31,7 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
     volume_digits: number;
     price_digits: number;
     public verified_tokens: TokenDEX[];
+    public filtered_markets: Market[];
     private onTokensChangeSubscriber: Subscriber<any>;
 
     constructor(
@@ -42,10 +46,26 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
         this.complete = true;
         this.onTokensChangeSubscriber = new Subscriber<string>(_ => {
             this.verified_tokens = null;
-        });        
+            this.filtered_markets = null;
+        });
+    }
+
+    get get_markets(): Market[] {
+        if (!this.filtered_markets) {
+            this.filtered_markets = []
+            for (var i in this.markets) {
+                var market = this.markets[i];
+                if (market.currency.symbol == this.currency.symbol) {
+                    this.filtered_markets.push(market);
+                }
+            }    
+        }
+        return this.filtered_markets;
     }
 
     get get_tokens() {
+        return [];
+        /*
         if (!this.verified_tokens) {
             this.verified_tokens = []
             for (var i in this.tokens) {
@@ -56,6 +76,7 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
             }    
         }
         return this.verified_tokens;
+        */
     }
 
     get local_string_change () {

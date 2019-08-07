@@ -1,30 +1,15 @@
 <vpe-panel class="max-height-100" [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.marketlist">
-    <div class="row" *ngIf="search != 'no-search'">
-        <div class="col-sm-12 input-group">
-            <input
-                type="text"
-                class="form-control form-control-sm"
-                placeholder="{{local.string.searchtk}}"
-                [value]="token_filter"
-                (input)="token_filter = $event.target.value"
-                >
-            <div class="input-group-append">
-                <span class="input-group-text form-control-sm padding-xs">
-                    <i class="material-icons">search</i>
-                </span>
-            </div>
-        </div>            
-    </div>
-    <hr class="line">
     
-    <div class="row margin-top" [hidden]="!complete">
+    <div class="row margin-top">
         <div class="nowrap text-bold text-sm col-sm-3 col-padding-right">{{local.string.token | titlecase}}</div>
         <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-right col-padding-left">{{local.string.vol | titlecase}}</div>
         <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-right col-padding-left">{{local.string.price | titlecase}}</div>
         <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-left">{{local_string_change | titlecase}}</div>
     </div>
+
     <div class="row margin-top max-height-100">
         <div class="col-sm-12 max-height-100">
+            
             <perfect-scrollbar [hidden]="!complete" style="max-height: 206px; max-width: 100%">
                 <div class="row cursor-pointer margin-bottom active-on-hover" 
                     *ngFor="let token of get_tokens | filter:token_filter"
@@ -51,19 +36,7 @@
                     </div>
                 </div>
             </perfect-scrollbar>
-            <perfect-scrollbar [hidden]="complete" style="max-height: 100%; max-width: 100%">
-                <div class="row cursor-pointer margin-bottom active-on-hover" 
-                    *ngFor="let token of get_tokens | filter:token_filter"
-                    [hidden]="token.symbol == 'TLOS'"
-                    (click)="clickOnMarket(token.scope)"
-                    (tap)="clickOnMarket(token.scope)"
-                >
-                    <div class="nowrap text-md col-sm-12 margin-top margin-bottom">
-                        <img style="height:20px; width: 20px; margin-top:-2px" [src]="token.logo">
-                        {{token.appname}} ({{token.symbol}})
-                    </div>
-                </div>
-            </perfect-scrollbar>
+            
         </div>
     </div>
 </vpe-panel>
