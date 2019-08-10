@@ -39,13 +39,18 @@ npm i -D @babel/runtime
     tengo una orden de compra de 2 OLIVEs a precio 10 ACORNs pero en la orden me aparece cualquiera.
     Hay que verificar que diga lo que tiene que decir.
 
+
 + WP:
   + aclarar que el cobro del segundo ciclo está detenido para poder ponerme al día
   + sacar (temporalmente) el botón de "Support This project"
 
+
 - Markets Page (new)
+  - SACAR EL BOTON DEL NAV BAR <<<<-----------
+  - convertir los links de currencies en botones (seleccionado y no seleccionado)
+  - Por cada currency, listar los markets existentes y poner un botón "nuevo market" donde solo podés seleccionar el comodity. Eso en realidad no crea nada sino que te lleva a la página de trade/XXX.CCC donde podés hacer tus ordenes y ahi recién se crea el market
   + titulo Markets
-  - contract:
+  + contract:
     + actualmente el activity log registra actividad inconsistente:
       cuando registra una orden toma en cuenta el scope tal cual viene
       cuando registra una transacción (deal) siempre lo hace usando el canonical scope
@@ -61,6 +66,9 @@ npm i -D @babel/runtime
   - lista de los todos los markets sobre la currency elegida, ordenados descendentemente por volumen.
 
 - Token Page
+  - Poner dos solapas:
+    - Tokens: por defecto y te muestra los tokes como ya están
+    - Markets: página de markets
   + al calcular el token.summary hay que hacer una lista de los mercados en el que paricipa ordenado por quantity, en todos los casos debe ser comodity.
   - vpe-panel-tokens-card-deck:
     + ícono más grande

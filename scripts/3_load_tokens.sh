@@ -104,7 +104,6 @@ cleos push action proxibotstkn issue '["bob", "100.0000 ROBO", "memo ROBO"]' -p 
 cleos push action proxibotstkn issue '["tom", "100.0000 ROBO", "memo ROBO"]' -p eosio@active
 cleos push action proxibotstkn issue '["kate", "100.0000 ROBO", "memo ROBO"]' -p eosio@active
 
-
 echo "-------- stablecarbon (CUSD) ---------"
 cleos set contract stablecarbon $PWD -p stablecarbon@active
 cleos push action stablecarbon create '[ "eosio", "1000000000.00 CUSD"]' -p stablecarbon@active
@@ -112,7 +111,6 @@ cleos push action stablecarbon issue '["alice", "1000.00 CUSD", "memo CUSD"]' -p
 cleos push action stablecarbon issue '["bob", "1000.00 CUSD", "memo CUSD"]' -p eosio@active
 cleos push action stablecarbon issue '["tom", "1000.00 CUSD", "memo CUSD"]' -p eosio@active
 cleos push action stablecarbon issue '["kate", "1000.00 CUSD", "memo CUSD"]' -p eosio@active
-
 
 echo "----- loading tokens ----"
 
@@ -148,6 +146,9 @@ cleos push action vapaeetokens updatetoken '["TEACH", "Teachology", "http://teac
 echo "-- register ROBO --" 
 cleos push action vapaeetokens addtoken '["proxibotstkn","ROBO",4,"vapaeetokens"]' -p vapaeetokens@active
 cleos push action vapaeetokens updatetoken '["ROBO", "Proxibots", "https://proxibots.io", "/assets/logos/proxibots.png", "/assets/logos/proxibots-lg.png",true]' -p vapaeetokens@active
+echo "-- register CUSD --" 
+cleos push action vapaeetokens addtoken '["stablecarbon","CUSD",2,"vapaeetokens"]' -p vapaeetokens@active
+cleos push action vapaeetokens updatetoken '["CUSD", "Carbon", "https://www.carbon.money", "/assets/logos/carbon.svg", "/assets/logos/carbon.svg",true]' -p vapaeetokens@active
 
 
 echo "-- creating CNT token --" 

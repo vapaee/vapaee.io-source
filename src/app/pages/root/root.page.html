@@ -8,7 +8,7 @@
                 </a>
             </div>
             <div>
-                <a routerLink="{{'/exchange/home'}}" target="_blank">
+                <a routerLink="'/exchange/home'" target="_blank">
                     <img src="/assets/img/Logo.png" alt="" class="cnt-logo">
                 </a>
             </div>
@@ -24,7 +24,7 @@
                     </a>
                 </div>
                 <div>
-                    <a routerLink="{{'/exchange/home'}}" target="_blank">
+                    <a [routerLink]="'/exchange/home'" target="_blank">
                         <img src="/assets/img/Logo.png" alt="" class="vpe image-logo">
                     </a>
                 </div>
@@ -52,7 +52,7 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav ml-auto">
                 <li class="nav-item" [ngClass]="{active: app.stateStartsWith('home')}">
-                    <a class="nav-link" routerLink="{{'/exchange/home'}}" >{{local.string.Home | titlecase}}</a>
+                    <a class="nav-link" [routerLink]="'/exchange/home'" >{{local.string.Home | titlecase}}</a>
                 </li>
                 <li class="nav-item" [ngClass]="{active: app.stateStartsWith('tokens')}">
                     <a class="nav-link" [routerLink]="'/exchange/tokens'" >{{local.string.Tokens | titlecase}}</a>
@@ -61,7 +61,10 @@
                     <a class="nav-link" [routerLink]="'/exchange/markets'" >{{local.string.markets | titlecase}}</a>
                 </li>
                 <li class="nav-item" [ngClass]="{active: app.stateStartsWith('trade')}">
-                    <a class="nav-link" routerLink="{{'/exchange/trade/' + (app.getGlobal('last-market') || 'cnt.tlos') }}" >{{local.string.Trade | titlecase}}</a>
+                    <a class="nav-link" routerLink="{{'/exchange/trade/' + (app.getGlobal('last-market') || 'cnt.tlos') }}" >
+                        <i class="far fa-chart-line"></i>
+                        {{local.string.Trade | titlecase}}
+                    </a>
                 </li>
                 <li class="nav-item" [ngClass]="{active: app.stateStartsWith('account')}">
                     <a class="nav-link" [routerLink]="'/exchange/account/' + dex.current.name" >{{local.string.Account | titlecase}}</a>

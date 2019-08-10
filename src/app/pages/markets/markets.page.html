@@ -1,10 +1,13 @@
 <div class="container" >
     <div class="card text-white bg-dark margin-top-md">
-        <div class="card-header vpe-background-card-header text-xl" [hidden]="!app.device.portrait">
-            <img style="height:28px; width: 28px; margin-top: -3px;" src="/assets/img/coins.png"> {{local.string.markets | titlecase}}
-        </div>
-        <div class="card-header vpe-background-card-header" [hidden]="app.device.portrait">
-            <h1><img style="height:38px; width: 38px; margin-top: -3px;" src="/assets/img/coins.png"> {{local.string.markets | titlecase}}</h1>
+        <div class="card-header vpe-background-card-header text-lg" >
+            <img style="height:28px; width: 28px; margin-top: -3px;" src="/assets/img/coins.png" [hidden]="!app.device.portrait">
+            <img style="height:38px; width: 38px; margin-top: -3px;" src="/assets/img/coins.png" [hidden]="app.device.portrait">
+            {{local.string.markets | titlecase}}
+            <div class="pull-right">
+                <span class="btn btn-sm btn-secondary margin-right" routerLink="/exchange/tokens"> {{local.string.Tokens | titlecase}} </span>
+                <vpe-offchain-combobox class="margin-top-xs" [btn]="'sm'" [hideprice]="app.device.portrait"></vpe-offchain-combobox>
+            </div>            
         </div>
     </div>
 

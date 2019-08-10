@@ -96,16 +96,21 @@ export class VapaeeDEX {
         this.updateLogState();
         this.fetchTokens().then(data => {
             this.tokens = [];
+            let carbon;
             for (let i in data.tokens) {
                 let tdata = data.tokens[i];
                 let token = new TokenDEX(tdata);
                 this.tokens.push(token);
                 if (token.symbol == "TLOS") {
                     this.telos = token;
+                }
+                if (token.symbol == "CUSD") {
+                    carbon = token;
                 }                
             }
 
             // hardoded temporary inserted tokens ------------------------------
+            /*
             let carbon = new TokenDEX({
                 appname: "Carbon",
                 contract: "stablecarbon",
@@ -118,6 +123,7 @@ export class VapaeeDEX {
                 website: "https://www.carbon.money"
             });
             this.tokens.push(carbon);
+            */
 
             // TODO: make this dynamic and not hardcoded ----------------
             this.currencies = [ this.telos, carbon ];

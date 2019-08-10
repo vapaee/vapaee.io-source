@@ -35,7 +35,9 @@ import { Market } from 'projects/vapaee/dex/src/public_api';
                     </li>
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('trade')}" (click)="app.closeSideMenu()">
                         <a class="nav-link" routerLink="{{'/exchange/trade/' + (app.getGlobal('last-market') || 'cnt.tlos') }}" >
-                            <i class="material-icons"> navigate_next </i>{{local.string.Trade | titlecase}}
+                            <i class="material-icons"> navigate_next </i>
+                            <i class="far fa-chart-line"></i>
+                            {{local.string.Trade | titlecase}}
                         </a>
                     </li>
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('account')}" (click)="app.closeSideMenu()">
