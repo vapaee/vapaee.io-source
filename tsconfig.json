@@ -34,6 +34,12 @@
       ],
       "@vapaee/dex/*": [
         "dist/vapaee/dex/*"
+      ],
+      "@vapaee/aux": [
+        "dist/vapaee/aux"
+      ],
+      "@vapaee/aux/*": [
+        "dist/vapaee/aux/*"
       ]
     }
   }

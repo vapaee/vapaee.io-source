@@ -5,7 +5,6 @@
             <img style="height:38px; width: 38px; margin-top: -3px;" src="/assets/img/coins.png" [hidden]="app.device.portrait">
             {{local.string.markets | titlecase}}
             <div class="pull-right">
-                <span class="btn btn-sm btn-secondary margin-right" routerLink="/exchange/tokens"> {{local.string.Tokens | titlecase}} </span>
                 <vpe-offchain-combobox class="margin-top-xs" [btn]="'sm'" [hideprice]="app.device.portrait"></vpe-offchain-combobox>
             </div>            
         </div>

@@ -52,25 +52,40 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav ml-auto">
                 <li class="nav-item" [ngClass]="{active: app.stateStartsWith('home')}">
-                    <a class="nav-link" [routerLink]="'/exchange/home'" >{{local.string.Home | titlecase}}</a>
+                    <a class="nav-link" [routerLink]="'/exchange/home'" >
+                        <i class="material-icons"> home </i>
+                        {{local.string.Home | titlecase}}
+                    </a>
                 </li>
                 <li class="nav-item" [ngClass]="{active: app.stateStartsWith('tokens')}">
-                    <a class="nav-link" [routerLink]="'/exchange/tokens'" >{{local.string.Tokens | titlecase}}</a>
+                    <a class="nav-link" [routerLink]="'/exchange/tokens'" >
+                        <i class="material-icons"> view_list </i>
+                        {{local.string.Tokens | titlecase}}
+                    </a>
                 </li>
                 <li class="nav-item" [ngClass]="{active: app.stateStartsWith('markets')}">
-                    <a class="nav-link" [routerLink]="'/exchange/markets'" >{{local.string.markets | titlecase}}</a>
+                    <a class="nav-link" [routerLink]="'/exchange/markets'" >
+                        <i class="material-icons"> attach_money </i>
+                        {{local.string.markets | titlecase}}
+                    </a>
                 </li>
                 <li class="nav-item" [ngClass]="{active: app.stateStartsWith('trade')}">
                     <a class="nav-link" routerLink="{{'/exchange/trade/' + (app.getGlobal('last-market') || 'cnt.tlos') }}" >
-                        <i class="far fa-chart-line"></i>
+                        <i class="material-icons"> insert_chart_outlined </i>
                         {{local.string.Trade | titlecase}}
                     </a>
                 </li>
                 <li class="nav-item" [ngClass]="{active: app.stateStartsWith('account')}">
-                    <a class="nav-link" [routerLink]="'/exchange/account/' + dex.current.name" >{{local.string.Account | titlecase}}</a>
+                    <a class="nav-link" [routerLink]="'/exchange/account/' + dex.current.name" >
+                        <i class="material-icons"> perm_identity </i>
+                        {{local.string.Account | titlecase}}
+                    </a>
                 </li>
                 <li class="nav-item highlight" [ngClass]="{active: app.stateStartsWith('wp')}">
-                    <a class="nav-link" [routerLink]="'/exchange/wp'" >WP</a>
+                    <a class="nav-link" [routerLink]="'/exchange/wp'" >
+                        <i class="material-icons"> how_to_vote </i>
+                        WP
+                    </a>
                 </li>
                <!-- 
                 <li class="nav-item">
@@ -78,7 +93,11 @@
                 </li>
                 -->
                 <li class="nav-item dropdown" ngbDropdown>
-                    <a ngbDropdownToggle class="nav-link dropdown-toggle cursor-pointer" data-toggle="dropdown" id="language">{{local.string.Language | titlecase}} <span class="caret"></span></a>
+                    <a ngbDropdownToggle class="nav-link dropdown-toggle cursor-pointer" data-toggle="dropdown" id="language">
+                        <i class="material-icons"> language </i>
+                        {{local.string.Language | titlecase}}
+                        <span class="caret"></span>
+                    </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="language">
                         <span class="cursor-pointer dropdown-item" (click)="local.setLocal('en_US'); debug();">English</span>
                         <span class="cursor-pointer dropdown-item" (click)="local.setLocal('es_ES'); debug();">Español</span>

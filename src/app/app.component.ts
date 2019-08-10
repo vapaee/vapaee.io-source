@@ -6,6 +6,7 @@ import { VapaeeDEX } from '../../projects/vapaee/dex/src/lib/dex.service';
 import { LocalStringsService } from './services/common/common.services';
 import { TokenDEX } from '../../projects/vapaee/dex/src/lib/token-dex.class';
 import { Market } from 'projects/vapaee/dex/src/public_api';
+import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-root',
@@ -20,38 +21,52 @@ import { Market } from 'projects/vapaee/dex/src/public_api';
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('home')}" (click)="app.closeSideMenu()">
                         <a class="nav-link" routerLink="{{'/exchange/home'}}" >
-                            <i class="material-icons"> navigate_next </i>{{local.string.Home | titlecase}}
+                            <i class="material-icons nav"> navigate_next </i>
+                            <i class="material-icons"> home </i>
+                            {{local.string.Home | titlecase}}
                         </a>
                     </li>
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('tokens')}" (click)="app.closeSideMenu()">
                         <a class="nav-link" [routerLink]="'/exchange/tokens'" >
-                            <i class="material-icons"> navigate_next </i>{{local.string.Tokens | titlecase}}
+                            <i class="material-icons nav"> navigate_next </i>
+                            <i class="material-icons"> view_list </i>
+                            {{local.string.Tokens | titlecase}}
                         </a>
                     </li>
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('markets')}" (click)="app.closeSideMenu()">
                         <a class="nav-link" [routerLink]="'/exchange/markets'" >
-                            <i class="material-icons"> navigate_next </i>{{local.string.markets | titlecase}}
+                            <i class="material-icons nav"> navigate_next </i>
+                            <i class="material-icons"> attach_money </i>
+                            {{local.string.markets | titlecase}}
                         </a>
                     </li>
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('trade')}" (click)="app.closeSideMenu()">
                         <a class="nav-link" routerLink="{{'/exchange/trade/' + (app.getGlobal('last-market') || 'cnt.tlos') }}" >
-                            <i class="material-icons"> navigate_next </i>
-                            <i class="far fa-chart-line"></i>
+                            <i class="material-icons nav"> navigate_next </i>
+                            <i class="material-icons"> insert_chart_outlined </i>
                             {{local.string.Trade | titlecase}}
                         </a>
                     </li>
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('account')}" (click)="app.closeSideMenu()">
                         <a class="nav-link" [routerLink]="'/exchange/account/' + dex.current.name" >
-                            <i class="material-icons"> navigate_next </i>{{local.string.Account | titlecase}}
+                            <i class="material-icons nav"> navigate_next </i>
+                            <i class="material-icons"> perm_identity </i>
+                            {{local.string.Account | titlecase}}
                         </a>
                     </li>
                     <li class="nav-item highlight" [ngClass]="{active: app.stateStartsWith('wp')}" (click)="app.closeSideMenu()">
                         <a class="nav-link" [routerLink]="'/exchange/wp'" >
-                            <i class="material-icons"> navigate_next </i>WP
+                            <i class="material-icons nav"> navigate_next </i>
+                            <i class="material-icons"> how_to_vote </i>
+                            WP
                         </a>
                     </li>
                     <li class="nav-item dropdown" ngbDropdown>
-                        <a ngbDropdownToggle class="nav-link dropdown-toggle cursor-pointer" data-toggle="dropdown" id="language">{{local.string.Language | titlecase}} <span class="caret"></span></a>
+                        <a ngbDropdownToggle class="nav-link dropdown-toggle cursor-pointer" data-toggle="dropdown" id="language">
+                            <i class="material-icons"> language </i>
+                            {{local.string.Language | titlecase}}
+                            <span class="caret"></span>
+                        </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="language">
                             <span class="cursor-pointer dropdown-item" (click)="local.setLocal('en_US'); debug();">English</span>
                             <span class="cursor-pointer dropdown-item" (click)="local.setLocal('es_ES'); debug();">Español</span>
@@ -71,10 +86,12 @@ import { Market } from 'projects/vapaee/dex/src/public_api';
     <!-- Page content -->
       
   `,
-    styles: ['li.nav-item.active a.nav-link { position:relative; } li.nav-item.active a.nav-link i.material-icons { display: inline-block; } a.nav-link i.material-icons { display: none; position: absolute; left: -24px; top: 5px; }']
+    styles: ['li.nav-item.active a.nav-link { position:relative; } li.nav-item.active a.nav-link i.material-icons.nav { display: inline-block; } a.nav-link i.material-icons.nav { display: none; position: absolute; left: -24px; top: 7px; } a.nav-link i.material-icons:not(.nav) { vertical-align: middle; margin-top: -3px; }']
 })
 export class AppComponent {
 
+    // https://github.com/FortAwesome/angular-fontawesome
+    faCoffee = faCoffee;
     // ----------------------------
     private _opened: boolean = false;
  

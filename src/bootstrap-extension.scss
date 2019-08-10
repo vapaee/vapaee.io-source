@@ -762,13 +762,14 @@ small, .small {
 }
 
 // esto permite poner íconos a la derecha sin que se agrande el contenedor
+.pull-right { float: right; }
+.pull-left { float: left; }
 div.pull-right {
     line-height: 0px;
     & > * {
         line-height: 1.5;
     }
 }
-
 
 // spinner xs size
 .spinner-border-xs {

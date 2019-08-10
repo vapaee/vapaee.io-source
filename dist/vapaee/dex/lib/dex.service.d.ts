@@ -13,9 +13,11 @@ export declare class VapaeeDEX {
     loginState: string;
     private _markets;
     private _reverse;
+    topmarkets: Market[];
     zero_telos: AssetDEX;
     telos: TokenDEX;
     tokens: TokenDEX[];
+    currencies: TokenDEX[];
     contract: SmartContract;
     feed: Feedback;
     current: Account;
@@ -29,7 +31,7 @@ export declare class VapaeeDEX {
     onHistoryChange: Subject<string>;
     onMarketSummary: Subject<MarketSummary>;
     onTokensReady: Subject<TokenDEX[]>;
-    onMarketReady: Subject<TokenDEX[]>;
+    onTopMarketsReady: Subject<Market[]>;
     onTradeUpdated: Subject<any>;
     vapaeetokens: string;
     activityPagesize: number;
@@ -99,10 +101,12 @@ export declare class VapaeeDEX {
     getSellOrders(comodity: TokenDEX, currency: TokenDEX, force?: boolean): Promise<any>;
     getBuyOrders(comodity: TokenDEX, currency: TokenDEX, force?: boolean): Promise<any>;
     getOrderSummary(): Promise<any>;
-    getTableSummary(comodity: TokenDEX, currency: TokenDEX, force?: boolean): Promise<MarketSummary>;
+    getMarketSummary(token_a: TokenDEX, token_b: TokenDEX, force?: boolean): Promise<MarketSummary>;
     getAllTablesSumaries(): Promise<any>;
     private auxProcessRowsToOrders(rows);
     private auxGetLabelForHour(hh);
+    private auxGetCurrencyToken(scope);
+    private auxGetComodityToken(scope);
     private auxAssertScope(scope);
     private fetchDeposits(account);
     private fetchBalances(account);
@@ -119,4 +123,5 @@ export declare class VapaeeDEX {
     private updateTokensSummary(times?);
     private fetchTokens(extended?);
     private resortTokens();
+    private resortTopMarkets();
 }
