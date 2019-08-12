@@ -24,16 +24,20 @@ npm i -D @babel/runtime
   cd /var/www/vapaee.io-source && ng build @vapaee/dex --prod
   cd dist/vapaee/dex && npm publish --access public
 
-- @vapaee/feedback
-- @vapaee/scatter
-  - VapaeeScatter
-  - ScatterUtils: Utils renombrado
-  - Token: <-- tiene que poder manejar un objeto con propiedades {symbol, contract, precision}
-  - Asset 
-- @vapaee/dex 
-  - VapaeeDEX
-  - TokenDEX: clase que extiende Token, incluye stats y todo lo referente al DEX
-  - AssetDEX: clase que extiende Asset, incluye stats y todo lo referente al DEX
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
