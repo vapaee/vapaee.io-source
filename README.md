@@ -85,7 +85,7 @@ cd script
 
 - ### Critical
   - [x] PWA
-  - [ ] Responsive
+  - [x] Responsive
     - [x] generate an event _onResize_ for all panels to subscribe
     - [x] each panel should be able to calculate the area in which it should be deployed and set a element class that reflects it
     - [x] each panel must be displayed taking into account the area it has to be deployed (based on the class of the element)
@@ -126,7 +126,7 @@ cd script
     - [x] test Dapp-wallet comunication. Is it really integrated ??
 - ### Details:
   - [x] add Portugues language (Thanks to Fabiana Cecin)
-  - [ ] highlight the WP navbar button
+  - [x] highlight the WP navbar button
   - [x] change the Beatitude icon (HEART)
   - [x] mouse wheel on the chart must advance faster the further back in time it goes.
   - [x] make the TLOS deposit clickable so it adds the maximum possible order amount from the token Spot Account into the order form (Ryan Jones request)
