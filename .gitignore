@@ -42,6 +42,6 @@ Thumbs.db
 /contracts/**/*.wasm
 /contracts/**/*.abi
 
-
 # vapaee
-/dist
+dist
+./dist

@@ -8,25 +8,14 @@ import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
 
 
 @Component({
-    selector: 'vpe-panel-tokens-card-deck',
-    templateUrl: './vpe-panel-tokens-card-deck.component.html',
-    styleUrls: ['./vpe-panel-tokens-card-deck.component.scss']
+    selector: 'vpe-panel-tokens-card',
+    templateUrl: './vpe-panel-tokens-card.component.html',
+    styleUrls: ['./vpe-panel-tokens-card.component.scss']
 })
-export class VpePanelTokensCardDeckComponent implements OnChanges {
+export class VpePanelTokensCardComponent implements OnChanges {
 
-    @Input() public tokens: TokenDEX[];
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public expanded: boolean;
-    @Input() public title: string;
-    @Input() public loading: boolean;
-    @Input() public error: string;
-    @Input() public hidebackground: boolean;
-    @Input() public limit: number;
+    @Input() public token: TokenDEX;
 
-
-    @Output() confirmDeposit: EventEmitter<any> = new EventEmitter();
-    @Output() confirmWithdraw: EventEmitter<any> = new EventEmitter();
     @Output() tradeToken: EventEmitter<TokenDEX> = new EventEmitter();
     @Output() tokenPage: EventEmitter<TokenDEX> = new EventEmitter();
     public deposit: AssetDEX;
@@ -36,46 +25,10 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
-        this.hideheader = false;
-        this.margintop = true;
-        this.expanded = true; 
-        this.hidebackground = false;
-        this.limit = 0;
-        this.dex.waitTokensLoaded.then(_ => {
-            setTimeout(_ => {
-                if (this.limit == 0) {
-                    this.limit = this.dex.tokens.length;
-                }    
-            });
-        });
-    }
-
-    get get_tokens() {
-        var tokens = []
-        for (var i in this.tokens) {
-            var token = this.tokens[i];
-            if (!token.offchain) {
-                tokens.push(token);
-            }
-        }
-        return tokens
-    }
-
-    async updateSize(event:ResizeEvent) {
-
-    }
-
-    onResize(event:ResizeEvent) {
-        setTimeout(_ => {
-            this.updateSize(event);
-        });
-    }
-
-    ngOnChanges() {
         
     }
 
-    onChange() {
+    ngOnChanges() {
         
     }
 
@@ -110,21 +63,13 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
         return _summary;
     }
 
-    onConfirmWithdraw() {
-        this.confirmWithdraw.next(this.withdraw);
-    }
-
-    onConfirmDeposit() {
-        this.confirmDeposit.next(this.deposit);
-    }
-
     goToTradeToken(token:TokenDEX) {
-        console.log("VpePanelTokensCardDeckComponent.goToTradeToken()", token);
+        console.log("VpePanelTokensCardComponent.goToTradeToken()", token);
         this.tradeToken.next(token);
     }
 
     goToTokenPage(token:TokenDEX) {
-        console.log("VpePanelTokensCardDeckComponent.goToTokenPage()", token);
+        console.log("VpePanelTokensCardComponent.goToTokenPage()", token);
         this.tokenPage.next(token);
     }
 }

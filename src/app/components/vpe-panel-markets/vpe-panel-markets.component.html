@@ -1,42 +1,94 @@
 <vpe-panel class="max-height-100" [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.marketlist">
     
-    <div class="row margin-top">
-        <div class="nowrap text-bold text-sm col-sm-3 col-padding-right">{{local.string.token | titlecase}}</div>
-        <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-right col-padding-left">{{local.string.vol | titlecase}}</div>
-        <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-right col-padding-left">{{local.string.price | titlecase}}</div>
-        <div class="nowrap text-bold text-sm-right col-sm-3 col-padding-left">{{local_string_change | titlecase}}</div>
+    <div class="row margin-top" [hidden]="hide_maxmin">
+        <div class="nowrap text-bold text-sm col-2 col-padding-right">{{local.string.token | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-2 col-padding-right col-padding-left">{{local.string.price | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-2 col-padding-right col-padding-left">{{local_string_change | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-2 col-padding-right col-padding-left">24h min</div>
+        <div class="nowrap text-bold text-sm-right col-2 col-padding-right col-padding-left">24h max</div>
+        <div class="nowrap text-bold text-sm-right col-2 col-padding-left">{{local.string.vol | titlecase}}</div>
     </div>
+    
+    <div class="row margin-top cursor-pointer market-full"
+        [hidden]="hide_maxmin"
+        *ngFor="let market of markets"
+        (click)="clickOnMarket(market.scope)"
+        (tap)="clickOnMarket(market.scope)"    
+    >
+        <div class="nowrap col-2 col-padding-right">
+            <img style="height:24px; width: 24px; margin-top:-2px" [src]="market.comodity.logo">&nbsp;
+            <span class="text-md">{{market.comodity.symbol}}</span>
+            <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('market.token-stat-'+market.comodity.symbol) && !dex.feed.loading('summary.'+dex.canonicalScope(market.scope))"></span>
+        </div>
+        <div class="nowrap col-2 text-bold text-right col-padding-right col-padding-left">
+            {{market.summary?.price.valueToString(price_digits, true)}}
+            <span [hidden]="hide_symbol">{{market.summary?.price.token.symbol}}</span>
+        </div>
+        <div
+            class="nowrap col-2 text-right col-padding-right col-padding-left"
+            [ngClass]="{'text-success': market.summary?.percent > 0, 'text-danger': market.summary?.percent < 0, 'text-muted': market.summary?.percent  == 0}"
+        >
+            {{market.summary?.percent_str}}
+        </div>
+        <div class="nowrap col-2 text-right col-padding-right col-padding-left">
+            {{market.summary?.max_price.valueToString(price_digits, true)}}
+            <span [hidden]="hide_symbol">{{market.summary?.max_price.token.symbol}}</span>
+        </div>
+        <div class="nowrap col-2 text-right col-padding-right col-padding-left">
+            {{market.summary?.min_price.valueToString(price_digits, true)}}
+            <span [hidden]="hide_symbol">{{market.summary?.min_price.token.symbol}}</span>
+        </div>
+        <div class="nowrap col-2 text-sm-right col-padding-left">
+            {{market.summary?.volume.valueToString(volume_digits, true)}}
+            <span [hidden]="hide_symbol">{{market.summary?.volume.token.symbol}}</span>
+        </div>
+    </div>
+
+    <!-- -- -->
+
+    <div class="row margin-top" [hidden]="!hide_maxmin">
+        <div class="nowrap text-bold text-sm col-3 col-padding-right">{{local.string.token | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-3 col-padding-right col-padding-left">{{local.string.vol | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-3 col-padding-right col-padding-left">{{local.string.price | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-3 col-padding-left">{{local_string_change | titlecase}}</div>
+    </div>
+   
 
     <div class="row margin-top max-height-100">
         <div class="col-sm-12 max-height-100">
             
-            <perfect-scrollbar [hidden]="!complete" style="max-height: 206px; max-width: 100%">
-                <div class="row cursor-pointer margin-bottom active-on-hover" 
-                    *ngFor="let token of get_tokens | filter:token_filter"
-                    [hidden]="token.symbol == 'TLOS'"
-                    (click)="clickOnMarket(token.scope)"
-                    (tap)="clickOnMarket(token.scope)"
+            <perfect-scrollbar [hidden]="!complete" style="max-height: 254px; max-width: 100%">
+                <div
+                    class="row cursor-pointer market"
+                    *ngFor="let market of markets"
+                    [hidden]="!hide_maxmin"
+                    (click)="clickOnMarket(market.scope)"
+                    (tap)="clickOnMarket(market.scope)"    
                 >
-                    <div class="nowrap col-sm-3 col-padding-right">
-                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="token.logo">
-                        {{token.symbol}}
-                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('token-stat-'+token.symbol) && !dex.feed.loading('summary.'+token.scope)"></span>
-                    </div>
-                    <div class="nowrap col-sm-3 text-right col-padding-right col-padding-left">
-                        {{token.summary?.volume.valueToString(volume_digits, true)}}
-                    </div>
-                    <div class="nowrap col-sm-3 text-right col-padding-right col-padding-left">
-                        {{token.summary?.price.valueToString(price_digits, true)}}
+                    <div class="nowrap col-3 col-padding-right">
+                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="market.comodity.logo">&nbsp;
+                        {{market.comodity.symbol}}
+                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('market.token-stat-'+market.comodity.symbol) && !dex.feed.loading('summary.'+dex.canonicalScope(market.scope))"></span>
                     </div>
                     <div
-                        class="nowrap col-sm-3 text-right padding-right-lg"
-                        [ngClass]="{'text-success': token.summary?.percent > 0, 'text-danger': token.summary?.percent < 0, 'text-muted': token.summary?.percent  == 0}"
+                        class="nowrap col-3 text-right col-padding-right col-padding-left"
                     >
-                        {{token.summary?.percent_str}}
+                        {{market.summary?.volume.valueToString(volume_digits, true)}}
+                        <span [hidden]="hide_symbol">{{market.summary?.volume.token.symbol}}</span>            
+                    </div>
+                    <div class="nowrap col-3 text-right col-padding-right col-padding-left">
+                        {{market.summary?.price.valueToString(price_digits, true)}}
+                        <span [hidden]="hide_symbol">{{market.summary?.price.token.symbol}}</span>
+                    </div>
+                    <div class="nowrap col-3 text-right padding-right-lg"
+                        [ngClass]="{'text-success': market.summary?.percent > 0, 'text-danger': market.summary?.percent < 0, 'text-muted': market.summary?.percent  == 0}"
+                    >
+                    {{market.summary?.percent_str}}
                     </div>
                 </div>
             </perfect-scrollbar>
             
         </div>
     </div>
+
 </vpe-panel>

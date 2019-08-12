@@ -19,7 +19,7 @@ import { SmartContract } from './contract.class';
 import { ScatterUtils } from './utils.class';
 //*/
 
-// declare var ScatterJS:any;
+// declare let ScatterJS:any;
 
 // eosjs / eosjs2
 export interface RPC {
@@ -440,7 +440,7 @@ export class VapaeeScatter {
     // Networks (eosio blockchains) & Endpoints -----------------
     public setEndpoints(endpoints: NetworkMap) {
         this._networks = endpoints || this._networks;
-        for (var i in this._networks) {
+        for (let i in this._networks) {
             this._networks_slugs.push(i);
         }
         this.setEndpointsReady();
@@ -449,7 +449,7 @@ export class VapaeeScatter {
     setNetwork(name:string, index: number = 0) {
         console.log("ScatterService.setNetwork("+name+","+index+")");
         return this.waitEndpoints.then(() => {
-            var n = this.getNetwork(name, index);
+            let n = this.getNetwork(name, index);
             if (n) {
                 if (this._network.name != n.name) {
                     this._network = n;
@@ -469,8 +469,8 @@ export class VapaeeScatter {
     getNetwork(slug:string, index: number = 0): Network {
         if (this._networks[slug]) {
             if (this._networks[slug].endpoints.length > index && index >= 0) {
-                var network: Network = this._networks[slug];
-                var endpoint:Endpoint = network.endpoints[index];
+                let network: Network = this._networks[slug];
+                let endpoint:Endpoint = network.endpoints[index];
                 network.slug = slug;
                 network.index = index;
                 network.eosconf = {
@@ -504,7 +504,7 @@ export class VapaeeScatter {
         console.error("ScatterService.resetPromises()");
         this.waitEosjs.then(r => {
             this.waitEosjs = null;
-            var p = new Promise((resolve) => {
+            let p = new Promise((resolve) => {
                 if (this.waitEosjs) return;
                 this.waitEosjs = p;
                 this.setEosjs = resolve;
@@ -513,7 +513,7 @@ export class VapaeeScatter {
         });
         this.waitConnected.then(r => {
             this.waitConnected = null;
-            var p = new Promise((resolve) => {
+            let p = new Promise((resolve) => {
                 if (this.waitConnected) return;
                 this.waitConnected = p;
                 this.setConnected = resolve;
@@ -522,7 +522,7 @@ export class VapaeeScatter {
         });
         this.waitReady.then(r => {
             this.waitReady = null;
-            var p = new Promise((resolve) => {
+            let p = new Promise((resolve) => {
                 if (this.waitReady) return;
                 this.waitReady = p;
                 this.setReady = resolve;
@@ -532,7 +532,7 @@ export class VapaeeScatter {
         });
         this.waitLogged.then(r => {
             this.waitLogged = null;
-            var p = new Promise((resolve) => {
+            let p = new Promise((resolve) => {
                 if (this.waitLogged) return;
                 this.waitLogged = p;
                 this.setLogged = resolve;
@@ -606,13 +606,13 @@ export class VapaeeScatter {
 
     connectApp(appTitle:string = "") {
         // this.connect_count++;
-        // var resolve_num = this.connect_count;
+        // let resolve_num = this.connect_count;
         this.feed.setLoading("connect", true);
         if (appTitle != "") this.appTitle = appTitle;
         console.log(`ScatterService.connectApp(${this.appTitle})`);
         const connectionOptions = {initTimeout:1800}
         if (this._connected) return Promise.resolve(); // <---- avoids a loop
-        var promise = new Promise<any>((resolve, reject) => {
+        let promise = new Promise<any>((resolve, reject) => {
             this.waitConnected.then(resolve);
             if (this._connected) return; // <---- avoids a loop
             this.waitEosjs.then(() => {
@@ -707,7 +707,7 @@ export class VapaeeScatter {
                 
                 then((response) => {
                     // console.log("PASO 3 (eosjs.getAccount) ------", response);
-                    var account_data: AccountData = <AccountData>response;
+                    let account_data: AccountData = <AccountData>response;
 
                     if (account_data.core_liquid_balance) {
                         this.symbol = account_data.core_liquid_balance.split(" ")[1];
@@ -776,7 +776,7 @@ export class VapaeeScatter {
             });
         });
 
-        var promise = this._account_queries[name];
+        let promise = this._account_queries[name];
         promise.then((r) => {
             setTimeout(() => {
                 delete this._account_queries[r.account_name];
@@ -862,7 +862,7 @@ export class VapaeeScatter {
                     
                     this.eos.contract(account_name).then(contract => {
                         console.log(`-- contract ${account_name} --`);
-                        for (var i in contract) {
+                        for (let i in contract) {
                             if(typeof contract[i] == "function") console.log("contract."+i+"()", [contract[i]]);
                         }
                         resolve(contract);
@@ -912,7 +912,7 @@ export class VapaeeScatter {
                 this.setIdentity(this.lib.identity);
                 resolve(this.lib.identity);
             } else {
-                var loginTimer = setTimeout( _ => {
+                let loginTimer = setTimeout( _ => {
                     this.feed.setLoading("login", false);
                     reject("connection timeout");
                 }, 5000);
@@ -979,7 +979,7 @@ export class VapaeeScatter {
         // https://github.com/EOSIO/eosjs-api/blob/master/docs/api.md#eos.getTableRows
         return new Promise<any>((resolve, reject) => {
             this.waitEosjs.then(() => {
-                var json = {
+                let json = {
                     code: contract,
                     index_position: ipos,
                     json: true,

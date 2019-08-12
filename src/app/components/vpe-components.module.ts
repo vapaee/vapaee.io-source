@@ -39,6 +39,8 @@ import { VpeTokenInputComponent } from './vpe-token-input/vpe-token-input.compon
 import { VpeOffChainComboboxComponent } from './vpe-offchain-combobox/vpe-offchain-combobox.component';
 import { VpePanelActivityLogComponent } from './vpe-panel-activity-log/vpe-panel-activity-log.component';
 import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-panel-token-selector.component';
+import { VpePanelTokensCardComponent } from './vpe-panel-tokens-card/vpe-panel-tokens-card.component';
+import { VpePanelMarketsCardComponent } from './vpe-panel-markets-card/vpe-panel-markets-card.component';
 
 
 
@@ -48,7 +50,9 @@ import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-p
         VpePanelComponent,
         VpePanelOrdersComponent,
         VpePanelUserOrdersComponent,
+        VpePanelTokensCardComponent,
         VpePanelTokensCardDeckComponent,
+        VpePanelMarketsCardComponent,
         VpePanelMarketsCardDeckComponent,
         VpePanelHistoryComponent,
         VpePanelWalletComponent,
@@ -82,7 +86,9 @@ import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-p
         VpePanelComponent,
         VpePanelOrdersComponent,
         VpePanelUserOrdersComponent,
+        VpePanelTokensCardComponent,
         VpePanelTokensCardDeckComponent,
+        VpePanelMarketsCardComponent,
         VpePanelMarketsCardDeckComponent,
         VpePanelHistoryComponent,
         VpePanelWalletComponent,

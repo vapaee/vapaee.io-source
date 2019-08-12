@@ -4,10 +4,8 @@ import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscriber } from 'rxjs';
-import { Feedback } from 'projects/vapaee/feedback/src/public_api';
 import { SmartContract, VapaeeScatter } from '@vapaee/scatter';
-
-
+import { Feedback } from '@vapaee/feedback';
 
 @Component({
     selector: 'vpe-wp-page',

@@ -16,6 +16,11 @@ cleos push action stablecarbon transfer  '["alice","vapaeetokens","1000.00 CUSD"
 cleos push action stablecarbon transfer  '["tom",  "vapaeetokens","1000.00 CUSD","deposit"]' -p tom@active
 cleos push action stablecarbon transfer  '["kate", "vapaeetokens","1000.00 CUSD","deposit"]' -p kate@active
 
+cleos push action stablecoin.z transfer  '["bob",  "vapaeetokens","1000.00 EZAR","deposit"]' -p bob@active
+cleos push action stablecoin.z transfer  '["alice","vapaeetokens","1000.00 EZAR","deposit"]' -p alice@active
+cleos push action stablecoin.z transfer  '["tom",  "vapaeetokens","1000.00 EZAR","deposit"]' -p tom@active
+cleos push action stablecoin.z transfer  '["kate", "vapaeetokens","1000.00 EZAR","deposit"]' -p kate@active
+
 cleos push action ednazztokens transfer  '["bob",  "vapaeetokens","100.0000 EDNA","deposit"]' -p bob@active
 cleos push action ednazztokens transfer  '["alice","vapaeetokens","100.0000 EDNA","deposit"]' -p alice@active
 cleos push action ednazztokens transfer  '["tom",  "vapaeetokens","100.0000 EDNA","deposit"]' -p tom@active

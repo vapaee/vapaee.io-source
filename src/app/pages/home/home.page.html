@@ -20,7 +20,7 @@
     </div>
    
     <div class="container margin-top">
-        <vpe-panel-tokens-card-deck (tradeToken)="tradeToken($event)" [limit]="3" [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
+        <vpe-panel-tokens-card-deck (tradeToken)="tradeToken($event)" (tokenPage)="tokenPage($event)" [limit]="3" [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
     </div>
     
     <div class="container margin-top-lg">
@@ -48,7 +48,7 @@
         </div>
        
         <div class="container">
-            <vpe-panel-tokens-card-deck (tradeToken)="tradeToken($event)" [limit]="3" [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
+            <vpe-panel-tokens-card-deck (tradeToken)="tradeToken($event)" (tokenPage)="tokenPage($event)" [limit]="3" [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
         </div>
         
         <div class="container margin-top-lg">

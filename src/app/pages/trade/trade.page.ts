@@ -7,7 +7,7 @@ import { Subscriber } from 'rxjs';
 import { VpePanelOrderEditorComponent } from 'src/app/components/vpe-panel-order-editor/vpe-panel-order-editor.component';
 import { TokenDEX } from 'projects/vapaee/dex/src/lib/token-dex.class';
 import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
-import { TokenOrders, Market, OrderRow } from 'projects/vapaee/dex/src/public_api';
+import { TokenOrders, Market, OrderRow } from '@vapaee/dex';
 import { VpePanelWalletComponent } from 'src/app/components/vpe-panel-wallet/vpe-panel-wallet.component';
 
 

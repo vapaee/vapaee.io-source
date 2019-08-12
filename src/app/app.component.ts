@@ -5,8 +5,7 @@ import { CoingeckoService } from './services/coingecko.service';
 import { VapaeeDEX } from '../../projects/vapaee/dex/src/lib/dex.service';
 import { LocalStringsService } from './services/common/common.services';
 import { TokenDEX } from '../../projects/vapaee/dex/src/lib/token-dex.class';
-import { Market } from 'projects/vapaee/dex/src/public_api';
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+import { Market } from '@vapaee/dex';
 
 @Component({
     selector: 'app-root',
@@ -89,10 +88,6 @@ import { faCoffee } from '@fortawesome/free-solid-svg-icons';
     styles: ['li.nav-item.active a.nav-link { position:relative; } li.nav-item.active a.nav-link i.material-icons.nav { display: inline-block; } a.nav-link i.material-icons.nav { display: none; position: absolute; left: -24px; top: 7px; } a.nav-link i.material-icons:not(.nav) { vertical-align: middle; margin-top: -3px; }']
 })
 export class AppComponent {
-
-    // https://github.com/FortAwesome/angular-fontawesome
-    faCoffee = faCoffee;
-    // ----------------------------
     private _opened: boolean = false;
  
     private _toggleSidebar() {
@@ -109,7 +104,7 @@ export class AppComponent {
         public dex: VapaeeDEX,
         public local: LocalStringsService
     ) {
-        this.app.init("v2.2.0");
+        this.app.init("v2.2.3");
     }
     
     ngOnInit() {

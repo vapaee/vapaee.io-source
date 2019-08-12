@@ -1,6 +1,12 @@
 .token-card {
     min-width: 220px;
 }
+.card.currencies, .card.title {
+    overflow: visible;
+    .card-header {
+        border-radius: 8px;
+    }
+}
 
 .card.currencies {
     overflow: visible;

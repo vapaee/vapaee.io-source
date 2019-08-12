@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
-import { UserOrdersMap } from 'projects/vapaee/dex/src/public_api';
+import { UserOrdersMap } from '@vapaee/dex';
 import { VpePanelWalletComponent } from 'src/app/components/vpe-panel-wallet/vpe-panel-wallet.component';
 
 

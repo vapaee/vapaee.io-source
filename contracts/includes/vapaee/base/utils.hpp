@@ -45,6 +45,17 @@ namespace vapaee {
             double result = amount / unit;            
             return result;
         }
+
+        static uint32_t round_amount(uint32_t amount) {
+            int64_t diff = amount % 100;
+            if (diff <= 3) {
+                amount -= diff;
+            }
+            if (diff >= 97) {
+                amount += 100 - diff;
+            }
+            return amount;
+        }
         
         static asset inverse(const asset &A, const symbol &B ) {
             // PRINT("vapaee::utils::inverse()\n");
@@ -54,12 +65,32 @@ namespace vapaee {
             double A_unit = (double)pow(10.0, A.symbol.precision());   // 100000000 
             double B_unit = (double)pow(10.0, B.precision());          //     10000 
             double A_real = A_unit / A_amount;                         //       0.5 
-            int64_t amount = (int64_t) (A_real * B_unit);              //      5000   
+            int64_t amount = (int64_t) (A_real * B_unit);              //      5000
+            /*
+            // amount = round_amount(amount);
+            int64_t fixed = round_amount(amount);
+            int64_t aux = amount;
+            if (amount != fixed) {
+
+                int64_t diff = amount % 100;
+                print("  diff: ", std::to_string((unsigned long)diff), "\n");
+                if (diff <= 3) {
+                    aux -= diff;
+                }
+                if (diff >= 97) {
+                    aux += 100 - diff;
+                }                
+                print("vapaee::utils::inverse()\n");
+                print("  amount: ", std::to_string((unsigned long)amount), "\n");
+                print("   fixed: ", std::to_string((unsigned long)fixed), "\n");
+                print("     aux: ", std::to_string((unsigned long)aux), "\n");
+            }
+            */
             asset inv = asset(amount, B);                              // 0.5000 TLOS
             // PRINT("  A_amount: ", std::to_string(A_amount), "\n");
             // PRINT("  unit: ", std::to_string(unit), "\n");     
             // PRINT("  result: ", std::to_string(result), "\n");     
-            // PRINT("  amount: ", std::to_string((long long)amount), "\n");     
+            // PRINT("  amount: ", std::to_string((unsigned long)amount), "\n");     
             // PRINT("  inv: ", inv.to_string(), "\n");
             // PRINT("vapaee::utils::inverse()\n");
             return inv;
@@ -73,6 +104,12 @@ namespace vapaee {
             double real_inverse = unit / price_amount;
             double real_amount = (double) (payment.amount * real_inverse);
             int64_t amount = (int64_t) (real_amount);
+            int64_t fixed = round_amount(amount);
+            if (amount != fixed) {
+                print(" ************ vapaee::utils::amount() ****************\n");
+                print("  amount: ", std::to_string((long long)amount), "\n");
+                print("  fixed: ", std::to_string((long long)fixed), "\n");
+            }
             asset result = asset(amount, B);
             // PRINT("vapaee::utils::amount()\n");
             return result;
@@ -87,8 +124,8 @@ namespace vapaee {
             double unit = (double)pow(10.0, total.symbol.precision());
             double T_real = T_amount / unit;
             int64_t amount = (int64_t) (T_real * price.amount);
+            amount = round_amount(amount);
             asset pay = asset(amount, price.symbol);
-            
             // PRINT("  pay: ", pay.to_string(), "\n");
             // PRINT("vapaee::utils::payment() ...\n");
             return pay;

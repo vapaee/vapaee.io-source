@@ -70,38 +70,8 @@ export class VpePanelMarketsCardDeckComponent implements OnChanges {
         
     }
 
-    summary(_scope) {
-        return this.tokenSummary(_scope);
-    }
-
-    tokenSummary(_scope) {
-        return this.marketSummary(_scope);
-    }
-
-    marketSummary(_scope) {
-        var market = this.dex.market(_scope);
-        var _summary = Object.assign({
-            percent: 0,
-            percent_str: "0%",
-            price: this.dex.zero_telos.clone(),
-            records: [],
-            volume: this.dex.zero_telos.clone()
-        }, market ? market.summary : {
-            volume: new AssetDEX(),
-            price: new AssetDEX(),
-            max_price: new AssetDEX(),
-            min_price: new AssetDEX(),
-        });
-
-        _summary.volume = _summary.volume || new AssetDEX();
-        _summary.price = _summary.price || new AssetDEX();
-        _summary.max_price = _summary.max_price || new AssetDEX();
-        _summary.min_price = _summary.min_price || new AssetDEX();
-        
-        return _summary;
-    }
-
     goToTradeMarket(market:Market) {
+        
         this.tradeMarket.next(market.scope);
     }
 

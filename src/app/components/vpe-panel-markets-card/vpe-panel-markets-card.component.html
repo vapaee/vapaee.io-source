@@ -1,0 +1,139 @@
+
+
+                        <div class="card market-card text-white bg-dark margin-top">
+                            <div class="card-body vpe-background-card-body">
+                                
+                                <div class="text-left">
+                                    <img style="height:16px; width: 16px; margin-top:-8px" [src]="market.comodity.logo">
+                                    <span class="card-title text-md">
+                                        {{market.comodity.symbol}}
+                                    </span>
+
+                                    <span class="text-muted"> / </span>
+
+                                    <img style="height:16px; width: 16px; margin-top:-8px" [src]="market.currency.logo">
+                                    <span class="card-title text-md">
+                                        {{market.currency.symbol}}
+                                    </span>
+
+                                    <div style="position: absolute; right: 20px; top: 12px;" class="text-lg">
+                                        <div
+                                            class="nowrap text-right"
+                                            [ngClass]="{'text-success': market.summary?.percent > 0, 'text-danger': market.summary?.percent < 0, 'text-muted': market.summary?.percent  == 0}"
+                                        >
+                                            <small><b>{{market.summary?.percent_str}}</b></small>
+                                        </div>
+                                    </div>                                       
+                                </div>
+
+
+                                <div class="row margin-top">
+                                    <div class="col-6 text-left">                         
+                                        <span
+                                            class="btn btn-primary btn-sm"
+                                            (click)="goToTradeMarket(market)"
+                                            >{{local.string.trade}}</span>
+                                    </div>
+                                    <div class="col-6 text-right">
+
+                                        <div class="text-right">
+                                            <div><small class="nowrap text-muted">max: {{market.summary?.max_price}}</small></div>
+                                            <div><small class="nowrap text-muted">min: {{market.summary?.min_price}}</small></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="row margin-top">
+                                    <div class="col-6 text-left col-padding-right">
+                                        <small class="text-muted">{{local.string.vol}}: {{market.summary?.volume.valueToString(4)}}  {{market.summary?.volume.token.symbol}}</small>
+                                    </div>
+                                    <div class="col-6 text-right col-padding-left">
+                                        <small class="color-yellow bold"> {{service.getTokenInCurrentCurrency(market.summary?.price || "0.0000 TLOS").toString()}} </small>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </div>
+                        <!--
+                        <div class="col-xs-12 margin-top">
+                            <div class="row" style="flex-grow: 1">
+                                <div class="col-6 text-left col-padding-right" *ngIf="market.symbol != 'TLOS' && market.verified">
+                                    <small class="text-muted">{{local.string.vol}}: {{market.summary?.volume.valueToString(4)}}  {{market.summary?.volume.market.symbol}}</small>
+                                </div>
+                                <div class="col-6 text-right col-padding-left" *ngIf="market.symbol != 'TLOS' && market.verified">
+                                    <small class="color-yellow bold"> {{service.getTokenInCurrentCurrency(market.summary?.price || "0.0000 TLOS").toString()}} </small>
+                                </div>
+                                <div class="col-12 text-right" *ngIf="market.symbol == 'TLOS'"> &nbsp; </div>
+                                <div class="col-12 text-right" *ngIf="!market.verified"> {{local.string.cantbtraded}} </div>
+                            </div>
+                        </div>
+                        -->
+
+                        <!--
+                        <div class="card market-card text-white bg-dark margin-top" *ngIf="i<limit">
+                            <div class="card-body vpe-background-card-body">
+                                <div class="text-center">
+                                    <img style="height:64px; width: 64px; margin-top:-3px" [src]="market.logolg">
+                                    <div style="position: absolute; right: 20px; top: 12px;" class="text-lg" [hidden]="market.symbol == 'TLOS'">
+                                        <div
+                                            class="nowrap text-right"
+                                            [ngClass]="{'text-success': market.summary?.percent > 0, 'text-danger': market.summary?.percent < 0, 'text-muted': market.summary?.percent  == 0}"
+                                        >
+                                            <small><b>{{market.summary?.percent_str}}</b></small>
+                                        </div>
+                                    </div>                                       
+                                </div>
+                                <div class="text-center margin-top">
+                                    <span class="card-title text-lg">
+                                        {{market.appname}}
+                                    </span>
+                                </div>
+                                <div class="text-center">
+                                    <a [href]="market.website" target="_blank"><small class="text-muted">{{market.website}} &nbsp;</small></a>
+                                </div>
+                                <div class="card-text margin-top">
+                                    <div>
+                                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('market-stat-'+market.symbol) && !dex.feed.loading('summary.'+market.scope)"></span>
+                                        <small><span class="label">max:</span><span class="nowrap"> {{market.stat ? market.stat.max_supply : ('0 ' + market.symbol)}} </span></small><br>
+                                        <small><span class="label">total:</span><span class="nowrap"> {{market.stat ? market.stat.supply : ('0 ' + market.symbol)}} </span></small>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="row margin-top">
+                                        <div class="col-4 text-left">
+                                            <span [hidden]="market.symbol != 'TLOS' && market.verified"
+                                                class="btn disabled btn-primary btn-sm margin-top">{{local.string.trade}}</span>                            
+                                            <span [hidden]="market.symbol == 'TLOS' || !market.verified"
+                                                class="btn btn-primary btn-sm margin-top"
+                                                (click)="goToTrademarket(market)"
+                                                >{{local.string.trade}}</span>
+                                        </div>
+                                        <div class="col-4 text-center">
+                                            <span [hidden]="market.symbol == 'TLOS' || !market.verified"
+                                                (click)="goTomarketPage(market)"
+                                                class="btn btn-primary btn-sm margin-top">{{local.string.info}}</span>   
+                                        </div>
+                                        <div class="col-4 text-right">
+                                            <span [hidden]="market.symbol == 'TLOS' || !market.verified"
+                                                class="btn btn-primary btn-sm margin-top">{{local.string.markets}}</span>   
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 margin-top">
+                                    <div class="row" style="flex-grow: 1">
+                                        <div class="col-6 text-left col-padding-right" *ngIf="market.symbol != 'TLOS' && market.verified">
+                                            <small class="text-muted">{{local.string.vol}}: {{market.summary?.volume.valueToString(4)}}  {{market.summary?.volume.market.symbol}}</small>
+                                        </div>
+                                        <div class="col-6 text-right col-padding-left" *ngIf="market.symbol != 'TLOS' && market.verified">
+                                            <small class="color-yellow bold"> {{service.getTokenInCurrentCurrency(market.summary?.price || "0.0000 TLOS").toString()}} </small>
+                                        </div>
+                                        <div class="col-12 text-right" *ngIf="market.symbol == 'TLOS'"> &nbsp; </div>
+                                        <div class="col-12 text-right" *ngIf="!market.verified"> {{local.string.cantbtraded}} </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        -->
+

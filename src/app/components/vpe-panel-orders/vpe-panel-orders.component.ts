@@ -3,7 +3,7 @@ import { EventEmitter } from '@angular/core';
 import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { TokenOrders, OrderRow, MarketHeader } from 'projects/vapaee/dex/src/public_api';
+import { TokenOrders, OrderRow, MarketHeader } from '@vapaee/dex';
 
 
 

@@ -1,5 +1,5 @@
 <div class="container" >
-    <div class="card text-white bg-dark margin-top-md">
+    <div class="card title text-white bg-dark margin-top-md">
         <div class="card-header vpe-background-card-header text-lg" >
             <img style="height:28px; width: 28px; margin-top: -3px;" src="/assets/img/coins.png" [hidden]="!app.device.portrait">
             <img style="height:38px; width: 38px; margin-top: -3px;" src="/assets/img/coins.png" [hidden]="app.device.portrait">
@@ -15,9 +15,10 @@
     <div class="card currencies text-white bg-dark margin-top-sm">
         <div class="card-header vpe-background-card-header text-md">
             <span *ngFor="let currency of currencies; let i=index"
-                class="currency" [ngClass]="{'cursor-pointer':currency.verified, 'cursor-default':!currency.verified}"
+                class="currency btn btn-lg margin-right-lg"
+                [ngClass]="{'disable':!currency.verified, 'btn-success':selected?.symbol == currency.symbol, 'btn-primary':selected?.symbol != currency.symbol}"
+                (click)="selectCurrency(currency)"
             >
-                <span [hidden]="i == 0">&nbsp;&nbsp; | &nbsp;&nbsp;</span>
                 <img style="height:20px; width: 20px; margin-top: -3px;" [src]="currency.logo">
                 <span [ngClass]="{'text-muted':!currency.verified}"> {{currency.symbol}} </span>
                 <div class="label text-sm nowrap">coming soon</div>
@@ -26,7 +27,12 @@
     </div>
 
     <div class="margin-top-md">
-        <vpe-panel-markets [margintop]="false" [hideheader]="true" [markets]="markets" [currencies]="currencies" (selectMarket)="selectMarket($event)"></vpe-panel-markets>
+        <vpe-panel-markets 
+            [margintop]="false" 
+            [hideheader]="true" 
+            [markets]="currency_markets"
+            (selectMarket)="tradeMarket($event)"
+        ></vpe-panel-markets>
     </div>
 
 </div>

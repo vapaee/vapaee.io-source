@@ -39,6 +39,10 @@ export class HomePage implements OnInit, OnDestroy {
         this.app.navigate('/exchange/trade/'+token.symbol.toLowerCase()+'.tlos');
     }
 
+    tokenPage(token:TokenDEX) {
+        this.app.navigate('/exchange/token/'+token.symbol.toLowerCase());
+    }    
+
     gotoAccount(name:string) {
         this.app.navigate('/exchange/account/' + name);
     }

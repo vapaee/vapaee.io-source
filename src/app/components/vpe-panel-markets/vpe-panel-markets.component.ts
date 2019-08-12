@@ -17,8 +17,6 @@ import { Market } from '@vapaee/dex';
 export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
 
     @Input() public markets: Market[];
-    @Input() public currencies: TokenDEX[];
-    @Input() public currency: TokenDEX;
     @Input() public hideheader: boolean;
     @Input() public margintop: boolean;
     @Input() public expanded: boolean;
@@ -30,8 +28,8 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
     @HostBinding('class') display;
     volume_digits: number;
     price_digits: number;
-    public verified_tokens: TokenDEX[];
-    public filtered_markets: Market[];
+    hide_symbol: boolean;
+    hide_maxmin: boolean;
     private onTokensChangeSubscriber: Subscriber<any>;
 
     constructor(
@@ -45,38 +43,8 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
         this.expanded = true; 
         this.complete = true;
         this.onTokensChangeSubscriber = new Subscriber<string>(_ => {
-            this.verified_tokens = null;
-            this.filtered_markets = null;
+
         });
-    }
-
-    get get_markets(): Market[] {
-        if (!this.filtered_markets) {
-            this.filtered_markets = []
-            for (var i in this.markets) {
-                var market = this.markets[i];
-                if (market.currency.symbol == this.currency.symbol) {
-                    this.filtered_markets.push(market);
-                }
-            }    
-        }
-        return this.filtered_markets;
-    }
-
-    get get_tokens() {
-        return [];
-        /*
-        if (!this.verified_tokens) {
-            this.verified_tokens = []
-            for (var i in this.tokens) {
-                var token = this.tokens[i];
-                if (token.verified) {
-                    this.verified_tokens.push(token);
-                }
-            }    
-        }
-        return this.verified_tokens;
-        */
     }
 
     get local_string_change () {
@@ -88,15 +56,26 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     async updateSize(event:ResizeEvent) {
-        this.volume_digits = 4;
+        this.volume_digits = 8;
         this.price_digits = 8;
+        this.hide_symbol = false;
+        this.hide_maxmin = false;
+
+        console.log("event.width: ", event.width);
+
+        if (event.width < 691) {
+            this.hide_symbol = true;
+            this.hide_maxmin = true;
+            this.volume_digits = 6;
+        }
         
         this.display = "normal";
         if (event.width < 370) {
+            this.volume_digits = 4;
             this.display = "medium";
         }
         if (event.width < 360) {
-            this.price_digits = 7;
+            this.price_digits = 6;
         }
         if (event.width < 350) {
             this.volume_digits = 3;
@@ -105,11 +84,11 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
             this.display = "small";
         }
         if (event.width < 300) {
-            this.price_digits = 6;
+            this.price_digits = 5;
             this.volume_digits = 2;
         }
         if (event.width < 280) {
-            this.price_digits = 5;
+            this.price_digits = 4;
         }
         if (event.width < 260) {
             this.volume_digits = 1;
@@ -118,10 +97,10 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
             this.display = "tiny";
         }
         if (event.width < 230) {
-            this.price_digits = 5;
+            this.price_digits = 3;
         }
         if (event.width < 210) {
-            this.price_digits = 4;
+            this.price_digits = 2;
         }
     }
 
@@ -149,7 +128,7 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
     
 
     ngOnChanges() {
-        
+        console.log("vpe-panel-markets", this.markets);
     }
 
     ngOnInit() {

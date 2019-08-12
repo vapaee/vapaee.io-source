@@ -94,7 +94,7 @@ export class Asset {
         }
         if (decimal.length > precision) {
             decimal = decimal.substr(0, precision);
-        }    
+        }
 
         if (precision == 0) {
             return integer;

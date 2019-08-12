@@ -16,6 +16,7 @@ show_balance() {
     cleos $NET get currency balance teachology14 $user TEACH
     cleos $NET get currency balance proxibotstkn $user ROBO
     cleos $NET get currency balance qubicletoken $user QBE
+    cleos $NET get currency balance stablecoin.z $user EZAR
     cleos $NET get table vapaeetokens $user deposits
 }
 

@@ -18,7 +18,7 @@ import { CoingeckoService } from './services/coingecko.service';
 
 
 import { VapaeeComponentsModule } from './components/vpe-components.module';
-import { VapaeeFeedbackModule } from '@vapaee/feedback';
+// import { VapaeeFeedbackModule } from '@vapaee/feedback';
 import { VapaeeScatterModule } from '@vapaee/scatter';
 import { VapaeeDexModule } from '@vapaee/dex';
 
@@ -65,7 +65,7 @@ import { TokenPage } from './pages/token/token.page';
         HttpClientModule,
         CommonServicesModule,
         VapaeeComponentsModule,
-        VapaeeFeedbackModule,
+        // VapaeeFeedbackModule,
         VapaeeScatterModule,
         VapaeeDexModule,
         ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),

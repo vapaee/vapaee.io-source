@@ -24,13 +24,13 @@ export class Feedback {
     }
 
     static create(keys:string[] = []) {
-        var feed = new Feedback();
+        let feed = new Feedback();
         feed.keys = keys;
         return feed;
     }
 
     private updateScopes() {
-        for (var i in this.keys) {
+        for (let i in this.keys) {
             this.scopes[this.keys[i]] = this.scopes[this.keys[i]] || {}
         }
     }
@@ -52,9 +52,9 @@ export class Feedback {
 
     setMarck(key:string, label:string) {
         if (this.scopes[key]) {
-            var elapsedTime:Date = new Date();
-            var millisec = elapsedTime.getTime() - this.scopes[key].start.getTime();
-            var sec = millisec / 1000;
+            let elapsedTime:Date = new Date();
+            let millisec = elapsedTime.getTime() - this.scopes[key].start.getTime();
+            let sec = millisec / 1000;
             this.scopes[key].marks.push({ label, sec, millisec });
         } else {
             console.error("ERROR: key not present", key, this.scopes);
@@ -65,7 +65,7 @@ export class Feedback {
         if (this.scopes[key]) {
             console.log("Chronometer marks for ", key);
             this.setMarck(key, "total");
-            for (var i in this.scopes[key].marks) {
+            for (let i in this.scopes[key].marks) {
                 console.log("- ",this.scopes[key].marks[i]);
             }
         } else {
@@ -135,17 +135,3 @@ export class Feedback {
     }
 
 }
-
-/*
-@Injectable({
-    providedIn: "root"
-})
-export class FeedbackService {
-    
-    constructor(){}
-
-    create(keys:string[] = []) {
-        return new Feedback(keys);
-    }
-}
-*/

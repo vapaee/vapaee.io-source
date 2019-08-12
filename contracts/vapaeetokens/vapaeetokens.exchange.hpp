@@ -772,7 +772,7 @@ namespace vapaee {
             PRINT(" total: ", total.to_string(), "\n");
             PRINT(" price: ", price.to_string(), "\n");
 
-            require_auth(owner);            
+            require_auth(owner);         
 
             // create scope for the orders table
             name scope_buy = aux_get_scope_for_tokens(total.symbol.code(), price.symbol.code());
@@ -783,6 +783,9 @@ namespace vapaee {
             
             asset inverse = vapaee::utils::inverse(price, total.symbol);
             asset payment = vapaee::utils::payment(total, price);
+            
+            PRINT(" -> inverse: ", inverse.to_string(), "\n");
+            PRINT(" -> payment: ", payment.to_string(), "\n");
 
             aux_register_event(owner, name(type.to_string() + ".order"), total.to_string() + "|" + price.to_string() );
             
@@ -808,6 +811,7 @@ namespace vapaee {
             PRINT(" payment: ", payment.to_string(), "\n");    // payment: 2.50000000 CNT
             PRINT(" price: ", price.to_string(), "\n");        // price: 2.50000000 CNT
             PRINT(" inverse: ", inverse.to_string(), "\n");    // inverse: 0.40000000 TLOS
+            PRINT(" ram_payer: ", ram_payer.to_string(), "\n");
             double buyer_fee_percentage = 0.001;
             double seller_fee_percentage = 0.002;
             

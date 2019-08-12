@@ -1,12 +1,12 @@
 {
   "name": "@vapaee/dex",
-  "version": "2.2.0",
+  "version": "2.2.3",
   "peerDependencies": {
     "ngx-cookie-service": "^2.1.0",
     "rxjs": "^6.2.1",
     "rxjs-compat": "^6.3.3",
-    "@vapaee/scatter": "1.0.0",
-    "@vapaee/feedback": "1.0.1",
+    "@vapaee/scatter": "1.0.1",
+    "@vapaee/feedback": "1.0.3",
     "bignumber.js": "8.0.2",
     "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
     "@angular/core": "^6.0.0-rc.0 || ^6.0.0"

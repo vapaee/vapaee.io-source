@@ -10,8 +10,15 @@
                 <div class="row" style="flex-grow: 1;">
                     <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let token of get_tokens; let i=index">
 
-
-                        <div class="card token-card text-white bg-dark margin-top" *ngIf="i<limit">
+                        <vpe-panel-tokens-card
+                            [token]="token"
+                            *ngIf="i<limit"
+                            (tradeToken)="goToTradeToken(token)"
+                            (tokenPage)="goToTokenPage(token)"
+                        ></vpe-panel-tokens-card>
+                        
+                        <!-- 
+                        <div class="card token-card text-white bg-dark margin-top">
                             <div class="card-body vpe-background-card-body">
                                 <div class="text-center">
                                     <img style="height:64px; width: 64px; margin-top:-3px" [src]="token.logolg">
@@ -61,29 +68,6 @@
                                     </div>
                                 </div>
 
-                                <!--
-                                <div>
-                                    <div class="row">
-                                        <div class="col-6 text-left">
-                                            <span [hidden]="token.symbol != 'TLOS' && token.verified"
-                                                class="btn disabled btn-primary btn-sm margin-top">trade</span>                            
-                                            <span [hidden]="token.symbol == 'TLOS' || !token.verified"
-                                                class="btn btn-primary btn-sm margin-top"
-                                                (click)="goToTradeToken(token)"
-                                                >trade</span>
-                                        </div>
-                                        <div class="col-6 text-right">
-                                            
-                                            <div class="text-right" *ngIf="token.symbol != 'TLOS' && token.verified">
-                                                <div><small class="nowrap text-muted">max: {{token.summary?.max_price?.valueToString(4)}} {{token.summary?.max_price?.token.symbol}}</small></div>
-                                                <div><small class="nowrap text-muted">min: {{token.summary?.min_price?.valueToString(4)}} {{token.summary?.min_price?.token.symbol}}</small></div>
-                                            </div>
-                                            <div *ngIf="token.symbol == 'TLOS' || !token.verified"><div>&nbsp;</div><div>&nbsp;</div></div>
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                                -->
 
                                 <div class="col-xs-12 margin-top">
                                     <div class="row" style="flex-grow: 1">
@@ -100,7 +84,7 @@
                             </div>
                         </div>
 
-
+                        -->
 
 
                     </div>

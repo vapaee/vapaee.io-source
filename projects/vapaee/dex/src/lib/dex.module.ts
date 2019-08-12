@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { VapaeeDEX } from './dex.service'
+import { CookieService } from 'ngx-cookie-service';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
-  imports: [
-  ],
+  imports: [],
   declarations: [],
-  providers: [VapaeeDEX],
+  providers: [VapaeeDEX, CookieService, DatePipe],
   exports: []
 })
 export class VapaeeDexModule { }

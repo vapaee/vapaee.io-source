@@ -5,10 +5,24 @@ https://docs.npmjs.com/creating-and-publishing-scoped-public-packages
 
 
 // Instalar las bibliotecas de vapaee
+npm i --save ngx-cookie-service@2.1.0 rxjs-compat@^6.3.3 bignumber.js@8.0.2 scatterjs-core@2.3.8 scatterjs-plugin-eosjs@1.3.10 eosjs@16.0.9
 npm i --save @vapaee/feedback @vapaee/scatter @vapaee/dex
-npm i --save ngx-cookie-service@^2.1.0 rxjs-compat@^6.3.3 bignumber.js@8.0.2 scatterjs-core@2.3.8 scatterjs-plugin-eosjs@1.3.10 eosjs@16.0.9
 npm i -D @babel/runtime
 
+
+
+-- publicar libraies --
+  npm adduser
+  
+  
+  cd /var/www/vapaee.io-source && ng build @vapaee/feedback --prod
+  cd dist/vapaee/feedback && npm publish --access public
+  
+  cd /var/www/vapaee.io-source && ng build @vapaee/scatter --prod
+  cd dist/vapaee/scatter && npm publish --access public
+
+  cd /var/www/vapaee.io-source && ng build @vapaee/dex --prod
+  cd dist/vapaee/dex && npm publish --access public
 
 - @vapaee/feedback
 - @vapaee/scatter
@@ -272,7 +286,7 @@ ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 30
 }
 --------------------------
 {
-  "app": "Vapaée - Telos DEX",
+  "app": "Vapaée - Telos DEX",@vapaee/dex
   "with appkey": "4c7dbd7d49439e146032e2aa7f791e79bc90c9a39033d42d91bb012fa20327c7"
 }
 {
@@ -532,6 +546,9 @@ cleos --url https://telos.eos.barcelona get table snapshots.tf 1 snapshots --low
 
 
 
+
+
+
 Phaser con Angular para videojuegos
 https://github.com/weichen2046/phaser3-angular6-helloworld
 
@@ -572,3 +589,7 @@ Por ejemplo, se pueden exigir comisiones por cada evento, cumplir con mínimos o
     por lo general vos podés hacer una carta y para esa carta va a decir que vos tenés el 100% y el resto del mundo 0%.
     pero pueden haber varias partes productoras de un mismo contenido y se arregla de antemano dividir el authorship en partes A% B% y C% dependiendo de la participación de cada uno.
   - cada vez que hay una compra o venta de un item con multimple authorship hay que dividir las ganancias respentado los porcentajes A% B% y C%
+
+
+
+---------------------------------------------

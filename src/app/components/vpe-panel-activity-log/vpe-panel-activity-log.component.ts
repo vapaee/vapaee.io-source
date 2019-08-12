@@ -5,7 +5,7 @@ import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, StringMap, ResizeEvent } from '../vpe-components.service';
 import { Subscriber } from 'rxjs';
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
-import { EventLog } from 'projects/vapaee/dex/src/public_api';
+import { EventLog } from '@vapaee/dex';
 
 
 @Component({
