@@ -21,35 +21,35 @@ cd script
 ## features for next version - DELUXE (v3.x.x)
 - ### Critical
   - [ ] Trade any pair
-    - [+] smart contract adaptation
-      - [+] verify that current smart contract already accepts any pair, make any adjustments if necessary
-      - [+] execute by console a whole use case of creating a new market XXX/YYY not involvind TLOS
+    - [x] smart contract adaptation
+      - [x] verify that current smart contract already accepts any pair, make any adjustments if necessary
+      - [x] execute by console a whole use case of creating a new market XXX/YYY not involvind TLOS
     - [ ] website adaptation
       - [ ] new "Markets" Page.
-        - [+] Currency selector as header (comobity/currency, comobity/TLOS by default)
-        - [+] List of tokens that are currently being traded in the currency selected
+        - [x] Currency selector as header (comobity/currency, comobity/TLOS by default)
+        - [x] List of tokens that are currently being traded in the currency selected
         - [ ] "Create new Market" button, and modal to create a sell/buy order in a non existing yet market (comobity/currency)
-      - [+] Adapt "Trade" Page
-        - [+] verify trade-page component does not base its behavior on the assumption that TLOS is always the currency.
-        - [+] verify every component admits any given pair comobity/currency, recode if not
-        - [+] creates new component to show list of markets instead of just tokens
-      - [+] Adapt "Tokens" Page.
-        - [+] dex service must resolve token price based on all markets it participates
-        - [+] create a new telos card deck
-          - [+] create a new telos card with bigger icons
-      - [+] Adapt "Home" Page.
-        - [+] show top 3 of concrete markets, based on volume translated to USD
+      - [x] Adapt "Trade" Page
+        - [x] verify trade-page component does not base its behavior on the assumption that TLOS is always the currency.
+        - [x] verify every component admits any given pair comobity/currency, recode if not
+        - [x] creates new component to show list of markets instead of just tokens
+      - [x] Adapt "Tokens" Page.
+        - [x] dex service must resolve token price based on all markets it participates
+        - [x] create a new telos card deck
+          - [x] create a new telos card with bigger icons
+      - [x] Adapt "Home" Page.
+        - [x] show top 3 of concrete markets, based on volume translated to USD
 - ### Normal
-  - [+] Material icons on navbar
-  - [+] Invert tokens pair
-    - [+] inside trade market a button will switch comodity / currency places.
+  - [x] Material icons on navbar
+  - [x] Invert tokens pair
+    - [x] inside trade market a button will switch comodity / currency places.
   - [ ] Free to join
     - [ ] Tokens Page should have a 4th section "Own Tokens"
       - [ ] Create a brand new standar eosio token on vapaeetokens smart contrat and issue tokens
       - [ ] Register an existing token to be listed
       - [ ] form to update registered tokens page content (links, news, videos)
   - [ ] Token info page
-    - [+] Tokens page should have on each token a info button to redirect to tokens page
+    - [x] Tokens page should have on each token a info button to redirect to tokens page
     - [ ] Token page shows Token symbol, project name and description, token stats, and a list of contents and links taked from owner submits.
   - [ ] Timezone
     - [ ] User should have a combobox to select the local timezone
@@ -63,7 +63,7 @@ cd script
     - [ ] handler, on skin change, delete current style, install new style system
     - [ ] implement three simple color prototypes of skins
 - ### Issues
-  - [+] we lost communication with sqrl wallet after ScatterJS update. Consider rollback while not supporting Lynx
+  - [x] we lost communication with sqrl wallet after ScatterJS update. Consider rollback while not supporting Lynx
 
 
 
