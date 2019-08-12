@@ -21,39 +21,35 @@ cd script
 ## features for next version - DELUXE (v3.x.x)
 - ### Critical
   - [ ] Trade any pair
-    - [ ] smart contract adaptation
-      - [ ] verify that current smart contract already accepts any pair, make any adjustments if necessary
-      - [ ] execute by console a whole use case of creating a new market XXX/YYY not involvind TLOS
+    - [+] smart contract adaptation
+      - [+] verify that current smart contract already accepts any pair, make any adjustments if necessary
+      - [+] execute by console a whole use case of creating a new market XXX/YYY not involvind TLOS
     - [ ] website adaptation
       - [ ] new "Markets" Page.
-        - [ ] Currency selector as header (comobity/currency, comobity/TLOS by default)
-        - [ ] List of tokens that are currently being traded in the currency selected
+        - [+] Currency selector as header (comobity/currency, comobity/TLOS by default)
+        - [+] List of tokens that are currently being traded in the currency selected
         - [ ] "Create new Market" button, and modal to create a sell/buy order in a non existing yet market (comobity/currency)
-      - [ ] Adapt "Trade" Page
-        - [ ] verify trade-page component does not base its behavior on the assumption that TLOS is always the currency.
-        - [ ] verify every component admits any given pair comobity/currency, recode if not
-      - [ ] Adapt "Tokens" Page.
-        - [ ] 3 sections (4 in total)
-          - [ ] verified. Allowed to be traded. Each token:
-            - [ ] show top three market price && percent gain, ordered by volume
-            - [ ] show top three trade button ordered by volume
-          - [ ] registered. It apears in your balance, but can't be traded (you can't deposit)
-            - [ ] verified and registered will have a token icon, project description, token page btn
-          - [ ] draft. Smart contracts implementing a standard token.
-        - [ ] volume must show not only TLOS market but all top 5 markets at least
-        - [ ] volume must show not only TLOS market but all top 5 markets at least
-      - [ ] Adapt "Home" Page.
-        - [ ] show top 3 of concrete markets, based on volume translated to USD
+      - [+] Adapt "Trade" Page
+        - [+] verify trade-page component does not base its behavior on the assumption that TLOS is always the currency.
+        - [+] verify every component admits any given pair comobity/currency, recode if not
+        - [+] creates new component to show list of markets instead of just tokens
+      - [+] Adapt "Tokens" Page.
+        - [+] dex service must resolve token price based on all markets it participates
+        - [+] create a new telos card deck
+          - [+] create a new telos card with bigger icons
+      - [+] Adapt "Home" Page.
+        - [+] show top 3 of concrete markets, based on volume translated to USD
 - ### Normal
-  - [ ] Invert tokens pair
-    - [ ] inside trade market a button will switch comodity / currency places.
+  - [+] Material icons on navbar
+  - [+] Invert tokens pair
+    - [+] inside trade market a button will switch comodity / currency places.
   - [ ] Free to join
     - [ ] Tokens Page should have a 4th section "Own Tokens"
       - [ ] Create a brand new standar eosio token on vapaeetokens smart contrat and issue tokens
       - [ ] Register an existing token to be listed
       - [ ] form to update registered tokens page content (links, news, videos)
   - [ ] Token info page
-    - [ ] Tokens page should have on each token a info button to redirect to tokens page
+    - [+] Tokens page should have on each token a info button to redirect to tokens page
     - [ ] Token page shows Token symbol, project name and description, token stats, and a list of contents and links taked from owner submits.
   - [ ] Timezone
     - [ ] User should have a combobox to select the local timezone
@@ -67,7 +63,7 @@ cd script
     - [ ] handler, on skin change, delete current style, install new style system
     - [ ] implement three simple color prototypes of skins
 - ### Issues
-  - [ ] we lost communication with sqrl wallet after ScatterJS update. Consider rollback while not supporting Lynx
+  - [+] we lost communication with sqrl wallet after ScatterJS update. Consider rollback while not supporting Lynx
 
 
 
