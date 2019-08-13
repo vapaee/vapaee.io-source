@@ -104,7 +104,7 @@ export class VapaeeDEX {
                 if (token.symbol == "TLOS") {
                     this.telos = token;
                 }
-                if (token.symbol == "CUSD") {
+                if (token.symbol == "TELOSD") {
                     carbon = token;
                 }                
             }

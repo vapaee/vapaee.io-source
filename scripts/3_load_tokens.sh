@@ -41,14 +41,6 @@ cleos push action acornaccount issue '["bob", "1000.0000 ACORN", "memo ACORN"]' 
 cleos push action acornaccount issue '["tom", "1000.0000 ACORN", "memo ACORN"]' -p eosio@active
 cleos push action acornaccount issue '["kate", "1000.0000 ACORN", "memo ACORN"]' -p eosio@active
 
-echo "-------- stablecoin.z (EZAR) ---------"
-cleos set contract stablecoin.z $PWD -p stablecoin.z@active
-cleos push action stablecoin.z create '[ "eosio", "1000000000000.00 EZAR"]' -p stablecoin.z@active
-cleos push action stablecoin.z issue '["alice", "1000.00 EZAR", "memo EZAR"]' -p eosio@active
-cleos push action stablecoin.z issue '["bob", "1000.00 EZAR", "memo EZAR"]' -p eosio@active
-cleos push action stablecoin.z issue '["tom", "1000.00 EZAR", "memo EZAR"]' -p eosio@active
-cleos push action stablecoin.z issue '["kate", "1000.00 EZAR", "memo EZAR"]' -p eosio@active
-
 echo "-------- oliveaccount (OLIVE) ---------"
 cleos set contract oliveaccount $PWD -p oliveaccount@active
 cleos push action oliveaccount create '[ "eosio", "461168601842738.0000 OLIVE"]' -p oliveaccount@active
