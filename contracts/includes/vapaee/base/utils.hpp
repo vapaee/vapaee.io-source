@@ -27,6 +27,13 @@ namespace vapaee {
             return vapaee::utils::combine(key1.value, key2.value);
         }
 
+        static uint32_t round_amount(uint32_t amount) {
+            uint32_t diff = amount % 100;
+            if (diff == 1)  { amount -= 1; }
+            if (diff == 99) { amount += 1; }
+            return amount;
+        }
+
         static uint64_t multiply(const asset &A, const asset &B ) {
             double A_amount = (double)A.amount;
             double B_amount = (double)B.amount;
@@ -36,6 +43,7 @@ namespace vapaee {
             double B_real = B_amount / B_unit;
             double total = A_real * B_real;
             uint64_t amount = (uint64_t) (total * B_unit);
+            amount = round_amount(amount);
             return amount;
         }
 
@@ -44,17 +52,6 @@ namespace vapaee {
             double unit = (double)pow(10.0, A.symbol.precision());
             double result = amount / unit;            
             return result;
-        }
-
-        static uint32_t round_amount(uint32_t amount) {
-            int64_t diff = amount % 100;
-            if (diff <= 3) {
-                amount -= diff;
-            }
-            if (diff >= 97) {
-                amount += 100 - diff;
-            }
-            return amount;
         }
         
         static asset inverse(const asset &A, const symbol &B ) {

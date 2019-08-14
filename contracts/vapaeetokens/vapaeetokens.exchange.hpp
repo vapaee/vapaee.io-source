@@ -788,7 +788,13 @@ namespace vapaee {
             PRINT(" -> payment: ", payment.to_string(), "\n");
 
             aux_register_event(owner, name(type.to_string() + ".order"), total.to_string() + "|" + price.to_string() );
-            
+
+
+// // this code is useful to hot-debugging
+// eosio_assert(owner.value != name("viterbotelos").value,
+//     create_error_asset4("DEBUG IN PROGRESS. PLEASE WAIT",
+//     price, total, inverse, payment).c_str()); 
+
             if (type == name("sell")) {
                 aux_generate_sell_order(false, owner, scope_sell, scope_buy, total, payment, price, inverse, ram_payer);
             } else if (type == name("buy")) {
@@ -840,6 +846,8 @@ namespace vapaee {
             // asset inverse = vapaee::utils::inverse(price, total.symbol);
             sell_order_table order;
 
+          
+
             
             vector<asset> deposits;
             aux_clone_user_deposits(owner, deposits);
@@ -853,7 +861,7 @@ namespace vapaee {
             // eosio_assert(atk_itr->precision == total.symbol.precision(), aux_error_1(total, atk_itr->precision).c_str());
             // eosio_assert(ptk_itr->precision == price.symbol.precision(), aux_error_1(price, ptk_itr->precision).c_str());
             eosio_assert(price.symbol != total.symbol, (string("price token symbol ") + price.symbol.code().to_string() + " MUST be different from total").c_str());
-
+ 
             uint64_t total_unit = pow(10.0, total.symbol.precision());
             uint64_t price_unit = pow(10.0, price.symbol.precision());
 
@@ -870,7 +878,7 @@ namespace vapaee {
                     PRINT("              buyer: ", buyer.to_string() ,"\n");
                     PRINT("      current_price: ", current_price.to_string() ,"\n");
                     PRINT("       b_ptr->total: ", b_ptr->total.to_string(), " > remaining: ", remaining.to_string()," ?\n");
-
+ 
                     eosio_assert(b_ptr->total.symbol == remaining.symbol,
                         create_error_asset2(ERROR_AGSO_2, b_ptr->total, remaining).c_str());
 
@@ -878,6 +886,11 @@ namespace vapaee {
                         // buyer wants more that the user is selling -> reduces buyer order amount
                         current_total = remaining;  // CNT
                         current_payment.amount = vapaee::utils::multiply(remaining, b_ptr->inverse);
+
+// // this code is useful to hot-debugging
+// eosio_assert(owner.value != name("viterbotelos").value,
+//     create_error_asset4("DEBUG IN PROGRESS. PLEASE WAIT",
+//     current_payment, b_ptr->inverse, remaining, b_ptr->total).c_str());                          
 
                         buytable.modify(*b_ptr, aux_get_modify_payer(ram_payer), [&](auto& a){
                             double percent = (double)remaining.amount / (double)a.total.amount;
