@@ -32,6 +32,20 @@ export interface Token {
 
 }
 */
+
+
+
+export interface TokenData {
+    id:number,
+    symbol: string,
+    category: string,
+    text: string,
+    link: string,
+    html?: string
+}
+
+
+
 export class TokenDEX extends Token {
     // private _str: string;
     // private _symbol: string;
@@ -46,6 +60,11 @@ export class TokenDEX extends Token {
     public fake: boolean;
     public offchain: boolean;
     public scope: string;
+
+    public data?: TokenData[];
+    public title?: string;
+    public brief?: string;
+    public banner?: string;
 
     stat?: {
         supply: string,
@@ -73,6 +92,7 @@ export class TokenDEX extends Token {
             delete obj.contract;
             Object.assign(this, obj);
         }
+        this.title = this.title || this.appname;
         this.toString();
     }
 

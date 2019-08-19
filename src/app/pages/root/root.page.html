@@ -70,7 +70,7 @@
                     </a>
                 </li>
                 <li class="nav-item" [ngClass]="{active: app.stateStartsWith('trade')}">
-                    <a class="nav-link" routerLink="{{'/exchange/trade/' + (app.getGlobal('last-market') || 'cnt.tlos') }}" >
+                    <a class="nav-link" routerLink="{{'/exchange/trade/' + (app.getGlobal('lastmarket', 'cnt.tlos')) }}" >
                         <i class="material-icons"> insert_chart_outlined </i>
                         {{local.string.Trade | titlecase}}
                     </a>
@@ -81,7 +81,7 @@
                         {{local.string.Account | titlecase}}
                     </a>
                 </li>
-                <li class="nav-item highlight" [ngClass]="{active: app.stateStartsWith('wp')}">
+                <li class="nav-item no-highlight" [ngClass]="{active: app.stateStartsWith('wp')}">
                     <a class="nav-link" [routerLink]="'/exchange/wp'" >
                         <i class="material-icons"> how_to_vote </i>
                         WP

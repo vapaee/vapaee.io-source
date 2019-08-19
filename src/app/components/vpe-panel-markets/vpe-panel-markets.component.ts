@@ -61,8 +61,6 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
         this.hide_symbol = false;
         this.hide_maxmin = false;
 
-        console.log("event.width: ", event.width);
-
         if (event.width < 691) {
             this.hide_symbol = true;
             this.hide_maxmin = true;

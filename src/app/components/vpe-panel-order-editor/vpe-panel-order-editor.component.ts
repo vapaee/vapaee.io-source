@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';

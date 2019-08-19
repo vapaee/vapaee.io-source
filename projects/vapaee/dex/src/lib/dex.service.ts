@@ -96,7 +96,7 @@ export class VapaeeDEX {
         this.updateLogState();
         this.fetchTokens().then(data => {
             this.tokens = [];
-            let carbon;
+            this.currencies = [ ];
             for (let i in data.tokens) {
                 let tdata = data.tokens[i];
                 let token = new TokenDEX(tdata);
@@ -105,9 +105,14 @@ export class VapaeeDEX {
                     this.telos = token;
                 }
                 if (token.symbol == "TELOSD") {
-                    carbon = token;
-                }                
+                    this.currencies.push(token);
+                }
+                if (token.symbol == "CUSD") {
+                    this.currencies.push(token);
+                }
             }
+
+            this.currencies.unshift(this.telos);
 
             // hardoded temporary inserted tokens ------------------------------
             /*
@@ -125,8 +130,6 @@ export class VapaeeDEX {
             this.tokens.push(carbon);
             */
 
-            // TODO: make this dynamic and not hardcoded ----------------
-            this.currencies = [ this.telos, carbon ];
             // ----------------------------------------------------------
 
             
@@ -1388,8 +1391,8 @@ export class VapaeeDEX {
         var result:MarketSummary = null;
         aux = this.waitTokensLoaded.then(async _ => {
             var summary = await this.fetchSummary(canonical);
-            if(canonical=="cusd.tlos")console.log(scope, "---------------------------------------------------");
-            if(canonical=="cusd.tlos")console.log("Summary crudo:", summary.rows);
+            //if(canonical=="cusd.tlos")console.log(scope, "---------------------------------------------------");
+            //if(canonical=="cusd.tlos")console.log("Summary crudo:", summary.rows);
 
             this._markets[canonical] = this.auxAssertScope(canonical);
             this._markets[canonical].summary = {
@@ -1408,8 +1411,8 @@ export class VapaeeDEX {
             var now_sec: number = Math.floor(now.getTime() / 1000);
             var now_hour: number = Math.floor(now_sec / 3600);
             var start_hour = now_hour - 23;
-            if(canonical=="cusd.tlos")console.log("now_hour:", now_hour);
-            if(canonical=="cusd.tlos")console.log("start_hour:", start_hour);
+            //if(canonical=="cusd.tlos")console.log("now_hour:", now_hour);
+            //if(canonical=="cusd.tlos")console.log("start_hour:", start_hour);
 
             // proceso los datos crudos 
             var price = ZERO_CURRENCY;
@@ -1429,14 +1432,14 @@ export class VapaeeDEX {
 
                         // price = (scope == canonical) ? summary.rows[i].price : summary.rows[i].inverse;
                         // inverse = (scope == canonical) ? summary.rows[i].inverse : summary.rows[i].price;
-                        if(canonical=="cusd.tlos")console.log("hh:", hh, "last_hh:", last_hh, "price:", price);
+                        //if(canonical=="cusd.tlos")console.log("hh:", hh, "last_hh:", last_hh, "price:", price);
                     }    
                 }
                 /*
                 */
             }
-            if(canonical=="cusd.tlos")console.log("crude:", crude);
-            if(canonical=="cusd.tlos")console.log("price:", price);
+            //if(canonical=="cusd.tlos")console.log("crude:", crude);
+            //if(canonical=="cusd.tlos")console.log("price:", price);
 
             // genero una entrada por cada una de las últimas 24 horas
             var last_24h = {};
@@ -1469,7 +1472,7 @@ export class VapaeeDEX {
                     };
                 }
                 last_24h[current] = crude[current] || nuevo;
-                if(canonical=="cusd.tlos")console.log("current_date:", current_date.toISOString(), current, last_24h[current]);
+                //if(canonical=="cusd.tlos")console.log("current_date:", current_date.toISOString(), current, last_24h[current]);
 
                 // coninical ----------------------------
                 price = last_24h[current].price;
@@ -1534,14 +1537,14 @@ export class VapaeeDEX {
                 ratio = idiff.amount.dividedBy(inverse_fst.amount).toNumber();
             }
             var ipercent = Math.floor(ratio * 10000) / 100;
-            if(canonical=="cusd.tlos")console.log("price_fst:", price_fst.str);
-            if(canonical=="cusd.tlos")console.log("inverse_fst:", inverse_fst.str);
+            //if(canonical=="cusd.tlos")console.log("price_fst:", price_fst.str);
+            //if(canonical=="cusd.tlos")console.log("inverse_fst:", inverse_fst.str);
 
-            if(canonical=="cusd.tlos")console.log("last_24h:", [last_24h]);
-            if(canonical=="cusd.tlos")console.log("diff:", diff.toString(8));
-            if(canonical=="cusd.tlos")console.log("percent:", percent);
-            if(canonical=="cusd.tlos")console.log("ratio:", ratio);
-            if(canonical=="cusd.tlos")console.log("volume:", volume.str);
+            //if(canonical=="cusd.tlos")console.log("last_24h:", [last_24h]);
+            //if(canonical=="cusd.tlos")console.log("diff:", diff.toString(8));
+            //if(canonical=="cusd.tlos")console.log("percent:", percent);
+            //if(canonical=="cusd.tlos")console.log("ratio:", ratio);
+            //if(canonical=="cusd.tlos")console.log("volume:", volume.str);
 
             this._markets[canonical].summary.price = last_price;
             this._markets[canonical].summary.inverse = last_inverse;
@@ -1558,8 +1561,8 @@ export class VapaeeDEX {
             this._markets[canonical].summary.min_inverse = min_inverse;
             this._markets[canonical].summary.max_inverse = max_inverse;
 
-            if(canonical=="cusd.tlos")console.log("Summary final:", this._markets[canonical].summary);
-            if(canonical=="cusd.tlos")console.log("---------------------------------------------------");
+            //if(canonical=="cusd.tlos")console.log("Summary final:", this._markets[canonical].summary);
+            //if(canonical=="cusd.tlos")console.log("---------------------------------------------------");
             this.feed.setLoading("summary."+canonical, false);
             this.feed.setLoading("summary."+inverse, false);
             return this._markets[canonical].summary;

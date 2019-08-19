@@ -224,3 +224,10 @@ ng-sidebar {
     background-color: rgba(93, 107, 115, 0.3);
     color: #b5bfda;
 }
+
+// twitter centered
+.text-center.twitter-container > twitter-widget.twitter-tweet.twitter-tweet-rendered {
+    margin-left: auto;
+    margin-right: auto;
+}
+

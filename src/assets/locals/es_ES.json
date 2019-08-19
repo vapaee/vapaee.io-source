@@ -52,6 +52,7 @@
     "tinallowed": "Este token no está verificado aún en vapaee.io DEX",
     "Tokens": "Monedas",
     "markets": "mercados",
+    "tknMarkets": "Mercados {{symbol}}",
     "token": "moneda",
     "volume": "volumen",
     "vol": "vol.",
@@ -113,5 +114,6 @@
     "activitylog": "Log de actividad",
     "user": "usuario",
     "detail": "detalle",
-    "toolow": "montos demasiado bajos"
+    "toolow": "montos demasiado bajos",
+    "visitwebsite":"visita la página web"
 }

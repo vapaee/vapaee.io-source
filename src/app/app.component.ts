@@ -40,7 +40,7 @@ import { Market } from '@vapaee/dex';
                         </a>
                     </li>
                     <li class="nav-item" [ngClass]="{active: app.stateStartsWith('trade')}" (click)="app.closeSideMenu()">
-                        <a class="nav-link" routerLink="{{'/exchange/trade/' + (app.getGlobal('last-market') || 'cnt.tlos') }}" >
+                        <a class="nav-link" routerLink="{{'/exchange/trade/' + (app.getGlobal('lastmarket', 'cnt.tlos')) }}" >
                             <i class="material-icons nav"> navigate_next </i>
                             <i class="material-icons"> insert_chart_outlined </i>
                             {{local.string.Trade | titlecase}}

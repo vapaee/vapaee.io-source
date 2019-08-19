@@ -8,10 +8,10 @@
         <div class="col-sm-12">
             <div class="card-deck">
                 <div class="row" style="flex-grow: 1;">
-                    <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let market of get_markets; let i=index">
+                    <div [ngClass]="marketClass" *ngFor="let market of get_markets; let i=index">
 
                         <vpe-panel-markets-card
-                            *ngIf="i<limit"
+                            *ngIf="i<max"
                             [market]="market"
                             (tradeMarket)="goToTradeMarket(market)"
                         ></vpe-panel-markets-card>

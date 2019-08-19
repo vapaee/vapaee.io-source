@@ -93,15 +93,6 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
         return parts[1] + "." + parts[0];
     }
 
-    mergeDataToTemplateString(template:string, data:StringMap) {
-        var str = template;
-        for (var prop in data) {
-            var key = "{{" + prop + "}}";
-            str = str.split(key).join(data[prop]);
-        }
-        return str;
-    }
-
     getOrdertype(e:EventLog) {
         var data:StringMap = this.extractEventData(e);
         return data.ordertype;
@@ -223,7 +214,7 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
                 default:
                     str = e.params;
             }
-            this.detail[id] = this.mergeDataToTemplateString(str, data);
+            this.detail[id] = this.local.merge(str, data);
         }        
         return this.detail[id];
     }

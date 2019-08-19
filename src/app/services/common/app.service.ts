@@ -3,6 +3,7 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { AnalyticsService } from './analytics.service';
 import { DomService } from './dom.service';
 import { Subject } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 
 export interface Device {
     fullhd?:boolean, // >= 1600px
@@ -40,7 +41,8 @@ export class AppService {
         private router: Router, 
         private route: ActivatedRoute, 
         private analytics: AnalyticsService,
-        private dom: DomService
+        private dom: DomService,
+        public cookie: CookieService
     ) {
         this.router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
@@ -129,14 +131,26 @@ export class AppService {
     }
 
     // global variables ---------
-    getGlobal(key): any {
-        if (!this.global) return undefined;
+    getGlobal(key, defautl:any = undefined): any {
+        if (!this.global) this.global = {};
+        if (!this.global[key]) {
+            var cached = this.cookie.get(key);
+            if (cached) {
+                this.global[key] = cached;
+                return cached;
+            } else {
+                return defautl;
+            }
+        }
         return this.global[key];
     }
 
-    setGlobal(key:string, value:any) {
+    setGlobal(key:string, value:any, persist:boolean = false) {
         if (!this.global) this.global = {};
         this.global[key] = value;
+        if (persist) {
+            this.cookie.set(key, value);
+        }
     }
 
     toggleGlobal(key:string) {

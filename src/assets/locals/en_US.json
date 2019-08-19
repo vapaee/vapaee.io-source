@@ -52,6 +52,7 @@
     "tinallowed": "This token is not allowed yet in vapaee.io DEX",
     "Tokens": "Tokens",
     "markets": "markets",
+    "tknMarkets": "{{symbol}} markets",
     "token": "token",
     "volume": "volume",
     "vol": "vol.",
@@ -113,5 +114,6 @@
     "activitylog": "activity log",
     "user": "user",
     "detail": "detail",
-    "toolow": "too low amounts"
+    "toolow": "too low amounts",
+    "visitwebsite":"visit website"
 }

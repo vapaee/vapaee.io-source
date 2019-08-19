@@ -29,11 +29,14 @@ export class VpePanelMarketsCardDeckComponent implements OnChanges {
     
     public deposit: AssetDEX;
     public withdraw: AssetDEX;
+    public marketClass;
+    private _max;
     constructor(
         public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
+        
         this.hideheader = false;
         this.margintop = true;
         this.expanded = true; 
@@ -52,8 +55,25 @@ export class VpePanelMarketsCardDeckComponent implements OnChanges {
         return this.markets;
     }
 
-    async updateSize(event:ResizeEvent) {
+    get max() {
+        return this._max;
+    }
 
+    async updateSize(event:ResizeEvent) {
+        // class="col-sm-12 col-md-6 col-lg-4"
+        this.marketClass = "col-4";
+        // console.log("event.width: ", event.width);
+        this._max = this.limit;
+
+        if (event.width < 700) {
+            this.marketClass = "col-6";
+            this._max++;
+        }
+
+        if (event.width < 530) {
+            this.marketClass = "col-12";
+            this._max = this.limit;
+        }
     }
 
     onResize(event:ResizeEvent) {
@@ -63,7 +83,7 @@ export class VpePanelMarketsCardDeckComponent implements OnChanges {
     }
 
     ngOnChanges() {
-        
+        this._max = this.limit;
     }
 
     onChange() {

@@ -4,6 +4,7 @@ import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
 import { Subscriber } from 'rxjs';
 import { TokenDEX, Market } from '@vapaee/dex';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
     selector: 'markets-page',
@@ -19,11 +20,17 @@ export class MarketsPage implements OnInit, OnDestroy {
     constructor(
         public app: AppService,
         public local: LocalStringsService,
-        public dex: VapaeeDEX
+        public dex: VapaeeDEX,
+        public cookie: CookieService
     ) {
         this.dex.waitTokensLoaded.then(_ => {
-            this.selectCurrency(this.dex.telos);
-        });        
+            var cached = this.cookie.get("mcurrency");
+            if (cached) {
+                this.selectCurrency(this.dex.getTokenNow(cached));
+            } else {
+                this.selectCurrency(this.dex.telos);
+            }
+        });       
     }
 
     get markets() {
@@ -65,6 +72,7 @@ export class MarketsPage implements OnInit, OnDestroy {
     
     selectCurrency(cur:TokenDEX) {
         this.selected = cur;
+        this.cookie.set("mcurrency", this.selected.symbol);
         delete this._markets;
         let aux = this.currency_markets;        
     }

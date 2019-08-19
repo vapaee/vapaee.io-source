@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { CommonServicesModule } from './services/common/common.module';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -63,6 +63,7 @@ import { TokenPage } from './pages/token/token.page';
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,
+        HttpClientJsonpModule,
         CommonServicesModule,
         VapaeeComponentsModule,
         // VapaeeFeedbackModule,

@@ -59,7 +59,7 @@ export class TradePage implements OnInit, OnDestroy {
         this.comodity = await this.dex.getToken(com);
         this.currency = await this.dex.getToken(cur);
         this.dex.updateTrade(this.comodity, this.currency, updateUser);
-        this.app.setGlobal("last-market", this.scope);
+        this.app.setGlobal("lastmarket", this.scope, true);
     }
 
     async init() {

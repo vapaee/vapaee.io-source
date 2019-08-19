@@ -1,4 +1,5 @@
 #include "tables/tokens.hpp"
+#include "tables/tokendata.hpp"
 #include "tables/sellorders.hpp"
 #include "tables/locks.hpp"
 #include "tables/deposits.hpp"

@@ -6,6 +6,8 @@ import { CookieService } from 'ngx-cookie-service';
 
 declare var navigator:any;
 
+export interface StringMap {[key:string]: string};
+
 @Injectable()
 export class LocalStringsService  {
     public waitReady:Promise<any>;
@@ -53,6 +55,17 @@ export class LocalStringsService  {
                 return this.localKey;
             });
         }
+    }
+
+    merge(template:string, data:StringMap) {
+        if(!template) return "";
+        if(!data) return template;
+        var str = template;
+        for (var prop in data) {
+            var key = "{{" + prop + "}}";
+            str = str.split(key).join(data[prop]);
+        }
+        return str;
     }
 
 }

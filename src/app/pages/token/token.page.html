@@ -1,4 +1,7 @@
 <div class="container" >
+
+
+<!--
     <div class="card text-white bg-dark margin-top-md overflow-visibl">
         <div class="card-header vpe-background-card-header text-xl" [hidden]="app.device.portrait">
             <img style="height:64px; width: 64px; margin-top:-0px" [src]="token?.logolg">&nbsp;
@@ -9,9 +12,91 @@
             {{token?.appname}}
         </div>
     </div>
+-->
+    <div class="card text-white bg-dark margin-top-md overflow-hidden backgroun-holder">
+        <img [src]="token?.banner" style="width: 100%; height: auto">
+    </div>
 
-    <div class="jumbotron vpe-background-jumbotron margin-top-xl text-center">
-        <h4 class="text-muted">Token page - coming soon</h4> 
+    <div class="margin-top-md row">
+
+        <div class="col-lg-8 col-xl-9 d-lg-none">
+            <div class="text-xl">
+                <div>
+                    <span class="text-lg margin-top">{{token?.title}}</span>&nbsp;
+                    <a class="btn btn-sm btn-primary" target="_blank" [href]="token?.website">
+                        {{local.string.visitwebsite}} 
+                        <i class="material-icons"> forward </i> 
+                    </a>
+                </div>                
+                <div class="text-md margin-top">{{token?.brief}}</div>
+            </div>
+            <div class="margin-top-md margin-bottom-md">
+                <hr class="line">
+            </div>            
+        </div>
+
+        <div class="col-12 d-lg-none">
+            <div class="text-lg-center margin-top-md">
+                <img style="height:64px; width: 64px; margin-top:-12px" [src]="token?.logolg">&nbsp;
+                {{local.merge(local.string.tknMarkets, {'symbol': token?.symbol})}}
+            </div>
+
+            <vpe-panel-markets-card-deck
+                (tradeMarket)="tradeMarket($event)"
+                [hidebackground]="true"
+                [hideheader]="true"
+                [markets]="token?.markets">
+            </vpe-panel-markets-card-deck>
+        </div>
+
+        <div class="col-lg-8 col-xl-9">
+            <div class="text-xl d-none d-lg-inline-block margin-top-md">
+                <div>
+                    <span class="text-lg margin-top">{{token?.title}}</span>&nbsp;
+                    <a class="btn btn-sm btn-primary" target="_blank" [href]="token?.website">
+                        {{local.string.visitwebsite}} 
+                        <i class="material-icons"> forward </i> 
+                    </a>
+                </div>                
+                <div class="text-md margin-top">{{token?.brief}}</div>
+            </div>
+
+            <div class="margin-top-md"
+                *ngFor="let info of token?.data"
+            >
+                <hr class="line">
+                <div class="text-lg margin-top-md" [hidden]="!info.text">{{info.text}}</div>
+
+                <div class="margin-top embed-responsive embed-responsive-16by9"
+                    [hidden]="info.category != 'youtube'"
+                >
+                    <iframe class="embed-responsive-item" [src]="getEmbedLink(info)" allowfullscreen></iframe>
+                </div>
+
+                <div class="text-center twitter-container" [innerHTML]="info.html" [hidden]="info.category != 'twitter'"></div>
+                <div class="margin-top" [hidden]="info.category != 'image'">
+                    <img [src]="info?.link" style="width: 100%; height: auto">
+                </div>
+            </div>
+
+            <div class="margin-top-xxl"></div>
+
+        </div>
+
+        <div class="col-lg-4 col-xl-3 d-none d-lg-inline-block margin-top-md">
+            <div class="text-mdlglg-center margin-top-md">
+                <img style="height:64px; width: 64px; margin-top:-12px" [src]="token?.logolg">&nbsp;
+                {{local.merge(local.string.tknMarkets, {'symbol': token?.symbol})}}
+            </div>
+            
+
+            <vpe-panel-markets-card-deck
+                (tradeMarket)="tradeMarket($event)"
+                [hidebackground]="true"
+                [hideheader]="true"
+                [markets]="token?.markets">
+            </vpe-panel-markets-card-deck>
+        </div>
     </div>
 
 </div>
