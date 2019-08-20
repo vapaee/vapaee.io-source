@@ -19,7 +19,7 @@ import { VpePanelWalletComponent } from 'src/app/components/vpe-panel-wallet/vpe
 export class TradePage implements OnInit, OnDestroy {
 
     scope:string;
-    comodity:TokenDEX;
+    commodity:TokenDEX;
     currency:TokenDEX;
     _orders:TokenOrders;
     timer:number;
@@ -56,9 +56,9 @@ export class TradePage implements OnInit, OnDestroy {
         this.scope = this.route.snapshot.paramMap.get('scope');
         var com:string = this.scope.split(".")[0];
         var cur:string = this.scope.split(".")[1];
-        this.comodity = await this.dex.getToken(com);
+        this.commodity = await this.dex.getToken(com);
         this.currency = await this.dex.getToken(cur);
-        this.dex.updateTrade(this.comodity, this.currency, updateUser);
+        this.dex.updateTrade(this.commodity, this.currency, updateUser);
         this.app.setGlobal("lastmarket", this.scope, true);
     }
 
@@ -66,7 +66,7 @@ export class TradePage implements OnInit, OnDestroy {
         console.log("TradePage.init() <-- ");
         this.orderform_min ? this.orderform_min.reset() : null;
         this.orderform_full ? this.orderform_full.reset() : null;
-        this.comodity = null;
+        this.commodity = null;
         this.currency = null;
         this._chartData = [[]];
         

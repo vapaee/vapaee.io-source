@@ -16,9 +16,9 @@
         (tap)="clickOnMarket(market.scope)"    
     >
         <div class="nowrap col-2 col-padding-right">
-            <img style="height:24px; width: 24px; margin-top:-2px" [src]="market.comodity.logo">&nbsp;
-            <span class="text-md">{{market.comodity.symbol}}</span>
-            <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('market.token-stat-'+market.comodity.symbol) && !dex.feed.loading('summary.'+dex.canonicalScope(market.scope))"></span>
+            <img style="height:24px; width: 24px; margin-top:-2px" [src]="market.commodity.logo">&nbsp;
+            <span class="text-md">{{market.commodity.symbol}}</span>
+            <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('market.token-stat-'+market.commodity.symbol) && !dex.feed.loading('summary.'+dex.canonicalScope(market.scope))"></span>
         </div>
         <div class="nowrap col-2 text-bold text-right col-padding-right col-padding-left">
             {{market.summary?.price.valueToString(price_digits, true)}}
@@ -66,9 +66,9 @@
                     (tap)="clickOnMarket(market.scope)"    
                 >
                     <div class="nowrap col-3 col-padding-right">
-                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="market.comodity.logo">&nbsp;
-                        {{market.comodity.symbol}}
-                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('market.token-stat-'+market.comodity.symbol) && !dex.feed.loading('summary.'+dex.canonicalScope(market.scope))"></span>
+                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="market.commodity.logo">&nbsp;
+                        {{market.commodity.symbol}}
+                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('market.token-stat-'+market.commodity.symbol) && !dex.feed.loading('summary.'+dex.canonicalScope(market.scope))"></span>
                     </div>
                     <div
                         class="nowrap col-3 text-right col-padding-right col-padding-left"

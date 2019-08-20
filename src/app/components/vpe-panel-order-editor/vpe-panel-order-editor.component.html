@@ -4,8 +4,8 @@
     <div class="row" *ngIf="portrait">
         <div class="col-6 text-right nowrap">
             <span class="cursor-pointer" (click)="sellAll()">
-                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_comodity.token.logo ? deposits_comodity.token.logo : '#'">
-                <span [ngClass]="{'text-danger': !can_sell && wants=='sell'}"> {{deposits_comodity.toString()}} </span>
+                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_commodity.token.logo ? deposits_commodity.token.logo : '#'">
+                <span [ngClass]="{'text-danger': !can_sell && wants=='sell'}"> {{deposits_commodity.toString()}} </span>
             </span>
         </div>
         <div class="col-6 text-right nowrap">
@@ -221,8 +221,8 @@
                         </div>
                         <div class="col text-right nowrap col-padding-right">
                             <span class="cursor-pointer" (click)="sellAll()">
-                                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_comodity.token.logo ? deposits_comodity.token.logo : '#'">
-                                <span [ngClass]="{'text-danger': !can_sell && wants=='sell'}"> {{deposits_comodity.toString()}} </span>
+                                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_commodity.token.logo ? deposits_commodity.token.logo : '#'">
+                                <span [ngClass]="{'text-danger': !can_sell && wants=='sell'}"> {{deposits_commodity.toString()}} </span>
                             </span>
                         </div>
                     </div>                    
@@ -409,7 +409,7 @@
                     </div>
                     <perfect-scrollbar style="max-height: 200px; max-width: 100%">
                         <div class="row margin-bottom active-on-hover cursor-pointer" 
-                            [ngClass]="{'d-none':order.deposit.token.symbol != get_comodity.symbol}"
+                            [ngClass]="{'d-none':order.deposit.token.symbol != get_commodity.symbol}"
                             *ngFor="let order of own.sell"
                             (click)="cancel(order)"
                         >

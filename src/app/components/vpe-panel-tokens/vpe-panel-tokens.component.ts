@@ -21,7 +21,7 @@ export class VpePanelTokensComponent implements OnChanges, OnInit, OnDestroy {
     @Input() public expanded: boolean;
     @Input() public complete: boolean;
     @Input() public search: string;
-    @Output() selectToken: EventEmitter<string> = new EventEmitter();
+    @Output() selectToken: EventEmitter<TokenDEX> = new EventEmitter();
     token_filter:string;
     
     @HostBinding('class') display;
@@ -122,8 +122,8 @@ export class VpePanelTokensComponent implements OnChanges, OnInit, OnDestroy {
         return _summary;
     }
 
-    clickOnToken(scope:string) {
-        this.selectToken.next(scope);
+    clickOnToken(token:TokenDEX) {
+        this.selectToken.next(token);
     }
     
 

@@ -2,7 +2,7 @@
 
 # Vapaée DEX - source code
 
-current version: PREMIUM (v2.2.3)
+current version: PREMIUM (v2.2.4)
 
 https://vapaee.io
 
@@ -42,7 +42,7 @@ cd script
 - ### Normal
   - [x] Material icons on navbar
   - [x] Invert tokens pair
-    - [x] inside trade market a button will switch comodity / currency places.
+    - [x] inside trade market a button will switch commodity / currency places.
   - [ ] Free to join
     - [ ] Tokens Page should have a 4th section "Own Tokens"
       - [ ] Create a brand new standar eosio token on vapaeetokens smart contrat and issue tokens

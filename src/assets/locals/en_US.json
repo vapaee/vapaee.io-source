@@ -53,6 +53,7 @@
     "Tokens": "Tokens",
     "markets": "markets",
     "tknMarkets": "{{symbol}} markets",
+    "newmarket": "new market",
     "token": "token",
     "volume": "volume",
     "vol": "vol.",
@@ -95,8 +96,8 @@
     "DisclaimerText": "This is a site for testing the EOSIO technology and some satellite applications such as Scatter. Discretion is suggested for its use since it is possible to make real transactions. Any situation that results from using this site is entirely the responsibility of the user and not of its creator.",
     "logDeposit":"{{user}} deposits {{amount}}",
     "logWithdraw":"{{user}} withdraws {{amount}}",
-    "logCancel":"{{user}} cancels {{ordertype}} from {{comodity}}/{{currency}} market",
-    "logCancelN":"{{user}} cancels {{quantity}} {{ordertype}} from {{comodity}}/{{currency}} market",
+    "logCancel":"{{user}} cancels {{ordertype}} from {{commodity}}/{{currency}} market",
+    "logCancelN":"{{user}} cancels {{quantity}} {{ordertype}} from {{commodity}}/{{currency}} market",
     "logOrder":"{{user}} creates a {{ordertype}} for {{amount}} tokens at {{price}} each",
     "logTrxSell":"{{user}} sells to {{buyer}} {{amount}} tokens at {{price}} each, for a total of {{payment}}",
     "logTrxBuy":"{{user}} buys from {{seller}} {{amount}} tokens at {{price}} each, for a total of {{payment}}",
@@ -115,5 +116,7 @@
     "user": "user",
     "detail": "detail",
     "toolow": "too low amounts",
-    "visitwebsite":"visit website"
+    "visitwebsite":"visit website",
+    "commodity": "commodity",
+    "currency": "currency"
 }

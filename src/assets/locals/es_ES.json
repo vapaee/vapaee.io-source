@@ -53,6 +53,7 @@
     "Tokens": "Monedas",
     "markets": "mercados",
     "tknMarkets": "Mercados {{symbol}}",
+    "newmarket": "nuevo mercado",
     "token": "moneda",
     "volume": "volumen",
     "vol": "vol.",
@@ -95,8 +96,8 @@
     "DisclaimerText": "Este es un sitio destinado a hacer pruebas con la tecnología EOSIO y algunas aplicaciones satélites como Scatter. Se sugiere discreción para su uso ya que es posible hacer transacciones reales. Cualquier situación que resulte de utilizar este sitio es entera responsabilidad del usuario y no de su creador.",
     "logDeposit":"{{user}} deposita {{amount}}",
     "logWithdraw":"{{user}} retira {{amount}}",
-    "logCancel":"{{user}} cancela {{ordertype}} del mercado {{comodity}}/{{currency}}",
-    "logCancelN":"{{user}} cancela {{quantity}} {{ordertype}} del mercado {{comodity}}/{{currency}}",
+    "logCancel":"{{user}} cancela {{ordertype}} del mercado {{commodity}}/{{currency}}",
+    "logCancelN":"{{user}} cancela {{quantity}} {{ordertype}} del mercado {{commodity}}/{{currency}}",
     "logOrder":"{{user}} crea una {{ordertype}} por {{amount}} tokens a {{price}} cada uno",
     "logTrxSell":"{{user}} le vende a {{buyer}} {{amount}} tokens a {{price}} cada uno, por un total de {{payment}}",
     "logTrxBuy":"{{user}} le compra a {{seller}} {{amount}} tokens a {{price}} cada uno, por un total de {{payment}}",
@@ -115,5 +116,7 @@
     "user": "usuario",
     "detail": "detalle",
     "toolow": "montos demasiado bajos",
-    "visitwebsite":"visita la página web"
+    "visitwebsite":"visita la página web",
+    "commodity": "mercancía",
+    "currency": "moneda"
 }

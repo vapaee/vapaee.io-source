@@ -151,7 +151,7 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
                     // cancel buy order: tlos.cnt|1
                     data.scope = parts[0];
                     data.canonical = this.getCanonicalScope(data.scope);
-                    data.comodity = data.canonical.split(".")[0].toUpperCase();
+                    data.commodity = data.canonical.split(".")[0].toUpperCase();
                     data.currency = data.canonical.split(".")[1].toUpperCase();
                     data.quantity = parts[1];
 

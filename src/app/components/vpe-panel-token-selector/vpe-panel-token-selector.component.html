@@ -1,8 +1,8 @@
-<vpe-panel (click)="open(content)" class="cursor-pointer active-on-hover" [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.Tokenlist">
+<vpe-panel (click)="open(content)" class="cursor-pointer active-on-hover" [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [margintop]="false" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.Tokenlist">
     <div class="row">
         <div class="nowrap col-sm-12">
             <div class="pull-right">
-               <i class="material-icons cursor-pointer"> expand_more </i> 
+               <i class="material-icons cursor-pointer" style="line-height: 0px; margin-top: 12px;"> expand_more </i> 
             </div>
             <img style="height:16px; width: 16px; margin-top:-2px" [src]="current?.logo">
             {{current?.appname}} ({{current?.symbol}})

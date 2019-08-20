@@ -57,6 +57,7 @@ export class TokenDEX extends Token {
     public logo: string;
     public logolg: string;
     public verified: boolean;
+    public banned?: boolean;
     public fake: boolean;
     public offchain: boolean;
     public scope: string;

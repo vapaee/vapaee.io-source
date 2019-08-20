@@ -7,7 +7,7 @@ export interface MarketMap {
 
 export interface Market {
     scope: string;
-    comodity: TokenDEX,
+    commodity: TokenDEX,
     currency: TokenDEX,
     deals: number;
     blocks: number;
