@@ -98,7 +98,7 @@ CONTRACT vapaeetokens : public eosio::contract {
 
         /*ACTION nosnapshot (const symbol_code& symbolcode) {
             PRINT("\nACTION vapaeetokens.nosnapshot()\n");
-            vapaee::token::airdrop a;
+            vapaee::token::airdrop a; 
             a.action_nosnapshot(symbolcode);
         };*/
 
@@ -109,21 +109,27 @@ CONTRACT vapaeetokens : public eosio::contract {
             a.action_claim(owner, symbolcode, ram_payer);
         };
 
-
     public:
         // EXCHANGE-ACTOINS  ------------------------------------------------------------------------------------------------------
-        ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name ram_payer) {
+        ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name owner) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.addtoken()\n");
             vapaee::token::exchange e;
-            e.action_add_token(contract, symbol, precision, ram_payer);
+            e.action_add_token(contract, symbol, precision, owner);
         };
         
-        ACTION updatetoken (const symbol_code & sym_code, string appname, string website, string logo, string logolg, bool verified) {
+        ACTION updatetoken (const symbol_code & sym_code, string title, string website, string brief, string banner, string logo, string logolg, bool tradeable) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.updatetoken()\n");
             vapaee::token::exchange e;
-            e.action_update_token_info(sym_code, appname, website, logo, logolg, verified);
+            e.action_update_token_info(sym_code, title, website, brief, banner, logo, logolg, tradeable);
+        };
+
+        ACTION settokendata (const symbol_code & symbol, uint64_t id, name action, name category, string text, string link) {
+            MAINTENANCE();
+            PRINT("\nACTION vapaeetokens.updatetoken()\n");
+            vapaee::token::exchange e;
+            e.action_set_token_data(symbol, id, action, category, text, link);
         };        
 
         ACTION cancel(name owner, name type, const symbol_code & comodity, const symbol_code & currency, const std::vector<uint64_t> & orders) {

@@ -191,7 +191,7 @@ export class VpePanelWalletComponent implements OnChanges {
         this.alert_msg = "";
         if (!this.dex.logged) return;
         if (!this.actions) return;
-        if (!asset.token.verified) {
+        if (!asset.token.tradeable) {
             this.alert_msg = this.local.string.tinallowed;
             this.deposit = new AssetDEX();
             return;

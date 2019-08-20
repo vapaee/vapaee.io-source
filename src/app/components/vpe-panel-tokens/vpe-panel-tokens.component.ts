@@ -27,7 +27,7 @@ export class VpePanelTokensComponent implements OnChanges, OnInit, OnDestroy {
     @HostBinding('class') display;
     volume_digits: number;
     price_digits: number;
-    public verified_tokens: TokenDEX[];
+    public tradeable_tokens: TokenDEX[];
     private onTokensChangeSubscriber: Subscriber<any>;
 
     constructor(
@@ -41,21 +41,21 @@ export class VpePanelTokensComponent implements OnChanges, OnInit, OnDestroy {
         this.expanded = true; 
         this.complete = true;
         this.onTokensChangeSubscriber = new Subscriber<string>(_ => {
-            this.verified_tokens = null;
+            this.tradeable_tokens = null;
         });        
     }
 
     get get_tokens() {
-        if (!this.verified_tokens) {
-            this.verified_tokens = []
+        if (!this.tradeable_tokens) {
+            this.tradeable_tokens = []
             for (var i in this.tokens) {
                 var token = this.tokens[i];
-                if (token.verified) {
-                    this.verified_tokens.push(token);
+                if (token.tradeable) {
+                    this.tradeable_tokens.push(token);
                 }
             }    
         }
-        return this.verified_tokens;
+        return this.tradeable_tokens;
     }
 
     get local_string_change () {

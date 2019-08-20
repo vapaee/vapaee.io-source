@@ -150,7 +150,6 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         for (var i=0; i<zoom; i++) {
             data.push(level[level.length - zoom + i]);    
         }
-        // console.log("********************* recreateDataTable()", zoom, this.zoom, this.level, [data]);
         return data;
     }
 
@@ -169,7 +168,6 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
     cache: any;
     ngOnChanges() {
         this.bgStyle = {"height": this.height + "px"};
-        // console.log("********************* ngOnChanges()", [this.data, this._chartData?this._chartData.options.height:0]);
         // if (this.data && this.data.length > 0) {
         
         this.cache = this.cache || {};

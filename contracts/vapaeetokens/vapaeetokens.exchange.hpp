@@ -155,7 +155,7 @@ namespace vapaee {
             tokens tokenstable(get_self(), get_self().value);
             auto tk_itr = tokenstable.find(amount.symbol.code().raw());
             eosio_assert(tk_itr != tokenstable.end(), "The token is not registered");
-            eosio_assert(tk_itr->verified, "The token is not verified");
+            eosio_assert(tk_itr->tradeable, "The token is not setted as tradeable. Contact the token's responsible admin.");
 
             depusers depuserstable(get_self(), get_self().value);
             auto user_itr = depuserstable.find(owner.value);
@@ -516,7 +516,6 @@ namespace vapaee {
             PRINT(" -> scope: ", scope.to_string(), "\n");
 
             if (scope == aux_get_scope_for_tokens(B, A)) {
-                PRINT(" ********* INVERTIMOS POR SER UN SCOPE INVERSO *********\n");
                 // swap buyer / seller names
                 tmp_name = buyer;
                 buyer = seller;
@@ -798,7 +797,6 @@ namespace vapaee {
             if (type == name("sell")) {
                 aux_generate_sell_order(false, owner, scope_sell, scope_buy, total, payment, price, inverse, ram_payer);
             } else if (type == name("buy")) {
-                PRINT(" ********* INVERTIMOS POR SER UNA COMPRA -> AHORA ES UNA VENTA *********\n");
                 aux_generate_sell_order(true, owner, scope_buy, scope_sell, payment, total, inverse, price, ram_payer);
             } else {
                 eosio_assert(false, (string("type must be 'sell' or 'buy' in lower case, got: ") + type.to_string()).c_str());
@@ -1199,60 +1197,116 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::action_withdraw() ...\n");
         }
         
-        void action_add_token(name contract, const symbol_code & sym_code, uint8_t precision, name ram_payer) {
+        void action_add_token(name contract, const symbol_code & sym_code, uint8_t precision, name owner) {
             PRINT("vapaee::token::exchange::action_add_token()\n");
             PRINT(" contract: ", contract.to_string(), "\n");
             PRINT(" sym_code: ", sym_code.to_string(), "\n");
             PRINT(" precision: ", std::to_string((unsigned) precision), "\n");
-            PRINT(" ram_payer: ", ram_payer.to_string(), "\n");
+            PRINT(" owner: ", owner.to_string(), "\n");
 
-            require_auth(ram_payer);
+            require_auth(owner);
 
             tokens tokenstable(get_self(), get_self().value);
             auto itr = tokenstable.find(sym_code.raw());
             eosio_assert(itr == tokenstable.end(), "Token already registered");
-            tokenstable.emplace( ram_payer, [&]( auto& a ){
-                a.contract = contract;
-                a.symbol = sym_code;
+            tokenstable.emplace( owner, [&]( auto& a ){
+                a.contract  = contract;
+                a.symbol    = sym_code;
                 a.precision = precision;
-                a.appname  = "unknown";
-                a.website  = "unknown";
-                a.logo     = "unknown";
-                a.logolg   = "unknown";
-                a.verified = false;
+                a.owner     = owner;
+                a.title     = "";
+                a.website   = "";
+                a.brief     = "";
+                a.banner    = "";
+                a.logo      = "";
+                a.logolg    = "";
+                a.tradeable = false;
+                a.banned    = false;
+                a.data      = 0;
             });
             PRINT("vapaee::token::exchange::action_add_token() ...\n");
         }
 
-        void action_update_token_info(const symbol_code & sym_code, string appname, string website, string logo, string logolg, bool verified) {
+        void action_update_token_info(const symbol_code & sym_code, string title, string website, string brief, string banner, string logo, string logolg, bool tradeable) {
             PRINT("vapaee::token::exchange::action_update_token_info()\n");
             PRINT(" sym_code: ", sym_code.to_string(), "\n");
-            PRINT(" appname: ", appname.c_str(), "\n");
+            PRINT(" title: ", title.c_str(), "\n");
             PRINT(" website: ", website.c_str(), "\n");
+            PRINT(" brief: ", brief.c_str(), "\n");
+            PRINT(" banner: ", banner.c_str(), "\n");
             PRINT(" logo: ", logo.c_str(), "\n");
             PRINT(" logolg: ", logolg.c_str(), "\n");
-            PRINT(" verified: ", std::to_string(verified), "\n");
+            PRINT(" tradeable: ", std::to_string(tradeable), "\n");
 
             tokens tokenstable(get_self(), get_self().value);
             auto itr = tokenstable.find(sym_code.raw());
-
             eosio_assert(itr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
-            if (itr->verified) {
-                eosio_assert(has_auth(get_self()), "only admin can modify a verified token");
-            } else if (verified) {
-                eosio_assert(has_auth(get_self()), "only admin can verify a token");
-            }
+            name owner = itr->owner;
+            eosio_assert(has_auth(get_self()) || has_auth(owner), "only admin or token's owner can modify the token main info");
 
-            tokenstable.modify( *itr, get_self(), [&]( auto& a ){
-                a.appname  = appname;
-                a.website  = website;
-                a.logo     = logo;
-                a.logolg   = logolg;
-                a.verified = verified;
+            tokenstable.modify( *itr, same_payer, [&]( auto& a ){
+                a.title     = title;
+                a.website   = website;
+                a.brief     = brief;
+                a.banner    = banner;
+                a.logo      = logo;
+                a.logolg    = logolg;
+                a.tradeable = tradeable;
             });
 
-            PRINT("vapaee::token::exchange::action_update_token_info() ...\n");            
+            PRINT("vapaee::token::exchange::action_update_token_info() ...\n");
         }
+
+        void action_set_token_data (const symbol_code & sym_code, uint64_t id, name action, name category, string text, string link) {
+            PRINT("vapaee::token::exchange::action_set_token_data()\n");
+            PRINT(" sym_code: ", sym_code.to_string(), "\n");
+            PRINT(" id: ", std::to_string((unsigned long) id), "\n");
+            PRINT(" action: ", action.to_string(), "\n");
+            PRINT(" category: ", category.to_string(), "\n");
+            PRINT(" text: ", text.c_str(), "\n");
+            PRINT(" link: ", link.c_str(), "\n");
+
+            tokens tokenstable(get_self(), get_self().value);
+            auto tkitr = tokenstable.find(sym_code.raw());
+            eosio_assert(tkitr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
+            name owner = tkitr->owner;
+            eosio_assert(has_auth(get_self()) || has_auth(owner), "only admin or token's owner can modify the token data");
+            name ram_payer = owner;
+            if (has_auth(get_self())) {
+                ram_payer = get_self();
+            }
+
+            tokendata tokendatatable(get_self(), sym_code.raw());
+            auto itr = tokendatatable.find(id);
+            if (action == name("add")) {
+                tokendatatable.emplace( ram_payer, [&]( auto& a ){
+                    a.id        = tokendatatable.available_primary_key();
+                    a.category  = category;
+                    a.text      = text;
+                    a.link      = link;
+                });
+                tokenstable.modify(*tkitr, same_payer, [&]( auto& a){
+                    a.data++;
+                });
+            } else {
+                eosio_assert(itr != tokendatatable.end(), "No action can be performed on entry with this id because it does not exist");
+                if (action == name("remove")) {
+                    tokendatatable.erase(*itr);
+                    tokenstable.modify(*tkitr, same_payer, [&]( auto& a){
+                        a.data--;
+                        eosio_assert(a.data >= 0, "Data inconsistency");
+                    });
+                } else {
+                    tokendatatable.modify(*itr, same_payer, [&](auto& a){
+                        a.category  = category;
+                        a.text      = text;
+                        a.link      = link;
+                    });
+                }
+            }
+            
+            PRINT("vapaee::token::exchange::action_set_token_data() ...\n");            
+        } 
 
         void action_swapdeposit(name from, name to, const asset & quantity, string memo) {
             PRINT("vapaee::token::exchange::action_swapdeposit()\n");

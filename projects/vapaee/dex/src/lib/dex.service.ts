@@ -66,6 +66,11 @@ export class VapaeeDEX {
         this.setTokenStats = resolve;
     });
 
+    private setTokenData: Function;
+    public waitTokenData: Promise<any> = new Promise((resolve) => {
+        this.setTokenData = resolve;
+    });
+
     private setMarketSummary: Function;
     public waitMarketSummary: Promise<any> = new Promise((resolve) => {
         this.setMarketSummary = resolve;
@@ -107,32 +112,10 @@ export class VapaeeDEX {
                 if (token.symbol == "TELOSD") {
                     this.currencies.push(token);
                 }
-                if (token.symbol == "CUSD") {
-                    this.currencies.push(token);
-                }
             }
 
             this.currencies.unshift(this.telos);
 
-            // hardoded temporary inserted tokens ------------------------------
-            /*
-            let carbon = new TokenDEX({
-                appname: "Carbon",
-                contract: "stablecarbon",
-                logo: "/assets/logos/carbon.svg",
-                logolg: "/assets/logos/carbon.svg",
-                precision: 2,
-                scope: "cusd.tlos",
-                symbol: "CUSD",
-                verified: false,
-                website: "https://www.carbon.money"
-            });
-            this.tokens.push(carbon);
-            */
-
-            // ----------------------------------------------------------
-
-            
             this.tokens.push(new TokenDEX({
                 appname: "Viitasphere",
                 contract: "viitasphere1",
@@ -141,7 +124,7 @@ export class VapaeeDEX {
                 precision: 4,
                 scope: "viitct.tlos",
                 symbol: "VIITA",
-                verified: false,
+                tradeable: false,
                 website: "https://viitasphere.com"
             }));
             this.tokens.push(new TokenDEX({
@@ -152,12 +135,13 @@ export class VapaeeDEX {
                 precision: 0,
                 scope: "viitct.tlos",
                 symbol: "VIICT",
-                verified: false,
+                tradeable: false,
                 website: "https://viitasphere.com"
             }));
             this.zero_telos = new AssetDEX("0.0000 TLOS", this);
             this.setTokensLoaded();
             this.fetchTokensStats();
+            this.fetchTokensData();
             this.getOrderSummary();
             this.getAllTablesSumaries();
         });
@@ -182,14 +166,6 @@ export class VapaeeDEX {
     }
 
     get logged() {
-        if (this.scatter.logged && !this.scatter.account) {
-            /*
-            console.error("WARNING!!!");
-            console.log(this.scatter);
-            console.log(this.scatter.username);
-            console.error("*******************");
-            */
-        }
         return this.scatter.logged ?
             (this.scatter.account ? this.scatter.account.name : this.scatter.default.name) :
             null;
@@ -422,7 +398,7 @@ export class VapaeeDEX {
                 logolg: "",
                 scope: "",
                 stat: null,
-                verified: false,
+                tradeable: false,
                 offchain: true
             }));
         });
@@ -470,7 +446,6 @@ export class VapaeeDEX {
     }
 
     public createReverseTableFor(scope:string): Market {
-        // console.log("******************************************", scope);
         var canonical = this.canonicalScope(scope);
         var reverse_scope = this.inverseScope(canonical);
         var table:Market = this._markets[canonical];
@@ -1105,7 +1080,6 @@ export class VapaeeDEX {
                 // this.onBlocklistChange.next(market.blocklist);
                 return market;
             }).then(market => {
-                // console.log("***************************************************************************");
                 // // elapsed time
                 // var allLevelsStart:Date = new Date();                
                 
@@ -1167,8 +1141,7 @@ export class VapaeeDEX {
                 // var allLevelsTime:Date = new Date();
                 // diff = allLevelsTime.getTime() - allLevelsStart.getTime();
                 // sec = diff / 1000;
-                // console.log("** VapaeeDEX.getBlockHistory() allLevelsTime sec: ", sec, "(",diff,")");   
-                // // console.log("***************************************************************************", market.blocklevels);
+                // console.log("** VapaeeDEX.getBlockHistory() allLevelsTime sec: ", sec, "(",diff,")");
 
                 return market.block;
             }).catch(e => {
@@ -1391,8 +1364,8 @@ export class VapaeeDEX {
         var result:MarketSummary = null;
         aux = this.waitTokensLoaded.then(async _ => {
             var summary = await this.fetchSummary(canonical);
-            //if(canonical=="cusd.tlos")console.log(scope, "---------------------------------------------------");
-            //if(canonical=="cusd.tlos")console.log("Summary crudo:", summary.rows);
+            //if(canonical=="telosd.tlos")console.log(scope, "---------------------------------------------------");
+            //if(canonical=="telosd.tlos")console.log("Summary crudo:", summary.rows);
 
             this._markets[canonical] = this.auxAssertScope(canonical);
             this._markets[canonical].summary = {
@@ -1411,8 +1384,8 @@ export class VapaeeDEX {
             var now_sec: number = Math.floor(now.getTime() / 1000);
             var now_hour: number = Math.floor(now_sec / 3600);
             var start_hour = now_hour - 23;
-            //if(canonical=="cusd.tlos")console.log("now_hour:", now_hour);
-            //if(canonical=="cusd.tlos")console.log("start_hour:", start_hour);
+            //if(canonical=="telosd.tlos")console.log("now_hour:", now_hour);
+            //if(canonical=="telosd.tlos")console.log("start_hour:", start_hour);
 
             // proceso los datos crudos 
             var price = ZERO_CURRENCY;
@@ -1432,14 +1405,14 @@ export class VapaeeDEX {
 
                         // price = (scope == canonical) ? summary.rows[i].price : summary.rows[i].inverse;
                         // inverse = (scope == canonical) ? summary.rows[i].inverse : summary.rows[i].price;
-                        //if(canonical=="cusd.tlos")console.log("hh:", hh, "last_hh:", last_hh, "price:", price);
+                        //if(canonical=="telosd.tlos")console.log("hh:", hh, "last_hh:", last_hh, "price:", price);
                     }    
                 }
                 /*
                 */
             }
-            //if(canonical=="cusd.tlos")console.log("crude:", crude);
-            //if(canonical=="cusd.tlos")console.log("price:", price);
+            //if(canonical=="telosd.tlos")console.log("crude:", crude);
+            //if(canonical=="telosd.tlos")console.log("price:", price);
 
             // genero una entrada por cada una de las últimas 24 horas
             var last_24h = {};
@@ -1472,7 +1445,7 @@ export class VapaeeDEX {
                     };
                 }
                 last_24h[current] = crude[current] || nuevo;
-                //if(canonical=="cusd.tlos")console.log("current_date:", current_date.toISOString(), current, last_24h[current]);
+                //if(canonical=="telosd.tlos")console.log("current_date:", current_date.toISOString(), current, last_24h[current]);
 
                 // coninical ----------------------------
                 price = last_24h[current].price;
@@ -1537,14 +1510,14 @@ export class VapaeeDEX {
                 ratio = idiff.amount.dividedBy(inverse_fst.amount).toNumber();
             }
             var ipercent = Math.floor(ratio * 10000) / 100;
-            //if(canonical=="cusd.tlos")console.log("price_fst:", price_fst.str);
-            //if(canonical=="cusd.tlos")console.log("inverse_fst:", inverse_fst.str);
+            //if(canonical=="telosd.tlos")console.log("price_fst:", price_fst.str);
+            //if(canonical=="telosd.tlos")console.log("inverse_fst:", inverse_fst.str);
 
-            //if(canonical=="cusd.tlos")console.log("last_24h:", [last_24h]);
-            //if(canonical=="cusd.tlos")console.log("diff:", diff.toString(8));
-            //if(canonical=="cusd.tlos")console.log("percent:", percent);
-            //if(canonical=="cusd.tlos")console.log("ratio:", ratio);
-            //if(canonical=="cusd.tlos")console.log("volume:", volume.str);
+            //if(canonical=="telosd.tlos")console.log("last_24h:", [last_24h]);
+            //if(canonical=="telosd.tlos")console.log("diff:", diff.toString(8));
+            //if(canonical=="telosd.tlos")console.log("percent:", percent);
+            //if(canonical=="telosd.tlos")console.log("ratio:", ratio);
+            //if(canonical=="telosd.tlos")console.log("volume:", volume.str);
 
             this._markets[canonical].summary.price = last_price;
             this._markets[canonical].summary.inverse = last_inverse;
@@ -1561,8 +1534,8 @@ export class VapaeeDEX {
             this._markets[canonical].summary.min_inverse = min_inverse;
             this._markets[canonical].summary.max_inverse = max_inverse;
 
-            //if(canonical=="cusd.tlos")console.log("Summary final:", this._markets[canonical].summary);
-            //if(canonical=="cusd.tlos")console.log("---------------------------------------------------");
+            //if(canonical=="telosd.tlos")console.log("Summary final:", this._markets[canonical].summary);
+            //if(canonical=="telosd.tlos")console.log("---------------------------------------------------");
             this.feed.setLoading("summary."+canonical, false);
             this.feed.setLoading("summary."+inverse, false);
             return this._markets[canonical].summary;
@@ -1805,7 +1778,6 @@ export class VapaeeDEX {
         }
 
         return this.contract.getTable("blockhistory", {scope:canonical, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
-            // console.log("**************");
             // console.log("block History crudo:", result);
             this._markets[canonical] = this.auxAssertScope(canonical);
             this._markets[canonical].block = this._markets[canonical].block || {}; 
@@ -1859,8 +1831,6 @@ export class VapaeeDEX {
         }
 
         return this.contract.getTable("history", {scope:scope, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
-
-            // console.log("**************");
             // console.log("History crudo:", result);
             
             this._markets[canonical] = this.auxAssertScope(canonical);
@@ -1924,7 +1894,6 @@ export class VapaeeDEX {
         }        
 
         return this.contract.getTable("events", {limit:pagesize, lower_bound:""+id}).then(result => {
-            // console.log("**************");
             // console.log("Activity crudo:", result);
             var list:EventLog[] = [];
 
@@ -1934,7 +1903,6 @@ export class VapaeeDEX {
                 if (!this.activity.events["id-" + id]) {
                     this.activity.events["id-" + id] = event;
                     list.push(event);
-                    // console.log("**************>>>>>", id);
                 }
             }
 
@@ -1974,8 +1942,18 @@ export class VapaeeDEX {
         });
     }
 
+
+    private fetchTokenData(token): Promise<TableResult> {
+        this.feed.setLoading("token-data-"+token.symbol, true);
+        return this.contract.getTable("tokendata", {scope:token.symbol}).then(result => {
+            token.data = result.rows;
+            this.feed.setLoading("token-data-"+token.symbol, false);
+            return token;
+        });
+    }
+
     private fetchTokensStats(extended: boolean = true) {
-        console.log("Vapaee.fetchTokens()");
+        console.log("Vapaee.fetchTokensStats()");
         this.feed.setLoading("token-stats", true);
         return this.waitTokensLoaded.then(_ => {
 
@@ -1991,7 +1969,25 @@ export class VapaeeDEX {
                 return this.tokens;
             });            
         });
+    }
 
+    private fetchTokensData(extended: boolean = true) {
+        console.log("Vapaee.fetchTokensData()");
+        this.feed.setLoading("token-data", true);
+        return this.waitTokensLoaded.then(_ => {
+
+            var priomises = [];
+            for (var i in this.tokens) {
+                if (this.tokens[i].offchain) continue;
+                priomises.push(this.fetchTokenData(this.tokens[i]));
+            }
+
+            return Promise.all<any>(priomises).then(result => {
+                this.setTokenData(this.tokens);
+                this.feed.setLoading("token-data", false);
+                return this.tokens;
+            });            
+        });
     }
 
     // for each tokens this sorts its markets based on volume
@@ -2251,8 +2247,8 @@ export class VapaeeDEX {
         // console.log("this.tokens[0]", this.tokens[0].summary);
         this.tokens.sort((a:TokenDEX, b:TokenDEX) => {
             // push offchain tokens to the end of the token list
-            if (a.offchain || !a.verified) return 1;
-            if (b.offchain || !b.verified) return -1;
+            if (a.offchain || !a.tradeable) return 1;
+            if (b.offchain || !b.tradeable) return -1;
 
             // console.log(" --- ", a.symbol, "-", b.symbol, " --- ");
             // console.log("     ", a.summary ? a.summary.volume.str : "0", "-", b.summary ? b.summary.volume.str : "0");

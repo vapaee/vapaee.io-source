@@ -354,11 +354,7 @@ export class GoogleChartComponent implements OnChanges, OnDestroy, GoogleChartCo
   private registerChartEvents(): void {
     // console.log("GoogleChartComponent.registerChartEvents() ----------- ");
     const chart = this.wrapper.getChart();
-    // console.log("*******************************************************");
-    // console.log(google);
-    // console.log(chart);
-    // console.log("*******************************************************");
-    
+   
     // https://stackoverflow.com/a/26067800/2274525
     var self = this;
     function MouseWheelHandler(_e: { wheelDelta: any; detail: number; stopPropagation: () => void; stopImmediatePropagation: () => void; preventDefault: () => void; }) {

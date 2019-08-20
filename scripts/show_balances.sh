@@ -3,7 +3,7 @@ NET='--url https://telos.eos.barcelona'
 
 show_balance() {
     user=$1
-    echo "********* balances for $user -------------------------------------------------"
+    echo "balances for $user -------------------------------------------------"
     cleos $NET get currency balance eosio.token $user TLOS
     cleos $NET get currency balance vapaeetokens $user CNT
     cleos $NET get currency balance vapaeetokens $user VPE

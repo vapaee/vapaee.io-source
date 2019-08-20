@@ -43,7 +43,7 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
         var tokens = []
         for (var i in this.tokens) {
             var token = this.tokens[i];
-            if (token.verified) {
+            if (token.tradeable) {
                 tokens.push(token);
             }
         }

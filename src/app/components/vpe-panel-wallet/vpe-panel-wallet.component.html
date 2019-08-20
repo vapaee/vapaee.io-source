@@ -142,7 +142,7 @@
                             <div (click)="depositForm(balance)" [ngClass]="{'cursor-pointer': actions}">
                                 <div class="pull-right" style="line-height: 1.5;">
                                     <span class="text-xs color-yellow" [hidden]="!show_prices_bottom" [ngClass]="{'text-xs':!portrait, 'text-sm':portrait}"> {{service.getTokenInCurrentCurrency(balance).toString(digits.offchain)}} </span>
-                                    <span class="btn btn-xs btn-primary" [hidden]="deposit.token.symbol != 'SYS' || show_prices_bottom || !balance.token.verified">{{local.string.deposit | titlecase}}</span>
+                                    <span class="btn btn-xs btn-primary" [hidden]="deposit.token.symbol != 'SYS' || show_prices_bottom || !balance.token.tradeable">{{local.string.deposit | titlecase}}</span>
                                 </div>
                                 <img [src]="balance.token.logo" style="width: 20px; height: 20px; margin-top:-1px">
                                 {{balance.toString()}}

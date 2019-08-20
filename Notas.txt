@@ -1,4 +1,10 @@
 --- TODO ---
+- check TELOSD: telosmain get currency stats stablecarbon TELOSD
+
+
+
+
+
 - contract:
   - cambiar el appname por title
   - hacer una lista de entradas de links info de la moneda:
@@ -18,10 +24,6 @@
   - al centro (der) lista de links 
 
 
-
-
-
-- 
 
 
 

@@ -28,13 +28,13 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         private http: HttpClient
     ) {
         var symbol = this.route.snapshot.paramMap.get('symbol');
-        this.dex.waitTokensLoaded.then(_ => {
+        this.dex.waitTokenData.then(_ => {
             this.token = this.dex.getTokenNow(symbol.toUpperCase());
-            console.log("----> token: ", this.token);
-            this.token.brief = "A platform where you can create themed albums and trading cards to collect and play making money in the process.";
-            this.token.banner = "assets/img/cards-and-tokens-1200x400.jpeg";
-            this.token.data = [];
-            
+            // console.log("----> token: ", this.token);
+            // this.token.brief = "A platform where you can create themed albums and trading cards to collect and play making money in the process.";
+            // this.token.banner = "assets/img/cards-and-tokens-1200x400.jpeg";
+            // this.token.data = [];
+            /*
             this.token.data.push({
                 id:5,
                 symbol: this.token.symbol,
@@ -73,8 +73,8 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
                 category: "twitter",
                 text: "The CNT token airdrop",
                 link: "https://twitter.com/TokensCards/status/1105088865994452993"
-            });            
-
+            });
+            */
             for (let i in this.token.data) {
                 let info = this.token.data[i];
                 if (info.category == "twitter") {

@@ -32,9 +32,9 @@
                 <div>
                     <div class="row margin-top">
                         <div class="col-6 text-left col-padding-right">
-                            <span [hidden]="token.symbol != 'TLOS' && token.verified"
+                            <span [hidden]="token.symbol != 'TLOS' && token.tradeable"
                                 class="btn disabled btn-primary btn-sm margin-top">{{local.string.trade}}</span>                            
-                            <span [hidden]="token.symbol == 'TLOS' || !token.verified"
+                            <span [hidden]="token.symbol == 'TLOS' || !token.tradeable"
                                 class="btn btn-primary btn-sm margin-top"
                                 (click)="goToTradeToken(token)"
                                 >{{local.string.trade}}</span>
@@ -42,52 +42,23 @@
                         <div class="col-4 text-center col-padding-left col-padding-right" [hidden]="true">
                         </div>
                         <div class="col-6 text-right col-padding-left">
-                            <span [hidden]="token.symbol == 'TLOS' || !token.verified"
+                            <span [hidden]="token.symbol == 'TLOS' || !token.tradeable"
                                 (click)="goToTokenPage(token)"
-                                class="btn btn-primary btn-sm margin-top">{{local.string.info}}</span>   
-
-                            <!--
-                            <span [hidden]="token.symbol == 'TLOS' || !token.verified"
-                                class="btn btn-primary btn-sm margin-top">{{local.string.markets}}</span>   
-                            -->
+                                class="btn btn-primary btn-sm margin-top">{{local.string.info}}</span>
                         </div>
                     </div>
                 </div>
-
-                <!--
-                <div>
-                    <div class="row">
-                        <div class="col-6 text-left">
-                            <span [hidden]="token.symbol != 'TLOS' && token.verified"
-                                class="btn disabled btn-primary btn-sm margin-top">trade</span>                            
-                            <span [hidden]="token.symbol == 'TLOS' || !token.verified"
-                                class="btn btn-primary btn-sm margin-top"
-                                (click)="goToTradeToken(token)"
-                                >trade</span>
-                        </div>
-                        <div class="col-6 text-right">
-                            
-                            <div class="text-right" *ngIf="token.symbol != 'TLOS' && token.verified">
-                                <div><small class="nowrap text-muted">max: {{token.summary?.max_price?.valueToString(4)}} {{token.summary?.max_price?.token.symbol}}</small></div>
-                                <div><small class="nowrap text-muted">min: {{token.summary?.min_price?.valueToString(4)}} {{token.summary?.min_price?.token.symbol}}</small></div>
-                            </div>
-                            <div *ngIf="token.symbol == 'TLOS' || !token.verified"><div>&nbsp;</div><div>&nbsp;</div></div>
-                            
-                        </div>
-                    </div>
-                </div>
-                -->
 
                 <div class="col-xs-12 margin-top">
                     <div class="row" style="flex-grow: 1">
-                        <div class="col-6 text-left col-padding-right" *ngIf="token.symbol != 'TLOS' && token.verified">
+                        <div class="col-6 text-left col-padding-right" *ngIf="token.symbol != 'TLOS' && token.tradeable">
                             <small class="text-muted">{{local.string.vol}}: {{token.summary?.volume.valueToString(4)}}  {{token.summary?.volume.token.symbol}}</small>
                         </div>
-                        <div class="col-6 text-right col-padding-left" *ngIf="token.symbol != 'TLOS' && token.verified">
+                        <div class="col-6 text-right col-padding-left" *ngIf="token.symbol != 'TLOS' && token.tradeable">
                             <small class="color-yellow bold"> {{service.getTokenInCurrentCurrency(token.summary?.price || "0.0000 TLOS").toString()}} </small>
                         </div>
                         <div class="col-12 text-right" *ngIf="token.symbol == 'TLOS'"> &nbsp; </div>
-                        <div class="col-12 text-right" *ngIf="!token.verified"> {{local.string.cantbtraded}} </div>
+                        <div class="col-12 text-right" *ngIf="!token.tradeable"> {{local.string.cantbtraded}} </div>
                     </div>
                 </div>
             </div>

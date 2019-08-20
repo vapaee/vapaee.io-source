@@ -193,7 +193,6 @@ export class TradePage implements OnInit, OnDestroy {
     }
 
     onClickRow(e:{type:string, row:OrderRow}) {
-        // console.log("**************** onClickRow", e);
         this.orderform_min.setPrice(e.row.price.clone());
         this.orderform_min.setAmount(e.row.sum.clone());
         this.orderform_min.wantsTo(e.type == "sell" ? "buy" : "sell");
@@ -204,7 +203,6 @@ export class TradePage implements OnInit, OnDestroy {
     }
 
     onClickPrice(e) {
-        // console.log("**************** onClickPrice", e);
         this.orderform_min.setPrice(e.row.price.clone());
         this.orderform_full.setPrice(e.row.price.clone());
     }

@@ -11,7 +11,7 @@ export interface Token {
     website?: string,
     logo?: string,
     logolg?: string,
-    verified?: boolean,
+    tradeable?: boolean,
     fake?: boolean,
     offchain?: boolean,
     scope?: string,
@@ -56,7 +56,7 @@ export class TokenDEX extends Token {
     public website: string;
     public logo: string;
     public logolg: string;
-    public verified: boolean;
+    public tradeable: boolean;
     public fake: boolean;
     public offchain: boolean;
     public scope: string;

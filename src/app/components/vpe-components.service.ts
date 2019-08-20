@@ -124,7 +124,6 @@ export class VpeComponentsService {
         
         var cur_price = this.getCurrentPrice();
         var amount = asset.amount.toNumber();
-        // console.log("*********** VpeComponentsService.getTelosInCurrentCurrency() amount", amount, "cur_price", cur_price);
         var number = amount * cur_price;
         asset = new AssetDEX(number, this.getCurrentToken());
         this.cacheTIC[value] = asset;
@@ -185,7 +184,7 @@ export class VpeComponentsService {
                 symbol: "AUX",
                 appname: "Auxiliar Token",
                 offchain: true,
-                verified:false
+                tradeable: false
             });
         } else {
             return this.prices[this.current].token;

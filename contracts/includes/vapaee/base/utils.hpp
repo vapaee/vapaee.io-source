@@ -103,7 +103,6 @@ namespace vapaee {
             int64_t amount = (int64_t) (real_amount);
             int64_t fixed = round_amount(amount);
             if (amount != fixed) {
-                print(" ************ vapaee::utils::amount() ****************\n");
                 print("  amount: ", std::to_string((long long)amount), "\n");
                 print("  fixed: ", std::to_string((long long)fixed), "\n");
             }

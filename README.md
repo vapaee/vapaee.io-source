@@ -49,8 +49,10 @@ cd script
       - [ ] Register an existing token to be listed
       - [ ] form to update registered tokens page content (links, news, videos)
   - [ ] Token info page
+    - [x] Smart contract should have a table to hold token data (links, videos, tweets, etc)
     - [x] Tokens page should have on each token a info button to redirect to tokens page
-    - [ ] Token page shows Token symbol, project name and description, token stats, and a list of contents and links taked from owner submits.
+    - [x] Token page shows Token symbol, project name and description, token stats, and a list of contents and links taked from owner submits.
+    - [ ] UI should allow token admin to easily update token data content
   - [ ] Timezone
     - [ ] User should have a combobox to select the local timezone
     - [ ] All time entries will show time in terms of how long ago that entry was recorded. Then concrete dates if is too long ago.
