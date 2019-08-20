@@ -1,3 +1,12 @@
+-- TODO mañana --
+- agregarle el parámetro bool currency; en tokens.hpp
+- hacer que sólo TLOS y TELOSD sean currency
+- hacer que el dex.service.ts los incluya en la lista de currencies basándose en este parámetro (detando a TLOS como primero)
+- hacer que el contrato sólo permita la creación de nuevos mercados sólo si alguna de las dos tokens es una currency
+- Hacer que la página de Token muestre algo coherente si no tiene datos
+
+
+
 --- TODO ---
 - check TELOSD: telosmain get currency stats stablecarbon TELOSD
 
@@ -177,7 +186,7 @@ cleos push action revelation21 open '["user1.jc", "4,HEART", "user1.jc"]' -p use
   - Specific Token interaction: transfer, open, claim.
   - Crear / Registrar / Actualizar tu propio Token (estandar)
   - Timezone: que el usuario elija su timezone para mostrar mejor los horarios de las transacciones en el historial
-  - Invertir currency / comodity
+  - Invertir currency / commodity
   - Events: Contract propagate events to participants and the apps that owns the tokens involved
     - cuando se concreta una orden que pusiste te debería llegar un mensaje (diferido, cosa de que no pueda detener la ejecusión).
   - Skins

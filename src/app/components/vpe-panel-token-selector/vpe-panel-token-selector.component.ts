@@ -20,7 +20,7 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
     @Input() public margintop: boolean;
     @Input() public expanded: boolean;
 
-    @Output() scopeChange: EventEmitter<string> = new EventEmitter();
+    @Output() tokenChange: EventEmitter<TokenDEX> = new EventEmitter();
     token_filter:string;
     
     @HostBinding('class') display;
@@ -37,17 +37,6 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
         this.hideheader = true;
         this.margintop = true;
         this.expanded = true; 
-    }
-
-    get get_tokens() {
-        var tokens = []
-        for (var i in this.tokens) {
-            var token = this.tokens[i];
-            if (token.tradeable) {
-                tokens.push(token);
-            }
-        }
-        return tokens
     }
 
     get local_string_change () {
@@ -83,9 +72,9 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
         return _summary;
     }
 
-    clickOnToken(scope:string) {
-        console.log("VpePanelTokenSelectorComponent.clickOnToken()", scope);
-        this.scopeChange.next(scope);
+    clickOnToken(token:TokenDEX) {
+        console.log("VpePanelTokenSelectorComponent.clickOnToken()", token);
+        this.tokenChange.next(token);
     }
     
 
@@ -119,11 +108,11 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
         }
     }
 
-    onTokenSelected(e) {
-        console.log("VpePanelTokenSelectorComponent.onTokenSelected()", e);
+    onTokenSelected(token:TokenDEX) {
+        console.log("VpePanelTokenSelectorComponent.onTokenSelected()", token);
         if (this.modalService.hasOpenModals()) {
-            this.modalService.dismissAll(e);
+            this.modalService.dismissAll(token);
         }
-        this.clickOnToken(e);
+        this.clickOnToken(token);
     }
 }

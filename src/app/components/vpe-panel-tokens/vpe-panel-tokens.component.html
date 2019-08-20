@@ -54,9 +54,8 @@
             <perfect-scrollbar [hidden]="complete" style="max-height: 100%; max-width: 100%">
                 <div class="row cursor-pointer margin-bottom active-on-hover" 
                     *ngFor="let token of get_tokens | filter:token_filter"
-                    [hidden]="token.symbol == 'TLOS'"
-                    (click)="clickOnToken(token.scope)"
-                    (tap)="clickOnToken(token.scope)"
+                    (click)="clickOnToken(token)"
+                    (tap)="clickOnToken(token)"
                 >
                     <div class="nowrap text-md col-sm-12 margin-top margin-bottom">
                         <img style="height:20px; width: 20px; margin-top:-2px" [src]="token.logo">

@@ -2,7 +2,7 @@
 
 # Vapaée DEX - source code
 
-current version: PREMIUM (v2.2.3)
+current version: PREMIUM (v2.2.4)
 
 https://vapaee.io
 
@@ -20,15 +20,15 @@ cd script
 ------------------
 ## features for next version - DELUXE (v3.x.x)
 - ### Critical
-  - [ ] Trade any pair
+  - [x] Trade any pair
     - [x] smart contract adaptation
       - [x] verify that current smart contract already accepts any pair, make any adjustments if necessary
       - [x] execute by console a whole use case of creating a new market XXX/YYY not involvind TLOS
-    - [ ] website adaptation
-      - [ ] new "Markets" Page.
+    - [x] website adaptation
+      - [x] new "Markets" Page.
         - [x] Currency selector as header (comobity/currency, comobity/TLOS by default)
         - [x] List of tokens that are currently being traded in the currency selected
-        - [ ] "Create new Market" button, and modal to create a sell/buy order in a non existing yet market (comobity/currency)
+        - [x] "Create new Market" button, and modal to create a sell/buy order in a non existing yet market (comobity/currency)
       - [x] Adapt "Trade" Page
         - [x] verify trade-page component does not base its behavior on the assumption that TLOS is always the currency.
         - [x] verify every component admits any given pair comobity/currency, recode if not
@@ -42,7 +42,7 @@ cd script
 - ### Normal
   - [x] Material icons on navbar
   - [x] Invert tokens pair
-    - [x] inside trade market a button will switch comodity / currency places.
+    - [x] inside trade market a button will switch commodity / currency places.
   - [ ] Free to join
     - [ ] Tokens Page should have a 4th section "Own Tokens"
       - [ ] Create a brand new standar eosio token on vapaeetokens smart contrat and issue tokens

@@ -27,11 +27,11 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     c_loading: {[id:string]:boolean};
     wants: string;
 
-    deposits_comodity: AssetDEX;
+    deposits_commodity: AssetDEX;
     deposits_currency: AssetDEX;
 
     @Input() public owner: string;
-    @Input() public comodity: TokenDEX;
+    @Input() public commodity: TokenDEX;
     @Input() public currency: TokenDEX;
     @Input() public deposits: AssetDEX[];
     @Input() public buyorders: OrderRow[];
@@ -57,15 +57,15 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         this.feed = new Feedback();
         this.loading = false;
         this.c_loading = {};
-        this.deposits_comodity = new AssetDEX();
+        this.deposits_commodity = new AssetDEX();
         this.deposits_currency = new AssetDEX();
     }
 
     get get_currency() {
         return this.currency || {};
     }
-    get get_comodity() {
-        return this.comodity || {};
+    get get_commodity() {
+        return this.commodity || {};
     }
     get get_amount() {
         return this.amount || new AssetDEX();
@@ -125,26 +125,26 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             this.toolow = false;
             // console.log("calculate");
 
-            this.deposits_comodity = new AssetDEX("0 " + this.comodity.symbol, this.dex);
+            this.deposits_commodity = new AssetDEX("0 " + this.commodity.symbol, this.dex);
             this.deposits_currency = new AssetDEX("0 " + this.currency.symbol, this.dex);
 
 
             var a = this.price.amount;
             this.payment.amount = this.price.amount.multipliedBy(this.amount.amount);
     
-            // check if the user can sell. Does he/she have comodity?
-            this.asset = new AssetDEX("0.0 " + this.comodity.symbol, this.dex);
+            // check if the user can sell. Does he/she have commodity?
+            this.asset = new AssetDEX("0.0 " + this.commodity.symbol, this.dex);
             this.can_sell = false;
             for (var i in this.deposits) {
-                if (this.deposits[i].token == this.comodity) {
-                    this.deposits_comodity = this.deposits[i].clone();
+                if (this.deposits[i].token == this.commodity) {
+                    this.deposits_commodity = this.deposits[i].clone();
                     if (this.deposits[i].amount.toNumber() > 0) {
                         this.can_sell = true;
                         this.asset = this.deposits[i];
                     }
                 }
             }
-            // Does he/she have enough comodity?
+            // Does he/she have enough commodity?
             if (this.can_sell) {
                 if (this.asset.amount.isLessThan(this.amount.amount)) {
                     this.can_sell = false;
@@ -238,7 +238,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
 
     sellAll() {
         this.feed.clearError("form");
-        this.setAmount(this.deposits_comodity);
+        this.setAmount(this.deposits_commodity);
         this.wantsTo("sell");
     }
     
@@ -251,7 +251,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         } else {
             this.payment.amount = this.deposits_currency.amount.minus(0.0001);
             var amount = this.payment.amount.dividedBy(this.price.amount);
-            this.setAmount(new AssetDEX(amount, this.deposits_comodity.token));    
+            this.setAmount(new AssetDEX(amount, this.deposits_commodity.token));    
         }
     }
     
@@ -263,15 +263,15 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     reset() {
         this.amount = null;
         this.payment = null;
-        this.comodity = null;
+        this.commodity = null;
         this.currency = null;
         this.price = null;
         this.ngOnChanges();
     }
 
     private restaure() {
-        if (this.comodity && !this.amount) {
-            this.amount = new AssetDEX("0.0000 " + this.comodity.symbol, this.dex);
+        if (this.commodity && !this.amount) {
+            this.amount = new AssetDEX("0.0000 " + this.commodity.symbol, this.dex);
         }
 
         if (this.currency && !this.payment) {

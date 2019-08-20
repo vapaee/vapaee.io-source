@@ -132,11 +132,11 @@ CONTRACT vapaeetokens : public eosio::contract {
             e.action_set_token_data(symbol, id, action, category, text, link);
         };        
 
-        ACTION cancel(name owner, name type, const symbol_code & comodity, const symbol_code & currency, const std::vector<uint64_t> & orders) {
+        ACTION cancel(name owner, name type, const symbol_code & commodity, const symbol_code & currency, const std::vector<uint64_t> & orders) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.cancel()\n");
             vapaee::token::exchange e;
-            e.action_cancel(owner, type, comodity, currency, orders);
+            e.action_cancel(owner, type, commodity, currency, orders);
         };
 
         // "bob", "buy", "5.0000 CNT", "0.2000 TLOS", "1.0000 TLOS"

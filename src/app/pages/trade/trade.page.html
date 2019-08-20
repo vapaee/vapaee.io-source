@@ -1,5 +1,8 @@
 <div *ngIf="app.device.portrait">
-    <vpe-panel-token-selector [tokens]="tokens" [current]="comodity" [margintop]="true" (scopeChange)="scopeChange($event)"></vpe-panel-token-selector>
+    <div class="margin-top">
+        <vpe-panel-token-selector [tokens]="tokens" [current]="commodity" (tokenChange)="scopeChange($event.scope)"></vpe-panel-token-selector>
+    </div>
+    
     
     <vpe-panel-chart [hideheader]="true" [zoom]="500" [height]="chartHeight" [margintop]="true" [data]="chartData"></vpe-panel-chart>
 
@@ -17,11 +20,11 @@
         <span class="text-sm">{{local.string.NotLogged}} </span>
     </div>
 
-    <vpe-panel-order-editor [hidden]="!dex.logged" #orderform_min [deposits]="deposits" [comodity]="comodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="dex.logged"></vpe-panel-order-editor>
+    <vpe-panel-order-editor [hidden]="!dex.logged" #orderform_min [deposits]="deposits" [commodity]="commodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="dex.logged"></vpe-panel-order-editor>
 
     <vpe-panel-orders [expanded]='false' (onClickRow)="onClickRow($event)" (onClickPrice)="onClickPrice($event)" [headers]="headers" [orders]="orders"></vpe-panel-orders>
 
-    <vpe-panel-history [expanded]='true' [scope]="comodity ? comodity.scope : ''" [history]="history"></vpe-panel-history>
+    <vpe-panel-history [expanded]='true' [scope]="commodity ? commodity.scope : ''" [history]="history"></vpe-panel-history>
 </div>
 
 
@@ -41,8 +44,8 @@
                 </div>
                 <div class="col-sm-8 col-md-9 col-padding-left margin-top">
                     <span class="text-xl">
-                        <img style="height:40px; width: 40px; margin-top:-6px" [src]="comodity ? comodity.logolg : '#'">
-                        <span> {{comodity ? comodity.appname : local.string.loading}} </span>
+                        <img style="height:40px; width: 40px; margin-top:-6px" [src]="commodity ? commodity.logolg : '#'">
+                        <span> {{commodity ? commodity.appname : local.string.loading}} </span>
                         <small class="text-muted"> / <span> {{currency ? currency.symbol : local.string.loading}} </span> </small>
                     </span>
                 </div>
@@ -57,7 +60,7 @@
         </div>
         <div class="col-sm-8 col-md-9 col-padding-left">
             <vpe-panel-chart [data]="chartData"></vpe-panel-chart>
-            <vpe-panel-order-editor [hidden]="!dex.logged" #orderform_full [deposits]="deposits" [comodity]="comodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="dex.logged"></vpe-panel-order-editor>
+            <vpe-panel-order-editor [hidden]="!dex.logged" #orderform_full [deposits]="deposits" [commodity]="commodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="dex.logged"></vpe-panel-order-editor>
             <div class="row">
                 <div class="col-sm-8 col-md-9 col-padding-right">
                     <vpe-panel-orders (onClickRow)="onClickRow($event)" (onClickPrice)="onClickPrice($event)" [headers]="headers" [orders]="orders"></vpe-panel-orders>
