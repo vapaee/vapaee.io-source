@@ -104,7 +104,7 @@ export class AppComponent {
         public dex: VapaeeDEX,
         public local: LocalStringsService
     ) {
-        this.app.init("v2.2.4");
+        this.app.init("v2.2.5");
     }
     
     ngOnInit() {

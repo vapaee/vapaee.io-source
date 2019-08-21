@@ -58,6 +58,8 @@ show_table() {
     cleos $NET get table $code $scope $table -l 1000
 }
 
+show_table vapaeetokens vapaeetokens tokens
+show_table vapaeetokens vapaeetokens oldtokens
 
 show_table vapaeetokens vapaeetokens ordertables
 show_table vapaeetokens vapaeetokens ordersummary

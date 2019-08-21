@@ -37,23 +37,23 @@ namespace vapaee {
             return result;
         }
 
-        string create_error_asset2(const char * text, const asset & token1, const asset & token2) {
-            string result = string(text) + " [" + token1.to_string() + "], [" + token2.to_string()+"]";
+        string create_error_asset2(const char * text, const asset & token1, const asset & token) {
+            string result = string(text) + " [" + token1.to_string() + "], [" + token.to_string()+"]";
             return result;
         }
 
-        string create_error_asset3(const char * text, const asset & token1, const asset & token2, const asset & token3) {
-            string result = string(text) + " [" + token1.to_string() + "], [" + token2.to_string()+"], [" + token3.to_string()+"]";
+        string create_error_asset3(const char * text, const asset & token1, const asset & token, const asset & token3) {
+            string result = string(text) + " [" + token1.to_string() + "], [" + token.to_string()+"], [" + token3.to_string()+"]";
             return result;
         }
 
-        string create_error_asset4(const char * text, const asset & token1, const asset & token2, const asset & token3, const asset & token4) {
-            string result = string(text) + " [" + token1.to_string() + "], [" + token2.to_string()+"], [" + token3.to_string()+"], [" + token4.to_string()+"]";
+        string create_error_asset4(const char * text, const asset & token1, const asset & token, const asset & token3, const asset & token4) {
+            string result = string(text) + " [" + token1.to_string() + "], [" + token.to_string()+"], [" + token3.to_string()+"], [" + token4.to_string()+"]";
             return result;
         }
 
-        string create_error_asset5(const char * text, const asset & token1, const asset & token2, const asset & token3, const asset & token4, const asset & token5) {
-            string result = string(text) + " [" + token1.to_string() + "], [" + token2.to_string()+"], [" + token3.to_string()+"], [" + token4.to_string()+"], [" + token5.to_string()+"]";
+        string create_error_asset5(const char * text, const asset & token1, const asset & token, const asset & token3, const asset & token4, const asset & token5) {
+            string result = string(text) + " [" + token1.to_string() + "], [" + token.to_string()+"], [" + token3.to_string()+"], [" + token4.to_string()+"], [" + token5.to_string()+"]";
             return result;
         }        
 
@@ -1621,7 +1621,29 @@ namespace vapaee {
             //     o_sum.erase(*ptr);
             // }
             
-            
+            // // copy from old structure to newone
+            // oldtokens  oldtokens_table (get_self(), get_self().value);
+            // tokens tokens_table(get_self(), get_self().value);
+            // for (auto ptr = oldtokens_table.begin(); ptr != oldtokens_table.end(); ptr = oldtokens_table.begin()) {
+            //     tokens_table.emplace(get_self(), [&]( auto& a ) {
+            //         a.symbol     = ptr->symbol;
+            //         a.precision  = ptr->precision;
+            //         a.contract   = ptr->contract;
+            //         a.owner      = ptr->owner;
+            //         a.title      = ptr->title;
+            //         a.website    = ptr->website;
+            //         a.brief      = ptr->brief;
+            //         a.banner     = ptr->banner;
+            //         a.logo       = ptr->logo;
+            //         a.logolg     = ptr->logolg;
+            //         a.date       = ptr->date;
+            //         a.tradeable  = ptr->tradeable;
+            //         a.banned     = ptr->banned;
+            //         a.data       = ptr->data;
+            //     });
+            // 
+            //     oldtokens_table.erase(ptr);
+            // }
 
             /*
             // copy from old structure to newone
@@ -1698,7 +1720,7 @@ namespace vapaee {
             */
             
 
-            // Delete fake Tokens balance
+            // Delete fake tokens balance
             // auto sym = quantity.symbol;
             // stats statstable( _self, sym.code().raw() );
             // auto existing = statstable.find( sym.code().raw() );
