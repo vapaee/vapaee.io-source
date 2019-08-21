@@ -15,7 +15,7 @@ export interface TokenData {
 
 export class TokenDEX extends Token {
 
-    public appname: string;
+    public title: string;
     public website: string;
     public logo: string;
     public logolg: string;
@@ -24,11 +24,9 @@ export class TokenDEX extends Token {
     public fake: boolean;
     public offchain: boolean;
     public scope: string;
-
-    public data?: TokenData[];
-    public title?: string;
-    public brief?: string;
-    public banner?: string;
+    public data: TokenData[];
+    public brief: string;
+    public banner: string;
 
     stat?: {
         supply: string,
@@ -56,7 +54,6 @@ export class TokenDEX extends Token {
             delete obj.contract;
             Object.assign(this, obj);
         }
-        this.title = this.title || this.appname;
         this.toString();
     }
 

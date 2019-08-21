@@ -130,11 +130,11 @@ export class AppComponent {
             });
         });
 
-        this.dex.addOffChainToken(new TokenDEX({ symbol: "USD", appname: "US Dollar", precision: 4 }));
-        this.dex.addOffChainToken(new TokenDEX({ symbol: "EUR", appname: "Euro", precision: 4 }));
-        this.dex.addOffChainToken(new TokenDEX({ symbol: "BTC", appname: "Bitcoin", precision: 8 }));
-        this.dex.addOffChainToken(new TokenDEX({ symbol: "EOS", appname: "EOS", precision: 4 }));
-        this.dex.addOffChainToken(new TokenDEX({ symbol: "TLOS", appname: "Telos", precision: 4 }));
+        this.dex.addOffChainToken(new TokenDEX({ symbol: "USD", title: "US Dollar", precision: 4 }));
+        this.dex.addOffChainToken(new TokenDEX({ symbol: "EUR", title: "Euro", precision: 4 }));
+        this.dex.addOffChainToken(new TokenDEX({ symbol: "BTC", title: "Bitcoin", precision: 8 }));
+        this.dex.addOffChainToken(new TokenDEX({ symbol: "EOS", title: "EOS", precision: 4 }));
+        this.dex.addOffChainToken(new TokenDEX({ symbol: "TLOS", title: "Telos", precision: 4 }));
         
         this.dex.onTokensReady.subscribe((tokens:TokenDEX[]) => {
             var tokenPrices:PriceMap = {}

@@ -116,28 +116,6 @@ export class VapaeeDEX {
 
             this.currencies.unshift(this.telos);
 
-            this.tokens.push(new TokenDEX({
-                appname: "Viitasphere",
-                contract: "viitasphere1",
-                logo: "/assets/logos/viitasphere.png",
-                logolg: "/assets/logos/viitasphere-lg.png",
-                precision: 4,
-                scope: "viitct.tlos",
-                symbol: "VIITA",
-                tradeable: false,
-                website: "https://viitasphere.com"
-            }));
-            this.tokens.push(new TokenDEX({
-                appname: "Viitasphere",
-                contract: "viitasphere1",
-                logo: "/assets/logos/viitasphere.png",
-                logolg: "/assets/logos/viitasphere-lg.png",
-                precision: 0,
-                scope: "viitct.tlos",
-                symbol: "VIICT",
-                tradeable: false,
-                website: "https://viitasphere.com"
-            }));
             this.zero_telos = new AssetDEX("0.0000 TLOS", this);
             this.setTokensLoaded();
             this.fetchTokensStats();
@@ -392,7 +370,7 @@ export class VapaeeDEX {
                 symbol: offchain.symbol,
                 precision: offchain.precision || 4,
                 contract: "nocontract",
-                appname: offchain.appname,
+                title: offchain.title,
                 website: "",
                 logo:"",
                 logolg: "",
@@ -2259,8 +2237,8 @@ export class VapaeeDEX {
             if(a_vol.amount.isGreaterThan(b_vol.amount)) return -1;
             if(a_vol.amount.isLessThan(b_vol.amount)) return 1;
 
-            if(a.appname < b.appname) return -1;
-            if(a.appname > b.appname) return 1;
+            if(a.title < b.title) return -1;
+            if(a.title > b.title) return 1;
             return 0;
         }); 
 
@@ -2308,8 +2286,8 @@ export class VapaeeDEX {
                 if(a.currency == this.telos && b.currency != this.telos) return -1;
                 if(b.currency == this.telos && a.currency != this.telos) return 1;
 
-                if(a.commodity.appname < b.commodity.appname) return -1;
-                if(a.commodity.appname > b.commodity.appname) return 1;
+                if(a.commodity.title < b.commodity.title) return -1;
+                if(a.commodity.title > b.commodity.title) return 1;
     
             });
 

@@ -7,7 +7,7 @@
     "serve": "ng serve --poll=2000 -o",
     "libs": "ng build @vapaee/feedback --prod && ng build @vapaee/scatter --prod && ng build @vapaee/dex --prod",
     "build": "ng build --aot --buildOptimizer --prod",
-    "local": "ng build --aot --buildOptimizer --prod && cp .htaccess /var/www/vapaee.io/.htaccess && cp cert/* /var/www/vapaee.io/ && cd /var/www/vapaee.io && git add -A && git commit -m 'save' && git push && amazon_server_console",
+    "deploy": "npm run libs && ng build --aot --buildOptimizer --prod && cp .htaccess /var/www/vapaee.io/.htaccess && cp cert/* /var/www/vapaee.io/ && cd /var/www/vapaee.io && git add -A && git commit -m 'save' && git push && amazon_server_console",
     "postinstall": "node src/patch.js; npm run libs; cd contracts/_examples; if [ ! -d 'eosio.contracts' ]; then git clone https://github.com/Telos-Foundation/eosio.contracts; fi; npm run serve",
     "save": "git add -A; git commit -m 'save'; git push;",
     "pull": "git pull; cp ../airdrop-on-telos/* ./airdrop-on-telos/ -R;",

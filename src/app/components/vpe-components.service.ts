@@ -72,7 +72,7 @@ export class VpeComponentsService {
         if (this.prices[this.current]) {
             return this.prices[this.current].token;
         } else {
-            return {appname:""};
+            return {title:""};
         }
     }
 
@@ -182,7 +182,7 @@ export class VpeComponentsService {
         if (!this.prices[this.current]) {
             return new TokenDEX({
                 symbol: "AUX",
-                appname: "Auxiliar Token",
+                title: "Auxiliar Token",
                 offchain: true,
                 tradeable: false
             });
