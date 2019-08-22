@@ -103,5 +103,6 @@ export class MarketsPage implements OnInit, OnDestroy {
     createNewMarket() {
         this._comodities = null;
         this.newmarket = true;
+        this.commodity = this.comodities[0];
     }
 }

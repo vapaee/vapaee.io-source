@@ -7,6 +7,8 @@ import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 
+declare const twttr: any;
+
 
 @Component({
     selector: 'token-page',
@@ -30,51 +32,11 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         var symbol = this.route.snapshot.paramMap.get('symbol');
         this.dex.waitTokenData.then(_ => {
             this.token = this.dex.getTokenNow(symbol.toUpperCase());
-            // console.log("----> token: ", this.token);
-            // this.token.brief = "A platform where you can create themed albums and trading cards to collect and play making money in the process.";
-            // this.token.banner = "assets/img/cards-and-tokens-1200x400.jpeg";
-            // this.token.data = [];
-            /*
-            this.token.data.push({
-                id:5,
-                symbol: this.token.symbol,
-                category: "image",
-                text: "Cards & Tokens banner image",
-                link: "assets/img/cards-and-tokens-1200x400.jpeg"
-            });
-            
-            this.token.data.push({
-                id:1,
-                symbol: this.token.symbol,
-                category: "youtube",
-                text: "Promo video",
-                link: "https://youtu.be/YSVJgKsSobA"
-            });
 
-            this.token.data.push({
-                id:2,
-                symbol: this.token.symbol,
-                category: "twitter",
-                text: "Membership cards",
-                link: "https://twitter.com/TokensCards/status/1109668817175748608"
-            });
+            if (this.token.brief == "") {
+                this.token.brief = null;
+            }
 
-            this.token.data.push({
-                id:3,
-                symbol: this.token.symbol,
-                category: "youtube",
-                text: "Demo video",
-                link: "https://www.youtube.com/watch?v=jhL1KyifGEs&list=PLIv5p7BTy5wxqwqs0fGyjtOahoO3YWX0x&index=1"
-            });
-
-            this.token.data.push({
-                id:4,
-                symbol: this.token.symbol,
-                category: "twitter",
-                text: "The CNT token airdrop",
-                link: "https://twitter.com/TokensCards/status/1105088865994452993"
-            });
-            */
             for (let i in this.token.data) {
                 let info = this.token.data[i];
                 if (info.category == "twitter") {
@@ -93,6 +55,8 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
             this.renderTweets(2000);
             this.renderTweets(5000);
             this.renderTweets(10000);
+            this.renderTweets(15000);
+            this.renderTweets(20000);
         });
     }
 
@@ -109,18 +73,8 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
 
     renderTweets(delay) {
         setTimeout(_ => {
-            (function(d,s,id){
-                var js: any,
-                    fjs=d.getElementsByTagName(s)[0],
-                    p='https';
-                if(!d.getElementById(id)){
-                    js=d.createElement(s);
-                    js.id=id;
-                    js.src=p+"://platform.twitter.com/widgets.js";
-                    fjs.parentNode.insertBefore(js,fjs);
-                }
-            })
-            (document,"script","twitter-wjs");
+            console.log("renderTweets("+delay+")", typeof twttr);
+            twttr?twttr.widgets.load():null;
         }, delay);
     }
 
