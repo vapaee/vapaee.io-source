@@ -231,3 +231,23 @@ ng-sidebar {
     margin-right: auto;
 }
 
+// ------------------------------------------------------------------
+// ------------------------------------------------------------------
+// ------------------------------------------------------------------
+$bk-color:rgba(0, 0, 0, 0.8);
+
+ng-sidebar-container {
+    background-image: url(https://mcdn.wallpapersafari.com/medium/50/52/kis6Uf.jpg);
+    background-image: url(https://mcdn.wallpapersafari.com/medium/51/90/gNjomX.jpg);
+    background-image: url(https://mcdn.wallpapersafari.com/medium/24/68/20TPn8.jpg);
+    background-image: url(https://mcdn.wallpapersafari.com/medium/49/92/iCpIEe.jpg);
+    background-size: cover;
+}
+div.card.vpe-background-panel {
+    background-color: $bk-color !important;
+    background: none !important;
+}
+
+div.main.bg-dark {
+    background-color: $bk-color !important;
+}

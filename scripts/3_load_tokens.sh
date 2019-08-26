@@ -120,6 +120,17 @@ cleos push action stablecoin.z issue '["bob", "1000.00 EZAR", "memo EZAR"]' -p e
 cleos push action stablecoin.z issue '["tom", "1000.00 EZAR", "memo EZAR"]' -p eosio@active
 cleos push action stablecoin.z issue '["kate", "1000.00 EZAR", "memo EZAR"]' -p eosio@active
 
+
+
+echo "-------- yanggangcoin (YANG) ---------"
+cleos set contract yanggangcoin $PWD -p yanggangcoin@active
+cleos push action yanggangcoin create '[ "eosio", "1000000000.0000 YANG"]' -p yanggangcoin@active
+cleos push action yanggangcoin issue '["alice", "1000.0000 YANG", "memo YANG"]' -p eosio@active
+cleos push action yanggangcoin issue '["bob", "1000.0000 YANG", "memo YANG"]' -p eosio@active
+cleos push action yanggangcoin issue '["tom", "1000.0000 YANG", "memo YANG"]' -p eosio@active
+cleos push action yanggangcoin issue '["kate", "1000.0000 YANG", "memo YANG"]' -p eosio@active
+
+
 echo "----- loading tokens ----"
 
 # register tokens
@@ -139,6 +150,11 @@ cleos push action vapaeetokens updatetoken '["QBE", "Qubicles", "https://fenero.
 echo "-- register ACORN --" 
 cleos push action vapaeetokens addtoken '["acornaccount","ACORN",4,"vapaeetokens"]' -p vapaeetokens@active
 cleos push action vapaeetokens updatetoken '["ACORN", "ACORN", "http://acorns.fun", "", "", "/assets/logos/acorn.svg", "/assets/logos/acorn-lg.png",true]' -p vapaeetokens@active
+echo "-- register YANG --" 
+cleos push action vapaeetokens addtoken '["yanggangcoin","YANG",4,"vapaeetokens"]' -p vapaeetokens@active
+cleos push action vapaeetokens updatetoken '["YANG", "Yang Gang Coin", "https://www.yang2020.com/", "Together, We Can Build a New Kind of Economy, One That Puts People First.", "/assets/uploads/yang-banner.jpg", "/assets/logos/yang-coin.png", "/assets/logos/yang-coin-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens settokendata '["YANG", 0, "add", "twitter", "Official Twitter Account", "https://twitter.com/andrewyang"]' -p vapaeetokens@active
+
 echo "-- register OLIVE --" 
 cleos push action vapaeetokens addtoken '["oliveaccount","OLIVE",4,"vapaeetokens"]' -p vapaeetokens@active
 cleos push action vapaeetokens updatetoken '["OLIVE", "OLIVE", "http://democratic.money/olive", "", "", "/assets/logos/olive.png", "/assets/logos/olive-lg.png",true]' -p vapaeetokens@active
@@ -169,6 +185,7 @@ cleos push action vapaeetokens settokendata '["CNT", 0, "add", "youtube", "Promo
 cleos push action vapaeetokens settokendata '["CNT", 0, "add", "twitter", "Membership cards", "https://twitter.com/TokensCards/status/1109668817175748608"]' -p vapaeetokens@active
 cleos push action vapaeetokens settokendata '["CNT", 0, "add", "youtube", "Demo video", "https://www.youtube.com/watch?v=jhL1KyifGEs&list=PLIv5p7BTy5wxqwqs0fGyjtOahoO3YWX0x&index=1"]' -p vapaeetokens@active
 cleos push action vapaeetokens settokendata '["CNT", 0, "add", "twitter", "The CNT token airdrop", "https://twitter.com/TokensCards/status/1105088865994452993"]' -p vapaeetokens@active
+
 
 
 
