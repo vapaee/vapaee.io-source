@@ -38,10 +38,9 @@ const routes: Routes = [
       { path: 'wp',                      data: { state: "wp" }, component: ComingSoonPage },
       { path: 'home',                    data: { state: "home" }, component: ComingSoonPage },
       { path: 'trade/:scope',            data: { state: "trade" }, component: ComingSoonPage },
+      { path: 'tokens',                  data: { state: "tokens" }, component: ComingSoonPage },
+      { path: 'token/:symbol',           data: { state: "token" }, component: ComingSoonPage },
       { path: 'markets',                 data: { state: "markets" }, component: ComingSoonPage},
-      { path: 'tokens',                  data: { state: "tokens" }, component: ComingSoonPage, children: [
-          { path: ':symbol',             data: { state: "edit" }, component: ComingSoonPage }
-      ] },
       { path: 'account',                 data: { state: "guest" }, component: ComingSoonPage},
       { path: 'account/:name',           data: { state: "account" }, component: ComingSoonPage }
     ]

@@ -5,10 +5,21 @@
 - hacer que el contrato sólo permita la creación de nuevos mercados sólo si alguna de las dos tokens es una currency
 - Hacer que la página de Token muestre algo coherente si no tiene datos
 
+telosmain push action vapaeetokens addtoken '["yanggangcoin","YANG",4,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["YANG", "Yang Gang Coin", "https://www.yang2020.com/", "Together, We Can Build a New Kind of Economy, One That Puts People First.", "/assets/uploads/yang-banner.jpg", "/assets/logos/yang-coin.png", "/assets/logos/yang-coin-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens settokendata '["YANG", 0, "add", "twitter", "Official Twitter Account", "https://twitter.com/andrewyang"]' -p vapaeetokens@active
+
+
+
+
+
 
 
 --- TODO ---
 - check TELOSD: telosmain get currency stats stablecarbon TELOSD
+telosmain push action vapaeetokens addtoken '["yanggangcoin","YANG",4,"vapaeetokens"]' -p vapaeetokens@active
+telosmain push action vapaeetokens updatetoken '["YANG", "Yang Gang Coin", "https://www.yang2020.com/", "Together, We Can Build a New Kind of Economy, One That Puts People First.", "/assets/uploads/yang-banner.jpg", "/assets/logos/yang-coin.png", "/assets/logos/yang-coin-lg.png",true]' -p vapaeetokens@active
+telosmain push action vapaeetokens settokendata '["YANG", 0, "add", "twitter", "Official Twitter Account", "https://twitter.com/andrewyang"]' -p vapaeetokens@active
 
 
 telosmain push action vapaeetokens addtoken '["eosio.token","TLOS",4,"vapaeetokens"]' -p vapaeetokens@active
@@ -60,9 +71,11 @@ telosmain push action vapaeetokens settokendata '["CNT", 0, "add", "youtube", "D
 telosmain push action vapaeetokens settokendata '["CNT", 0, "add", "twitter", "The CNT token airdrop", "https://twitter.com/TokensCards/status/1105088865994452993"]' -p vapaeetokens@active
 
 
+cleos --url https://telos.eos.barcelona get table vapaeetokens CNT tokensdata
+cleos --url https://api.eos.miami get table vapaeetokens CNT tokensdata
 
-
-
+cleos --url https://telos.eos.barcelona get info
+cleos --url https://api.eos.miami get info
 
 - contract:
   - cambiar el appname por title
