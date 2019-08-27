@@ -49,11 +49,13 @@ export class AppService {
                 this.prev_state = this.state;
                 this.path = this.router.url;
                 this.state = this.getDeepestChild(this.route.root).snapshot.data.state;
-                console.log("AppService. onRoute()", [this]);
+                console.log("AppService. onRoute()", this.state, [this]);
                 this.analytics.sendPageView(window.location.href);
                 this.onStateChange.next(this.state);
-                window.document.body.classList.add(this.state);
-                window.document.body.classList.remove(this.prev_state);
+                if (this.state != this.prev_state) {
+                    window.document.body.classList.remove(this.prev_state);
+                    window.document.body.classList.add(this.state);
+                }
             }
         });
         window.document.body.removeAttribute("loading");

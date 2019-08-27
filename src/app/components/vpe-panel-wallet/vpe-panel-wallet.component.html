@@ -74,7 +74,7 @@
                                     <span class="color-yellow" [hidden]="!show_prices_top" [ngClass]="{'text-xs':!portrait, 'text-sm':portrait}"> {{service.getTokenInCurrentCurrency(deposit).toString(digits.offchain)}} </span>
                                     <span class="btn btn-xs btn-primary" [hidden]="withdraw.token.symbol != 'SYS' || show_prices_top || !hideuser">{{local.string.withdraw | titlecase}}</span>
                                 </div>                                 
-                                <img [src]="deposit.token.logo" style="width: 20px; height: 20px; margin-top:-1px">
+                                <img class="token-icon" [src]="deposit.token.logo">
                                 {{deposit.toString(digits.amount)}}
                                 <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('deposits')"></span>
                             </div>

@@ -2,8 +2,13 @@
     
     <div class="row margin-top" [hidden]="hide_maxmin">
         <div class="nowrap text-bold text-sm col-2 col-padding-right">{{local.string.token | titlecase}}</div>
-        <div class="nowrap text-bold text-sm-right col-2 col-padding-right col-padding-left">{{local.string.price | titlecase}}</div>
-        <div class="nowrap text-bold text-sm-right col-2 col-padding-right col-padding-left">{{local_string_change | titlecase}}</div>
+        <div class="nowrap text-bold text-sm-right col-3 col-padding-right col-padding-left">
+            <div class="row">
+                <div class="nowrap text-bold text-sm col-6 col-padding-right">{{local.string.price | titlecase}}</div>
+                <div class="nowrap text-bold text-sm col-6 col-padding-right"></div>
+            </div>            
+        </div>
+        <div class="nowrap text-bold text-sm-right col-1 col-padding-right col-padding-left">{{local_string_change | titlecase}}</div>
         <div class="nowrap text-bold text-sm-right col-2 col-padding-right col-padding-left">24h min</div>
         <div class="nowrap text-bold text-sm-right col-2 col-padding-right col-padding-left">24h max</div>
         <div class="nowrap text-bold text-sm-right col-2 col-padding-left">{{local.string.vol | titlecase}}</div>
@@ -20,12 +25,21 @@
             <span class="text-md">{{market.commodity.symbol}}</span>
             <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('market.token-stat-'+market.commodity.symbol) && !dex.feed.loading('summary.'+dex.canonicalScope(market.scope))"></span>
         </div>
-        <div class="nowrap col-2 text-bold text-right col-padding-right col-padding-left">
-            {{market.summary?.price.valueToString(price_digits, true)}}
-            <span [hidden]="hide_symbol">{{market.summary?.price.token.symbol}}</span>
+        <div class="nowrap col-3 text-bold text-right col-padding-right col-padding-left">
+            <div class="row">
+                <div class="nowrap text-bold text-sm col-6 col-padding-right">
+                    {{market.summary?.price.valueToString(price_digits, true)}}
+                    <span [hidden]="hide_symbol">{{market.summary?.price.token.symbol}}</span>                    
+                </div>
+                <div class="nowrap text-bold text-left col-6 col-padding-right">
+                    <small class="color-yellow bold"> ({{service.getTokenInCurrentCurrency(market.summary?.price || "0.0000 TLOS").toString()}}) </small>
+                </div>
+            </div> 
+
+            
         </div>
         <div
-            class="nowrap col-2 text-right col-padding-right col-padding-left"
+            class="nowrap col-1 text-right col-padding-right col-padding-left"
             [ngClass]="{'text-success': market.summary?.percent > 0, 'text-danger': market.summary?.percent < 0, 'text-muted': market.summary?.percent  == 0}"
         >
             {{market.summary?.percent_str}}
@@ -66,7 +80,7 @@
                     (tap)="clickOnMarket(market.scope)"    
                 >
                     <div class="nowrap col-3 col-padding-right">
-                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="market.commodity.logo">&nbsp;
+                        <img class="token-icon" [src]="market.commodity.logo">&nbsp;
                         {{market.commodity.symbol}}
                         <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('market.token-stat-'+market.commodity.symbol) && !dex.feed.loading('summary.'+dex.canonicalScope(market.scope))"></span>
                     </div>

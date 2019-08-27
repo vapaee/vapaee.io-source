@@ -51,37 +51,38 @@
 
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav ml-auto">
-                <li class="nav-item" [ngClass]="{active: app.stateStartsWith('home')}">
+                <li class="nav-item home" [ngClass]="{active: app.stateStartsWith('home')}">
                     <a class="nav-link" [routerLink]="'/exchange/home'" >
                         <i class="material-icons"> home </i>
                         {{local.string.Home | titlecase}}
                     </a>
                 </li>
-                <li class="nav-item" [ngClass]="{active: app.stateStartsWith('tokens')}">
+                <li class="nav-item tokens" [ngClass]="{active: app.stateStartsWith('tokens')}">
                     <a class="nav-link" [routerLink]="'/exchange/tokens'" >
-                        <i class="material-icons"> view_list </i>
+                        <i class="material-icons security"> security </i>
+                        <i class="material-icons view_list"> view_list </i>
                         {{local.string.Tokens | titlecase}}
                     </a>
                 </li>
-                <li class="nav-item" [ngClass]="{active: app.stateStartsWith('markets')}">
+                <li class="nav-item markets" [ngClass]="{active: app.stateStartsWith('markets')}">
                     <a class="nav-link" [routerLink]="'/exchange/markets'" >
                         <i class="material-icons"> attach_money </i>
                         {{local.string.markets | titlecase}}
                     </a>
                 </li>
-                <li class="nav-item" [ngClass]="{active: app.stateStartsWith('trade')}">
+                <li class="nav-item trade" [ngClass]="{active: app.stateStartsWith('trade')}">
                     <a class="nav-link" routerLink="{{'/exchange/trade/' + (app.getGlobal('lastmarket', 'cnt.tlos')) }}" >
                         <i class="material-icons"> insert_chart_outlined </i>
                         {{local.string.trade | titlecase}}
                     </a>
                 </li>
-                <li class="nav-item" [ngClass]="{active: app.stateStartsWith('account')}">
+                <li class="nav-item account" [ngClass]="{active: app.stateStartsWith('account')}">
                     <a class="nav-link" [routerLink]="'/exchange/account/' + dex.current.name" >
                         <i class="material-icons"> perm_identity </i>
                         {{local.string.Account | titlecase}}
                     </a>
                 </li>
-                <li class="nav-item no-highlight" [ngClass]="{active: app.stateStartsWith('wp')}">
+                <li class="nav-item wp no-highlight" [ngClass]="{active: app.stateStartsWith('wp')}">
                     <a class="nav-link" [routerLink]="'/exchange/wp'" >
                         <i class="material-icons"> how_to_vote </i>
                         WP
@@ -92,7 +93,7 @@
                     <a class="nav-link cursor-pointer" (click)="debug()">DEBUG</a>
                 </li>
                 -->
-                <li class="nav-item dropdown" ngbDropdown>
+                <li class="nav-item language dropdown" ngbDropdown>
                     <a ngbDropdownToggle class="nav-link dropdown-toggle cursor-pointer" data-toggle="dropdown" id="language">
                         <i class="material-icons"> language </i>
                         {{local.string.Language | titlecase}}
