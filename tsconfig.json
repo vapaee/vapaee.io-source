@@ -40,6 +40,12 @@
       ],
       "@vapaee/aux/*": [
         "dist/vapaee/aux/*"
+      ],
+      "@vapaee/style": [
+        "dist/vapaee/style"
+      ],
+      "@vapaee/style/*": [
+        "dist/vapaee/style/*"
       ]
     }
   }

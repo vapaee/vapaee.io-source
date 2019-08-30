@@ -82,13 +82,29 @@
                         {{local.string.Account | titlecase}}
                     </a>
                 </li>
+                <li class="nav-item skin dropdown" ngbDropdown>
+                    <a ngbDropdownToggle class="nav-link dropdown-toggle cursor-pointer" data-toggle="dropdown" id="skin">
+                        <i class="material-icons"> format_paint </i>
+                        {{local.string.skin | titlecase}}
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="skin">
+                        <span
+                            class="cursor-pointer dropdown-item"
+                            (click)="style.setSkin(skin.id);"
+                            *ngFor="let skin of style.skins"
+                            [ngClass]="{'active': skin.id == style.current.id}"
+                        >{{skin.name}}</span>
+                    </div>
+                </li>                
+                <!-- 
                 <li class="nav-item wp no-highlight" [ngClass]="{active: app.stateStartsWith('wp')}">
                     <a class="nav-link" [routerLink]="'/exchange/wp'" >
                         <i class="material-icons"> how_to_vote </i>
                         WP
                     </a>
                 </li>
-               <!-- 
+               
                 <li class="nav-item">
                     <a class="nav-link cursor-pointer" (click)="debug()">DEBUG</a>
                 </li>

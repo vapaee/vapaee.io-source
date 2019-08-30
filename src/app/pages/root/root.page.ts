@@ -1,12 +1,12 @@
 import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService, AnalyticsService } from 'src/app/services/common/common.services';
+
 import { VapaeeScatter, NetworkMap } from '@vapaee/scatter';
-import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
+import { VapaeeDEX } from '@vapaee/dex';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 import { HttpClient } from '@angular/common/http';
-
-
+import { VapaeeStyle } from 'projects/vapaee/style/src/public_api';
 
 
 declare var $:any;
@@ -25,8 +25,9 @@ export class RootPage implements OnInit {
         public elRef: ElementRef,
         public scatter: VapaeeScatter,
         public dex: VapaeeDEX,
+        public style: VapaeeStyle,
         public analytics: AnalyticsService,
-        private components: VpeComponentsService
+        private components: VpeComponentsService,
     ) {
         
     }
