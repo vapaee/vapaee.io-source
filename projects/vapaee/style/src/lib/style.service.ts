@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { DOCUMENT } from "@angular/platform-browser";
+import { CookieService } from 'ngx-cookie-service';
 
 
 export interface Skin {
@@ -17,7 +18,10 @@ export class VapaeeStyle {
     public skins: Skin[];
     private _current: Skin = {id:null, name:null, url:null};
 
-    constructor(@Inject(DOCUMENT) private doc) {
+    constructor(
+        @Inject(DOCUMENT) private doc,
+        private cookies: CookieService
+    ) {
         this.skins = [
             {
                 "id": "skin-1",
@@ -37,16 +41,10 @@ export class VapaeeStyle {
         ];
 
         this.createLinkForStylesheetURL("");
+        this.setSkin(this.cookies.get("skin"));
     }
 
     get current() { return this._current; }
-
-    private createLinkForStylesheetURL(url) {
-        this.link = this.doc.createElement('link');
-        this.link.setAttribute('rel', 'stylesheet');
-        this.doc.head.appendChild(this.link);
-        this.link.setAttribute('href', url);
-    }
 
     setSkin(skinid:string) {
         if (this._current.id != skinid) {
@@ -60,8 +58,17 @@ export class VapaeeStyle {
         }
     }
 
+    private createLinkForStylesheetURL(url) {
+        console.log("VapaeeStyle.createLinkForStylesheetURL()");
+        this.link = this.doc.createElement('link');
+        this.link.setAttribute('rel', 'stylesheet');
+        this.doc.head.appendChild(this.link);
+        this.link.setAttribute('href', url);
+    }
+
     private async applySking(skin:Skin) {
         this._current = skin;
+        this.cookies.set("skin", skin.id);
         console.log("VapaeeStyle.applySking()",skin);
         await this.takeOutCurrentStyle();
         await this.applyStyle(skin);

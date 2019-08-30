@@ -1,7 +1,14 @@
 -- TODO AHORA ---
-- sacar el WP nav button
-- en su lugar poner un combobox para seleccionar skin
-- hacer un servicio que se le diga applySkin(skin_id) y el tipo resuelva "sacar el actual" y "poner el skin_id"
+- cuando se hace click sobre un combobox del navbar deberían cerrarse el otro si esté abierto
+- falta estilar el sidemenu
+- falta estilar el botón de sidemenu (blanco)
+- los dropbown de los comboboxes no está estilado. Habría que ponerles color blanco
+- fuera de la skin, habría que rehacer el header del trade-page
+  - centrar el título verticalmente
+  - dejar bien visible cual es el precio actual
+
+CARBON:
+https://buy.carbon.money/
 
 
 -- TODO mañana --
