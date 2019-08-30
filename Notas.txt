@@ -1,3 +1,9 @@
+-- TODO AHORA ---
+- sacar el WP nav button
+- en su lugar poner un combobox para seleccionar skin
+- hacer un servicio que se le diga applySkin(skin_id) y el tipo resuelva "sacar el actual" y "poner el skin_id"
+
+
 -- TODO mañana --
 - agregarle el parámetro bool currency; en tokens.hpp
 - hacer que sólo TLOS y TELOSD sean currency
@@ -578,7 +584,7 @@ cleos --url https://telos.eos.barcelona get table snapshots.tf 1 snapshots --low
   npm publish --access public
 
 
-
+ng generate library @vapaee/style
 
 
 
