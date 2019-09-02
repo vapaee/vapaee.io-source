@@ -26,17 +26,17 @@ export class VapaeeStyle {
             {
                 "id": "skin-rain",
                 "name": "Gray Rain",
-                "url": "http://localhost:4200/assets/skins/skin-rain.css"
+                "url": "/assets/skins/skin-rain.css"
             },
             {
                 "id": "skin-jungle",
                 "name": "Jungle",
-                "url": "http://localhost:4200/assets/skins/skin-jungle.css"
+                "url": "/assets/skins/skin-jungle.css"
             },
             {
                 "id": "skin-sky",
                 "name": "Sky",
-                "url": "http://localhost:4200/assets/skins/skin-sky.css"
+                "url": "/assets/skins/skin-sky.css"
             },
         ];
 
