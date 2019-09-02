@@ -1,11 +1,23 @@
 -- TODO AHORA ---
-- cuando se hace click sobre un combobox del navbar deberían cerrarse el otro si esté abierto
-- falta estilar el sidemenu
-- falta estilar el botón de sidemenu (blanco)
-- los dropbown de los comboboxes no está estilado. Habría que ponerles color blanco
-- fuera de la skin, habría que rehacer el header del trade-page
-  - centrar el título verticalmente
-  - dejar bien visible cual es el precio actual
+- vapaee.io website skins
+  - cuando se hace click sobre un combobox del navbar deberían cerrarse el otro si esté abierto
+  - falta estilar el sidemenu
+  - falta estilar el botón de sidemenu (blanco)
+  - los dropbown de los comboboxes no está estilado. Habría que ponerles color blanco
+  - fuera de la skin, habría que rehacer el header del trade-page
+    - centrar el título verticalmente
+    - dejar bien visible cual es el precio actual
+  - hacer otra skin?
+
+- C++ Smart COntract
+  - podemos hacer el nuevo slug
+
+- FutbolTokens
+  - pasarle varias opciones a Agustín para decidir la estrategia monetaria
+  - hacer cartas y un álbum con Defensor
+
+- Cards & Tokens
+  - arreglar el prototipo para que encare el desplegar los videos bien
 
 CARBON:
 https://buy.carbon.money/

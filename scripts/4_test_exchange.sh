@@ -46,6 +46,11 @@ cleos push action teachology14 transfer  '["alice","vapaeetokens","100.0000 TEAC
 cleos push action teachology14 transfer  '["tom",  "vapaeetokens","100.0000 TEACH","deposit"]' -p tom@active
 cleos push action teachology14 transfer  '["kate", "vapaeetokens","100.0000 TEACH","deposit"]' -p kate@active
 
+cleos push action telosdacdrop transfer '["bob",  "vapaeetokens","50000.0000 TLOSDAC","deposit"]' -p bob@active
+cleos push action telosdacdrop transfer '["alice","vapaeetokens","50000.0000 TLOSDAC","deposit"]' -p alice@active
+cleos push action telosdacdrop transfer '["tom",  "vapaeetokens","50000.0000 TLOSDAC","deposit"]' -p tom@active
+cleos push action telosdacdrop transfer '["kate", "vapaeetokens","50000.0000 TLOSDAC","deposit"]' -p kate@active
+
 cleos push action vapaeetokens transfer '["bob",  "vapaeetokens","100.0000 CNT","deposit"]' -p bob@active
 cleos push action vapaeetokens transfer '["alice","vapaeetokens","1000.0000 CNT","deposit"]' -p alice@active
 cleos push action vapaeetokens transfer '["kate", "vapaeetokens","100.0000 CNT","deposit"]' -p kate@active

@@ -112,6 +112,14 @@ cleos push action stablecarbon issue '["bob", "1000.0000 TELOSD", "memo TELOSD"]
 cleos push action stablecarbon issue '["tom", "1000.0000 TELOSD", "memo TELOSD"]' -p eosio@active
 cleos push action stablecarbon issue '["kate", "1000.0000 TELOSD", "memo TELOSD"]' -p eosio@active
 
+echo "-------- telosdacdrop (TLOSDAC) ---------"
+cleos set contract telosdacdrop $PWD -p telosdacdrop@active
+cleos push action telosdacdrop create '[ "eosio", "1000000000.0000 TLOSDAC"]' -p telosdacdrop@active
+cleos push action telosdacdrop issue '["alice", "50000.0000 TLOSDAC", "memo TLOSDAC"]' -p eosio@active
+cleos push action telosdacdrop issue '["bob", "50000.0000 TLOSDAC", "memo TLOSDAC"]' -p eosio@active
+cleos push action telosdacdrop issue '["tom", "50000.0000 TLOSDAC", "memo TLOSDAC"]' -p eosio@active
+cleos push action telosdacdrop issue '["kate", "50000.0000 TLOSDAC", "memo TLOSDAC"]' -p eosio@active
+
 echo "-------- stablecoin.z (EZAR) ---------"
 cleos set contract stablecoin.z $PWD -p stablecoin.z@active
 cleos push action stablecoin.z create '[ "eosio", "1000000000.00 EZAR"]' -p stablecoin.z@active
@@ -119,8 +127,6 @@ cleos push action stablecoin.z issue '["alice", "1000.00 EZAR", "memo EZAR"]' -p
 cleos push action stablecoin.z issue '["bob", "1000.00 EZAR", "memo EZAR"]' -p eosio@active
 cleos push action stablecoin.z issue '["tom", "1000.00 EZAR", "memo EZAR"]' -p eosio@active
 cleos push action stablecoin.z issue '["kate", "1000.00 EZAR", "memo EZAR"]' -p eosio@active
-
-
 
 echo "-------- yanggangcoin (YANG) ---------"
 cleos set contract yanggangcoin $PWD -p yanggangcoin@active
@@ -173,6 +179,9 @@ cleos push action vapaeetokens updatetoken '["ROBO", "Proxibots", "https://proxi
 echo "-- register TELOSD --" 
 cleos push action vapaeetokens addtoken '["stablecarbon","TELOSD",4,"vapaeetokens"]' -p vapaeetokens@active
 cleos push action vapaeetokens updatetoken '["TELOSD", "Carbon", "https://www.carbon.money", "", "", "/assets/logos/carbon.svg", "/assets/logos/carbon.svg",true]' -p vapaeetokens@active
+echo "-- register TLOSDAC --" 
+cleos push action vapaeetokens addtoken '["telosdacdrop","TLOSDAC",4,"vapaeetokens"]' -p vapaeetokens@active
+cleos push action vapaeetokens updatetoken '["TLOSDAC", "TelosDAC", "https://telosdac.io/", "", "", "/assets/logos/telosdac.png", "/assets/logos/telosdac-lg.png",true]' -p vapaeetokens@active
 echo "-- register EZAR --"
 cleos push action vapaeetokens addtoken '["stablecoin.z","EZAR",2,"vapaeetokens"]' -p vapaeetokens@active
 cleos push action vapaeetokens updatetoken '["EZAR", "South African Rand", "https://t.me/ezartoken", "", "", "/assets/logos/ezar.png", "/assets/logos/ezar-lg.png",true]' -p vapaeetokens@active

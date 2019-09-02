@@ -1,0 +1,21 @@
+body ng-sidebar-container {
+    background-image: url(/assets/uploads/forest-438432_640.jpg);
+    background-size: cover;
+}
+
+
+vpe-panel-markets .active-on-hover:hover {
+    background-color: #353e37 !important;
+}
+
+.calculated-in-currency {
+    color: yellow !important;
+    font-weight: bold;
+}
+
+div.card, div.card.vpe-background-panel {  
+    -webkit-box-shadow: 0px 3px 14px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 3px 14px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 3px 14px 0px rgba(0,0,0,0.75);
+    border: 1px solid #182720;
+}

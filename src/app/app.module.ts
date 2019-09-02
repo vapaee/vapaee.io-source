@@ -15,7 +15,7 @@ import { AppComponent } from './app.component';
 import { LoadingOverall } from './services/common/app.service';
 
 import { CoingeckoService } from './services/coingecko.service';
-
+import { DropdownService } from './services/dropdown.service';
 
 import { VapaeeComponentsModule } from './components/vpe-components.module';
 // import { VapaeeFeedbackModule } from '@vapaee/feedback';
@@ -35,6 +35,7 @@ import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { TokenPage } from './pages/token/token.page';
+
 
 
 
@@ -76,7 +77,8 @@ import { TokenPage } from './pages/token/token.page';
         DatePipe,
         CookieService,
         HttpClient,
-        CoingeckoService
+        CoingeckoService,
+        DropdownService
     ],
     bootstrap: [AppComponent]
 })

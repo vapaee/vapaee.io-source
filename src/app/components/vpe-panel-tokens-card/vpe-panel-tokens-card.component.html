@@ -55,7 +55,7 @@
                             <small class="text-muted">{{local.string.vol}}: {{token.summary?.volume.valueToString(4)}}  {{token.summary?.volume.token.symbol}}</small>
                         </div>
                         <div class="col-6 text-right col-padding-left" *ngIf="token.symbol != 'TLOS' && token.tradeable">
-                            <small class="color-yellow bold"> {{service.getTokenInCurrentCurrency(token.summary?.price || "0.0000 TLOS").toString()}} </small>
+                            <small class="calculated-in-currency"> {{service.getTokenInCurrentCurrency(token.summary?.price || "0.0000 TLOS").toString()}} </small>
                         </div>
                         <div class="col-12 text-right" *ngIf="token.symbol == 'TLOS'"> &nbsp; </div>
                         <div class="col-12 text-right" *ngIf="!token.tradeable"> {{local.string.cantbtraded}} </div>

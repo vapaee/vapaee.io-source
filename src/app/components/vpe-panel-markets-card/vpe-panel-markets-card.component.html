@@ -50,7 +50,7 @@
                                         <small class="text-muted">{{local.string.vol}}: {{market.summary?.volume.valueToString(4)}}  {{market.summary?.volume.token.symbol}}</small>
                                     </div>
                                     <div class="col-6 text-right col-padding-left">
-                                        <small class="color-yellow bold"> {{service.getTokenInCurrentCurrency(market.summary?.price || "0.0000 TLOS").toString()}} </small>
+                                        <small class="calculated-in-currency"> {{service.getTokenInCurrentCurrency(market.summary?.price || "0.0000 TLOS").toString()}} </small>
                                     </div>
                                 </div>                                
                             </div>

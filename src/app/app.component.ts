@@ -6,6 +6,8 @@ import { VapaeeDEX } from '../../projects/vapaee/dex/src/lib/dex.service';
 import { LocalStringsService } from './services/common/common.services';
 import { TokenDEX } from '../../projects/vapaee/dex/src/lib/token-dex.class';
 import { Market } from '@vapaee/dex';
+import { VapaeeStyle } from 'projects/vapaee/style/src/public_api';
+import { DropdownService } from './services/dropdown.service';
 
 @Component({
     selector: 'app-root',
@@ -60,18 +62,33 @@ import { Market } from '@vapaee/dex';
                             WP
                         </a>
                     </li>
-                    <li class="nav-item dropdown" ngbDropdown>
-                        <a ngbDropdownToggle class="nav-link dropdown-toggle cursor-pointer" data-toggle="dropdown" id="language">
+                    <li class="nav-item skin dropdown">
+                        <a class="nav-link dropdown-toggle cursor-pointer" (click)="dropdown.drop('skin')">
+                            <i class="material-icons"> format_paint </i>
+                            {{local.string.skin | titlecase}}
+                            <span class="caret"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" [ngClass]="{show:dropdown.isOpen('skin')}">
+                            <span
+                                class="cursor-pointer dropdown-item"
+                                (click)="style.setSkin(skin.id); dropdown.close(); app.closeSideMenu(); "
+                                *ngFor="let skin of style.skins"
+                                [ngClass]="{'active': skin.id == style.current.id}"
+                            >{{skin.name}}</span>
+                        </div>
+                    </li>
+                    <li class="nav-item language dropdown" >
+                        <a  class="nav-link dropdown-toggle cursor-pointer" (click)="dropdown.drop('language')">
                             <i class="material-icons"> language </i>
                             {{local.string.Language | titlecase}}
                             <span class="caret"></span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="language">
-                            <span class="cursor-pointer dropdown-item" (click)="local.setLocal('en_US'); debug();">English</span>
-                            <span class="cursor-pointer dropdown-item" (click)="local.setLocal('es_ES'); debug();">Español</span>
-                            <span class="cursor-pointer dropdown-item" (click)="local.setLocal('pt_BR'); debug();">Português</span>
+                        <div class="dropdown-menu dropdown-menu-right" [ngClass]="{show: dropdown.isOpen('language')}" >
+                            <span class="cursor-pointer dropdown-item" (click)="local.setLocal('en_US'); dropdown.close(); app.closeSideMenu(); debug();">English</span>
+                            <span class="cursor-pointer dropdown-item" (click)="local.setLocal('es_ES'); dropdown.close(); app.closeSideMenu(); debug();">Español</span>
+                            <span class="cursor-pointer dropdown-item" (click)="local.setLocal('pt_BR'); dropdown.close(); app.closeSideMenu(); debug();">Português</span>
                         </div>
-                    </li>                    
+                    </li>               
                 </ul>        
             </div>
 
@@ -102,9 +119,11 @@ export class AppComponent {
         public components: VpeComponentsService,
         public coingecko: CoingeckoService,
         public dex: VapaeeDEX,
-        public local: LocalStringsService
+        public local: LocalStringsService,
+        public style: VapaeeStyle,
+        public dropdown: DropdownService
     ) {
-        this.app.init("v2.2.7");
+        this.app.init("v2.3.0");
     }
     
     ngOnInit() {

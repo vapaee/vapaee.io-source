@@ -1,0 +1,55 @@
+body {
+    background-color: rgb(196, 202, 204);
+}
+
+body ng-sidebar-container {
+    background-image: url(/assets/uploads/drip-2806027_640.jpg);
+    background-size: cover;
+}
+
+nav.navbar.vpe-background-navbar {
+    background: linear-gradient(to bottom, rgba(71,83,102,1) 0%, rgba(45,48,51,1) 100%);
+}
+
+nav.navbar.vpe-background-navbar div.navbar-collapse a {
+    color: white !important;
+}
+
+ng-sidebar div.sidebar-content {
+    background: linear-gradient(to bottom, rgba(71,83,102,1) 0%, rgba(45,48,51,1) 100%); 
+}
+
+/* ---- HOME ---- */
+
+home-page .jumbotron.vpe-background-jumbotron {
+    background: linear-gradient(to bottom, rgba(71,83,102,0.9) 0%, rgba(45,48,51,0.9) 100%);
+}
+
+div.card {
+    -webkit-box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.75);
+}
+
+div.card div.card-body {
+    background: linear-gradient(to bottom, rgba(59,63,66,1) 0%, rgba(45,48,51,1) 100%);
+}
+
+
+div.card div.card-body.vpe-background-card-body {
+    background: linear-gradient(to bottom, rgba(94,97,102,1) 0%, rgba(45,48,51,1) 100%);
+}
+
+div.card div.card-header.vpe-background-card-header {
+    background: linear-gradient(to bottom, rgba(71,83,102,1) 0%, rgba(45,48,51,1) 100%);
+}
+
+div.title.vpe-background-panel-title {
+    background: linear-gradient(to bottom, rgba(71,83,102,1) 0%, rgba(40,51,59,1) 100%);
+    margin-bottom: 0px !important;
+}
+
+.calculated-in-currency {
+    color: yellow !important;
+    font-weight: bold;
+}

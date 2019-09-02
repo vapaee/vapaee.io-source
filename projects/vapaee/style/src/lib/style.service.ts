@@ -24,19 +24,19 @@ export class VapaeeStyle {
     ) {
         this.skins = [
             {
-                "id": "skin-1",
-                "name": "Skin 1",
-                "url": "http://localhost:4200/assets/skins/skin-1.css"
+                "id": "skin-rain",
+                "name": "Gray Rain",
+                "url": "http://localhost:4200/assets/skins/skin-rain.css"
             },
             {
-                "id": "skin-2",
-                "name": "Skin 2",
-                "url": "http://localhost:4200/assets/skins/skin-2.css"
+                "id": "skin-jungle",
+                "name": "Jungle",
+                "url": "http://localhost:4200/assets/skins/skin-jungle.css"
             },
             {
-                "id": "skin-3",
-                "name": "Skin 3",
-                "url": "http://localhost:4200/assets/skins/skin-3.css"
+                "id": "skin-sky",
+                "name": "Sky",
+                "url": "http://localhost:4200/assets/skins/skin-sky.css"
             },
         ];
 

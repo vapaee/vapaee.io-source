@@ -1,5 +1,5 @@
 <div class="container" >
-    <div class="card markets text-white bg-dark margin-top-md">
+    <div class="card markets text-white margin-top-md">
         <div class="card-header vpe-background-card-header text-lg" >
             <img style="height:28px; width: 28px; margin-top: -3px;" src="/assets/img/coins.png" [hidden]="!app.device.portrait">
             <img style="height:38px; width: 38px; margin-top: -3px;" src="/assets/img/coins.png" [hidden]="app.device.portrait">
@@ -12,7 +12,7 @@
 
     <vpe-panel-markets-card-deck (tradeMarket)="tradeMarket($event)" [limit]="3" [hidebackground]="true" [hideheader]="true" [markets]="markets"></vpe-panel-markets-card-deck>
 
-    <div class="card currencies text-white bg-dark margin-top-sm">
+    <div class="card currencies text-white margin-top-sm">
         <div class="card-header vpe-background-card-header text-md">
             <span *ngFor="let currency of dex.currencies; let i=index"
                 class="currency btn btn-lg margin-right-lg"
@@ -44,7 +44,7 @@
         ></vpe-panel-markets>
     </div>
 
-    <div class="card currencies text-white bg-dark margin-top-md" [hidden]="!newmarket">
+    <div class="card currencies text-white margin-top-md" [hidden]="!newmarket">
         <div class="card-header vpe-background-card-header text-md-center">
             <span class="text-md">{{local.string.commodity|titlecase}}</span>
             <div class="margin-top-md">

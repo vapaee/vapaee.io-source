@@ -59,7 +59,6 @@ show_table() {
 }
 
 show_table vapaeetokens vapaeetokens tokens
-show_table vapaeetokens vapaeetokens oldtokens
 
 show_table vapaeetokens vapaeetokens ordertables
 show_table vapaeetokens vapaeetokens ordersummary
@@ -67,9 +66,9 @@ show_table vapaeetokens vapaeetokens ordersummary
 show_table vapaeetokens $token2.$token1 sellorders
 show_table vapaeetokens $token1.$token2 sellorders
 
-show_table vapaeetokens $token2.$token1 history
-show_table vapaeetokens $token1.$token2 history
-show_table vapaeetokens $token2.$token1 tablesummary
-show_table vapaeetokens $token1.$token2 tablesummary
-show_table vapaeetokens $token2.$token1 blockhistory
-show_table vapaeetokens $token1.$token2 blockhistory
+#show_table vapaeetokens $token2.$token1 history
+#show_table vapaeetokens $token1.$token2 history
+#show_table vapaeetokens $token2.$token1 tablesummary
+#show_table vapaeetokens $token1.$token2 tablesummary
+#show_table vapaeetokens $token2.$token1 blockhistory
+#show_table vapaeetokens $token1.$token2 blockhistory

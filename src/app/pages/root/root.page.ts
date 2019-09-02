@@ -7,6 +7,7 @@ import { VapaeeDEX } from '@vapaee/dex';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 import { HttpClient } from '@angular/common/http';
 import { VapaeeStyle } from 'projects/vapaee/style/src/public_api';
+import { DropdownService } from 'src/app/services/dropdown.service';
 
 
 declare var $:any;
@@ -28,6 +29,7 @@ export class RootPage implements OnInit {
         public style: VapaeeStyle,
         public analytics: AnalyticsService,
         private components: VpeComponentsService,
+        public dropdown: DropdownService
     ) {
         
     }
@@ -39,7 +41,7 @@ export class RootPage implements OnInit {
 
             var network = "telos-testnet";
             network = "telos";
-            network = "local";
+            // network = "local";
             if ( this.scatter.network.slug != network || !this.scatter.connected ) {
                 this.scatter.setNetwork(network);
                 this.scatter.connectApp("Vapaée - Telos DEX").catch(err => console.error(err));
@@ -62,6 +64,7 @@ export class RootPage implements OnInit {
     }
     
     debug(){
+        
         console.log("--------------------------------");
         console.log("VPE", [this.dex]);
         console.log("Scatter", [this.scatter]);

@@ -34,21 +34,34 @@
     <div class="card page-header">
         <div class="card-header vpe-background-card-header padding">
             <div class="row">
-                <div class="col-sm-4 col-md-3 col-padding-right margin-top text-center">
+                <div class="col-sm-4 col-md-3 col-padding-right text-center">
                     <!--INVERSE -->
-                    <span class="btn btn-info btn-sm margin-top-sm switch-tokens-btn" (click)="switchTokens()">
+                    <span class="btn btn-primary btn-sm margin-top-sm switch-tokens-btn" (click)="switchTokens()">
                         <i class="material-icons" style="font-size: 20px; margin-top: -2px;" [hidden]="dex.isCanonical(scope)">autorenew</i>
                         <i class="material-icons" style="font-size: 20px; margin-top: -2px;" [hidden]="!dex.isCanonical(scope)">cached</i>                        
-                        Switch to {{dex.inverseScope(scope)}}
-                    </span>
+                        {{local.string.invert | titlecase}}
+                    </span>                    
                 </div>
-                <div class="col-sm-8 col-md-9 col-padding-left margin-top">
+                <div class="col-sm-5 col-md-6 col-padding-left col-padding-right">
                     <span class="text-xl">
                         <img style="height:40px; width: 40px; margin-top:-6px" [src]="commodity ? commodity.logolg : '#'">
                         <span> {{commodity ? commodity.title : local.string.loading}} </span>
                         <small class="text-muted currency-title"> / <span> {{currency ? currency.symbol : local.string.loading}} </span> </small>
                     </span>
                 </div>
+                
+                <div class="col-sm-3 col-padding-left text-right">
+                    <div class="text-lg margin-top">
+                        {{market?.summary?.price.str}}
+                    </div>
+                    <!-- 
+                    <div class="margin-top">
+                        <span class="text-lg">{{market?.summary?.price.str}}</span>
+                        <small class="calculated-in-currency"> {{components.getTokenInCurrentCurrency(market?.summary?.price || "0.0000 TLOS").toString()}} </small>
+                    </div>
+                    -->
+                </div>
+
             </div>
         </div>
     </div>

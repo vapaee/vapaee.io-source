@@ -10,7 +10,7 @@ using namespace eosio;
 #include <locale>
 #include <cmath>
 
-
+// #define PRINT(...) print(__VA_ARGS__)
 
 namespace vapaee {
     namespace utils {
@@ -27,10 +27,16 @@ namespace vapaee {
             return vapaee::utils::combine(key1.value, key2.value);
         }
 
-        static uint32_t round_amount(uint32_t amount) {
-            uint32_t diff = amount % 100;
+        static uint64_t round_amount(uint64_t amount) {
+            // PRINT("vapaee::utils::round_amount()\n");
+            // PRINT(" amount:   ", std::to_string((unsigned long long) amount), "\n");
+
+            uint64_t diff = amount % 100;
+            // PRINT(" ->diff:   ", std::to_string((unsigned long long) diff), "\n");
             if (diff == 1)  { amount -= 1; }
             if (diff == 99) { amount += 1; }
+            // PRINT(" ->amount: ", std::to_string((unsigned long long) amount), "\n");
+            // PRINT("vapaee::utils::round_amount()...\n");
             return amount;
         }
 

@@ -1,0 +1,60 @@
+body {
+    background-color: rgb(196, 202, 204);
+}
+
+body ng-sidebar-container {
+    /*
+    background-image: url(/assets/uploads/drip-2806027_640.jpg);    
+    background-size: cover;
+    */
+}
+
+nav.navbar.vpe-background-navbar {
+    background: none;
+    background-color: transparent  !important;
+}
+
+nav.navbar.vpe-background-navbar div.navbar-collapse a {
+    color: white !important;
+}
+
+ng-sidebar div.sidebar-content {
+    background: none;
+    background-color: transparent  !important;
+
+}
+
+/* ---- HOME ---- */
+
+home-page .jumbotron.vpe-background-jumbotron {
+    background: none;
+    background-color: transparent  !important;
+}
+
+div.card, div.card.vpe-background-panel {
+    background: none;
+    background-color: transparent  !important;    
+    -webkit-box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.75);
+}
+
+div.card div.card-body {
+    background: none;
+    background-color: transparent  !important;
+}
+
+div.card div.card-body.vpe-background-card-body {
+    background: none;
+    background-color: transparent  !important;
+}
+
+div.card div.card-header.vpe-background-card-header {
+    background: none;
+    background-color: transparent  !important;
+}
+
+div.title.vpe-background-panel-title {
+    background: none;
+    background-color: transparent  !important;
+}

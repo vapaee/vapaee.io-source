@@ -42,6 +42,9 @@ div.text-lg span.spinner-border {
     margin-bottom: 5px;
 }
 
+vpe-panel div.main div.body {
+    overflow: visible !important;
+}
 
 .vpe-background-jumbotron {
     background: #1b211f;
@@ -118,6 +121,7 @@ div.title.vpe-background-panel-title {
     background: -moz-linear-gradient(top, #2a332a 0%, #2a332a 100%);
     background: -webkit-linear-gradient(top, #2a332a 0%,#2a332a 100%);
     background: linear-gradient(to bottom, #3a423a 0%,#545a54 100%);
+    margin-bottom: 0px !important;
 }
 
 .card {
@@ -160,8 +164,8 @@ div.title.vpe-background-panel-title {
 
 @media (min-width: 1200px) {
     app-root > ng-sidebar-container#sidebar {
-        height: calc(100% - 57px);
-        top: 57px;
+        height: calc(100% - 56px);
+        top: 56px;
     }
 }
 
@@ -201,6 +205,10 @@ ng-sidebar {
         padding-top: 20px;
         top: -20px !important;
     }
+}
+
+span.dropdown-item.active {
+    background-color: #5b6269;
 }
 
 // Modal ---------

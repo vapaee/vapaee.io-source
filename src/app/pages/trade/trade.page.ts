@@ -9,6 +9,7 @@ import { TokenDEX } from 'projects/vapaee/dex/src/lib/token-dex.class';
 import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
 import { TokenOrders, Market, OrderRow } from '@vapaee/dex';
 import { VpePanelWalletComponent } from 'src/app/components/vpe-panel-wallet/vpe-panel-wallet.component';
+import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 
 
 @Component({
@@ -41,7 +42,8 @@ export class TradePage implements OnInit, OnDestroy {
         public app: AppService,
         public local: LocalStringsService,
         public dex: VapaeeDEX,
-        public route: ActivatedRoute
+        public route: ActivatedRoute,
+        public components: VpeComponentsService
 
     ) {
         this.chartHeight = Math.max(this.app.device.height - 430, 175); 
