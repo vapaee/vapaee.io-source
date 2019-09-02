@@ -46,7 +46,7 @@
                     <!-- Total balance (if any) -->
                     <div class="text-md nowrap margin-top-xs" [hidden]="!current.data.total_balance">
                         <span class="text-md"> {{current.data.total_balance}} </span>
-                        <span class="text-sm color-yellow d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
+                        <span class="text-sm total-balance calculated-in-currency d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
                     </div>
                     <div class="text-md nowrap  margin-top-xs" [hidden]="!current.data.total_balance">
 
@@ -54,7 +54,7 @@
                             <vpe-offchain-combobox [btn]="'xs'"></vpe-offchain-combobox>
                         </div> 
 
-                        <span class="text-sm color-yellow d-sm d-md-none"> {{service.getTelosInCurrentCurrency(current.data.total_balance)}} </span>
+                        <span class="text-sm calculated-in-currency d-sm d-md-none"> {{service.getTelosInCurrentCurrency(current.data.total_balance)}} </span>
                     </div>
 
                 </div>
@@ -154,14 +154,14 @@
                     <div class="text-md nowrap" [hidden]="!current.data.total_balance">
                         <small>total balance: </small>
                         <span class="text-md"> {{current.data.total_balance}} </span>
-                        <span class="text-sm color-yellow d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
+                        <span class="text-sm total-balance calculated-in-currency d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
 
                         <div class="pull-right" [hidden]="!dex.logged || dex.loginState == 'no-scatter'">
                             <vpe-offchain-combobox></vpe-offchain-combobox>
                         </div>                    
                     </div>
                     <div class="text-md nowrap" [hidden]="!current.data.total_balance">
-                        <span class="text-sm color-yellow d-sm d-md-none"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
+                        <span class="text-sm calculated-in-currency d-sm d-md-none"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
                     </div>
                     
                 </div>

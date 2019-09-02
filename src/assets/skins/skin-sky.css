@@ -1,5 +1,6 @@
 body {
     background-color: rgb(196, 202, 204);
+    color: black !important;
 }
 
 body ng-sidebar-container {
@@ -112,10 +113,12 @@ vpe-panel-markets .active-on-hover:hover, vpe-panel-orders .active-on-hover:hove
     background-color: #4d8a9a;
 }
 
-
-
-
 .calculated-in-currency {
     color: #0fa6cc !important;
+    font-weight: bold;
+}
+
+.total-balance.calculated-in-currency {
+    color: #b6f0ff !important;
     font-weight: bold;
 }

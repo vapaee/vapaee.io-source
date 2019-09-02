@@ -19,3 +19,7 @@ div.card, div.card.vpe-background-panel {
     box-shadow: 0px 3px 14px 0px rgba(0,0,0,0.75);
     border: 1px solid #182720;
 }
+
+vpe-panel table {
+    color: white !important;
+}

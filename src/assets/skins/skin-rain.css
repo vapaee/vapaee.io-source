@@ -53,3 +53,7 @@ div.title.vpe-background-panel-title {
     color: yellow !important;
     font-weight: bold;
 }
+
+vpe-panel table {
+    color: white !important;
+}

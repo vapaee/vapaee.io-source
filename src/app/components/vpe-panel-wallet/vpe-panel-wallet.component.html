@@ -71,8 +71,8 @@
                         <td>
                             <div (click)="withdrawForm(deposit)" [ngClass]="{'cursor-pointer': actions}">
                                 <div class="pull-right" style="line-height: 1.5;">
-                                    <span class="color-yellow" [hidden]="!show_prices_top" [ngClass]="{'text-xs':!portrait, 'text-sm':portrait}"> {{service.getTokenInCurrentCurrency(deposit).toString(digits.offchain)}} </span>
-                                    <span class="btn btn-xs btn-primary" [hidden]="withdraw.token.symbol != 'SYS' || show_prices_top || !hideuser">{{local.string.withdraw | titlecase}}</span>
+                                    <span class="calculated-in-currency" [hidden]="!show_prices_top" [ngClass]="{'text-xs':!portrait, 'text-sm':portrait}"> {{service.getTokenInCurrentCurrency(deposit).toString(digits.offchain)}} </span>
+                                    <span class="btn btn-xs btn-primary" [hidden]="withdraw.token.symbol != 'AUX' || show_prices_top || !hideuser">{{local.string.withdraw | titlecase}}</span>
                                 </div>                                 
                                 <img class="token-icon" [src]="deposit.token.logo">
                                 {{deposit.toString(digits.amount)}}
@@ -141,8 +141,8 @@
                         <td>
                             <div (click)="depositForm(balance)" [ngClass]="{'cursor-pointer': actions}">
                                 <div class="pull-right" style="line-height: 1.5;">
-                                    <span class="text-xs color-yellow" [hidden]="!show_prices_bottom" [ngClass]="{'text-xs':!portrait, 'text-sm':portrait}"> {{service.getTokenInCurrentCurrency(balance).toString(digits.offchain)}} </span>
-                                    <span class="btn btn-xs btn-primary" [hidden]="deposit.token.symbol != 'SYS' || show_prices_bottom || !balance.token.tradeable">{{local.string.deposit | titlecase}}</span>
+                                    <span class="text-xs calculated-in-currency" [hidden]="!show_prices_bottom" [ngClass]="{'text-xs':!portrait, 'text-sm':portrait}"> {{service.getTokenInCurrentCurrency(balance).toString(digits.offchain)}} </span>
+                                    <span class="btn btn-xs btn-primary" [hidden]="deposit.token.symbol != 'AUX' || show_prices_bottom || !balance.token.tradeable">{{local.string.deposit | titlecase}}</span>
                                 </div>
                                 <img [src]="balance.token.logo" style="width: 20px; height: 20px; margin-top:-1px">
                                 {{balance.toString()}}
