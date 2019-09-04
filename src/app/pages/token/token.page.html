@@ -24,15 +24,15 @@
 
         <div class="col-lg-8 col-xl-9 d-lg-none">
             <div [hidden]="!token?.brief">
-                <div class="text-xl">
+                <div class="text-xl token-description">
                     <div>
-                        <span class="text-lg margin-top">{{token?.title}}</span>&nbsp;
+                        <span class="text-lg margin-top token-title">{{token?.title}}</span>&nbsp;
                         <a class="btn btn-sm btn-primary" target="_blank" [href]="token?.website">
                             {{local.string.visitwebsite}} 
                             <i class="material-icons"> forward </i> 
                         </a>
                     </div>
-                    <div class="text-md margin-top">{{token?.brief}}</div>
+                    <div class="text-md margin-top token-brief">{{token?.brief}}</div>
                 </div>
                 <div class="margin-top-md margin-bottom-md">
                     <hr class="line">
@@ -41,7 +41,7 @@
         </div>
 
         <div class="col-12 d-lg-none">
-            <div class="text-lg-center margin-top-md">
+            <div class="text-lg-center margin-top-md token-markets">
                 <img style="height:64px; width: 64px; margin-top:-12px" [src]="token?.logolg">&nbsp;
                 {{local.merge(local.string.tknMarkets, {'symbol': token?.symbol})}}
             </div>
@@ -56,33 +56,35 @@
 
         <div class="col-lg-8 col-xl-9">
             <div [hidden]="!token?.brief">
-                <div class="text-xl d-none d-lg-inline-block margin-top-md">
+                <div class="col-12 token-description text-xl d-none d-lg-inline-block margin-top-md">
                     <div>
-                        <span class="text-lg margin-top">{{token?.title}}</span>&nbsp;
+                        <span class="text-lg margin-top token-title">{{token?.title}}</span>&nbsp;
                         <a class="btn btn-sm btn-primary" target="_blank" [href]="token?.website">
                             {{local.string.visitwebsite}} 
                             <i class="material-icons"> forward </i> 
                         </a>
                     </div>
-                    <div class="text-md margin-top">{{token?.brief}}</div>
+                    <div class="text-md margin-top token-brief">{{token?.brief}}</div>
                 </div>            
             </div>
 
-            <div class="margin-top-md"
+            <div class="margin-top-md card"
                 *ngFor="let info of token?.data"
             >
-                <hr class="line">
-                <div class="text-lg margin-top-md" [hidden]="!info.text">{{info.text}}</div>
+                <div class="card-body vpe-background-card-body">
+                    <!-- hr class="line" -->
+                    <div class="text-lg margin-top-md" [hidden]="!info.text">{{info.text}}</div>
 
-                <div class="margin-top embed-responsive embed-responsive-16by9"
-                    [hidden]="info.category != 'youtube'"
-                >
-                    <iframe class="embed-responsive-item" [src]="getEmbedLink(info)" allowfullscreen></iframe>
-                </div>
+                    <div class="margin-top embed-responsive embed-responsive-16by9"
+                        [hidden]="info.category != 'youtube'"
+                    >
+                        <iframe class="embed-responsive-item" [src]="getEmbedLink(info)" allowfullscreen></iframe>
+                    </div>
 
-                <div class="text-center twitter-container" [innerHTML]="info.html" [hidden]="info.category != 'twitter'"></div>
-                <div class="margin-top" [hidden]="info.category != 'image'">
-                    <img [src]="info?.link" style="width: 100%; height: auto">
+                    <div class="text-center twitter-container" [innerHTML]="info.html" [hidden]="info.category != 'twitter'"></div>
+                    <div class="margin-top" [hidden]="info.category != 'image'">
+                        <img [src]="info?.link" style="width: 100%; height: auto">
+                    </div>
                 </div>
             </div>
 
@@ -91,7 +93,7 @@
         </div>
 
         <div class="col-lg-4 col-xl-3 d-none d-lg-inline-block margin-top-md">
-            <div class="text-mdlglg-center margin-top-md">
+            <div class="text-center token-markets">
                 <img style="height:64px; width: 64px; margin-top:-12px" [src]="token?.logolg">&nbsp;
                 {{local.merge(local.string.tknMarkets, {'symbol': token?.symbol})}}
             </div>

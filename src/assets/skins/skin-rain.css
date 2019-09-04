@@ -19,6 +19,17 @@ ng-sidebar div.sidebar-content {
     background: linear-gradient(to bottom, rgba(71,83,102,1) 0%, rgba(45,48,51,1) 100%); 
 }
 
+/* ---- Token ---- */
+div.token-description, div.token-markets {
+    padding: 15px;
+    border-radius: 8px;
+    background: #000000ad;
+}
+
+div.token-markets {
+    padding-top: 26px;
+}
+
 /* ---- HOME ---- */
 
 home-page .jumbotron.vpe-background-jumbotron {

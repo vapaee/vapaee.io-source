@@ -41,7 +41,7 @@ export class VapaeeStyle {
         ];
 
         this.createLinkForStylesheetURL("");
-        this.setSkin(this.cookies.get("skin"));
+        this.setSkin(this.cookies.get("skin") || "skin-jungle");
     }
 
     get current() { return this._current; }

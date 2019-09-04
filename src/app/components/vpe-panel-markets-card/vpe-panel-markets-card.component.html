@@ -11,8 +11,8 @@
 
                                     <span class="text-muted"> / </span>
 
-                                    <img style="height:16px; width: 16px; margin-top:-8px" [src]="market.currency.logo">
-                                    <span class="card-title text-md">
+                                    <!-- img style="height:16px; width: 16px; margin-top:-8px" [src]="market.currency.logo" -->
+                                    <span class="card-title text-sm text-muted">
                                         {{market.currency.symbol}}
                                     </span>
 
@@ -28,13 +28,13 @@
 
 
                                 <div class="row margin-top">
-                                    <div class="col-6 text-left">                         
+                                    <div class="col-3 text-left">                         
                                         <span
                                             class="btn btn-primary btn-sm"
                                             (click)="goToTradeMarket(market)"
                                             >{{local.string.trade}}</span>
                                     </div>
-                                    <div class="col-6 text-right">
+                                    <div class="col-9 text-right">
 
                                         <div class="text-right">
                                             <div><small class="nowrap text-muted">max: {{market.summary?.max_price}}</small></div>

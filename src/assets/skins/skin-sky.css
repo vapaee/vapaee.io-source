@@ -8,6 +8,15 @@ body ng-sidebar-container {
     background-size: cover;    
 }
 
+ng-sidebar div.sidebar-content {
+    background: none;
+    background-color: white !important;
+}
+
+ng-sidebar div.sidebar-content li a { color: black; }
+ng-sidebar div.sidebar-content li.active { background-color: #58b3cc !important; }
+ng-sidebar div.sidebar-content li.active a { color: white; }
+
 nav.navbar.vpe-background-navbar {
     background: linear-gradient(to bottom, rgba(73,165,191,1) 0%, rgba(117,189,209,1) 59%, rgba(147,206,222,1) 100%);
 }
@@ -16,10 +25,6 @@ nav.navbar.vpe-background-navbar div.navbar-collapse a {
     color: white !important;
 }
 
-ng-sidebar div.sidebar-content {
-    background: none;
-    background-color: white !important;
-}
 
 
 .navbar .nav-item.active .nav-link {
@@ -32,6 +37,19 @@ ng-sidebar div.sidebar-content {
     -webkit-filter: none;
     filter: none;
     border-left: 1px solid rgba(0,0,0,0.2);
+}
+
+
+
+/* ---- Token ---- */
+div.token-description, div.token-markets {
+    padding: 15px;
+    border-radius: 8px;
+    background: #cfe2f545;
+}
+
+div.token-markets {
+    padding-top: 26px;
 }
 
 /* ---- HOME ---- */
@@ -97,6 +115,8 @@ vpe-panel-orders div.orders div.nowrap.price {
 vpe-panel-markets .active-on-hover:hover, vpe-panel-orders .active-on-hover:hover {
     background-color: rgba(0, 0, 0, 0.2) !important;
 }
+
+/* dropdown */
 
 .dropdown-menu {
     background-color: #e8f8ff;

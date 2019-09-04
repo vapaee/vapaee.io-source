@@ -13,7 +13,7 @@ vpe-panel-markets .active-on-hover:hover {
     font-weight: bold;
 }
 
-div.card, div.card.vpe-background-panel {  
+div.card, div.card.vpe-background-panel {
     -webkit-box-shadow: 0px 3px 14px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 3px 14px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 3px 14px 0px rgba(0,0,0,0.75);
@@ -22,4 +22,20 @@ div.card, div.card.vpe-background-panel {
 
 vpe-panel table {
     color: white !important;
+}
+
+/* HOME */
+home-page .jumbotron.vpe-background-jumbotron {
+    background-image: linear-gradient(to bottom, #1b211fd0 0%, #2a332ad0 100%);
+}
+
+/* ---- Token ---- */
+div.token-description, div.token-markets {
+    padding: 15px;
+    border-radius: 8px;
+    background: #060f09ad;
+}
+
+div.token-markets {
+    padding-top: 26px;
 }
