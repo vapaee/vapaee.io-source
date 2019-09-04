@@ -35,6 +35,7 @@ import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { TokenPage } from './pages/token/token.page';
+import { TimezoneService } from './services/timezone.service';
 
 
 
@@ -78,7 +79,8 @@ import { TokenPage } from './pages/token/token.page';
         CookieService,
         HttpClient,
         CoingeckoService,
-        DropdownService
+        DropdownService,
+        TimezoneService
     ],
     bootstrap: [AppComponent]
 })

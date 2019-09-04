@@ -4,6 +4,7 @@ import { VapaeeDEX } from '../../../projects/vapaee/dex/src/lib/dex.service';
 import { CookieService } from 'ngx-cookie-service';
 import { TokenDEX } from '../../../projects/vapaee/dex/src/lib/token-dex.class';
 import { AssetDEX } from '../../../projects/vapaee/dex/src/lib/asset-dex.class';
+import { TimezoneService } from '../services/timezone.service';
 
 
 
@@ -57,7 +58,8 @@ export class VpeComponentsService {
 
     constructor(
         private dex: VapaeeDEX,
-        public cookie: CookieService
+        public cookie: CookieService,
+        public timezone: TimezoneService
     ) {
         this.device = {};
         this.prices = {};
@@ -191,7 +193,9 @@ export class VpeComponentsService {
         }        
     }
 
-
+    toLocalTimezone(d:Date | string) {
+        return this.timezone.toLocal(d);
+    }
     
 
 }

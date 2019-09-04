@@ -38,8 +38,8 @@
                         (click)="event.event=='transaction' ? clickOnScope(getOrderScope(event)) : null;">{{eventDetail(event)}}</div>
                     
                     
-                    <div class="text-sm-right col-2 col-padding-left d-block d-lg-none">{{event.date | date : "HH:mm:ss"}}</div>
-                    <div class="text-sm-right col-2 col-padding-left d-none d-lg-block">{{event.date | date : "MMM d, HH:mm:ss"}}</div>
+                    <div class="text-sm-right col-2 col-padding-left d-block d-lg-none">{{service.toLocalTimezone(event.date) | date : "HH:mm:ss"}}</div>
+                    <div class="text-sm-right col-2 col-padding-left d-none d-lg-block">{{service.toLocalTimezone(event.date) | date : "MMM d, HH:mm:ss"}}</div>
                     
                 </div>
 
@@ -55,8 +55,8 @@
                     <div class="text-sm-left col-4 col-padding-right col-padding-left">
                         <span class="cursor-pointer account-name" (click)="clickOnAccount(event.user)">{{event.user}}</span>
                     </div>
-                    <div class="text-sm-right col-3 col-padding-left d-block d-lg-none">{{event.date | date : "HH:mm:ss"}}</div>
-                    <div class="text-sm-right col-3 col-padding-left d-none d-lg-block">{{event.date | date : "MMM d, HH:mm:ss"}}</div>
+                    <div class="text-sm-right col-3 col-padding-left d-block d-lg-none">{{service.toLocalTimezone(event.date) | date : "HH:mm:ss"}}</div>
+                    <div class="text-sm-right col-3 col-padding-left d-none d-lg-block">{{service.toLocalTimezone(event.date) | date : "MMM d, HH:mm:ss"}}</div>
                     <div class="text-sm-center col-12 margin-top-xs text-muted"
                         [ngClass]="{'cursor-pointer': event.event=='transaction'}"
                         (click)="event.event=='transaction' ? clickOnScope(getOrderScope(event)) : null;">{{eventDetail(event)}}</div>                    

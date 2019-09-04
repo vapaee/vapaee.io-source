@@ -8,6 +8,7 @@ import { VpeComponentsService } from 'src/app/components/vpe-components.service'
 import { HttpClient } from '@angular/common/http';
 import { VapaeeStyle } from 'projects/vapaee/style/src/public_api';
 import { DropdownService } from 'src/app/services/dropdown.service';
+import { TimezoneService } from 'src/app/services/timezone.service';
 
 
 declare var $:any;
@@ -29,7 +30,8 @@ export class RootPage implements OnInit {
         public style: VapaeeStyle,
         public analytics: AnalyticsService,
         private components: VpeComponentsService,
-        public dropdown: DropdownService
+        public dropdown: DropdownService,
+        public timezone: TimezoneService
     ) {
         
     }
