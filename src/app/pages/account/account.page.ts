@@ -3,9 +3,8 @@ import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Subscriber } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
+import { VapaeeDEX, AssetDEX } from '@vapaee/dex';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
-import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
 import { UserOrdersMap } from '@vapaee/dex';
 import { VpePanelWalletComponent } from 'src/app/components/vpe-panel-wallet/vpe-panel-wallet.component';
 

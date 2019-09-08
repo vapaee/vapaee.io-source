@@ -1,9 +1,8 @@
 import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
+import { VapaeeDEX, AssetDEX } from '@vapaee/dex';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
 import { Feedback } from '@vapaee/feedback';
 
 
@@ -16,7 +15,6 @@ export class VpePanelWalletComponent implements OnChanges {
 
     @Input() public deposits: AssetDEX[];
     @Input() public balances: AssetDEX[];
-    @Input() public _fake_balances: AssetDEX[];
     @Input() public _nonfake_balances: AssetDEX[];
     @Input() public _fake_tlos_balance: AssetDEX;
     @Input() public actions: boolean;
@@ -72,34 +70,11 @@ export class VpePanelWalletComponent implements OnChanges {
         this.withdraw = new AssetDEX();
     }   
 
-    get get_fake_tlos_balance() {
-        if (this._fake_tlos_balance && this._fake_tlos_balance.amount.toNumber() > 0) return this._fake_tlos_balance;
-        for (var i in this.balances) {
-            if (this.balances[i].token.fake) {
-                if (!this._fake_tlos_balance && this.balances[i].token.symbol == "TLOS") {
-                    this._fake_tlos_balance = this.balances[i];
-                }
-            }
-        }
-        return this._fake_tlos_balance || new AssetDEX();
-    }    
-
-    get get_fake_balances() {
-        if (this._fake_balances) return this._fake_balances;
-        this._fake_balances = this._fake_balances || [];
-        for (var i in this.balances) {
-            if (this.balances[i].token.fake) {
-                this._fake_balances.push(this.balances[i]);
-            }
-        }
-        return this._fake_balances;
-    }
-
     get get_non_fake_balances() {
         if (this._nonfake_balances) return this._nonfake_balances;
         this._nonfake_balances = this._nonfake_balances || [];
         for (var i in this.balances) {
-            if (!this.balances[i].token.fake && !this.balances[i].token.offchain) {
+            if (!this.balances[i].token.offchain) {
                 this._nonfake_balances.push(this.balances[i]);
             }
         }
@@ -217,45 +192,14 @@ export class VpePanelWalletComponent implements OnChanges {
         this.deposit = new AssetDEX();
     }
 
-    hasNoFake() {
-        var resutl = true;
-        for (var i in this.dex.tokens) {
-            if (this.dex.tokens[i].fake) {
-                resutl = false;
-                break;
-            }
-        }
-        return resutl;
-    }
-
     private setquiet(name:string) {
         this.deposit = new AssetDEX();
         this.loading_fake = false;
         this.loading_fake_tlos = false;
     }
 
-    freeFakeTokens() {
-        this.loading_fake = true;
-        this.dex.getSomeFreeFakeTokens().then(_ => {
-            this.loading_fake = false;
-        }).catch(_ => {
-            this.loading_fake = false;
-        });        
-    }
-
-    freeFakeTelos() {
-        console.log("freeFakeTelos()");
-        this.loading_fake_tlos = true;
-        this.dex.getSomeFreeFakeTokens("TLOS").then(_ => {
-            this.loading_fake_tlos = false;
-        }).catch(_ => {
-            this.loading_fake_tlos = false;
-        });
-    }    
-
     ngOnChanges() {
         this._nonfake_balances = null;
-        this._fake_balances = null;
         this._fake_tlos_balance = null;
         this.service.windowHasResized(this.service.device);
     }

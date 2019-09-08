@@ -38,6 +38,9 @@
 .text-danger {
     color: #d9201a;
 }
+.text-danger {
+    color: #5cb85c;
+}
 .label-default .badge {
   color: #fff;
   background-color: #333;
@@ -62,7 +65,18 @@
   color: #d9534f;
   background-color: #fff;
 }
-
+.input-icon {
+    position: absolute;
+    top: 12px;
+    right: 25px;
+    font-weight: bold;
+}
+.input-icon.success {
+    color: #5cb85c;
+}
+.input-icon.danger {
+    color: #d9201a;
+}
 .badge.badge-success {
     background-image: -webkit-linear-gradient(top,#5cb85c 0,#419641 100%);
     background-image: -o-linear-gradient(top,#5cb85c 0,#419641 100%);
@@ -333,13 +347,14 @@ th.left-aligned, td.left-aligned {
 .display-inline-block { display: inline-block; }
 .display-block { display: block; }
 .display-flex { display: flex; }
-.vertical-align-top { vertical-align: top; }
-.vertical-align-middle { vertical-align: middle; }
-.vertical-align-bottom { vertical-align: bottom; }
-.vertical-align-top { vertical-align: top; }
-.vertical-align-baseline { vertical-align: baseline; }
-.vertical-align-inherit { vertical-align: inherit; }
-.vertical-align-text-bottom { vertical-align: text-bottom; }
+.vertical-align-top { vertical-align: top !important; }
+.vertical-align-middle { vertical-align: middle !important; }
+.vertical-align-bottom { vertical-align: bottom !important; }
+.vertical-align-top { vertical-align: top !important; }
+.vertical-align-baseline { vertical-align: baseline !important; }
+.vertical-align-inherit { vertical-align: inherit !important; }
+.vertical-align-text-bottom { vertical-align: text-bottom !important; }
+.vertical-align-text-top { vertical-align: text-top !important; }
 .color-black { color: black; }
 .color-white { color: white; }
 .color-grey { color: grey; }

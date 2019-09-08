@@ -346,7 +346,7 @@ namespace vapaee {
             PRINT(" ",owner.to_string(), " -> fee: ", total_fee.to_string(), "(",  amount_a.to_string(),", ", amount_b.to_string(), "\n");
             PRINT("vapaee::token::exchange::aux_calculate_total_fee() ...\n");
         }
-        */
+        
         void aux_try_to_unlock(name ram_payer) {
             PRINT("vapaee::token::exchange::aux_try_to_unlock()\n");
             PRINT(" ram_payer: ", ram_payer.to_string(), "\n");
@@ -370,6 +370,7 @@ namespace vapaee {
 
             PRINT("vapaee::token::exchange::aux_try_to_unlock() ...\n");
         }
+        */
 
         void aux_earn_micro_change(name owner, symbol orig, symbol extended, name ram_payer) {
             PRINT("vapaee::token::exchange::aux_earn_micro_change()\n");
@@ -1194,6 +1195,8 @@ namespace vapaee {
 
             aux_register_event(owner, name("withdraw"), quantity.to_string());
 
+            aux_trigger_event(quantity.symbol.code(), name("withdraw"));
+
             PRINT("vapaee::token::exchange::action_withdraw() ...\n");
         }
         
@@ -1256,6 +1259,25 @@ namespace vapaee {
 
             PRINT("vapaee::token::exchange::action_update_token_info() ...\n");
         }
+        
+
+        void action_set_token_as_currency (const symbol_code & sym_code, bool is_currency) {
+            PRINT("vapaee::token::exchange::action_set_token_as_currency()\n");
+            PRINT(" sym_code: ", sym_code.to_string(), "\n");
+            PRINT(" is_currency: ", std::to_string(is_currency), "\n");
+
+            tokens tokenstable(get_self(), get_self().value);
+            auto itr = tokenstable.find(sym_code.raw());
+            eosio_assert(itr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
+            
+            eosio_assert(has_auth(get_self()), "only admin can modify the token.currency status");
+
+            tokenstable.modify( *itr, same_payer, [&]( auto& a ){
+                a.currency = is_currency;
+            });
+
+            PRINT("vapaee::token::exchange::action_set_token_as_currency() ...\n");
+        }
 
         void action_set_token_data (const symbol_code & sym_code, uint64_t id, name action, name category, string text, string link) {
             PRINT("vapaee::token::exchange::action_set_token_data()\n");
@@ -1276,6 +1298,8 @@ namespace vapaee {
                 ram_payer = get_self();
             }
 
+            require_auth( ram_payer );
+
             tokendata tokendatatable(get_self(), sym_code.raw());
             auto itr = tokendatatable.find(id);
             if (action == name("add")) {
@@ -1284,6 +1308,7 @@ namespace vapaee {
                     a.category  = category;
                     a.text      = text;
                     a.link      = link;
+                    a.date      = time_point_sec(now());
                 });
                 tokenstable.modify(*tkitr, same_payer, [&]( auto& a){
                     a.data++;
@@ -1301,12 +1326,53 @@ namespace vapaee {
                         a.category  = category;
                         a.text      = text;
                         a.link      = link;
+                        a.date      = time_point_sec(now());
                     });
                 }
             }
             
             PRINT("vapaee::token::exchange::action_set_token_data() ...\n");            
-        } 
+        }
+
+        void action_edit_token_event(const symbol_code & sym_code, name event, name action, name receptor) {
+            PRINT("vapaee::token::exchange::action_edit_token_event()\n");
+            PRINT(" sym_code: ", sym_code.to_string(), "\n");
+            PRINT(" event: ", event.to_string(), "\n");
+            PRINT(" action: ", action.to_string(), "\n");
+            PRINT(" receptor: ", receptor.to_string(), "\n");
+
+            tokens tokenstable(get_self(), get_self().value);
+            auto tkitr = tokenstable.find(sym_code.raw());
+            eosio_assert(tkitr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
+            name owner = tkitr->owner;
+            eosio_assert(has_auth(get_self()) || has_auth(owner), "only admin or token's owner can modify the token data");
+            name ram_payer = owner;
+            if (has_auth(get_self())) {
+                ram_payer = get_self();
+            }
+
+            require_auth( ram_payer );
+
+            tokenevents tokeneventstable(get_self(), sym_code.raw());
+            auto itr = tokeneventstable.find(event.value);
+            if (action == name("add")) {
+                tokeneventstable.emplace( ram_payer, [&]( auto& a ){
+                    a.event     = event;
+                    a.receptor  = receptor;
+                });
+            } else {
+                eosio_assert(itr != tokeneventstable.end(), "No action can be performed on entry with this id because it does not exist");
+                if (action == name("remove")) {
+                    tokeneventstable.erase(*itr);
+                } else {
+                    tokeneventstable.modify(*itr, same_payer, [&](auto& a){
+                        a.receptor  = receptor;
+                    });
+                }
+            }
+
+            PRINT("vapaee::token::exchange::action_edit_token_event()...\n");
+        }
 
         void action_swapdeposit(name from, name to, const asset & quantity, string memo) {
             PRINT("vapaee::token::exchange::action_swapdeposit()\n");
@@ -1334,6 +1400,8 @@ namespace vapaee {
 
             aux_substract_deposits(from, quantity, ram_payer);
             aux_add_deposits(to, quantity, ram_payer);
+
+            aux_trigger_event(quantity.symbol.code(), name("swapdeposit"));
             
             PRINT("vapaee::token::exchange::action_swapdeposit() ...\n"); 
         }        
@@ -1383,9 +1451,27 @@ namespace vapaee {
                 PRINT(" quantity extended: ", quantity.to_string(), "\n");
                 aux_add_deposits(receiver, quantity, get_self());
                 aux_register_event(from, name("deposit"), receiver.to_string() + "|" + quantity.to_string());
+                aux_trigger_event(quantity.symbol.code(), name("deposit"));
             }
 
             PRINT("vapaee::token::exchange::handler_transfer() ...\n");
+        }
+
+        void aux_trigger_event(const symbol_code & sym_code, name event) {
+            PRINT("vapaee::token::exchange::aux_trigger_event()\n");
+            PRINT(" sym_code: ",  sym_code.to_string(), "\n");
+            PRINT(" event: ",  event.to_string(), "\n");
+
+            tokenevents tokeneventstable(get_self(), sym_code.raw());
+            auto itr = tokeneventstable.find(event.value);
+            if (itr != tokeneventstable.end()) {
+                name receptor = itr->receptor;
+                PRINT(" -> receptor: ",  receptor.to_string(), "\n");
+                PRINT(" -> carbon copy sent to:: ",  receptor.to_string(), "\n");
+                require_recipient (receptor);
+            }
+
+            PRINT("vapaee::token::exchange::aux_trigger_event()... \n");
         }
 
         void action_cancel(name owner, name type, const symbol_code & token_a, const symbol_code & token_p, const std::vector<uint64_t> & orders) {
@@ -1502,8 +1588,12 @@ namespace vapaee {
 
 
 
-
-
+            // stats statstable(get_self(), symbol_code("CNT").raw());
+            // statstable.emplace(get_self(), [&](auto & a){
+            //     a.supply = asset(497731940988, symbol(symbol_code("CNT"), 4));
+            //     a.max_supply = asset(5000000000000, symbol(symbol_code("CNT"), 4));
+            //     a.issuer = name("vapaeetokens");                
+            // });
 
 
 
@@ -1620,12 +1710,48 @@ namespace vapaee {
             //     });
             //     o_sum.erase(*ptr);
             // }
+
+            // tokens tokens_table(get_self(), get_self().value);
+            // auto carbon_ptr = tokens_table.find(symbol_code("TELOSD").raw());
+            // tokens_table.modify(*carbon_ptr, get_self(), [&]( auto& a ) {
+            //     a.currency = true;
+            // });
             
             // // copy from old structure to newone
+            // symbol_code telos = symbol_code("TLOS");
+            // symbol_code carbon = symbol_code("TLOSD");
             // oldtokens  oldtokens_table (get_self(), get_self().value);
             // tokens tokens_table(get_self(), get_self().value);
             // for (auto ptr = oldtokens_table.begin(); ptr != oldtokens_table.end(); ptr = oldtokens_table.begin()) {
+            //     bool currency = false;
+            //     if (telos == ptr->symbol) currency = true;
+            //     if (carbon == ptr->symbol) currency = true;
             //     tokens_table.emplace(get_self(), [&]( auto& a ) {
+            //         a.symbol     = ptr->symbol;
+            //         a.precision  = ptr->precision;
+            //         a.contract   = ptr->contract;
+            //         a.owner      = ptr->owner;
+            //         a.title      = ptr->title;
+            //         a.website    = ptr->website;
+            //         a.brief      = ptr->brief;
+            //         a.banner     = ptr->banner;
+            //         a.logo       = ptr->logo;
+            //         a.logolg     = ptr->logolg;
+            //         a.date       = ptr->date;
+            //         a.tradeable  = ptr->tradeable;
+            //         a.banned     = ptr->banned;
+            //         a.currency   = currency;
+            //         a.data       = ptr->data;
+            //     });
+            // 
+            //     oldtokens_table.erase(ptr);
+            // }
+            
+            // // copy from current token structure to old
+            // oldtokens  oldtokens_table (get_self(), get_self().value);
+            // tokens tokens_table(get_self(), get_self().value);
+            // for (auto ptr = tokens_table.begin(); ptr != tokens_table.end(); ptr = tokens_table.begin()) {
+            //     oldtokens_table.emplace(get_self(), [&]( auto& a ) {
             //         a.symbol     = ptr->symbol;
             //         a.precision  = ptr->precision;
             //         a.contract   = ptr->contract;
@@ -1642,7 +1768,7 @@ namespace vapaee {
             //         a.data       = ptr->data;
             //     });
             // 
-            //     oldtokens_table.erase(ptr);
+            //     tokens_table.erase(ptr);
             // }
 
             /*

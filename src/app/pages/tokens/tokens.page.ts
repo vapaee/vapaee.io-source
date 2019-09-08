@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
-import { TokenDEX } from 'projects/vapaee/dex/src/lib/token-dex.class';
+import { VapaeeDEX, TokenDEX } from '@vapaee/dex';
 
 
 @Component({
@@ -23,6 +22,7 @@ export class TokensPage implements OnInit, OnDestroy {
     }
 
     get tokens(): TokenDEX[] {
+        console.log("tokens()", this.dex.tokens);
         return this.dex.tokens;
     }
     
@@ -40,6 +40,10 @@ export class TokensPage implements OnInit, OnDestroy {
         return _summary;
     }
     */
+
+    editToken(token:TokenDEX) {
+        this.app.navigate('/exchange/tokenedit/'+token.symbol.toLowerCase());
+    }
 
     tradeToken(token:TokenDEX) {
         this.app.navigate('/exchange/trade/'+token.symbol.toLowerCase()+'.tlos');

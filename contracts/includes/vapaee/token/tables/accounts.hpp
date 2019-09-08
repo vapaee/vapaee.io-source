@@ -2,6 +2,7 @@
 
         // TABLE accounts (balances) -----------
         // scope: user
+        // STANDARD TABLE - DON'T CHANGE
         TABLE account {
             eosio::asset balance;
             uint64_t primary_key()const { return balance.symbol.code().raw(); }

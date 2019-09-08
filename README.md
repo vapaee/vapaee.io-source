@@ -2,7 +2,7 @@
 
 # Vapaée DEX - source code
 
-current version: PREMIUM (v2.3.3)
+current version: PREMIUM (v2.4.0)
 
 https://vapaee.io
 

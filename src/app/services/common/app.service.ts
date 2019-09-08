@@ -59,6 +59,7 @@ export class AppService {
             }
         });
         window.document.body.removeAttribute("loading");
+        // console.error('window.document.body.removeAttribute("loading");');
     }
 
     get version() {

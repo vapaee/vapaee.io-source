@@ -1,10 +1,8 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
+import { VapaeeDEX, TokenDEX, AssetDEX } from '@vapaee/dex';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { TokenDEX } from 'projects/vapaee/dex/src/lib/token-dex.class';
-import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
 
 
 @Component({
@@ -15,9 +13,11 @@ import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
 export class VpePanelTokensCardComponent implements OnChanges {
 
     @Input() public token: TokenDEX;
+    @Input() public logged: string;
 
     @Output() tradeToken: EventEmitter<TokenDEX> = new EventEmitter();
     @Output() tokenPage: EventEmitter<TokenDEX> = new EventEmitter();
+    @Output() editToken: EventEmitter<TokenDEX> = new EventEmitter();
     public deposit: AssetDEX;
     public withdraw: AssetDEX;
     constructor(
@@ -61,6 +61,11 @@ export class VpePanelTokensCardComponent implements OnChanges {
         _summary.min_price = _summary.min_price || new AssetDEX();
         
         return _summary;
+    }
+
+    goToEditTokenPage(token:TokenDEX) {
+        console.log("VpePanelTokensCardComponent.goToEditTokenPage()", token);
+        this.editToken.next(token);
     }
 
     goToTradeToken(token:TokenDEX) {

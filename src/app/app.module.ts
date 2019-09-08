@@ -18,7 +18,6 @@ import { CoingeckoService } from './services/coingecko.service';
 import { DropdownService } from './services/dropdown.service';
 
 import { VapaeeComponentsModule } from './components/vpe-components.module';
-// import { VapaeeFeedbackModule } from '@vapaee/feedback';
 import { VapaeeScatterModule } from '@vapaee/scatter';
 import { VapaeeDexModule } from '@vapaee/dex';
 
@@ -36,6 +35,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { TokenPage } from './pages/token/token.page';
 import { TimezoneService } from './services/timezone.service';
+import { TokenEditPage } from './pages/tokenedit/tokenedit.page';
+import { FormsModule } from '@angular/forms';
+import { DirectivesModule } from './directives/directives.module';
 
 
 
@@ -50,6 +52,7 @@ import { TimezoneService } from './services/timezone.service';
         TradePage,
         TokensPage,
         TokenPage,
+        TokenEditPage,
         MarketsPage,
         AccountPage,
         NotFoundPage,
@@ -68,11 +71,12 @@ import { TimezoneService } from './services/timezone.service';
         HttpClientJsonpModule,
         CommonServicesModule,
         VapaeeComponentsModule,
-        // VapaeeFeedbackModule,
         VapaeeScatterModule,
         VapaeeDexModule,
         ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
-        SidebarModule.forRoot()
+        SidebarModule.forRoot(),
+        FormsModule,
+        DirectivesModule
     ],
     providers: [
         DatePipe,

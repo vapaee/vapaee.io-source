@@ -25,7 +25,7 @@ vpe-panel table {
 }
 
 /* HOME */
-home-page .jumbotron.vpe-background-jumbotron {
+div div.jumbotron.vpe-background-jumbotron {
     background-image: linear-gradient(to bottom, #1b211fd0 0%, #2a332ad0 100%);
 }
 

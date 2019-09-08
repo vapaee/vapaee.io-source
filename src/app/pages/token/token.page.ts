@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
-import { TokenDEX, TokenData } from 'projects/vapaee/dex/src/lib/token-dex.class';
+import { VapaeeDEX, TokenDEX, TokenData } from '@vapaee/dex';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';

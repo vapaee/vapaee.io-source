@@ -54,14 +54,14 @@ div.token-markets {
 
 /* ---- HOME ---- */
 
-home-page .jumbotron.vpe-background-jumbotron .text-muted {
+div div.jumbotron.vpe-background-jumbotron .text-muted {
     color: #425581 !important;
     font-weight: bold;
 }
-home-page .jumbotron.vpe-background-jumbotron .text-muted .text-version {
+div div.jumbotron.vpe-background-jumbotron .text-muted .text-version {
     color: white !important;
 }
-home-page .jumbotron.vpe-background-jumbotron {
+div div.jumbotron.vpe-background-jumbotron {
     background: linear-gradient(to bottom, rgba(73,165,191,0.6) 0%, rgba(117,189,209,0.6) 59%, rgba(147,206,222,0.6) 100%);
 }
 

@@ -21,6 +21,5 @@
 #define ERROR_AEMC_2 "ERR-AEMC-02: internal and external symbols don't match in code: "
 
 
-
 // aux_add_deposits
 #define ERROR_AAD_1 "ERR-AAD-01: symbol mismatch: "

@@ -1,12 +1,11 @@
 import { Component, Input, OnChanges, Output, OnInit, OnDestroy, HostBinding } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
+import { VapaeeDEX, AssetDEX } from '@vapaee/dex';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, Device } from '../vpe-components.service';
 import { Subscriber } from 'rxjs';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import BigNumber from 'bignumber.js';
-import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
 
 
 @Component({

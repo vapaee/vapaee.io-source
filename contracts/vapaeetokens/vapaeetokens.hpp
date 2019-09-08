@@ -36,11 +36,11 @@ CONTRACT vapaeetokens : public eosio::contract {
             c.action_create_token(issuer, maximum_supply);
         };
 
-        ACTION addissuer( name app, const symbol_code& symbol ) {
+        ACTION addissuer( name app, const symbol_code& symbol, name ram_payer ) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.addissuer()\n");
             vapaee::token::core c;
-            c.action_add_token_issuer(app, symbol);
+            c.action_add_token_issuer(app, symbol, ram_payer);
         };
         
         ACTION removeissuer( name app, const symbol_code& symbol ) {
@@ -111,11 +111,12 @@ CONTRACT vapaeetokens : public eosio::contract {
 
     public:
         // EXCHANGE-ACTOINS  ------------------------------------------------------------------------------------------------------
-        ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name owner) {
+        ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name owner, string title, string website, string brief, string banner, string logo, string logolg, bool tradeable) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.addtoken()\n");
             vapaee::token::exchange e;
             e.action_add_token(contract, symbol, precision, owner);
+            e.action_update_token_info(symbol, title, website, brief, banner, logo, logolg, tradeable);
         };
         
         ACTION updatetoken (const symbol_code & sym_code, string title, string website, string brief, string banner, string logo, string logolg, bool tradeable) {
@@ -125,12 +126,26 @@ CONTRACT vapaeetokens : public eosio::contract {
             e.action_update_token_info(sym_code, title, website, brief, banner, logo, logolg, tradeable);
         };
 
+        ACTION setcurrency (const symbol_code & sym_code, bool is_currency) {
+            MAINTENANCE();
+            PRINT("\nACTION vapaeetokens.setcurrency()\n");
+            vapaee::token::exchange e;
+            e.action_set_token_as_currency(sym_code, is_currency);
+        };
+
         ACTION settokendata (const symbol_code & symbol, uint64_t id, name action, name category, string text, string link) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.updatetoken()\n");
             vapaee::token::exchange e;
             e.action_set_token_data(symbol, id, action, category, text, link);
-        };        
+        };
+
+        ACTION edittknevent (const symbol_code & symbol, name event, name action, name contract) {
+            MAINTENANCE();
+            PRINT("\nACTION vapaeetokens.edittknevent()\n");
+            vapaee::token::exchange e;
+            e.action_edit_token_event(symbol, event, action, contract);
+        };
 
         ACTION cancel(name owner, name type, const symbol_code & commodity, const symbol_code & currency, const std::vector<uint64_t> & orders) {
             MAINTENANCE();
@@ -195,12 +210,14 @@ CONTRACT vapaeetokens : public eosio::contract {
             e.action_convert_deposits_to_earnings(quantity);
         };
         
+        /*
         ACTION dotick (name caller) {
             PRINT("\nACTION vapaeetokens.dotick()\n");
             require_auth( caller );
             vapaee::token::exchange e;
             e.aux_try_to_unlock(caller);
         };
+        */
         
         // debugin ----------
         AUX_DEBUG_ACTIONS (

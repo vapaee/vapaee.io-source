@@ -1,16 +1,72 @@
--- TODO AHORA ---
-- vapaee.io website skins
-  - cuando se hace click sobre un combobox del navbar deberían cerrarse el otro si esté abierto
-  - falta estilar el sidemenu
-  - falta estilar el botón de sidemenu (blanco)
-  - los dropbown de los comboboxes no está estilado. Habría que ponerles color blanco
-  - fuera de la skin, habría que rehacer el header del trade-page
-    - centrar el título verticalmente
-    - dejar bien visible cual es el precio actual
-  - hacer otra skin?
+-- AGUSTIN ---
+escuchar los primeros 2 minutos
+https://www.youtube.com/watch?v=loRfN8aLJOY
 
-- C++ Smart COntract
+-- TODO: COBRAR v3.0.0 --
+- C++ Smart Contract
+  + cambiar la tabla tokendata para agregar el date
+    + borrar tabla en producción
+    + adaptar el datatype en angular
+  + action_set_token_data hay que actualizar el dato: date
+  + tokenevents table: crear esta tabla donde el creador de un token puede agregar eventos a los que quiere registrarse:
+    + campos[symbol]: event (id), contract (receptor)
+    + edittknevent (action, sym, event, receptor): solo el issuer puede modificar esta tabla
+    + hacer que los eventos deposits, withdraws, order, deal, swapdeposit sean replicados al contrato destino
+  + token stat / issuers: partir en dos el actual stat del token de manera que vuelva a ser standar y sacarle la parte de los issuers
+    + sacar a issuers de stat
+    + crear nueva tabla issuers para un token
+    + cambiar el código que modifica los issuers
+
+https://cdn.pixabay.com/photo/2015/10/23/07/28/banner-1002455_960_720.jpg
+http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/96/coin-us-dollar-icon.png
+http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/256/coin-us-dollar-icon.png
+
+- ADMIN de Token Page
+  - tokens page: botón de "New Token" al pié de la página
+  - edit token page:
+    - 3 solapas: 
+      - "New token": Create new Token un vapaeetokens smart contrat
+        - checkear en background que el token no exista
+        - el formulario solo muestra los primeros 4 campos
+        - crear una nueva: cambiar la action de alta un nuevo token con todos los datos del formulario
+      - "Register token": register already existing token
+        - checkear en background que el token no exista
+        - todos los campos
+        - crear una nueva: cambiar el registo de un token paa que admita todos los campos del formulario
+      - "Edit token": modify already registered token
+    - cear un solo formulario que se adapte según la solapa que este operando y los datos "symbol" y "contract"
+    - form:
+      - symbol
+      - contract (vapaeetokens if "new token")
+      - precision (auto en "Register token")
+      - owner (auto)
+      - title
+      - website
+      - brief
+      - banner
+      - logo
+      - logolg
+      - date (auto)
+    - "Solapa Edit token"
+      - sección donde se listan los items de la data del token.
+        - cada Item tiene un botón "delete"
+          - salta un popup para confirmar
+        - cada Item tiene un botón "edit"
+        - si se toca el botón edit, aparece un formulario abajo del item y si hay modificaciones el item se adapta.
+      - Se muestra un botón de "new entry"
+        - al presionarlo se crea un último item en la lista ya en modo edit con un flag que dice "new_entry"
+  - token page
+    - si el user logueado es el creador del token, entonces dejar visible el botón "edit token"
+- Wish list
+  - que el desglose del balance incluya los tokesn del REX y los que están depositados en el DEX.
+  + el loading podría incluir un svg del logo vapaee
+  - que la token page incluya una sección de actions (transfer, claim, burn, issue)
+  - el selector de markets de la página trade debería permitir markets basados en todas las currencies (incluyendo TELOSD)
+
+-- TODO ---
+- C++ Smart Contract
   - podemos hacer el nuevo slug
+  + agregarle el parámetro bool currency; en tokens.hpp
 
 - FutbolTokens
   - pasarle varias opciones a Agustín para decidir la estrategia monetaria
@@ -19,14 +75,15 @@
 - Cards & Tokens
   - arreglar el prototipo para que encare el desplegar los videos bien
 
+
+
+
 CARBON:
 https://buy.carbon.money/
 
 
 -- TODO mañana --
-- agregarle el parámetro bool currency; en tokens.hpp
-- hacer que sólo TLOS y TELOSD sean currency
-- hacer que el dex.service.ts los incluya en la lista de currencies basándose en este parámetro (detando a TLOS como primero)
+- hacer que el dex.service.ts los incluya en la lista de currencies basándose en este parámetro (dejando a TLOS como primero)
 - hacer que el contrato sólo permita la creación de nuevos mercados sólo si alguna de las dos tokens es una currency
 - Hacer que la página de Token muestre algo coherente si no tiene datos
 

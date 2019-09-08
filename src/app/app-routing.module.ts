@@ -10,6 +10,7 @@ import { NotFoundPage } from './pages/not-found/not-found.page';
 import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
 import { MarketsPage } from './pages/markets/markets.page';
 import { TokenPage } from './pages/token/token.page';
+import { TokenEditPage } from './pages/tokenedit/tokenedit.page';
 
 //*
 const routes: Routes = [
@@ -22,6 +23,7 @@ const routes: Routes = [
       { path: 'trade/:scope',            data: { state: "trade" }, component: TradePage },
       { path: 'tokens',                  data: { state: "tokens" }, component: TokensPage },
       { path: 'token/:symbol',           data: { state: "token" }, component: TokenPage },
+      { path: 'tokenedit/:symbol',       data: { state: "tokenedit" }, component: TokenEditPage },
       { path: 'markets',                 data: { state: "markets" }, component: MarketsPage},
       { path: 'account',                 data: { state: "guest" }, component: AccountPage},
       { path: 'account/:name',           data: { state: "account" }, component: AccountPage }

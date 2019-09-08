@@ -7,6 +7,7 @@
             name category;
             string text;
             string link;
+            time_point_sec date;
             uint64_t primary_key() const { return id; }
             uint64_t by_category_key() const { return category.value; }
         };

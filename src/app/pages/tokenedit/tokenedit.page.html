@@ -1,0 +1,255 @@
+<div class="container" >
+
+    <div class="row margin-top-md">
+        <div class="col-4 text-left">
+            <span class="btn btn-lg" [ngClass]="{'btn-primary':tab!=TAB.CREATE,'btn-success':tab==TAB.CREATE}" (click)="changeTab(TAB.CREATE)">
+                <i class="material-icons"> add_circle_outline </i>
+                <span> Create </span>
+            </span>
+        </div>
+        <div class="col-4 text-center">
+            <span class="btn btn-lg" [ngClass]="{'btn-primary':tab!=TAB.REGISTER,'btn-success':tab==TAB.REGISTER}" (click)="changeTab(TAB.REGISTER)">
+                <i class="material-icons"> playlist_add </i>
+                <span> Register </span>
+            </span>
+        </div>
+        <div class="col-4 text-right">
+            <span class="btn btn-lg" [ngClass]="{'btn-primary':tab!=TAB.EDIT,'btn-success':tab==TAB.EDIT,'disabled':!this.editable}" (click)="changeTab(TAB.EDIT)">
+                <i class="material-icons"> edit </i>
+                <span> Edit </span>
+            </span>
+        </div>
+    </div>
+
+    <div class="margin-top-md">
+        <div class="card text-white bg-dark">
+            <div class="card-header vpe-background-card-header">
+                <div [hidden]="tab != TAB.CREATE">
+                    <span class="text-lg">Token Creation</span><br>
+                    <span class="text-md">You can create a brand new token in Telos blockchain using Vapaée's smart contract without coding.</span>
+                </div>
+                <div [hidden]="tab != TAB.REGISTER">
+                    <span class="text-lg">Token Registration</span><br>
+                    <span class="text-md">You may register you own already existing tokens to get listed in Telos DEX.</span>        
+                </div>
+                <div [hidden]="tab != TAB.EDIT">
+                    <span class="text-lg">Token Edition</span><br>
+                    <span class="text-md">From here you can modify any data related to your already registered token.</span>        
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="margin-top-md" [hidden]="!thetoken">
+        <div class="card text-white bg-dark">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="pull-right">
+                            <span class="btn btn-sm btn-danger"
+                                (click)="discardTheToken()">
+                                <i class="material-icons" [hidden]="loading">cancel</i>
+                                change
+                            </span>
+                        </div>                        
+                        <span class="text-lg">Token: {{thetoken?.symbol}}</span> 
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <label class="col-sm-2 col-form-label nowrap">Contract:</label>
+                    <label class="col-sm-4 col-form-label">{{thetoken?.contract}}</label>
+                    <label class="col-sm-2 col-form-label nowrap">Max Supply:</label>
+                    <label class="col-sm-4 col-form-label text-right">{{thetoken?.stat?.max_supply?.toString()}}</label>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-2 col-form-label nowrap">Issuer:</label>
+                    <label class="col-sm-4 col-form-label">{{thetoken?.stat?.issuer}}</label>
+                    <label class="col-sm-2 col-form-label nowrap">Current Supply:</label>
+                    <label class="col-sm-4 col-form-label text-right">{{thetoken?.stat?.supply?.toString()}}</label>
+                </div>
+
+            </div>
+        </div>
+    </div>    
+
+    <div class="margin-top-md">
+        <div class="card text-white bg-dark">
+            <div class="card-body">
+                <!-- CREATE TAB -->
+                <div [hidden]="tab != TAB.CREATE || thetoken">
+
+                    <!-- Symbol -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label nowrap">Symbol:</label>
+                        <div class="col-sm-10">
+                            <i _ngcontent-c4="" class="material-icons input-icon danger" [hidden]="symbolIsGood">cancel</i>
+                            <i _ngcontent-c4="" class="material-icons input-icon success" [hidden]="!symbolIsGood">done</i>
+                            <input class="form-control col-form-label" placeholder="symbol" [(uppercase)]="newtoken.symbol" (uppercaseChange)="onTokenChange($event)">
+                        </div>
+                    </div>
+    
+                    <!-- Contract -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label nowrap">Contract:</label>
+                        <label class="col-sm-10 col-form-label">{{newtoken.contract}}</label>
+                    </div>
+    
+                    <!-- precision -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label nowrap">Precision:</label>
+                        <div class="col-sm-10">
+                            <input class="form-control col-form-label" type="number" placeholder="precision" [(ngModel)]="newtoken.precision">
+                        </div>
+                    </div>
+    
+                    <!-- Max Supply -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label nowrap">Max Supply:</label>
+                        <div class="col-sm-10">
+                            <input class="form-control col-form-label" placeholder="maximun supply" [(ngModel)]="max_supply">
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- REGISTER TAB -->
+                <div [hidden]="tab != TAB.REGISTER">
+
+                    <div [hidden]="thetoken">
+                        <!-- Symbol -->
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label nowrap">Symbol:</label>
+                            <div class="col-sm-10" >
+                                <i _ngcontent-c4="" class="material-icons input-icon danger" [hidden]="symbolIsGood">cancel</i>
+                                <i _ngcontent-c4="" class="material-icons input-icon success" [hidden]="!symbolIsGood">done</i>
+                                <input class="form-control col-form-label" placeholder="symbol" [(uppercase)]="newtoken.symbol" (uppercaseChange)="onTokenChange($event)">
+                            </div>
+                        </div>
+        
+                        <!-- Contract -->
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label nowrap">Contract:</label>
+                            <div class="col-sm-10">
+                                <input class="form-control col-form-label" placeholder="contract" [(ngModel)]="newtoken.contract" (ngModelChange)="onTokenChange($event)">
+                            </div>
+                        </div>    
+                    </div>
+    
+                </div>
+
+                <div [hidden]="tab == TAB.CREATE || !thetoken">
+                    <!-- title -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label nowrap">Title:</label>
+                        <div class="col-sm-10" >
+                            <input class="form-control col-form-label" placeholder="title" [(ngModel)]="editing.title" (ngModelChange)="onTokenInfoChange($event)">
+                        </div>
+                    </div>
+
+                    <!-- brief -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label nowrap">brief:</label>
+                        <div class="col-sm-10" >
+                            <textarea class="form-control col-form-label" placeholder="brief" [(ngModel)]="editing.brief" (ngModelChange)="onTokenInfoChange($event)"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- website -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label nowrap">website:</label>
+                        <div class="col-sm-10" >
+                            <input class="form-control col-form-label" placeholder="website" [(ngModel)]="editing.website" (ngModelChange)="onTokenInfoChange($event)">
+                        </div>
+                    </div>
+
+                    <!-- banner -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label nowrap">banner:</label>
+                        <div class="col-sm-10" >
+                            <input class="form-control col-form-label" placeholder="banner" [(ngModel)]="editing.banner" (ngModelChange)="onTokenInfoChange($event)">
+                        </div>
+                    </div>
+
+                    <!-- logo -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label nowrap">logo:</label>
+                        <div class="col-sm-10" >
+                            <input class="form-control col-form-label" placeholder="logo" [(ngModel)]="editing.logo" (ngModelChange)="onTokenInfoChange($event)">
+                        </div>
+                    </div>
+
+                    <!-- logolg -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label nowrap">logolg:</label>
+                        <div class="col-sm-10" >
+                            <input class="form-control col-form-label" placeholder="logolg" [(ngModel)]="editing.logolg" (ngModelChange)="onTokenInfoChange($event)">
+                        </div>
+                    </div>
+
+                </div>                
+
+
+                <!-- Error -->
+                <div class="form-group row">
+                    <div class="col-12 margin-top" [hidden]="!error">
+                        <div class="alert alert-danger">
+                            <div class="pull-right">
+                                <button type="button" class="close text-white" (click)="clearError()">
+                                    <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                </button>                
+                            </div>
+                            {{error}}
+                        </div>
+                    </div>
+                </div>     
+
+
+
+                <!-- confirm -->
+                <div class="form-group row margin-top">
+                    <label class="col-sm-2 col-form-label nowrap"></label>
+                    <div class="col-sm-10 text-right">
+                        <span class="btn btn-lg btn-success"
+                            [ngClass]="{disabled: !okConfirm()}"
+                            (click)="confirm()">
+                            <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
+                            <i class="material-icons" [hidden]="loading">done</i>
+                            Confirm
+                        </span>
+                    </div>
+                </div>
+
+
+
+
+                <!-- prueba 
+                <div class="form-group row margin-top">
+                    <label class="col-sm-2 col-form-label nowrap"></label>
+                    <div class="col-sm-10 text-right">
+                        <span class="btn btn-lg btn-success"
+                            (click)="prueba()">
+                            PRUEBA
+                        </span>
+                    </div>
+                </div>
+            -->
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="margin-top-md">
+        <div class="card text-white bg-dark">
+            <div class="card-body">
+                <pre>{{thetoken|json}}</pre>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>

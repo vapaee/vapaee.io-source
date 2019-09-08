@@ -141,69 +141,56 @@ echo "----- loading tokens ----"
 
 # register tokens
 echo "-- register TLOS --" 
-cleos push action vapaeetokens addtoken '["eosio.token","TLOS",4,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens addtoken '["eosio.token","TLOS",4,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["TLOS", "Telos", "https://telosfoundation.io", "", "", "/assets/logos/telos.png", "/assets/logos/telos-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["eosio.token","TLOS",4,"vapaeetokens", "Telos", "https://telosfoundation.io", "", "", "/assets/logos/telos.png", "/assets/logos/telos-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["eosio.token","TLOS",4,"vapaeetokens", "Telos", "https://telosfoundation.io", "", "", "/assets/logos/telos.png", "/assets/logos/telos-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens setcurrency '["TLOS", true]' -p vapaeetokens@active
 echo "-- register VIITA --" 
-cleos push action vapaeetokens addtoken '["viitasphere1","VIITA",4,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["VIITA", "Viitasphere", "https://viitasphere.com", "", "", "/assets/logos/viitasphere.png", "/assets/logos/viitasphere-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["viitasphere1","VIITA",4,"vapaeetokens", "Viitasphere", "https://viitasphere.com", "", "", "/assets/logos/viitasphere.png", "/assets/logos/viitasphere-lg.png",true]' -p vapaeetokens@active
 echo "-- register VIICT --" 
-cleos push action vapaeetokens addtoken '["viitasphere1","VIICT",0,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["VIICT", "Viitasphere", "https://viitasphere.com", "", "", "/assets/logos/viitasphere.png", "/assets/logos/viitasphere-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["viitasphere1","VIICT",0,"vapaeetokens", "Viitasphere", "https://viitasphere.com", "", "", "/assets/logos/viitasphere.png", "/assets/logos/viitasphere-lg.png",true]' -p vapaeetokens@active
 echo "-- register QBE --" 
-cleos push action vapaeetokens addtoken '["qubicletoken","QBE",4,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["QBE", "Qubicles", "https://fenero.io/qubicles", "", "", "/assets/logos/qbe.png", "/assets/logos/qbe-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["qubicletoken","QBE",4,"vapaeetokens", "Qubicles", "https://fenero.io/qubicles", "", "", "/assets/logos/qbe.png", "/assets/logos/qbe-lg.png",true]' -p vapaeetokens@active
 echo "-- register ACORN --" 
-cleos push action vapaeetokens addtoken '["acornaccount","ACORN",4,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["ACORN", "ACORN", "http://acorns.fun", "", "", "/assets/logos/acorn.svg", "/assets/logos/acorn-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["acornaccount","ACORN",4,"vapaeetokens", "ACORN", "http://acorns.fun", "", "", "/assets/logos/acorn.svg", "/assets/logos/acorn-lg.png",true]' -p vapaeetokens@active
 echo "-- register YANG --" 
-cleos push action vapaeetokens addtoken '["yanggangcoin","YANG",4,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["YANG", "Yang Gang Coin", "https://www.yang2020.com/", "Together, We Can Build a New Kind of Economy, One That Puts People First.", "/assets/uploads/yang-banner.jpg", "/assets/logos/yang-coin.png", "/assets/logos/yang-coin-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["yanggangcoin","YANG",4,"vapaeetokens", "Yang Gang Coin", "https://www.yang2020.com/", "Together, We Can Build a New Kind of Economy, One That Puts People First.", "/assets/uploads/yang-banner.jpg", "/assets/logos/yang-coin.png", "/assets/logos/yang-coin-lg.png",true]' -p vapaeetokens@active
 cleos push action vapaeetokens settokendata '["YANG", 0, "add", "twitter", "Official Twitter Account", "https://twitter.com/andrewyang"]' -p vapaeetokens@active
 
 echo "-- register OLIVE --" 
-cleos push action vapaeetokens addtoken '["oliveaccount","OLIVE",4,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["OLIVE", "OLIVE", "http://democratic.money/olive", "", "", "/assets/logos/olive.png", "/assets/logos/olive-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["oliveaccount","OLIVE",4,"vapaeetokens", "OLIVE", "http://democratic.money/olive", "", "", "/assets/logos/olive.png", "/assets/logos/olive-lg.png",true]' -p vapaeetokens@active
 echo "-- register HEART --" 
-cleos push action vapaeetokens addtoken '["revelation21","HEART",4,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["HEART", "HEART", "https://steemit.com/@steemchurch", "", "", "/assets/logos/beautitude.png", "/assets/logos/beautitude-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["revelation21","HEART",4,"vapaeetokens", "HEART", "https://steemit.com/@steemchurch", "", "", "/assets/logos/beautitude.png", "/assets/logos/beautitude-lg.png",true]' -p vapaeetokens@active
 echo "-- register EDNA --" 
-cleos push action vapaeetokens addtoken '["ednazztokens","EDNA",4,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["EDNA", "EDNA", "https://github.com/EDNA-LIFE", "", "", "/assets/logos/edna.png", "/assets/logos/edna-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["ednazztokens","EDNA",4,"vapaeetokens", "EDNA", "https://github.com/EDNA-LIFE", "", "", "/assets/logos/edna.png", "/assets/logos/edna-lg.png",true]' -p vapaeetokens@active
 echo "-- register TEACH --" 
-cleos push action vapaeetokens addtoken '["teachology14","TEACH",4,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["TEACH", "Teachology", "http://teachology.io", "", "", "/assets/logos/teach.svg", "/assets/logos/teach-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["teachology14","TEACH",4,"vapaeetokens", "Teachology", "http://teachology.io", "", "", "/assets/logos/teach.svg", "/assets/logos/teach-lg.png",true]' -p vapaeetokens@active
 echo "-- register ROBO --" 
-cleos push action vapaeetokens addtoken '["proxibotstkn","ROBO",4,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["ROBO", "Proxibots", "https://proxibots.io", "", "", "/assets/logos/proxibots.png", "/assets/logos/proxibots-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["proxibotstkn","ROBO",4,"vapaeetokens", "Proxibots", "https://proxibots.io", "", "", "/assets/logos/proxibots.png", "/assets/logos/proxibots-lg.png",true]' -p vapaeetokens@active
 echo "-- register TELOSD --" 
-cleos push action vapaeetokens addtoken '["stablecarbon","TELOSD",4,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["TELOSD", "Carbon", "https://www.carbon.money", "", "", "/assets/logos/carbon.svg", "/assets/logos/carbon.svg",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["stablecarbon","TELOSD",4,"vapaeetokens", "Carbon", "https://www.carbon.money", "", "", "/assets/logos/carbon.svg", "/assets/logos/carbon.svg",true]' -p vapaeetokens@active
+cleos push action vapaeetokens setcurrency '["TELOSD", true]' -p vapaeetokens@active
+
 echo "-- register TLOSDAC --" 
-cleos push action vapaeetokens addtoken '["telosdacdrop","TLOSDAC",4,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["TLOSDAC", "TelosDAC", "https://telosdac.io/", "", "", "/assets/logos/telosdac.png", "/assets/logos/telosdac-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["telosdacdrop","TLOSDAC",4,"vapaeetokens", "TelosDAC", "https://telosdac.io/", "", "", "/assets/logos/telosdac.png", "/assets/logos/telosdac-lg.png",true]' -p vapaeetokens@active
 echo "-- register EZAR --"
-cleos push action vapaeetokens addtoken '["stablecoin.z","EZAR",2,"vapaeetokens"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["EZAR", "South African Rand", "https://t.me/ezartoken", "", "", "/assets/logos/ezar.png", "/assets/logos/ezar-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["stablecoin.z","EZAR",2,"vapaeetokens", "South African Rand", "https://t.me/ezartoken", "", "", "/assets/logos/ezar.png", "/assets/logos/ezar-lg.png",true]' -p vapaeetokens@active
 
 
 echo "-- creating CNT token --" 
 cleos push action vapaeetokens create '["vapaeetokens","500000000.0000 CNT"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["CNT", "Cards & Tokens", "http://cardsandtokens.com", "A platform where you can create themed albums and trading cards to collect and play making money in the process.", "assets/img/cards-and-tokens-1200x400.jpeg", "/assets/logos/cnt.svg", "/assets/logos/cnt-lg.svg",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["vapaeetokens", "CNT", 4, "vapaeetokens", "Cards & Tokens", "http://cardsandtokens.com", "A platform where you can create themed albums and trading cards to collect and play making money in the process.", "assets/img/cards-and-tokens-1200x400.jpeg", "/assets/logos/cnt.svg", "/assets/logos/cnt-lg.svg",true]' -p vapaeetokens@active
 cleos push action vapaeetokens settokendata '["CNT", 0, "add", "youtube", "Promo video", "https://youtu.be/YSVJgKsSobA"]' -p vapaeetokens@active
 cleos push action vapaeetokens settokendata '["CNT", 0, "add", "twitter", "Membership cards", "https://twitter.com/TokensCards/status/1109668817175748608"]' -p vapaeetokens@active
 cleos push action vapaeetokens settokendata '["CNT", 0, "add", "youtube", "Demo video", "https://www.youtube.com/watch?v=jhL1KyifGEs&list=PLIv5p7BTy5wxqwqs0fGyjtOahoO3YWX0x&index=1"]' -p vapaeetokens@active
 cleos push action vapaeetokens settokendata '["CNT", 0, "add", "twitter", "The CNT token airdrop", "https://twitter.com/TokensCards/status/1105088865994452993"]' -p vapaeetokens@active
 
 
-
-
 echo "-- creating BOX token --" 
 cleos push action vapaeetokens create '["vapaeetokens","500000000.0000 BOX"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["BOX", "Board Game Box", "https://vapaee.io/bgbox", "", "", "/assets/logos/box.png", "/assets/logos/box-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["vapaeetokens", "BOX", 4, "vapaeetokens", , "Board Game Box", "https://vapaee.io/bgbox", "", "", "/assets/logos/box.png", "/assets/logos/box-lg.png",true]' -p vapaeetokens@active
 echo "-- creating VPE token --" 
 cleos push action vapaeetokens create '["vapaeetokens","1000000.000000 VPE"]' -p vapaeetokens@active
-cleos push action vapaeetokens updatetoken '["VPE", "Vapaée", "https://vapaee.io", "", "", "/assets/logos/vapaee.png", "/assets/logos/vapaee-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["vapaeetokens", "VPE", 4, "vapaeetokens", , "Vapaée", "https://vapaee.io", "", "", "/assets/logos/vapaee.png", "/assets/logos/vapaee-lg.png",true]' -p vapaeetokens@active
 
 
 
@@ -211,8 +198,8 @@ cleos push action vapaeetokens updatetoken '["VPE", "Vapaée", "https://vapaee.i
 
 
 # add issuers to the tokens
-echo "-- adding issuers to the tokens --" 
-cleos push action vapaeetokens addissuer '["vapaeetokens","VPE"]' -p vapaeetokens@active
+# echo "-- adding issuers to the tokens --" 
+# cleos push action vapaeetokens addissuer '["vapaeetokens","VPE"]' -p vapaeetokens@active
 
 
 

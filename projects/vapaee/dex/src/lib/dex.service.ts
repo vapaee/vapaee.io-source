@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import BigNumber from "bignumber.js";
 import { CookieService } from 'ngx-cookie-service';
 import { DatePipe } from '@angular/common';
-import { TokenDEX } from './token-dex.class';
+import { TokenDEX, ETokenDEX } from './token-dex.class';
 import { AssetDEX } from './asset-dex.class';
 import { Feedback } from '@vapaee/feedback';
 import { VapaeeScatter, Account, AccountData, SmartContract, TableResult, TableParams } from '@vapaee/scatter';
@@ -14,6 +14,8 @@ import { MarketMap, UserOrdersMap, MarketSummary, EventLog, Market, HistoryTx, T
     providedIn: "root"
 })
 export class VapaeeDEX {
+
+    public id;
 
     public loginState: string;
     /*
@@ -90,6 +92,7 @@ export class VapaeeDEX {
         private cookies: CookieService,
         private datePipe: DatePipe
     ) {
+        this.id = Math.floor( 10 * Math.random());
         this._markets = {};
         this._reverse = {};
         this.activity = {total:0, events:{}, list:[]};
@@ -99,27 +102,9 @@ export class VapaeeDEX {
         this.feed = new Feedback();
         this.scatter.onLogggedStateChange.subscribe(this.onLoggedChange.bind(this));
         this.updateLogState();
-        this.fetchTokens().then(data => {
-            this.tokens = [];
-            this.currencies = [ ];
-            for (let i in data.tokens) {
-                let tdata = data.tokens[i];
-                let token = new TokenDEX(tdata);
-                this.tokens.push(token);
-                if (token.symbol == "TLOS") {
-                    this.telos = token;
-                }
-                if (token.symbol == "TELOSD") {
-                    this.currencies.push(token);
-                }
-            }
-
-            this.currencies.unshift(this.telos);
-
+        this.updateTokens().then(data => {
             this.zero_telos = new AssetDEX("0.0000 TLOS", this);
             this.setTokensLoaded();
-            this.fetchTokensStats();
-            this.fetchTokensData();
             this.getOrderSummary();
             this.getAllTablesSumaries();
         });
@@ -138,6 +123,26 @@ export class VapaeeDEX {
         });
     }
 
+    updateTokens() {
+        return this.fetchTokens().then(data => {
+            this.tokens = [];
+            this.currencies = [ ];
+            for (let i in data.tokens) {
+                let tdata = data.tokens[i];
+                let token = new TokenDEX(tdata);
+                this.tokens.push(token);
+                if (token.symbol == "TLOS") {
+                    this.telos = token;
+                } else if (token.currency) {
+                    this.currencies.push(token);
+                }
+            }
+            this.currencies.unshift(this.telos);
+            this.fetchTokensStats();
+            this.fetchTokensData();
+        });
+    }
+
     // getters -------------------------------------------------------------
     get default(): Account {
         return this.scatter.default;
@@ -153,6 +158,10 @@ export class VapaeeDEX {
         return this.scatter.logged ? 
         this.scatter.account :
         this.scatter.default;
+    }
+
+    get waitLogged() {
+        return this.scatter.waitLogged;
     }
 
     // -- User Log State ---------------------------------------------------
@@ -363,7 +372,78 @@ export class VapaeeDEX {
         });
     }
 
+    // Tokens Action --------------------------------------------------------------
+
+    addtoken(token:TokenDEX) {
+        var feedid = "addtoken";
+        this.feed.setError(feedid, null);
+        this.feed.setLoading(feedid, true);
+
+        return this.contract.excecute("addtoken", {
+            contract:  token.contract,
+            symbol: token.symbol,
+            precision: token.precision,
+            owner: this.logged,
+            title: token.title,
+            website: token.website,
+            brief: token.brief,
+            banner: token.banner,
+            logo: token.logo,
+            logolg: token.logolg,
+            tradeable: token.tradeable,
+        }).then(async result => {
+            await this.updateTokens();
+            this.feed.setLoading(feedid, false);
+            return result;
+        }).catch(e => {
+            this.feed.setLoading(feedid, false);
+            this.feed.setError(feedid, typeof e == "string" ? e : JSON.stringify(e,null,4));
+            throw e;
+        });
+    }
+
+    updatetoken(token:TokenDEX) {
+        var feedid = "updatetoken";
+        this.feed.setError(feedid, null);
+        this.feed.setLoading(feedid, true);
+        return this.contract.excecute("updatetoken", {
+            sym_code: token.symbol,
+            title: token.title,
+            website: token.website,
+            brief: token.brief,
+            banner: token.banner,
+            logo: token.logo,
+            logolg: token.logolg,
+            tradeable: token.tradeable,
+        }).then(async result => {
+            this.feed.setLoading(feedid, false);
+            return result;
+        }).catch(e => {
+            this.feed.setLoading(feedid, false);
+            this.feed.setError(feedid, typeof e == "string" ? e : JSON.stringify(e,null,4));
+            throw e;
+        });
+    }
+
+    createtoken(asset:AssetDEX) {
+        var feedid = "createtoken";
+        this.feed.setError(feedid, null);
+        this.feed.setLoading(feedid, true);
+        return this.contract.excecute("create", {
+            issuer:  this.logged,
+            maximum_supply: asset.toString()
+        }).then(async result => {
+            this.feed.setLoading(feedid, false);
+            return result;
+        }).catch(e => {
+            this.feed.setLoading(feedid, false);
+            this.feed.setError(feedid, typeof e == "string" ? e : JSON.stringify(e,null,4));
+            throw e;
+        });
+    }
+
     // Tokens --------------------------------------------------------------
+
     addOffChainToken(offchain: TokenDEX) {
         this.waitTokensLoaded.then(_ => {
             this.tokens.push(new TokenDEX({
@@ -591,62 +671,6 @@ export class VapaeeDEX {
             }
         }
         return new AssetDEX("0 " + token.symbol, this);
-    }
-
-    async getSomeFreeFakeTokens(symbol:string = null) {
-        console.log("VapaeeDEX.getSomeFreeFakeTokens()");
-        var _token = symbol;    
-        this.feed.setLoading("freefake-"+_token || "token", true);
-        return this.waitTokenStats.then(_ => {
-            var token = null;
-            var counts = 0;
-            for (var i=0; i<100; i++) {
-                if (symbol) {
-                    if (this.tokens[i].symbol == symbol) {
-                        token = this.tokens[i];
-                    }
-                }                
-
-                var random = Math.random();
-                // console.log(i, "Random: ", random);
-                if (!token && random > 0.5) {
-                    token = this.tokens[i % this.tokens.length];
-                    if (token.fake) {
-                        random = Math.random();
-                        if (random > 0.5) {
-                            token = this.telos;
-                        }
-                    } else {
-                        token = null;
-                    }
-                }
-
-                if (i<100 && token && this.getBalance(token).amount.toNumber() > 0) {
-                    token = null;
-                }
-
-                // console.log(i, "token: ", token);
-
-                if (token) {
-                    random = Math.random();
-                    var monto = Math.floor(10000 * random) / 100;
-                    var quantity = new AssetDEX("" + monto + " " + token.symbol ,this);
-                    var memo = "you get " + quantity.valueToString()+ " free fake " + token.symbol + " tokens to play on vapaee.io DEX";
-                    return this.contract.excecute("issue", {
-                        to:  this.scatter.account.name,
-                        quantity: quantity.toString(),
-                        memo: memo
-                    }).then(_ => {
-                        this.getBalances();
-                        this.feed.setLoading("freefake-"+_token || "token", false);
-                        return memo;
-                    }).catch(e => {
-                        this.feed.setLoading("freefake-"+_token || "token", false);
-                        throw e;
-                    });                
-                }               
-            }
-        })
     }
 
     getTokenNow(sym:string): TokenDEX {
@@ -1908,13 +1932,10 @@ export class VapaeeDEX {
         });
     }
 
-    private fetchTokenStats(token): Promise<TableResult> {
+    public fetchTokenStats(token): Promise<TableResult> {
         this.feed.setLoading("token-stat-"+token.symbol, true);
         return this.contract.getTable("stat", {contract:token.contract, scope:token.symbol}).then(result => {
             token.stat = result.rows[0];
-            if (token.stat.issuers && token.stat.issuers[0] == "everyone") {
-                token.fake = true;
-            }
             this.feed.setLoading("token-stat-"+token.symbol, false);
             return token;
         });

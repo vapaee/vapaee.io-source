@@ -226,6 +226,15 @@ span.dropdown-item.active {
     margin-top: -6px;
 }
 
+.btn-sm > i.material-icons, .btn-group-sm > .btn > i.material-icons {
+    margin-top: -2px;
+}
+
+.btn.btn-lg i.material-icons {
+    vertical-align: middle;
+    margin-top: -4px;    
+}
+
 
 // nav-item highlight
 .navbar-dark .navbar-nav .nav-item.highlight a {

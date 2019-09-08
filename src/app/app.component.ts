@@ -2,12 +2,10 @@ import { Component, HostListener, HostBinding } from '@angular/core';
 import { AppService } from './services/common/app.service';
 import { VpeComponentsService, PriceMap } from './components/vpe-components.service';
 import { CoingeckoService } from './services/coingecko.service';
-import { VapaeeDEX } from '../../projects/vapaee/dex/src/lib/dex.service';
+import { VapaeeDEX, TokenDEX, Market } from '@vapaee/dex';
 import { LocalStringsService } from './services/common/common.services';
-import { TokenDEX } from '../../projects/vapaee/dex/src/lib/token-dex.class';
-import { Market } from '@vapaee/dex';
-import { VapaeeStyle } from 'projects/vapaee/style/src/public_api';
 import { DropdownService } from './services/dropdown.service';
+import { VapaeeStyle } from '@vapaee/style';
 
 @Component({
     selector: 'app-root',
@@ -123,7 +121,7 @@ export class AppComponent {
         public style: VapaeeStyle,
         public dropdown: DropdownService
     ) {
-        this.app.init("v2.3.3");
+        this.app.init("v2.4.0");
     }
     
     ngOnInit() {

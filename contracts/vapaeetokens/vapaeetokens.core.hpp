@@ -36,20 +36,29 @@ namespace vapaee {
             statstable.emplace( _self, [&]( auto& s ) {
                 s.supply.symbol = maximum_supply.symbol;
                 s.max_supply    = maximum_supply;
-                s.owner         = owner;
+                s.issuer        = owner;
             });
 
+            /*
             action(
                 permission_level{owner,"active"_n},
                 get_self(),
                 "addtoken"_n,
-                std::make_tuple(get_self(), maximum_supply.symbol.code(), maximum_supply.symbol.precision(), owner)
+                std::make_tuple(
+                    get_self(),
+                    maximum_supply.symbol.code(),
+                    maximum_supply.symbol.precision(),
+                    owner,
+                    maximum_supply.symbol.code().to_string(),
+                    "", "", "", "", "", false
+                    )
             ).send();
+            */
 
             PRINT("vapaee::token::core::action_create_token() ...\n");
         }
 
-        void action_add_token_issuer( name app, const symbol_code& sym_code ) {
+        void action_add_token_issuer( name app, const symbol_code& sym_code, name ram_payer ) {
             PRINT("vapaee::token::core::action_add_token_issuer()\n");
             PRINT(" app: ", app.to_string(), "\n");
             PRINT(" sym_code: ", sym_code.to_string(), "\n");
@@ -58,10 +67,13 @@ namespace vapaee {
             auto token_itr = statstable.find( sym_code.raw() );
             eosio_assert( token_itr != statstable.end(), "token with symbol not exists" );
 
-            require_auth ( token_itr->owner );
+            require_auth ( token_itr->issuer );
 
-            statstable.modify( token_itr, token_itr->owner, [&]( auto& s ) {
-                s.issuers.push_back(app);
+            issuers issuerstable(get_self(), sym_code.raw() );
+            auto issuer_itr = issuerstable.find( app.value );
+            eosio_assert( issuer_itr == issuerstable.end(), "issuer already registered" );
+            issuerstable.emplace( ram_payer, [&]( auto& a ){
+                a.issuer = app;
             });
             PRINT("vapaee::token::core::action_add_token_issuer() ...\n");
         }
@@ -75,13 +87,13 @@ namespace vapaee {
             auto token_itr = statstable.find( sym_code.raw() );
             eosio_assert( token_itr != statstable.end(), "token with symbol not exists" );
 
-            require_auth ( token_itr->owner );
+            require_auth ( token_itr->issuer );
 
-            statstable.modify( token_itr, token_itr->owner, [&]( auto& s ) {
-                std::vector<name> foo;
-                std::copy_if (s.issuers.begin(), s.issuers.end(), std::back_inserter(foo), [&](name i){return i!=app;} );                
-                s.issuers = foo;
-            });
+            issuers issuerstable(get_self(), sym_code.raw() );
+            auto issuer_itr = issuerstable.find( app.value );
+            eosio_assert( issuer_itr != issuerstable.end(), "issuer is not registered" );
+            issuerstable.erase( *issuer_itr );
+
             PRINT("vapaee::token::core::action_remove_token_issuer() ...\n");
         }
 
@@ -111,10 +123,12 @@ namespace vapaee {
 
             // check authorization (issuer of appcontract)
             name everyone = "everyone"_n;
-            name issuer = st.owner;
-            for (int i=0; i<st.issuers.size(); i++) {
+            name issuer = st.issuer;
+
+            issuers issuerstable(get_self(), sym.code().raw() );
+            for (auto issuer_itr = issuerstable.begin(); issuer_itr != issuerstable.end(); issuer_itr++) {
                 // auto issuer_app = apps_table.get(st.issuers[i], (string("app ") + std::to_string((int)st.issuers[i]) + " not found in bgbox::apps").c_str());
-                name issuer_app = st.issuers[i];
+                name issuer_app = issuer_itr->issuer;
                 // if "everyone" is in issuers list then everyone is allowed to issue because this is a fake token
                 if (has_auth(issuer_app) || issuer_app == everyone) {
                     issuer = issuer_app;
@@ -127,7 +141,7 @@ namespace vapaee {
                 require_auth( issuer );
             } else {
                 // for fake token, everyone can issue. No need for signature
-                issuer = st.owner;
+                issuer = st.issuer;
             }
 
             

@@ -1,14 +1,14 @@
 
 
 export class Token {
-    private _str?: string;
-    private _symbol: string;
-    private _precision?: number;
-    private _contract?: string;
+    protected _str?: string;
+    protected _symbol: string;
+    protected _precision?: number;
+    protected _contract?: string;
 
     constructor(obj:any = null) {
         this._symbol = "AUX";
-        this._precision = null;
+        this._precision = 0;
         this._contract = null;
     
         if (typeof obj == "string") {

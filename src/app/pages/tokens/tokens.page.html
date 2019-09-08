@@ -7,11 +7,21 @@
                  Telos tokens
             </span>
             <div class="pull-right">
-                <vpe-offchain-combobox class="margin-top-xs" [btn]="'sm'" [hideprice]="app.device.portrait"></vpe-offchain-combobox>
+                <!-- New Token Btn -->
+                <a class="currency btn btn-primary btn-sm"
+                    [routerLink]="'/exchange/tokenedit/new-token'" 
+                >
+                    <i class="material-icons"> add_circle_outline </i>
+                    <span> {{local.string.newtoken|titlecase}} </span>
+                </a>
+
+                <!-- Offchain currency selector -->
+                <vpe-offchain-combobox class="margin-left margin-top-xs" [btn]="'sm'" [hideprice]="app.device.portrait"></vpe-offchain-combobox>
             </div>
         </div>
     </div>
 
-    <vpe-panel-tokens-card-deck  (tokenPage)="tokenPage($event)" (tradeToken)="tradeToken($event)" [hidebackground]="true" [hideheader]="true" [tokens]="tokens"></vpe-panel-tokens-card-deck>
+    <vpe-panel-tokens-card-deck  (tokenPage)="tokenPage($event)" (tradeToken)="tradeToken($event)" (editToken)="editToken($event)"  [hidebackground]="true" [hideheader]="true" [tokens]="tokens" [logged]="dex.logged"></vpe-panel-tokens-card-deck>
+
 
 </div>

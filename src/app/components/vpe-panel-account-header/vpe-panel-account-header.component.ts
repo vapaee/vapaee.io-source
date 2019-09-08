@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeDEX } from 'projects/vapaee/dex/src/lib/dex.service';
+import { VapaeeDEX, AssetDEX } from '@vapaee/dex';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Account, VapaeeScatter } from '@vapaee/scatter';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { AssetDEX } from 'projects/vapaee/dex/src/lib/asset-dex.class';
+
 
 
 @Component({
@@ -27,7 +27,6 @@ export class VpePanelAccountHeaderComponent implements OnChanges {
     @Output() confirmWithdraw: EventEmitter<any> = new EventEmitter();
     public deposit: AssetDEX;
     public withdraw: AssetDEX;
-    public loading_fake: boolean;
     public portrait: boolean;
     constructor(
         public dex: VapaeeDEX,
@@ -39,7 +38,6 @@ export class VpePanelAccountHeaderComponent implements OnChanges {
         this.hideheader = true;
         this.margintop = true;
         this.expanded = true; 
-        this.loading_fake = false;
         this.current = this.dex.default;
     }
 
@@ -49,15 +47,6 @@ export class VpePanelAccountHeaderComponent implements OnChanges {
 
     onChange() {
         
-    }
-
-    freeFakeTokens() {
-        this.loading_fake = true;
-        this.dex.getSomeFreeFakeTokens().then(_ => {
-            this.loading_fake = false;
-        }).catch(_ => {
-            this.loading_fake = false;
-        });        
     }
 
     setCurrency(currency:string) {

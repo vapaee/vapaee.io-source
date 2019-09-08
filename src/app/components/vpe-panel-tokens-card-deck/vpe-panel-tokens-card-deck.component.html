@@ -12,9 +12,11 @@
 
                         <vpe-panel-tokens-card
                             [token]="token"
+                            [logged]="logged"
                             *ngIf="i<limit"
                             (tradeToken)="goToTradeToken(token)"
                             (tokenPage)="goToTokenPage(token)"
+                            (editToken)="goToEditTokenPage(token)"
                         ></vpe-panel-tokens-card>
                         
 
