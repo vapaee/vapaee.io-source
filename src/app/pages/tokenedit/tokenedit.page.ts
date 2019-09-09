@@ -247,16 +247,28 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
                     symbol: this.thetoken.symbol,
                     title: this.editing.title,
                     tradeable:1
-                });
-                
+                });                
                 this.dex.addtoken(token).then(_ => {
                     console.log("EXITO:", _);
                     this.app.navigate("/exchange/token/"+this.newtoken.symbol.toLowerCase());
                 }).catch(e => { console.error(e); });
                 break;
             case this.TAB.EDIT:
-                this.dex.updatetoken(this.newtoken).then(_ => {
+                var token = new TokenDEX({
+                    banner: this.editing.banner,
+                    brief: this.editing.brief,
+                    contract: this.thetoken.contract,
+                    logo: this.editing.logo,
+                    logolg: this.editing.logolg,
+                    precision: this.thetoken.precision || 0,
+                    website: this.editing.website,
+                    symbol: this.thetoken.symbol,
+                    title: this.editing.title,
+                    tradeable: 1
+                });                
+                this.dex.updatetoken(token).then(_ => {
                     console.log("EXITO:", _);
+                    this.app.navigate("/exchange/token/"+this.newtoken.symbol.toLowerCase());
                 }).catch(e => { console.error(e); });
                 break;
         }

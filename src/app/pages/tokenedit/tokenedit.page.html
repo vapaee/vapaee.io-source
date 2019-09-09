@@ -43,20 +43,21 @@
 
     <div class="margin-top-md" [hidden]="!thetoken">
         <div class="card text-white bg-dark">
-            <div class="card-body">
+            <div class="card-header vpe-background-card-header">
                 <div class="row">
                     <div class="col-12">
                         <div class="pull-right">
-                            <span class="btn btn-sm btn-danger"
+                            <span class="btn btn-sm btn-danger margin-top-xs"
                                 (click)="discardTheToken()">
                                 <i class="material-icons" [hidden]="loading">cancel</i>
-                                change
+                                forget
                             </span>
                         </div>                        
                         <span class="text-lg">Token: {{thetoken?.symbol}}</span> 
                     </div>
                 </div>
-                
+            </div>
+            <div class="card-body">
                 <div class="row">
                     <label class="col-sm-2 col-form-label nowrap">Contract:</label>
                     <label class="col-sm-4 col-form-label">{{thetoken?.contract}}</label>
@@ -225,7 +226,7 @@
 
 
 
-                <!-- prueba 
+            <!-- prueba 
                 <div class="form-group row margin-top">
                     <label class="col-sm-2 col-form-label nowrap"></label>
                     <div class="col-sm-10 text-right">
@@ -241,7 +242,7 @@
         </div>
     </div>
 
-
+<!--
     <div class="margin-top-md">
         <div class="card text-white bg-dark">
             <div class="card-body">
@@ -249,7 +250,7 @@
             </div>
         </div>
     </div>
-
+-->
 
 
 </div>

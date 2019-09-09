@@ -22,7 +22,7 @@ export class TokensPage implements OnInit, OnDestroy {
     }
 
     get tokens(): TokenDEX[] {
-        console.log("tokens()", this.dex.tokens);
+        // console.log("tokens()", this.dex.tokens);
         return this.dex.tokens;
     }
     
