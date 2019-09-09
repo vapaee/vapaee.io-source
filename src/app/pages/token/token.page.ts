@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VapaeeDEX, TokenDEX, TokenData } from '@vapaee/dex';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 
@@ -24,11 +24,22 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         public app: AppService,
         public local: LocalStringsService,
         public dex: VapaeeDEX,
+        private router: Router, 
         public route: ActivatedRoute,
         private sanitizer: DomSanitizer,
         private http: HttpClient
     ) {
         var symbol = this.route.snapshot.paramMap.get('symbol');
+        // ----------------------------------------------------------
+        // const navigation = this.router.getCurrentNavigation();
+        // var edit = navigation.extras.edit;
+        // console.log("************************");
+        // console.log("************************");
+        // console.log("edit:", edit);
+        // console.log("************************");
+        // console.log("************************");
+        // if (edit) alert("YES !!!!");
+        // ----------------------------------------------------------
         this.dex.waitTokenData.then(_ => {
             this.token = this.dex.getTokenNow(symbol.toUpperCase());
 

@@ -62,7 +62,7 @@ import { VapaeeStyle } from '@vapaee/style';
                     </li-->
                     <li class="nav-item skin dropdown">
                         <a class="nav-link dropdown-toggle cursor-pointer" (click)="dropdown.drop('skin')">
-                            <i class="material-icons"> format_paint </i>
+                            <i class="material-icons"> palette </i>
                             {{local.string.skin | titlecase}}
                             <span class="caret"></span>
                         </a>

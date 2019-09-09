@@ -20,7 +20,7 @@ export class TokenDEX extends Token {
     public website: string;
     public logo: string;
     public logolg: string;
-    public tradeable: boolean;
+    public tradeable: boolean | number;
     public currency: boolean;
     public banned: boolean;
     public offchain: boolean;

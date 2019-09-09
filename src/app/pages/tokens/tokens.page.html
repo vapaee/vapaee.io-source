@@ -9,7 +9,8 @@
             <div class="pull-right">
                 <!-- New Token Btn -->
                 <a class="currency btn btn-primary btn-sm"
-                    [routerLink]="'/exchange/tokenedit/new-token'" 
+                    [routerLink]="'/exchange/tokenedit/new-token'"
+                    [hidden]="!dex.logged"
                 >
                     <i class="material-icons"> add_circle_outline </i>
                     <span> {{local.string.newtoken|titlecase}} </span>

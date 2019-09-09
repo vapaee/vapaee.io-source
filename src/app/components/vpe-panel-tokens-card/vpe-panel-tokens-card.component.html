@@ -31,6 +31,27 @@
                 </div>
                 <div>
                     <div class="row margin-top">
+                        <div class="text-left col-padding-right col-6">
+                            <span [hidden]="token.symbol != 'TLOS' && token.tradeable"
+                                class="btn disabled btn-primary btn-sm margin-top">{{local.string.trade|titlecase}}</span>                            
+                            <span [hidden]="token.symbol == 'TLOS' || !token.tradeable"
+                                class="btn btn-primary btn-sm margin-top"
+                                (click)="goToTradeToken(token)"
+                                >{{local.string.trade}}</span>
+                        </div>
+                        <div class="col-4 text-center col-padding-left col-padding-right" [hidden]="true">                            
+                        </div>
+                        <div class="text-right col-padding-left col-6">
+                            <span [hidden]="token.symbol == 'TLOS' || !token.tradeable || token.owner == logged"
+                                (click)="goToTokenPage(token)"
+                                class="btn btn-primary btn-sm margin-top">{{local.string.info|titlecase}}</span>
+                            <span [hidden]="token.owner != logged"
+                                (click)="goToTokenPage(token)"
+                                class="btn btn-success btn-sm margin-top">{{local.string.edit|titlecase}}</span>                                
+                        </div>
+                    </div>
+                    <!--
+                    <div class="row margin-top">
                         <div class="text-left col-padding-right"
                             [ngClass]="{'col-6': token.owner != logged, 'col-4': token.owner == logged}"
                         >
@@ -54,6 +75,7 @@
                                 class="btn btn-primary btn-sm margin-top">{{local.string.info|titlecase}}</span>
                         </div>
                     </div>
+                    -->
                 </div>
 
                 <div class="col-xs-12 margin-top">

@@ -1,29 +1,23 @@
 <div class="container" >
 
-    <div class="row margin-top-md">
-        <div class="col-4 text-left">
+    <div class="row margin-top" [hidden]="!dex.logged">
+        <div class="col-auto margin-top">
             <span class="btn btn-lg" [ngClass]="{'btn-primary':tab!=TAB.CREATE,'btn-success':tab==TAB.CREATE}" (click)="changeTab(TAB.CREATE)">
                 <i class="material-icons"> add_circle_outline </i>
-                <span> Create </span>
+                <span> Create new token</span>
             </span>
         </div>
-        <div class="col-4 text-center">
+        <div class="col-auto margin-top">
             <span class="btn btn-lg" [ngClass]="{'btn-primary':tab!=TAB.REGISTER,'btn-success':tab==TAB.REGISTER}" (click)="changeTab(TAB.REGISTER)">
                 <i class="material-icons"> playlist_add </i>
-                <span> Register </span>
-            </span>
-        </div>
-        <div class="col-4 text-right">
-            <span class="btn btn-lg" [ngClass]="{'btn-primary':tab!=TAB.EDIT,'btn-success':tab==TAB.EDIT,'disabled':!this.editable}" (click)="changeTab(TAB.EDIT)">
-                <i class="material-icons"> edit </i>
-                <span> Edit </span>
+                <span> Register existing token </span>
             </span>
         </div>
     </div>
 
     <div class="margin-top-md">
         <div class="card text-white bg-dark">
-            <div class="card-header vpe-background-card-header">
+            <div class="card-header vpe-background-card-header" [hidden]="!dex.logged">
                 <div [hidden]="tab != TAB.CREATE">
                     <span class="text-lg">Token Creation</span><br>
                     <span class="text-md">You can create a brand new token in Telos blockchain using Vapaée's smart contract without coding.</span>
@@ -36,6 +30,17 @@
                     <span class="text-lg">Token Edition</span><br>
                     <span class="text-md">From here you can modify any data related to your already registered token.</span>        
                 </div>
+            </div>
+            <div class="card-header vpe-background-card-header" [hidden]="dex.logged">
+                <div class="pull-right">
+                    <div class="pull-right margin-top">
+                        <span class="btn btn-sm btn-primary" (click)="dex.login()">
+                            <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
+                            {{local.string.LoginWScOrSq}}
+                        </span>
+                    </div>
+                </div>             
+                <span class="text-md">You need to be logged in order to create or register any token.</span>
             </div>
         </div>
     </div>
@@ -53,7 +58,13 @@
                                 forget
                             </span>
                         </div>                        
-                        <span class="text-lg">Token: {{thetoken?.symbol}}</span> 
+                        <span class="text-lg" [hidden]="editable">Token: {{thetoken?.symbol}}</span> 
+                        <span class="text-lg" [hidden]="!editable">
+                            <img style="height:20px; width: 20px; margin-top:-3px" [src]="editing?.logo">
+                            <span class="card-title">
+                                {{editing?.title}}
+                            </span>                            
+                        </span>
                     </div>
                 </div>
             </div>
@@ -94,8 +105,9 @@
     
                     <!-- Contract -->
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label nowrap">Contract:</label>
-                        <label class="col-sm-10 col-form-label">{{newtoken.contract}}</label>
+                        <label class="col-12 d-block d-sm-none col-form-label nowrap">Contract: {{newtoken.contract}}</label>
+                        <label class="col-2 d-none d-sm-block col-form-label nowrap">Contract:</label>
+                        <label class="col-10 d-none d-sm-block col-form-label">{{newtoken.contract}}</label>
                     </div>
     
                     <!-- precision -->
@@ -141,7 +153,7 @@
     
                 </div>
 
-                <div [hidden]="tab == TAB.CREATE || !thetoken">
+                <div [hidden]="tab == TAB.CREATE || !thetoken || editable">
                     <!-- title -->
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label nowrap">Title:</label>
@@ -190,6 +202,14 @@
                         </div>
                     </div>
 
+                    <!-- tradeable -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label nowrap">tradeable:</label>
+                        <div class="col-sm-10">
+                            <vpe-checkbox class="as-block" [(value)]="editing.tradeable" (onChange)="setTradeable($event)"></vpe-checkbox>
+                        </div>
+                    </div>
+
                 </div>                
 
 
@@ -210,7 +230,7 @@
 
 
                 <!-- confirm -->
-                <div class="form-group row margin-top">
+                <div class="form-group row margin-top" [hidden]="editable">
                     <label class="col-sm-2 col-form-label nowrap"></label>
                     <div class="col-sm-10 text-right">
                         <span class="btn btn-lg btn-success"
@@ -224,6 +244,25 @@
                 </div>
 
 
+                <div [hidden]="!editable">
+                    <div class="pull-right">
+                        <a class="btn btn-lg btn-success"
+                            [routerLink]="'/exchange/token/' + thetoken?.symbol.toLowerCase()"
+                        >
+                            <span [hidden]="editing.owner == dex.logged">
+                                <i class="material-icons" [hidden]="loading">remove_red_eye</i> View token
+                            </span>
+                            <span [hidden]="editing.owner != dex.logged">
+                                <i class="material-icons" [hidden]="loading">edit</i> Edit token
+                            </span>
+                        </a>
+                    </div>
+                    <span class="text-md">
+                        This token is already registered.<br>
+                        <span [hidden]="editing.owner != dex.logged">Do you want to edit the token information?</span>
+                        <span [hidden]="editing.owner == dex.logged">Only the owner of the token can modify its information</span>
+                    </span>
+                </div>
 
 
             <!-- prueba 
@@ -246,7 +285,7 @@
     <div class="margin-top-md">
         <div class="card text-white bg-dark">
             <div class="card-body">
-                <pre>{{thetoken|json}}</pre>
+                <pre>{{editing.tradeable|json}}</pre>
             </div>
         </div>
     </div>

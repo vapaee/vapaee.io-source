@@ -42,7 +42,7 @@ export class TokensPage implements OnInit, OnDestroy {
     */
 
     editToken(token:TokenDEX) {
-        this.app.navigate('/exchange/tokenedit/'+token.symbol.toLowerCase());
+        this.app.navigateWithExtras('/exchange/tokenedit/'+token.symbol.toLowerCase(), {edit:true});
     }
 
     tradeToken(token:TokenDEX) {

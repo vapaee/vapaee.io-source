@@ -22,6 +22,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
     editing: TokenDEX;
     editable: boolean;
     max_supply: number;
+    prueb: number;
     TAB = {CREATE:"create", REGISTER:"register",EDIT:"edit"};
     _safe_url_cache = {};
     
@@ -124,10 +125,13 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
         this.changeTab(this.TAB.REGISTER);
     }
     
-    onTokenInfoChange() {
-        console.log("onTokenInfoChange()")
+    setTradeable(tradeable) {
+        this.editing.tradeable = tradeable?1:0;
     }
-
+     
+    onTokenInfoChange() {
+        console.log("onTokenInfoChange()");
+    }
     
     onTokenChange() {
         this.checkToken();

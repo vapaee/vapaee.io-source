@@ -1,72 +1,58 @@
--- AGUSTIN ---
-escuchar los primeros 2 minutos
-https://www.youtube.com/watch?v=loRfN8aLJOY
-
--- TODO: COBRAR v3.0.0 --
-- C++ Smart Contract
-  + cambiar la tabla tokendata para agregar el date
-    + borrar tabla en producción
-    + adaptar el datatype en angular
-  + action_set_token_data hay que actualizar el dato: date
-  + tokenevents table: crear esta tabla donde el creador de un token puede agregar eventos a los que quiere registrarse:
-    + campos[symbol]: event (id), contract (receptor)
-    + edittknevent (action, sym, event, receptor): solo el issuer puede modificar esta tabla
-    + hacer que los eventos deposits, withdraws, order, deal, swapdeposit sean replicados al contrato destino
-  + token stat / issuers: partir en dos el actual stat del token de manera que vuelva a ser standar y sacarle la parte de los issuers
-    + sacar a issuers de stat
-    + crear nueva tabla issuers para un token
-    + cambiar el código que modifica los issuers
-
+-- Video Vapaée DEX v3.0 --
 https://cdn.pixabay.com/photo/2015/10/23/07/28/banner-1002455_960_720.jpg
 http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/96/coin-us-dollar-icon.png
 http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/256/coin-us-dollar-icon.png
 
-- ADMIN de Token Page
-  - tokens page: botón de "New Token" al pié de la página
-  - edit token page:
-    - 3 solapas: 
-      - "New token": Create new Token un vapaeetokens smart contrat
-        - checkear en background que el token no exista
-        - el formulario solo muestra los primeros 4 campos
-        - crear una nueva: cambiar la action de alta un nuevo token con todos los datos del formulario
-      - "Register token": register already existing token
-        - checkear en background que el token no exista
-        - todos los campos
-        - crear una nueva: cambiar el registo de un token paa que admita todos los campos del formulario
-      - "Edit token": modify already registered token
-    - cear un solo formulario que se adapte según la solapa que este operando y los datos "symbol" y "contract"
-    - form:
-      - symbol
-      - contract (vapaeetokens if "new token")
-      - precision (auto en "Register token")
-      - owner (auto)
-      - title
-      - website
-      - brief
-      - banner
-      - logo
-      - logolg
-      - date (auto)
-    - "Solapa Edit token"
-      - sección donde se listan los items de la data del token.
-        - cada Item tiene un botón "delete"
-          - salta un popup para confirmar
-        - cada Item tiene un botón "edit"
-        - si se toca el botón edit, aparece un formulario abajo del item y si hay modificaciones el item se adapta.
-      - Se muestra un botón de "new entry"
-        - al presionarlo se crea un último item en la lista ya en modo edit con un flag que dice "new_entry"
-  - token page
-    - si el user logueado es el creador del token, entonces dejar visible el botón "edit token"
+-- TODO: COBRAR v3.0.0 --
+- Smart Contract
+  - cada evento habría que replicarlo si o si para los usuarios participantes (aparte del dueño del token)
+
++ Tokens page
+  + el botón de new Token no aparece si no estás logueado
+
+- Edit Token Page
+  + en el formulario de registro tiene que haber un checkbox para el campo "tradeable" y que esté encendido por defecto
+  + sacar el botón de "Edit Token" (el tercero)
+  + si el usuario coloca un token que ya está registrado:
+    + mostrar el ícono y el título del token
+    + mostrar cartel que dice que ese token ya está registrado
+    + Si es el owner, mostrar botón Edit -> lo redirecciona a la página del token en modo "edition"
+    + Si no es el owner, mostrar un cartel rojo que diga que no puede editarlo
+
+- Token Page
+  - edition mode: si el user logueado es el creador del token, entonces dejar visible el botón "edit token"
+  - si se toka el botón "edit token" aparecen los campos para editar y botón confirmar
+  - tiene que haber un checkbox para el campo "tradeable"
+  - abajo un botón que diga "New Data Entry"
+    - al apretarlo aparece un cuadro entry-editor:
+      - category (combobox)
+      - text
+      - link
+      - botón "confirm"
+      - botón "delete" (si es que tiene un id, o sea, ya existe el entry)
+  - si estamos en edition mode:
+    - cada entry va a tener un par de botones: edit y remove
+    - las cajas de markets desaparecen y en su lugar aparece la lista de todos los eventos.
+      - si está subscripto aparece un tock verde y el nombre del destinatario del evento
+      - botones edit y subscribe/unsubscribe
+
+
+
+
 - Wish list
   - que el desglose del balance incluya los tokesn del REX y los que están depositados en el DEX.
   + el loading podría incluir un svg del logo vapaee
   - que la token page incluya una sección de actions (transfer, claim, burn, issue)
   - el selector de markets de la página trade debería permitir markets basados en todas las currencies (incluyendo TELOSD)
 
+
+
+
+
+
 -- TODO ---
 - C++ Smart Contract
   - podemos hacer el nuevo slug
-  + agregarle el parámetro bool currency; en tokens.hpp
 
 - FutbolTokens
   - pasarle varias opciones a Agustín para decidir la estrategia monetaria

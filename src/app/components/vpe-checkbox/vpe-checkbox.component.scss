@@ -1,0 +1,9 @@
+:host {
+    display: inline-block;
+    &.as-block {
+        display: block;
+    }
+    div.icon-container {
+        margin-top: 6px;
+    }
+}

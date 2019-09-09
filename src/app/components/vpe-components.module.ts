@@ -41,6 +41,7 @@ import { VpePanelActivityLogComponent } from './vpe-panel-activity-log/vpe-panel
 import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-panel-token-selector.component';
 import { VpePanelTokensCardComponent } from './vpe-panel-tokens-card/vpe-panel-tokens-card.component';
 import { VpePanelMarketsCardComponent } from './vpe-panel-markets-card/vpe-panel-markets-card.component';
+import { VpeCheckboxComponent } from './vpe-checkbox/vpe-checkbox.component';
 
 
 
@@ -66,7 +67,8 @@ import { VpePanelMarketsCardComponent } from './vpe-panel-markets-card/vpe-panel
         VpeOffChainComboboxComponent,
         VpeTokenInputComponent,
         VpePanelActivityLogComponent,
-        VpePanelTokenSelectorComponent
+        VpePanelTokenSelectorComponent,
+        VpeCheckboxComponent
     ],
     imports: [
         BrowserModule,
@@ -102,7 +104,8 @@ import { VpePanelMarketsCardComponent } from './vpe-panel-markets-card/vpe-panel
         VpeOffChainComboboxComponent,
         VpeTokenInputComponent,
         VpePanelActivityLogComponent,
-        VpePanelTokenSelectorComponent
+        VpePanelTokenSelectorComponent,
+        VpeCheckboxComponent
     ]
 })
 export class VapaeeComponentsModule { }
