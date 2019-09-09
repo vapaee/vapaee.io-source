@@ -44,7 +44,7 @@ http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/256/coin-
   + el loading podría incluir un svg del logo vapaee
   - que la token page incluya una sección de actions (transfer, claim, burn, issue)
   - el selector de markets de la página trade debería permitir markets basados en todas las currencies (incluyendo TELOSD)
-
+  - Upgrade to Angular 8: https://medium.com/mr-frontend-community/upgrade-to-angular-7-beta-within-10-minutes-c14fc380edd
 
 
 
