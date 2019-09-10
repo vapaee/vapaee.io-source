@@ -38,26 +38,46 @@
                     <hr class="line">
                 </div>            
             </div>
-            <div [hidden]="editing || token?token.owner==dex.logged:false">
-                <a class="btn btn-lg btn-success">
+            <div class="margin-top-md" [hidden]="hide_edit_btn">
+                <a class="btn btn-lg btn-success" (click)="editToken()">
                     <i class="material-icons">edit</i>
-                    Edit token info
+                    {{local.string.edittokinf}}
                 </a>
             </div>
         </div>
 
         <div class="col-12 d-lg-none">
-            <div class="text-lg-center margin-top-md token-markets">
+            <div class="text-lg-center margin-top-md token-markets" [hidden]="editing">
                 <img style="height:64px; width: 64px; margin-top:-12px" [src]="token?.logolg">&nbsp;
                 {{local.merge(local.string.tknMarkets, {'symbol': token?.symbol})}}
             </div>
 
             <vpe-panel-markets-card-deck
+                [hidden]="editing"
                 (tradeMarket)="tradeMarket($event)"
                 [hidebackground]="true"
                 [hideheader]="true"
                 [markets]="token?.markets">
             </vpe-panel-markets-card-deck>
+
+            <div class="row">
+                <div class="col-6">
+                    <div class="text-center token-markets expand" [hidden]="!editing">
+                        <div>
+                            {{local.string.icon}}
+                        </div>
+                        <img style="height:24px; width: 24px; margin-top: 10px;" [src]="token?.logo">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="text-center token-markets" [hidden]="!editing">
+                        <div>
+                            {{local.string.bigicon}}
+                        </div>
+                        <img style="height:64px; width: 64px; margin-top: 15px;" [src]="token?.logolg">
+                    </div>
+                </div>
+            </div>       
         </div>
 
         <div class="col-lg-8 col-xl-9">
@@ -71,13 +91,127 @@
                         </a>
                     </div>
                     <div class="text-md margin-top token-brief">{{token?.brief}}</div>
-                </div>            
+                </div>
             </div>
+
+            <div class="d-none d-lg-inline-block">
+                <a class="btn btn-lg btn-success margin-top-md" [hidden]="hide_edit_btn" (click)="editToken()">
+                    <i class="material-icons">edit</i>
+                    {{local.string.edittokinf}}
+                </a>
+                <a class="btn btn-lg btn-danger margin-top-md" [hidden]="!editing" (click)="quitEditing()">
+                    <i class="material-icons">cancel</i>
+                    Quit Editing
+                </a>
+            </div>
+
+            <!-- TOKEN EDITION (init) -->
+            <div class="margin-top-md" [hidden]="!editing">
+                <div class="card text-white bg-dark">
+                    <div class="card-header vpe-background-card-header">
+                        <span class="text-lg">{{local.string.tknedition | titlecase}}</span><br>
+                        <span class="text-md">{{local.string.tkneditiontxt}}</span>
+                    </div>
+                </div>
+
+
+                <div class="margin-top-md" *ngIf="token">
+                    <div class="card text-white bg-dark">
+                        <div class="card-body">
+                            <!-- title -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.title|titlecase}}:</label>
+                                <div class="col-sm-9" >
+                                    <input class="form-control col-form-label" placeholder="title" [(ngModel)]="token.title" (ngModelChange)="onTokenInfoChange($event)">
+                                </div>
+                            </div>
+        
+                            <!-- brief -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.about|titlecase}}:</label>
+                                <div class="col-sm-9" >
+                                    <textarea class="form-control col-form-label" placeholder="brief" [(ngModel)]="token.brief" (ngModelChange)="onTokenInfoChange($event)"></textarea>
+                                </div>
+                            </div>
+        
+                            <!-- website -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.website|titlecase}}:</label>
+                                <div class="col-sm-9" >
+                                    <input class="form-control col-form-label" placeholder="website" [(ngModel)]="token.website" (ngModelChange)="onTokenInfoChange($event)">
+                                </div>
+                            </div>
+        
+                            <!-- banner -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.banner|titlecase}}:</label>
+                                <div class="col-sm-9" >
+                                    <input class="form-control col-form-label" placeholder="banner" [(ngModel)]="token.banner" (ngModelChange)="onTokenInfoChange($event)">
+                                </div>
+                            </div>
+        
+                            <!-- logo -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.icon|titlecase}}:</label>
+                                <div class="col-sm-9" >
+                                    <input class="form-control col-form-label" placeholder="logo" [(ngModel)]="token.logo" (ngModelChange)="onTokenInfoChange($event)">
+                                </div>
+                            </div>
+        
+                            <!-- logolg -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.bigicon|titlecase}}:</label>
+                                <div class="col-sm-9" >
+                                    <input class="form-control col-form-label" placeholder="logolg" [(ngModel)]="token.logolg" (ngModelChange)="onTokenInfoChange($event)">
+                                </div>
+                            </div>
+        
+                            <!-- tradeable -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.tradeable|titlecase}}:</label>
+                                <div class="col-sm-9">
+                                    <vpe-checkbox class="as-block" [(value)]="token.tradeable" (onChange)="setTradeable($event)"></vpe-checkbox>
+                                </div>
+                            </div>
+            
+                            <!-- Error -->
+                            <div class="form-group row">
+                                <div class="col-12 margin-top" [hidden]="!error">
+                                    <div class="alert alert-danger">
+                                        <div class="pull-right">
+                                            <button type="button" class="close text-white" (click)="clearError()">
+                                                <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                            </button>                
+                                        </div>
+                                        {{error}}
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- confirm -->
+                            <div class="form-group row margin-top" [hidden]="editable">
+                                <label class="col-sm-2 col-form-label nowrap"></label>
+                                <div class="col-sm-10 text-right">
+                                    <span class="btn btn-lg btn-success"
+                                        (click)="confirm()">
+                                        <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
+                                        <i class="material-icons" [hidden]="loading">done</i>
+                                        {{local.string.confirm|titlecase}}
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
 
             <div class="margin-top-md card"
                 *ngFor="let info of token?.data"
             >
-                <div class="card-body vpe-background-card-body">
+                <div class="card-body vpe-background-card-body" *ngIf="!editing">
                     <!-- hr class="line" -->
                     <div class="text-lg margin-top-md" [hidden]="!info.text">{{info.text}}</div>
 
@@ -91,6 +225,51 @@
                     <div class="margin-top" [hidden]="info.category != 'image'">
                         <img [src]="info?.link" style="width: 100%; height: auto">
                     </div>
+                    <!-- editing -->
+                </div>
+                <div class="card-body vpe-background-card-body" *ngIf="editing">
+                    <!-- hr class="line" -->
+                    <div class="text-lg margin-top-md" [hidden]="!info.text">{{info.text}}</div>
+
+                    <div class="margin-top-md" [hidden]="info.editing">
+                        <span class="btn btn-sm btn-primary" (click)="info.editing = true">
+                            <i class="material-icons">edit</i>
+                            Edit this entry
+                        </span>
+                    </div>
+                    
+                    <div class="margin-top-md" [hidden]="!info.editing">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label nowrap">Text:</label>
+                            <div class="col-sm-9" >
+                                <input class="form-control col-form-label" placeholder="text" [(ngModel)]="info.text" autofocus>
+                            </div>
+                        </div>
+
+
+                        <!-- Info Error -->
+                        <div class="form-group row">
+                            <div class="col-12 margin-top" [hidden]="!feed.error('info-' + info.id)">
+                                <div class="alert alert-danger">
+                                    <div class="pull-right">
+                                        <button type="button" class="close text-white" (click)="feed.setError('info-' + info.id, null)">
+                                            <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                        </button>                
+                                    </div>
+                                    {{feed.error('info-' + info.id)}}
+                                </div>
+                            </div>
+                        </div>     
+    
+                        <!-- Info Save btn -->
+                        <span class="btn btn-sm btn-success" (click)="confirmData(info)">
+                            <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('info-' + info.id)"></span>
+                            <i class="material-icons" [hidden]="feed.loading('info-' + info.id)">save_alt</i>
+                            Save
+                        </span>                        
+                    </div>
+                    
+                    <!-- editing -->
                 </div>
             </div>
 
@@ -99,18 +278,46 @@
         </div>
 
         <div class="col-lg-4 col-xl-3 d-none d-lg-inline-block margin-top-md">
-            <div class="text-center token-markets">
+            <div class="text-center token-markets" [hidden]="editing">
                 <img style="height:64px; width: 64px; margin-top:-12px" [src]="token?.logolg">&nbsp;
                 {{local.merge(local.string.tknMarkets, {'symbol': token?.symbol})}}
-            </div>
-            
+            </div>            
 
             <vpe-panel-markets-card-deck
+                [hidden]="editing"
                 (tradeMarket)="tradeMarket($event)"
                 [hidebackground]="true"
                 [hideheader]="true"
                 [markets]="token?.markets">
             </vpe-panel-markets-card-deck>
+
+            <div class="text-center token-markets" [hidden]="!editing">
+                <div>
+                    {{local.string.icon}}
+                </div>
+                <img style="height:20px; width: 20px; margin-top: 10px;" [src]="token?.logo">
+            </div>
+
+            <div class="margin-top-md text-center token-markets" [hidden]="!editing">
+                <div>
+                    {{local.string.bigicon}}
+                </div>
+                <img style="height:64px; width: 64px; margin-top: 15px;" [src]="token?.logolg">
+            </div>
+
+            <div class="margin-top-md token-markets" [hidden]="!editing">
+                <div>
+                    Extra Data: {{token?.data.length}}
+                </div>
+                <div>
+                    <span class="btn btn-sm btn-primary" (click)="createDataEntry()">
+                        <i class="material-icons">edit</i>
+                        New Data Entry
+                    </span>
+                </div>
+            </div>
+
+
         </div>
     </div>
 

@@ -425,6 +425,25 @@ export class VapaeeDEX {
         });
     }
 
+    settokendata(token:TokenDEX) {
+        var feedid = "settokendata";
+        this.feed.setError(feedid, null);
+        this.feed.setLoading(feedid, true);
+        return this.contract.excecute("settokendata", {
+
+            ***************
+
+        }).then(async result => {
+            this.feed.setLoading(feedid, false);
+            return result;
+        }).catch(e => {
+            this.feed.setLoading(feedid, false);
+            this.feed.setError(feedid, typeof e == "string" ? e : JSON.stringify(e,null,4));
+            throw e;
+        });
+    }
+
+
     createtoken(asset:AssetDEX) {
         var feedid = "createtoken";
         this.feed.setError(feedid, null);

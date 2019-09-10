@@ -4,13 +4,13 @@
         <div class="col-auto margin-top">
             <span class="btn btn-lg" [ngClass]="{'btn-primary':tab!=TAB.CREATE,'btn-success':tab==TAB.CREATE}" (click)="changeTab(TAB.CREATE)">
                 <i class="material-icons"> add_circle_outline </i>
-                <span> Create new token</span>
+                <span> {{local.string.createnewtkn}}</span>
             </span>
         </div>
         <div class="col-auto margin-top">
             <span class="btn btn-lg" [ngClass]="{'btn-primary':tab!=TAB.REGISTER,'btn-success':tab==TAB.REGISTER}" (click)="changeTab(TAB.REGISTER)">
                 <i class="material-icons"> playlist_add </i>
-                <span> Register existing token </span>
+                <span> {{local.string.registertkn}} </span>
             </span>
         </div>
     </div>
@@ -19,16 +19,16 @@
         <div class="card text-white bg-dark">
             <div class="card-header vpe-background-card-header" [hidden]="!dex.logged">
                 <div [hidden]="tab != TAB.CREATE">
-                    <span class="text-lg">Token Creation</span><br>
-                    <span class="text-md">You can create a brand new token in Telos blockchain using Vapaée's smart contract without coding.</span>
+                    <span class="text-lg">{{local.string.tkncreation | titlecase}}</span><br>
+                    <span class="text-md">{{local.string.tkncreationtxt}}</span>
                 </div>
                 <div [hidden]="tab != TAB.REGISTER">
-                    <span class="text-lg">Token Registration</span><br>
-                    <span class="text-md">You may register you own already existing tokens to get listed in Telos DEX.</span>        
+                    <span class="text-lg">{{local.string.tknregist | titlecase}}</span><br>
+                    <span class="text-md">{{local.string.tknregisttxt}}</span>
                 </div>
                 <div [hidden]="tab != TAB.EDIT">
-                    <span class="text-lg">Token Edition</span><br>
-                    <span class="text-md">From here you can modify any data related to your already registered token.</span>        
+                    <span class="text-lg">{{local.string.tknedition | titlecase}}</span><br>
+                    <span class="text-md">{{local.string.tkneditiontxt}}</span>        
                 </div>
             </div>
             <div class="card-header vpe-background-card-header" [hidden]="dex.logged">
@@ -40,7 +40,7 @@
                         </span>
                     </div>
                 </div>             
-                <span class="text-md">You need to be logged in order to create or register any token.</span>
+                <span class="text-md">{{local.string.logintoedit}}</span>
             </div>
         </div>
     </div>
@@ -70,16 +70,16 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <label class="col-sm-2 col-form-label nowrap">Contract:</label>
+                    <label class="col-sm-2 col-form-label nowrap">{{local.string.contract|titlecase}}:</label>
                     <label class="col-sm-4 col-form-label">{{thetoken?.contract}}</label>
-                    <label class="col-sm-2 col-form-label nowrap">Max Supply:</label>
+                    <label class="col-sm-2 col-form-label nowrap">{{local.string.maxsupply|titlecase}}:</label>
                     <label class="col-sm-4 col-form-label text-right">{{thetoken?.stat?.max_supply?.toString()}}</label>
                 </div>
 
                 <div class="row">
-                    <label class="col-sm-2 col-form-label nowrap">Issuer:</label>
+                    <label class="col-sm-2 col-form-label nowrap">{{local.string.issuer|titlecase}}:</label>
                     <label class="col-sm-4 col-form-label">{{thetoken?.stat?.issuer}}</label>
-                    <label class="col-sm-2 col-form-label nowrap">Current Supply:</label>
+                    <label class="col-sm-2 col-form-label nowrap">{{local.string.cursupply|titlecase}}:</label>
                     <label class="col-sm-4 col-form-label text-right">{{thetoken?.stat?.supply?.toString()}}</label>
                 </div>
 
@@ -95,7 +95,7 @@
 
                     <!-- Symbol -->
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label nowrap">Symbol:</label>
+                        <label class="col-sm-2 col-form-label nowrap">{{local.string.symbol|titlecase}}:</label>
                         <div class="col-sm-10">
                             <i _ngcontent-c4="" class="material-icons input-icon danger" [hidden]="symbolIsGood">cancel</i>
                             <i _ngcontent-c4="" class="material-icons input-icon success" [hidden]="!symbolIsGood">done</i>
@@ -105,14 +105,14 @@
     
                     <!-- Contract -->
                     <div class="form-group row">
-                        <label class="col-12 d-block d-sm-none col-form-label nowrap">Contract: {{newtoken.contract}}</label>
-                        <label class="col-2 d-none d-sm-block col-form-label nowrap">Contract:</label>
+                        <label class="col-12 d-block d-sm-none col-form-label nowrap">{{local.string.contract|titlecase}}: {{newtoken.contract}}</label>
+                        <label class="col-2 d-none d-sm-block col-form-label nowrap">{{local.string.contract|titlecase}}:</label>
                         <label class="col-10 d-none d-sm-block col-form-label">{{newtoken.contract}}</label>
                     </div>
     
                     <!-- precision -->
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label nowrap">Precision:</label>
+                        <label class="col-sm-2 col-form-label nowrap">{{local.string.precision|titlecase}}:</label>
                         <div class="col-sm-10">
                             <input class="form-control col-form-label" type="number" placeholder="precision" [(ngModel)]="newtoken.precision">
                         </div>
@@ -120,7 +120,7 @@
     
                     <!-- Max Supply -->
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label nowrap">Max Supply:</label>
+                        <label class="col-sm-2 col-form-label nowrap">{{local.string.maxsupply|titlecase}}:</label>
                         <div class="col-sm-10">
                             <input class="form-control col-form-label" placeholder="maximun supply" [(ngModel)]="max_supply">
                         </div>
@@ -134,8 +134,8 @@
                     <div [hidden]="thetoken">
                         <!-- Symbol -->
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label nowrap">Symbol:</label>
-                            <div class="col-sm-10" >
+                            <label class="col-sm-3 col-form-label nowrap">{{local.string.symbol|titlecase}}:</label>
+                            <div class="col-sm-9" >
                                 <i _ngcontent-c4="" class="material-icons input-icon danger" [hidden]="symbolIsGood">cancel</i>
                                 <i _ngcontent-c4="" class="material-icons input-icon success" [hidden]="!symbolIsGood">done</i>
                                 <input class="form-control col-form-label" placeholder="symbol" [(uppercase)]="newtoken.symbol" (uppercaseChange)="onTokenChange($event)">
@@ -144,8 +144,8 @@
         
                         <!-- Contract -->
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label nowrap">Contract:</label>
-                            <div class="col-sm-10">
+                            <label class="col-sm-3 col-form-label nowrap">{{local.string.contract|titlecase}}:</label>
+                            <div class="col-sm-9">
                                 <input class="form-control col-form-label" placeholder="contract" [(ngModel)]="newtoken.contract" (ngModelChange)="onTokenChange($event)">
                             </div>
                         </div>    
@@ -156,56 +156,56 @@
                 <div [hidden]="tab == TAB.CREATE || !thetoken || editable">
                     <!-- title -->
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label nowrap">Title:</label>
-                        <div class="col-sm-10" >
+                        <label class="col-sm-3 col-form-label nowrap">{{local.string.title|titlecase}}:</label>
+                        <div class="col-sm-9" >
                             <input class="form-control col-form-label" placeholder="title" [(ngModel)]="editing.title" (ngModelChange)="onTokenInfoChange($event)">
                         </div>
                     </div>
 
                     <!-- brief -->
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label nowrap">brief:</label>
-                        <div class="col-sm-10" >
+                        <label class="col-sm-3 col-form-label nowrap">{{local.string.about|titlecase}}:</label>
+                        <div class="col-sm-9" >
                             <textarea class="form-control col-form-label" placeholder="brief" [(ngModel)]="editing.brief" (ngModelChange)="onTokenInfoChange($event)"></textarea>
                         </div>
                     </div>
 
                     <!-- website -->
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label nowrap">website:</label>
-                        <div class="col-sm-10" >
+                        <label class="col-sm-3 col-form-label nowrap">{{local.string.website|titlecase}}:</label>
+                        <div class="col-sm-9" >
                             <input class="form-control col-form-label" placeholder="website" [(ngModel)]="editing.website" (ngModelChange)="onTokenInfoChange($event)">
                         </div>
                     </div>
 
                     <!-- banner -->
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label nowrap">banner:</label>
-                        <div class="col-sm-10" >
+                        <label class="col-sm-3 col-form-label nowrap">{{local.string.banner|titlecase}}:</label>
+                        <div class="col-sm-9" >
                             <input class="form-control col-form-label" placeholder="banner" [(ngModel)]="editing.banner" (ngModelChange)="onTokenInfoChange($event)">
                         </div>
                     </div>
 
                     <!-- logo -->
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label nowrap">logo:</label>
-                        <div class="col-sm-10" >
+                        <label class="col-sm-3 col-form-label nowrap">{{local.string.icon|titlecase}}:</label>
+                        <div class="col-sm-9" >
                             <input class="form-control col-form-label" placeholder="logo" [(ngModel)]="editing.logo" (ngModelChange)="onTokenInfoChange($event)">
                         </div>
                     </div>
 
                     <!-- logolg -->
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label nowrap">logolg:</label>
-                        <div class="col-sm-10" >
+                        <label class="col-sm-3 col-form-label nowrap">{{local.string.bigicon|titlecase}}:</label>
+                        <div class="col-sm-9" >
                             <input class="form-control col-form-label" placeholder="logolg" [(ngModel)]="editing.logolg" (ngModelChange)="onTokenInfoChange($event)">
                         </div>
                     </div>
 
                     <!-- tradeable -->
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label nowrap">tradeable:</label>
-                        <div class="col-sm-10">
+                        <label class="col-sm-3 col-form-label nowrap">{{local.string.tradeable|titlecase}}:</label>
+                        <div class="col-sm-9">
                             <vpe-checkbox class="as-block" [(value)]="editing.tradeable" (onChange)="setTradeable($event)"></vpe-checkbox>
                         </div>
                     </div>
@@ -238,7 +238,7 @@
                             (click)="confirm()">
                             <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
                             <i class="material-icons" [hidden]="loading">done</i>
-                            Confirm
+                            {{local.string.confirm|titlecase}}
                         </span>
                     </div>
                 </div>
@@ -250,17 +250,17 @@
                             [routerLink]="'/exchange/token/' + thetoken?.symbol.toLowerCase()"
                         >
                             <span [hidden]="editing.owner == dex.logged">
-                                <i class="material-icons" [hidden]="loading">remove_red_eye</i> View token
+                                <i class="material-icons" [hidden]="loading">remove_red_eye</i> {{local.string.viewtkn|titlecase}}
                             </span>
                             <span [hidden]="editing.owner != dex.logged">
-                                <i class="material-icons" [hidden]="loading">edit</i> Edit token
+                                <i class="material-icons" [hidden]="loading">edit</i> {{local.string.edittkn|titlecase}}
                             </span>
                         </a>
                     </div>
                     <span class="text-md">
-                        This token is already registered.<br>
-                        <span [hidden]="editing.owner != dex.logged">Do you want to edit the token information?</span>
-                        <span [hidden]="editing.owner == dex.logged">Only the owner of the token can modify its information</span>
+                        {{local.string.tknyaregist}}<br>
+                        <span [hidden]="editing.owner != dex.logged">{{local.string.wannaedittkn}}</span>
+                        <span [hidden]="editing.owner == dex.logged">{{local.string.onlyowneredit}}</span>
                     </span>
                 </div>
 

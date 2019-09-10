@@ -9,7 +9,8 @@ export interface TokenData {
     text: string,
     link: string,
     date: Date,
-    html?: string
+    html?: string,
+    editing?: boolean,
 }
 
 

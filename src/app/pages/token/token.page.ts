@@ -5,6 +5,7 @@ import { VapaeeDEX, TokenDEX, TokenData } from '@vapaee/dex';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
+import { Feedback } from 'projects/vapaee/feedback/src';
 
 declare const twttr: any;
 
@@ -18,7 +19,7 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
 
     token: TokenDEX;
     editing: boolean;
-
+    feed: Feedback;
     _safe_url_cache = {};
     
     constructor(
@@ -32,21 +33,15 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         var symbol = this.route.snapshot.paramMap.get('symbol');
         this.editing = !!this.app.getGlobal("edit-token");
         this.app.setGlobal("edit-token", false);
+        this.feed = new Feedback();
         
         this.dex.waitTokenData.then(_ => {
             this.token = this.dex.getTokenNow(symbol.toUpperCase());
-
             if (this.token.brief == "") {
                 this.token.brief = null;
             }
 
-            for (let i in this.token.data) {
-                let info = this.token.data[i];
-                if (info.category == "twitter") {
-                    this.fetchTwitter(info);
-                }
-            }           
-            
+            this.renderEntries();
         });
     }
 
@@ -72,6 +67,15 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
+    }
+
+    renderEntries() {
+        for (let i in this.token.data) {
+            let info = this.token.data[i];
+            if (info.category == "twitter") {
+                this.fetchTwitter(info);
+            }
+        }        
     }
 
     renderTweets(delay) {
@@ -125,4 +129,81 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
             }
         }
     }
+
+    // Token edition ----------------------------------------------------
+
+    get hide_edit_btn(): boolean {
+        if (this.dex.logged) {
+            if (!this.editing) {
+                if (this.token) {
+                    if (this.token.owner == this.dex.logged) {
+                        // console.log("TokenPage.hide_edit_btn() -> false");
+                        return false;
+                    }
+                }
+            }
+        }
+        // console.log("TokenPage.hide_edit_btn() -> true");
+        return true;
+    }
+
+    get error() {
+        return this.dex.feed.error("updatetoken");
+    }
+
+    clearError() {
+        this.dex.feed.clearError("updatetoken");
+    }
+
+    editToken() {
+        console.log("TokenPage.editToken()");
+        this.editing = true;
+    }
+
+    quitEditing() {
+        console.log("TokenPage.quitEditing()");
+        this.editing = false;
+        this.renderEntries();
+    }
+
+
+    onTokenInfoChange() {
+        console.log("TokenPage.onTokenInfoChange()");
+    }
+
+    confirm() {
+        this.clearError();
+        this.dex.updatetoken(this.token).then(_ => {
+            console.log("EXITO:", _);
+            this.editing = false;
+        }).catch(e => { console.error(e); });        
+    }
+
+    confirmData(info:TokenData) {
+        console.log("TokenPage.confirmData()", [info]);
+        this.feed.setLoading("info-" + info.id, true);
+        this.dex.updatetoken(this.token).then(_ => {
+            console.log("EXITO:", _);
+            info.editing = false;
+            this.feed.setLoading("info-" + info.id, false);
+        }).catch(e => {
+            console.error(e);
+            this.feed.setLoading("info-" + info.id, false);
+            this.feed.setError("error-" + info.id, typeof e == "string" ? e : e.toString());
+        });
+    }
+
+    createDataEntry() {
+        var entry: TokenData = {
+            id:-1,
+            category: "link",
+            editing: true,
+            symbol: this.token.symbol,
+            link: "",
+            text: "New Data Entry",
+            date: new Date(),
+        };
+        this.token.data.push(entry);
+    }
+
 }

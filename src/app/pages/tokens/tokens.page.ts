@@ -24,15 +24,18 @@ export class TokensPage implements OnInit, OnDestroy {
     }
 
     editToken(token:TokenDEX) {
+        console.log("TokensPage.editToken()", [token]);
         this.app.setGlobal("edit-token", true);
-        this.app.navigate('/exchange/tokenedit/'+token.symbol.toLowerCase());
+        this.app.navigate('/exchange/token/'+token.symbol.toLowerCase());
     }
 
     tradeToken(token:TokenDEX) {
+        console.log("TokensPage.tradeToken()", [token]);
         this.app.navigate('/exchange/trade/'+token.symbol.toLowerCase()+'.tlos');
     }
 
     tokenPage(token:TokenDEX) {
+        console.log("TokensPage.tokenPage()", [token]);
         this.app.navigate('/exchange/token/'+token.symbol.toLowerCase());
     }
 
