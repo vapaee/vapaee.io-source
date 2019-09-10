@@ -260,12 +260,6 @@ export class AppService {
         return path;
     }
 
-    navigateWithExtras(path, extras) {
-        console.log("AppService.navigateWithExtras()", path);
-        this.router.navigateByUrl(path, extras);
-        return path;
-    }
-
     onCardClose() {
         this.router.navigate(['cards']);
     }

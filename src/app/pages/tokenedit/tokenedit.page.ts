@@ -125,8 +125,8 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
         this.changeTab(this.TAB.REGISTER);
     }
     
-    setTradeable(tradeable) {
-        this.editing.tradeable = tradeable?1:0;
+    setTradeable(tradeable:boolean) {
+        this.editing.tradeable = !!tradeable;
     }
      
     onTokenInfoChange() {
@@ -254,6 +254,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
                 });                
                 this.dex.addtoken(token).then(_ => {
                     console.log("EXITO:", _);
+                    this.app.setGlobal("edit-token", true);
                     this.app.navigate("/exchange/token/"+this.newtoken.symbol.toLowerCase());
                 }).catch(e => { console.error(e); });
                 break;

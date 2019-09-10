@@ -17,6 +17,7 @@ declare const twttr: any;
 export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
 
     token: TokenDEX;
+    editing: boolean;
 
     _safe_url_cache = {};
     
@@ -24,22 +25,14 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         public app: AppService,
         public local: LocalStringsService,
         public dex: VapaeeDEX,
-        private router: Router, 
         public route: ActivatedRoute,
         private sanitizer: DomSanitizer,
         private http: HttpClient
     ) {
         var symbol = this.route.snapshot.paramMap.get('symbol');
-        // ----------------------------------------------------------
-        // const navigation = this.router.getCurrentNavigation();
-        // var edit = navigation.extras.edit;
-        // console.log("************************");
-        // console.log("************************");
-        // console.log("edit:", edit);
-        // console.log("************************");
-        // console.log("************************");
-        // if (edit) alert("YES !!!!");
-        // ----------------------------------------------------------
+        this.editing = !!this.app.getGlobal("edit-token");
+        this.app.setGlobal("edit-token", false);
+        
         this.dex.waitTokenData.then(_ => {
             this.token = this.dex.getTokenNow(symbol.toUpperCase());
 

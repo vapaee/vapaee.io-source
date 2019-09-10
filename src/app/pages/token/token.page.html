@@ -38,6 +38,12 @@
                     <hr class="line">
                 </div>            
             </div>
+            <div [hidden]="editing || token?token.owner==dex.logged:false">
+                <a class="btn btn-lg btn-success">
+                    <i class="material-icons">edit</i>
+                    Edit token info
+                </a>
+            </div>
         </div>
 
         <div class="col-12 d-lg-none">

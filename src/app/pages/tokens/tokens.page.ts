@@ -11,8 +11,6 @@ import { VapaeeDEX, TokenDEX } from '@vapaee/dex';
 })
 export class TokensPage implements OnInit, OnDestroy {
 
-    
-    
     constructor(
         public app: AppService,
         public local: LocalStringsService,
@@ -22,27 +20,12 @@ export class TokensPage implements OnInit, OnDestroy {
     }
 
     get tokens(): TokenDEX[] {
-        // console.log("tokens()", this.dex.tokens);
         return this.dex.tokens;
     }
-    
-    /*
-    summary(_scope) {
-        console.error("DEPRECATED");
-        var scope = this.scopes[_scope];
-        var _summary = Object.assign({
-            percent: 0,
-            percent_str: "0%",
-            price: this.dex.zero_telos.clone(),
-            records: [],
-            volume: this.dex.zero_telos.clone()
-        }, scope ? scope.summary : {});
-        return _summary;
-    }
-    */
 
     editToken(token:TokenDEX) {
-        this.app.navigateWithExtras('/exchange/tokenedit/'+token.symbol.toLowerCase(), {edit:true});
+        this.app.setGlobal("edit-token", true);
+        this.app.navigate('/exchange/tokenedit/'+token.symbol.toLowerCase());
     }
 
     tradeToken(token:TokenDEX) {
@@ -57,7 +40,5 @@ export class TokensPage implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
-
     }
 }
