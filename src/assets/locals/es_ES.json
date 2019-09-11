@@ -151,6 +151,9 @@
     "edittkn": "edit token",
     "tknyaregist": "This token is already registered.",
     "wannaedittkn": "Do you want to edit the token information?",
-    "onlyowneredit": "Only the owner of the token can modify its information"
+    "onlyowneredit": "Only the owner of the token can modify its information",
+    "category": "category",
+    "save": "save",
+    "delete": "delete"
 
 }

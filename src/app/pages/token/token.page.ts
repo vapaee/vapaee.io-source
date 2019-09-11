@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { Feedback } from 'projects/vapaee/feedback/src';
+import { DropdownService } from 'src/app/services/dropdown.service';
 
 declare const twttr: any;
 
@@ -28,6 +29,7 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         public dex: VapaeeDEX,
         public route: ActivatedRoute,
         private sanitizer: DomSanitizer,
+        public dropdown: DropdownService,
         private http: HttpClient
     ) {
         var symbol = this.route.snapshot.paramMap.get('symbol');
@@ -181,15 +183,46 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
 
     confirmData(info:TokenData) {
         console.log("TokenPage.confirmData()", [info]);
+        var action = "modify";
+        info.symbol = this.token.symbol;
+        if (info.id == -1) {
+            action = "modify";
+            action = "add";
+            info.id = 0;
+        }
         this.feed.setLoading("info-" + info.id, true);
-        this.dex.updatetoken(this.token).then(_ => {
+        this.feed.clearError("info-" + info.id);
+        this.dex.settokeninfo(action, info).then(_ => {
             console.log("EXITO:", _);
             info.editing = false;
             this.feed.setLoading("info-" + info.id, false);
+            this.renderEntries();            
         }).catch(e => {
             console.error(e);
             this.feed.setLoading("info-" + info.id, false);
-            this.feed.setError("error-" + info.id, typeof e == "string" ? e : e.toString());
+            this.feed.setError("info-" + info.id, typeof e == "string" ? e : JSON.stringify(e,null,4));
+        });
+    }
+
+    removeData(info:TokenData) {
+        console.log("TokenPage.confirmData()", [info]);
+        var action = "remove";
+        info.symbol = this.token.symbol;
+        this.feed.setLoading("info-" + info.id, true);
+        this.feed.clearError("info-" + info.id);
+        this.dex.settokeninfo(action, info).then(_ => {
+            console.log("EXITO:", _);
+            for (var i=0; i<this.token.data.length; i++) {
+                if (this.token.data[i].id == info.id) {
+                    this.token.data.splice(i, 1);
+                }
+            }
+            this.feed.setLoading("info-" + info.id, false);
+            this.renderEntries();            
+        }).catch(e => {
+            console.error(e);
+            this.feed.setLoading("info-" + info.id, false);
+            this.feed.setError("info-" + info.id, typeof e == "string" ? e : JSON.stringify(e,null,4));
         });
     }
 

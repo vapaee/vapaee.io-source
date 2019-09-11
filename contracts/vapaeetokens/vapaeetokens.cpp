@@ -2,7 +2,7 @@
 
 #define TOKEN_ACTIONS (create)(addissuer)(removeissuer)(issue)(transfer)(open)(close)(burn)
 #define AIRDROP_ACTIONS (setsnapshot)(claim)
-#define EXCHANGE_ACTIONS (addtoken)(updatetoken)(setcurrency)(settokendata)(edittknevent)(order)(withdraw)(swapdeposit)(cancel)(deps2earn)
+#define EXCHANGE_ACTIONS (addtoken)(updatetoken)(setcurrency)(settokendata)(edittkevent)(order)(withdraw)(swapdeposit)(cancel)(deps2earn)
 #define STAKE_ACTIONS (stake)(unstake)(restake)(unstakeback)(unstaketime)
 
 #define EXCHANGE_HANDLERS (htransfer)

@@ -3,7 +3,16 @@ https://cdn.pixabay.com/photo/2015/10/23/07/28/banner-1002455_960_720.jpg
 http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/96/coin-us-dollar-icon.png
 http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/256/coin-us-dollar-icon.png
 
--- TODO: COBRAR v3.0.0 --
+
+
+
+(click)="dropdown.drop('category-'+info.id)"
+
+
+Icons:
+https://iconmonstr.com/
+
+-- TODO: VERSION v3.0.0 --
 - Smart Contract
   - cada evento habría que replicarlo si o si para los usuarios participantes (aparte del dueño del token)
 

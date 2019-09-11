@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import BigNumber from "bignumber.js";
 import { CookieService } from 'ngx-cookie-service';
 import { DatePipe } from '@angular/common';
-import { TokenDEX, ETokenDEX } from './token-dex.class';
+import { TokenDEX, ETokenDEX, TokenData } from './token-dex.class';
 import { AssetDEX } from './asset-dex.class';
 import { Feedback } from '@vapaee/feedback';
 import { VapaeeScatter, Account, AccountData, SmartContract, TableResult, TableParams } from '@vapaee/scatter';
@@ -390,7 +390,7 @@ export class VapaeeDEX {
             banner: token.banner,
             logo: token.logo,
             logolg: token.logolg,
-            tradeable: token.tradeable,
+            tradeable: token.tradeable ? 1 : 0,
         }).then(async result => {
             await this.updateTokens();
             this.feed.setLoading(feedid, false);
@@ -425,14 +425,17 @@ export class VapaeeDEX {
         });
     }
 
-    settokendata(token:TokenDEX) {
-        var feedid = "settokendata";
+    settokeninfo(action:string, info:TokenData) {
+        var feedid = "settokeninfo";
         this.feed.setError(feedid, null);
         this.feed.setLoading(feedid, true);
         return this.contract.excecute("settokendata", {
-
-            ***************
-
+            symbol: info.symbol, 
+            id:info.id,
+            action:action,
+            category:info.category,
+            text:info.text,
+            link:info.link
         }).then(async result => {
             this.feed.setLoading(feedid, false);
             return result;

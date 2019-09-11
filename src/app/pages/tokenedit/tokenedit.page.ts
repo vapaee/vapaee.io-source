@@ -129,11 +129,11 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
         this.editing.tradeable = !!tradeable;
     }
      
-    onTokenInfoChange() {
+    onTokenInfoChange(a:any=null) {
         console.log("onTokenInfoChange()");
     }
     
-    onTokenChange() {
+    onTokenChange(a:any=null) {
         this.checkToken();
     }
 

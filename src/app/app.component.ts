@@ -121,7 +121,7 @@ export class AppComponent {
         public style: VapaeeStyle,
         public dropdown: DropdownService
     ) {
-        this.app.init("v2.4.0");
+        this.app.init("v3.0.0");
     }
     
     ngOnInit() {

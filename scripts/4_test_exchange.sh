@@ -646,10 +646,14 @@ cleos push action vapaeetokens order '["alice", "buy", "5.00000000 TEACH", "0.29
 #cleos push action vapaeetokens order '["bob" , "sell", "3.00000000 CNT", "1.30000000 TLOS"]' -p bob
 #
 ### cleos push action vapaeetokens withdraw '["alice", "9.0000 ACORN"]' -p alice
-### cleos push action vapaeetokens withdraw '["bob", "4.0000 ACORN"]' -p bob
+### cleos push action vapaeetokens withdraw '["bob", "100.0000 OLIVE"]' -p bob@active
 ##
 ### cleos push action eosio.token transfer '["alice","vapaeetokens","8.0000 ACORN","deposit"]' -p alice@active
 ### cleos push action eosio.token transfer '["bob","vapaeetokens","3.0000 ACORN","deposit"]' -p bob@active
 ##
 ### ------------------------------------------------------------------------------------------------------
 ### cleos push action vapaeetokens order '["alice", "buy", "1.00000000 CNT", "1.00000000 TLOS"]' -p alice
+
+# cleos push action vapaeetokens edittknevent '["CNT", "deposit", "add", "eosio.trail"]' -p vapaeetokens
+
+# symbol, name event, name action, name contract

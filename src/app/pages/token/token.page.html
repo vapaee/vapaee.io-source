@@ -42,7 +42,7 @@
                 <a class="btn btn-lg btn-success" (click)="editToken()">
                     <i class="material-icons">edit</i>
                     {{local.string.edittokinf}}
-                </a>
+                </a>             
             </div>
         </div>
 
@@ -98,7 +98,7 @@
                 <a class="btn btn-lg btn-success margin-top-md" [hidden]="hide_edit_btn" (click)="editToken()">
                     <i class="material-icons">edit</i>
                     {{local.string.edittokinf}}
-                </a>
+                </a>                
                 <a class="btn btn-lg btn-danger margin-top-md" [hidden]="!editing" (click)="quitEditing()">
                     <i class="material-icons">cancel</i>
                     Quit Editing
@@ -170,7 +170,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label nowrap">{{local.string.tradeable|titlecase}}:</label>
                                 <div class="col-sm-9">
-                                    <vpe-checkbox class="as-block" [(value)]="token.tradeable" (onChange)="setTradeable($event)"></vpe-checkbox>
+                                    <vpe-checkbox class="as-block" [(value)]="token.tradeable" (onChange)="token.tradeable = $event ? 1 : 0"></vpe-checkbox>
                                 </div>
                             </div>
             
@@ -192,7 +192,12 @@
                             <div class="form-group row margin-top" [hidden]="editable">
                                 <label class="col-sm-2 col-form-label nowrap"></label>
                                 <div class="col-sm-10 text-right">
-                                    <span class="btn btn-lg btn-success"
+                                    <span class="btn btn-lg btn-danger"
+                                        (click)="quitEditing()">
+                                        <i class="material-icons" [hidden]="loading">cancel</i>
+                                        {{local.string.cancel|titlecase}}
+                                    </span>                                    
+                                    <span class="btn btn-lg btn-success margin-left"
                                         (click)="confirm()">
                                         <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
                                         <i class="material-icons" [hidden]="loading">done</i>
@@ -211,34 +216,89 @@
             <div class="margin-top-md card"
                 *ngFor="let info of token?.data"
             >
-                <div class="card-body vpe-background-card-body" *ngIf="!editing">
+                <div class="card-body vpe-background-card-body">
                     <!-- hr class="line" -->
                     <div class="text-lg margin-top-md" [hidden]="!info.text">{{info.text}}</div>
 
+                    <!-- YouTube video-->
                     <div class="margin-top embed-responsive embed-responsive-16by9"
-                        [hidden]="info.category != 'youtube'"
+                        *ngIf="info.category == 'youtube'"
                     >
                         <iframe class="embed-responsive-item" [src]="getEmbedLink(info)" allowfullscreen></iframe>
                     </div>
 
-                    <div class="text-center twitter-container" [innerHTML]="info.html" [hidden]="info.category != 'twitter'"></div>
-                    <div class="margin-top" [hidden]="info.category != 'image'">
+                    <!-- Tweet -->
+                    <div class="text-center twitter-container" [innerHTML]="info.html" *ngIf="info.category == 'twitter'"></div>
+
+                    <!-- Image -->
+                    <div class="margin-top" *ngIf="info.category == 'image'">
                         <img [src]="info?.link" style="width: 100%; height: auto">
                     </div>
-                    <!-- editing -->
-                </div>
-                <div class="card-body vpe-background-card-body" *ngIf="editing">
-                    <!-- hr class="line" -->
-                    <div class="text-lg margin-top-md" [hidden]="!info.text">{{info.text}}</div>
+
+                    <hr class="line">
+
+                    <!-- Info Error -->
+                    <div class="form-group row">
+                        <div class="col-12 margin-top" [hidden]="!feed.error('info-' + info.id)">
+                            <div class="alert alert-danger">
+                                <div class="pull-right">
+                                    <button type="button" class="close text-white" (click)="feed.setError('info-' + info.id, null)">
+                                        <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                    </button>                
+                                </div>
+                                {{feed.error('info-' + info.id)}}
+                            </div>
+                        </div>
+                    </div>                      
 
                     <div class="margin-top-md" [hidden]="info.editing">
-                        <span class="btn btn-sm btn-primary" (click)="info.editing = true">
+                        <span class="btn btn-sm btn-success" (click)="info.editing = true; feed.clearError('info-' + info.id)">
                             <i class="material-icons">edit</i>
                             Edit this entry
                         </span>
+                        <span class="btn btn-sm btn-danger margin-left" (click)="removeData(info)">
+                            <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('info-' + info.id)"></span>
+                            <i class="material-icons" [hidden]="feed.loading('info-' + info.id)">save_alt</i>
+                            {{local.string.delete|titlecase}}
+                        </span>                           
                     </div>
                     
                     <div class="margin-top-md" [hidden]="!info.editing">
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label nowrap">{{local.string.category | titlecase}}:</label>
+                            <div class="col-sm-9">
+                                
+                                <div class="nav-item dropdown" placement="bottom-right" ngbDropdown>
+                                    <a  class="btn btn-primary dropdown-toggle" data-toggle="dropdown" id="category">
+                                        {{info.category | titlecase}}
+                                        <span class="caret"></span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" placement="bottom-right" aria-labelledby="category">
+                                        <span class="cursor-pointer dropdown-item" (click)="info.category = 'link';">
+                                            <i class="color-white material-icons vertical-align-bottom"> link </i>
+                                            &nbsp; link
+                                        </span>
+                                        <span class="cursor-pointer dropdown-item" (click)="info.category = 'image';">
+                                            <i class="color-white material-icons vertical-align-bottom"> image </i>
+                                            &nbsp; image
+                                        </span>
+                                        <span class="cursor-pointer dropdown-item" (click)="info.category = 'twitter';">
+                                            <img style="width: 24px; height: 24px; " src="/assets/img/twitter.png">
+                                            &nbsp; twitter
+                                        </span>
+                                        <span class="cursor-pointer dropdown-item" (click)="info.category = 'youtube';">
+                                            <img style="width: 24px; height: 24px; " src="/assets/img/youtube.png">
+                                            &nbsp; youtube
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        
+
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label nowrap">Text:</label>
                             <div class="col-sm-9" >
@@ -246,6 +306,12 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label nowrap">Link:</label>
+                            <div class="col-sm-9" >
+                                <input class="form-control col-form-label" placeholder="link" [(ngModel)]="info.link" autofocus>
+                            </div>
+                        </div>
 
                         <!-- Info Error -->
                         <div class="form-group row">
@@ -259,14 +325,23 @@
                                     {{feed.error('info-' + info.id)}}
                                 </div>
                             </div>
-                        </div>     
+                        </div>  
     
                         <!-- Info Save btn -->
-                        <span class="btn btn-sm btn-success" (click)="confirmData(info)">
-                            <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('info-' + info.id)"></span>
-                            <i class="material-icons" [hidden]="feed.loading('info-' + info.id)">save_alt</i>
-                            Save
-                        </span>                        
+                        <div class="form-group row">
+                            <div class="col-12 margin-top text-right">
+                                <span class="btn btn-sm btn-danger" (click)="info.editing = false">
+                                    <i class="material-icons" [hidden]="feed.loading('info-' + info.id)">cancel</i>
+                                    {{local.string.cancel|titlecase}}
+                                </span>
+                                <span class="btn btn-sm btn-success margin-left" (click)="confirmData(info)">
+                                    <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('info-' + info.id)"></span>
+                                    <i class="material-icons" [hidden]="feed.loading('info-' + info.id)">save_alt</i>
+                                    {{local.string.save|titlecase}}
+                                </span>
+                            </div>
+                        </div>
+
                     </div>
                     
                     <!-- editing -->
@@ -310,7 +385,7 @@
                     Extra Data: {{token?.data.length}}
                 </div>
                 <div>
-                    <span class="btn btn-sm btn-primary" (click)="createDataEntry()">
+                    <span class="btn btn-sm btn-primary margin-top" (click)="createDataEntry()">
                         <i class="material-icons">edit</i>
                         New Data Entry
                     </span>

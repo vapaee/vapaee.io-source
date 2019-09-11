@@ -140,9 +140,9 @@ CONTRACT vapaeetokens : public eosio::contract {
             e.action_set_token_data(symbol, id, action, category, text, link);
         };
 
-        ACTION edittknevent (const symbol_code & symbol, name event, name action, name contract) {
+        ACTION edittkevent (const symbol_code & symbol, name event, name action, name contract) {
             MAINTENANCE();
-            PRINT("\nACTION vapaeetokens.edittknevent()\n");
+            PRINT("\nACTION vapaeetokens.edittkevent()\n");
             vapaee::token::exchange e;
             e.action_edit_token_event(symbol, event, action, contract);
         };

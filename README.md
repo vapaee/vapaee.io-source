@@ -2,7 +2,7 @@
 
 # Vapaée DEX - source code
 
-current version: PREMIUM (v2.4.0)
+current version: DELUXE (v3.0.0)
 
 https://vapaee.io
 
@@ -43,23 +43,21 @@ cd script
   - [x] Material icons on navbar
   - [x] Invert tokens pair
     - [x] inside trade market a button will switch commodity / currency places.
-  - [ ] Free to join
-    - [ ] Tokens Page should have a 4th section "Own Tokens"
-      - [ ] Create a brand new standar eosio token on vapaeetokens smart contrat and issue tokens
-      - [ ] Register an existing token to be listed
-      - [ ] form to update registered tokens page content (links, news, videos)
-  - [ ] Token info page
+  - [x] Free to join
+    - [x] Tokens Page should show your Own Tokens
+      - [x] Create a brand new standar eosio token on vapaeetokens smart contrat and issue tokens
+      - [x] Register an existing token to be listed
+      - [x] form to update registered tokens page content (links, news, videos)
+  - [x] Token info page
     - [x] Smart contract should have a table to hold token data (links, videos, tweets, etc)
     - [x] Tokens page should have on each token a info button to redirect to tokens page
-    - [x] Token page shows Token symbol, project name and description, token stats, and a list of contents and links taked from owner submits.
-    - [ ] UI should allow token admin to easily update token data content
-  - [ ] Timezone
-    - [ ] User should have a combobox to select the local timezone
-    - [ ] All time entries will show time in terms of how long ago that entry was recorded. Then concrete dates if is too long ago.
+    - [x] Token page shows Token symbol, project name and description, token stats, and a list of contents and links taked from owner 
+    submits.
+    - [x] UI should allow token admin to easily update token data content
+  - [x] Timezone
   - [ ] Contract Events
-    - [ ] list all possible actions and categorize them in terms of which one should be sending a message to whom.
-    - [ ] code the "copy" to send inline action to remintents
-    - [ ] test 
+    - [x] list all possible actions and categorize them in terms of which one should be sending a message to whom.
+    - [x] code the "copy" to send inline action to remintents
   - [ ] Skins
     - [ ] combobox to select one of three prototype skins
     - [ ] handler, on skin change, delete current style, install new style system
@@ -67,7 +65,8 @@ cd script
 - ### Issues
   - [x] we lost communication with sqrl wallet after ScatterJS update. Consider rollback while not supporting Lynx
 
-
+- ### Wishlist
+  - [ ] All time entries will show time in terms of how long ago that entry was recorded. Then concrete dates if is too long ago.
 
 
 
