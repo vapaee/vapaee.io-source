@@ -247,7 +247,7 @@
                 <div [hidden]="!editable">
                     <div class="pull-right">
                         <a class="btn btn-lg btn-success"
-                            [routerLink]="'/exchange/token/' + thetoken?.symbol.toLowerCase()"
+                            (click)="editToken(thetoken)"
                         >
                             <span [hidden]="editing.owner == dex.logged">
                                 <i class="material-icons" [hidden]="loading">remove_red_eye</i> {{local.string.viewtkn|titlecase}}

@@ -1,3 +1,32 @@
+-- CAMBIOS EN EL WP#12 / 3 --
+- DAO: (integrating with eosio.trail) método para governanza descentralizada y pode ajustar las variables
+- integration Voting Power: all TLOS tokens deposited in DEX should be counted for voting power 
+- integration REX: REX status should be reflected in user account page (Balance Breakdown)
+- BP Multisig ownership: Telos DEX will be deployed in a separated account controlled by BP multisig
+- incentive UI creation: UIs should be earning fees
+
+-- Video: guión --
+(borarr moneda AAA, generar movimiento en algunas monedas)
+- Trade any pair: creación de un market
+- Invert tokens pair: invertir
+- Token info page:
+- Free to join: creación de un token nuevo, incluir extra data
+- Contract Events: en la creación de de token, mostrar la subscripción a eventos
+- Timezone: hacer una transacción y ver q ue los datos de tiepo coinciden con la hora local
+- Skins
+- Vote / Support
+
+-- TODO --
+- listar los siguientes tokens:
+  - MAIL (dMail)
+  - WORD (token de WordProof)
+  - EKSH
+  - EBRL
+  - TLOSD
+  - KNIGHTS
+
+
+
 -- Video Vapaée DEX v3.0 --
 https://cdn.pixabay.com/photo/2015/10/23/07/28/banner-1002455_960_720.jpg
 http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/96/coin-us-dollar-icon.png
@@ -5,6 +34,28 @@ http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/256/coin-
 
 
 
+withdraw: user, asset
+deposit: user, asset
+swapdeposit: user, peer, asset
+order: user, asset, asset, asset
+cancel: user, oder_id, market_id
+deal: user, peer, asset, asset, asset, memo
+
+event, user, peer, asset, asset, asset, memo
+
+aux_trigger_event(quantity.symbol.code(), name("
+
+
+
+
+
+cleos push action vapaeetokens issue '["bob", "1000.00 AAA", ""]' -p bob
+
+cleos push action vapaeetokens edittkevent '["AAA", "withdraw", "add", "eventhandler"]' -p bob
+cleos push action vapaeetokens edittkevent '["AAA", "swapdeposit", "add", "eventhandler"]' -p bob
+cleos push action vapaeetokens edittkevent '["AAA", "deposit", "add", "eventhandler"]' -p bob
+
+cleos push action vapaeetokens order '["bob", "sell", "10.00000000 AAA", "0.04000000 TLOS"]' -p bob
 
 (click)="dropdown.drop('category-'+info.id)"
 
@@ -12,33 +63,8 @@ http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/256/coin-
 Icons:
 https://iconmonstr.com/
 
--- TODO: VERSION v3.0.0 --
-- Smart Contract
-  - cada evento habría que replicarlo si o si para los usuarios participantes (aparte del dueño del token)
+-- TODO: VERSION v3.1.0 --
 
-+ Tokens page
-  + el botón de new Token no aparece si no estás logueado
-
-- Edit Token Page
-  + en el formulario de registro tiene que haber un checkbox para el campo "tradeable" y que esté encendido por defecto
-  + sacar el botón de "Edit Token" (el tercero)
-  + si el usuario coloca un token que ya está registrado:
-    + mostrar el ícono y el título del token
-    + mostrar cartel que dice que ese token ya está registrado
-    + Si es el owner, mostrar botón Edit -> lo redirecciona a la página del token en modo "edition"
-    + Si no es el owner, mostrar un cartel rojo que diga que no puede editarlo
-
-- Token Page
-  - edition mode: si el user logueado es el creador del token, entonces dejar visible el botón "edit token"
-  - si se toka el botón "edit token" aparecen los campos para editar y botón confirmar
-  - tiene que haber un checkbox para el campo "tradeable"
-  - abajo un botón que diga "New Data Entry"
-    - al apretarlo aparece un cuadro entry-editor:
-      - category (combobox)
-      - text
-      - link
-      - botón "confirm"
-      - botón "delete" (si es que tiene un id, o sea, ya existe el entry)
   - si estamos en edition mode:
     - cada entry va a tener un par de botones: edit y remove
     - las cajas de markets desaparecen y en su lugar aparece la lista de todos los eventos.

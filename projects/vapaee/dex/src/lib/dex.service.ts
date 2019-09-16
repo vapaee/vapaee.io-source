@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import BigNumber from "bignumber.js";
 import { CookieService } from 'ngx-cookie-service';
 import { DatePipe } from '@angular/common';
-import { TokenDEX, ETokenDEX, TokenData } from './token-dex.class';
+import { TokenDEX, TokenData, TokenEvent } from './token-dex.class';
 import { AssetDEX } from './asset-dex.class';
 import { Feedback } from '@vapaee/feedback';
 import { VapaeeScatter, Account, AccountData, SmartContract, TableResult, TableParams } from '@vapaee/scatter';
@@ -66,6 +66,11 @@ export class VapaeeDEX {
     private setTokenStats: Function;
     public waitTokenStats: Promise<any> = new Promise((resolve) => {
         this.setTokenStats = resolve;
+    });
+
+    private setTokenEvents: Function;
+    public waitTokenEvents: Promise<any> = new Promise((resolve) => {
+        this.setTokenEvents = resolve;
     });
 
     private setTokenData: Function;
@@ -139,6 +144,7 @@ export class VapaeeDEX {
             }
             this.currencies.unshift(this.telos);
             this.fetchTokensStats();
+            this.fetchTokensEvents();
             this.fetchTokensData();
         });
     }
@@ -445,6 +451,25 @@ export class VapaeeDEX {
             throw e;
         });
     }
+
+    edittkevent(action:string, symbol:string, evt:TokenEvent) {
+        var feedid = "edittkevent";
+        this.feed.setError(feedid, null);
+        this.feed.setLoading(feedid, true);
+        return this.contract.excecute("edittkevent", {
+            symbol:symbol,
+            event:evt.event,
+            action:action,
+            contract: evt.receptor
+        }).then(async result => {
+            this.feed.setLoading(feedid, false);
+            return result;
+        }).catch(e => {
+            this.feed.setLoading(feedid, false);
+            this.feed.setError(feedid, typeof e == "string" ? e : JSON.stringify(e,null,4));
+            throw e;
+        });
+    }    
 
 
     createtoken(asset:AssetDEX) {
@@ -1963,6 +1988,15 @@ export class VapaeeDEX {
         });
     }
 
+    public fetchTokenEvents(token): Promise<TableResult> {
+        this.feed.setLoading("token-events-"+token.symbol, true);
+        return this.contract.getTable("tokenevents", {scope:token.symbol}).then(result => {
+            token.events = result.rows;
+            this.feed.setLoading("token-events-"+token.symbol, false);
+            return token;
+        });
+    }
+
 
     private fetchTokenData(token): Promise<TableResult> {
         this.feed.setLoading("token-data-"+token.symbol, true);
@@ -1992,7 +2026,26 @@ export class VapaeeDEX {
         });
     }
 
-    private fetchTokensData(extended: boolean = true) {
+    private fetchTokensEvents() {
+        console.log("Vapaee.fetchTokensEvents()");
+        this.feed.setLoading("token-events", true);
+        return this.waitTokensLoaded.then(_ => {
+
+            var priomises = [];
+            for (var i in this.tokens) {
+                if (this.tokens[i].offchain) continue;
+                priomises.push(this.fetchTokenEvents(this.tokens[i]));
+            }
+
+            return Promise.all<any>(priomises).then(result => {
+                this.setTokenEvents(this.tokens);
+                this.feed.setLoading("token-events", false);
+                return this.tokens;
+            });            
+        });
+    }
+
+    private fetchTokensData() {
         console.log("Vapaee.fetchTokensData()");
         this.feed.setLoading("token-data", true);
         return this.waitTokensLoaded.then(_ => {

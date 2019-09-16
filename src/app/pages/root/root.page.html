@@ -13,7 +13,7 @@
                 </a>
             </div>
         </span>
-    -->
+        -->
 
         <span class="navbar-brand brand">
             &nbsp;
@@ -80,6 +80,11 @@
                     <a class="nav-link" [routerLink]="'/exchange/account/' + dex.current.name" >
                         <i class="material-icons"> perm_identity </i>
                         {{local.string.Account | titlecase}}
+                    </a>
+                </li>
+                <li class="nav-item wp highlight" [ngClass]="{active: app.stateStartsWith('wp')}">
+                    <a class="nav-link" [routerLink]="'/exchange/wp/'" >
+                        <i class="material-icons"> how_to_vote </i>
                     </a>
                 </li>
                 <li class="nav-item skin dropdown">

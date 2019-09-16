@@ -56,11 +56,11 @@
                                 </div>
                             </div>
                             <div class="col-sm-12 text-center margin-top-lg" [hidden]="this.user_voted_us || feed.loading('voting')">
-                                <!--button type="button" class="btn btn-warning text-md" (click)="voteForUs()">
+                                <button type="button" class="btn btn-warning text-md" (click)="voteForUs()">
                                     <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('user-voted')"></span>
                                     <span>Please, support this project !!</span>
-                                </button-->
-                                <div class="alert alert-secondary margin-top-xl" role="alert">
+                                </button>
+                                <!--div class="alert alert-secondary margin-top-xl" role="alert">
                                     <h3>IMPORTANT</h3>
                                     <p class="margin-top">
                                         For reasons of development delay I have decided not to claim the funds of the second cycle of this WP until the next version is effectively finished and delivered.
@@ -68,7 +68,7 @@
                                     <p>
                                         Thanks to everyone who has supported my work so far, I will not disappoint you!                                    
                                     </p>
-                                </div>
+                                </div-->
                             </div>
 
                             <div class="col-sm-12 text-center margin-top-lg" [hidden]="this.user_voted_us || !feed.loading('voting')">
@@ -107,12 +107,6 @@
                     </div-->
 
                     <div class="margin-top-lg">                      
-                        <div class="row margin-top">
-                            <div class="col text-justify text-sm" id="intro">
-                                <strong>Note:</strong> if you prefer a version of this same document in black text with a white background,
-                                you can read it from <a href="https://github.com/vapaee/worker-proposal-2-Vapaee.io-DEX-and-review-video" target="_blanck">this page on github.</a>
-                            </div>
-                        </div>
                         <div class="row margin-top">
                             <div class="col text-justify text-lg" id="intro">
                                 Intro
@@ -242,13 +236,13 @@
 
 
 
-                                    <li class="margin-top-lg">
+                                    <li class="margin-top-lg checked title">
                                         <p><span class="text-lg"><strong>Deluxe</strong> (v3.x.x)</span><br>
                                             This advanced version aims to have an independent software, managed by its own users (and not so much by me).
                                             Again, there will be a lot of work in the interface but also modifications in the contract to be able to support these features.<br>
                                         This version includes:</p>
                                         <ul>
-                                        <li><strong>Free to join</strong>: The contract <strong>vapaeetokens</strong> already admit anyone to create
+                                        <li class="checked"><strong>Free to join</strong>: The contract <strong>vapaeetokens</strong> already admit anyone to create
                                             and/or register any standard token on Telos but the website has no interface for that. I will create
                                             a very intuitive page to create a new token on the <strong>vapaeetoken</strong> smart contract or register
                                             an existing one along with all the token info. All registered tokens will get listed in the exchange automatically.</li>
@@ -256,7 +250,7 @@
                                             links, video, contacts, transaction history, top N holders, etc). This information will be submitted and maintained
                                             by each token's manager. In this Token page I will add a basic form to execute standard token's actions like
                                             "transfer", "issue", "claim", "open", "close", "retire", etc.</li>
-                                        <li><strong>Timezone</strong>: currently the time displayed for the transactions is the blockchain date time. I will implement
+                                        <li class="checked"><strong>Timezone</strong>: currently the time displayed for the transactions is the blockchain date time. I will implement
                                             an easy way to set the user's local timezone to display the date times in local time. In fact, I will
                                             make the website to detect and set automatically the local timezone for the user.</li>
                                         <li class="checked"><strong>Invert tokens pair</strong>: something that I came across when I developed the first version is that you 
@@ -271,7 +265,7 @@
                                             For this <strong>Deluxe</strong> version, anyone will be able to create a new market buy simply create an order (requiring token X
                                             and offering token Y). This feature will be especially useful when we have EOS representative token on Telos or even a
                                             new stable coin (based on the dollar, for example).</li>
-                                        <li><strong>Contract Events</strong>: to be a really useful tool, all Dapps owning any token being traded in this
+                                        <li class="checked"><strong>Contract Events</strong>: to be a really useful tool, all Dapps owning any token being traded in this
                                             DEX should be able to 'react' when any event involving its token occurs. eg: deposits, withdraws, order, transaction, etc.
                                             So the <strong>vapaeetokens</strong> smart contract should be modified to send a signal to the Dapp contract owning
                                             the token involved in the event.<br>

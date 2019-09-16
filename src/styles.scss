@@ -248,7 +248,17 @@ span.dropdown-item.active {
     margin-right: auto;
 }
 
+input.form-control:not(.form-control-sm) {
+    height: 38px;
+}
+
 .nav-item .material-icons.security { display: none; }
+
+
+li.nav-item.highlight.wp {
+    display: none;
+}
+
 /*
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------

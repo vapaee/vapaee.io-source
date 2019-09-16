@@ -12,12 +12,13 @@ namespace vapaee {
     class exchange {
         name _self;
         name _code;
+        asset _asset;
         uint8_t internal_precision;
     
     public:
         
-        exchange():_self(vapaee::token::contract),_code(vapaee::token::contract),internal_precision(8){}
-        exchange(name code):_self(vapaee::token::contract),_code(code),internal_precision(8){}
+        exchange():_self(vapaee::token::contract),_code(vapaee::token::contract),_asset(asset(0, symbol(symbol_code("AUX"), 0))),internal_precision(8){}
+        exchange(name code):_self(vapaee::token::contract),_code(code),_asset(asset(0, symbol(symbol_code("AUX"), 0))),internal_precision(8){}
 
         inline name get_self() const { return _self; }
         inline name get_code() const { return _code; }
@@ -400,7 +401,7 @@ namespace vapaee {
                         permission_level{owner,name("active")},
                         get_self(),
                         name("swapdeposit"),
-                        std::make_tuple(owner, get_self(), itr->amount, string(" withdraw micro-change fees: ") + itr->amount.to_string())
+                        std::make_tuple(owner, get_self(), itr->amount, true, string(" withdraw micro-change fees: ") + itr->amount.to_string())
                     ).send();
 
                     PRINT("     -- withdraw micro-change fees: ",  itr->amount.to_string(), " from ", owner.to_string(),"\n");
@@ -578,7 +579,8 @@ namespace vapaee {
                 aux_register_event(owner, name("transaction"), actual_scope.to_string() + "|" + buyer.to_string() + "|" + seller.to_string() + "|" + payment.to_string() + "|" + amount.to_string() + "|" + inverse.to_string() );
             }
             
-
+            // aux_trigger_event(amount.symbol.code(),  name("deal"), seller, buyer,  amount,  payment, price);
+            // aux_trigger_event(payment.symbol.code(), name("deal"), buyer,  seller, payment, amount,  inverse);
 
             // find out last price
             asset last_price = price;
@@ -993,7 +995,7 @@ namespace vapaee {
                         permission_level{owner,name("active")},
                         get_self(),
                         name("swapdeposit"),
-                        std::make_tuple(owner, buyer, seller_gains, string("exchange made for ") + buyer_gains.to_string())
+                        std::make_tuple(owner, buyer, seller_gains, true, string("exchange made for ") + buyer_gains.to_string())
                     ).send();
                     PRINT("     -- transfer ", seller_gains.to_string(), " to ", buyer.to_string(),"\n");
                         
@@ -1002,7 +1004,7 @@ namespace vapaee {
                         permission_level{owner,name("active")},
                         get_self(),
                         name("swapdeposit"),
-                        std::make_tuple(owner, get_self(), buyer_fee, string("exchange made for ") + buyer_gains.to_string())
+                        std::make_tuple(owner, get_self(), buyer_fee, true, string("exchange made for ") + buyer_gains.to_string())
                     ).send();
                     PRINT("     -- charge fees ", buyer_fee.to_string(), " to ", buyer.to_string(),"\n");
                         
@@ -1011,20 +1013,9 @@ namespace vapaee {
                         permission_level{get_self(),name("active")},
                         get_self(),
                         name("swapdeposit"),
-                        std::make_tuple(get_self(), owner, buyer_gains, string("exchange made for ") + seller_gains.to_string())
+                        std::make_tuple(get_self(), owner, buyer_gains, true, string("exchange made for ") + seller_gains.to_string())
                     ).send();
                     PRINT("     -- transfer ", buyer_gains.to_string(), " to ", owner.to_string(),"\n");
-
-                    // charge fee to buyer
-                    /*
-                    action(
-                        permission_level{owner,name("active")},
-                        get_self(),
-                        name("swapdeposit"),
-                        std::make_tuple(owner, get_self(), seller_fee, string("charging order fee for ") + tlos.to_string())
-                    ).send();
-                    PRINT("     -- charging fee ", seller_fee.to_string(), " to ", owner.to_string(),"\n");
-                    */
 
                     // convert deposits to earnings
                     action(
@@ -1074,8 +1065,10 @@ namespace vapaee {
                     permission_level{owner,name("active")},
                     get_self(),
                     name("swapdeposit"),
-                    std::make_tuple(owner, get_self(), remaining, string("future payment for order"))
+                    std::make_tuple(owner, get_self(), remaining, false, string("future payment for order"))
                 ).send();
+
+                aux_trigger_event(remaining.symbol.code(), name("order"), owner, _self, remaining, payment, price);
 
                 PRINT("   remaining: ", remaining.to_string(), "\n");
                 PRINT("   payment: ", payment.to_string(), "\n");
@@ -1195,7 +1188,7 @@ namespace vapaee {
 
             aux_register_event(owner, name("withdraw"), quantity.to_string());
 
-            aux_trigger_event(quantity.symbol.code(), name("withdraw"));
+            aux_trigger_event(quantity.symbol.code(), name("withdraw"), owner, _self, quantity, _asset, _asset);
 
             PRINT("vapaee::token::exchange::action_withdraw() ...\n");
         }
@@ -1341,6 +1334,20 @@ namespace vapaee {
             PRINT(" action: ", action.to_string(), "\n");
             PRINT(" receptor: ", receptor.to_string(), "\n");
 
+
+            bool event_ok = false;
+            if (!event_ok && event == name("withdraw"))     event_ok = true;
+            if (!event_ok && event == name("deposit"))      event_ok = true;
+            if (!event_ok && event == name("swapdeposit"))  event_ok = true;
+            if (!event_ok && event == name("order"))        event_ok = true;
+            if (!event_ok && event == name("cancel"))       event_ok = true;
+            if (!event_ok && event == name("deal"))         event_ok = true;
+
+            if (!event_ok) {
+                string error = string("'") + event.to_string() + "' is not a valid event ('withdraw', 'deposit', 'swapdeposit', 'order', 'cancel', 'deal')";
+                eosio_assert(event_ok, error.c_str());
+            }
+            
             tokens tokenstable(get_self(), get_self().value);
             auto tkitr = tokenstable.find(sym_code.raw());
             eosio_assert(tkitr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
@@ -1356,6 +1363,7 @@ namespace vapaee {
             tokenevents tokeneventstable(get_self(), sym_code.raw());
             auto itr = tokeneventstable.find(event.value);
             if (action == name("add")) {
+                eosio_assert(itr == tokeneventstable.end(), "The event is already registered. User action 'modify' instead of 'add'");
                 tokeneventstable.emplace( ram_payer, [&]( auto& a ){
                     a.event     = event;
                     a.receptor  = receptor;
@@ -1374,11 +1382,12 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::action_edit_token_event()...\n");
         }
 
-        void action_swapdeposit(name from, name to, const asset & quantity, string memo) {
+        void action_swapdeposit(name from, name to, const asset & quantity, bool trigger_event, string memo) {
             PRINT("vapaee::token::exchange::action_swapdeposit()\n");
             PRINT(" from: ", from.to_string(), "\n");
             PRINT(" to: ", to.to_string(), "\n");
             PRINT(" quantity: ", quantity.to_string(), "\n");
+            PRINT(" trigger_event: ", std::to_string(trigger_event), "\n");
             PRINT(" memo: ", memo.c_str(), "\n");
             
             eosio_assert( from != to, "cannot swap deposits to self" );
@@ -1401,13 +1410,21 @@ namespace vapaee {
             aux_substract_deposits(from, quantity, ram_payer);
             aux_add_deposits(to, quantity, ram_payer);
 
-            aux_trigger_event(quantity.symbol.code(), name("swapdeposit"));
+            if (from != _self && to != _self) {
+                trigger_event = true;
+                PRINT(" -> trigger_event: ", std::to_string(trigger_event), "\n");
+            }
+
+            if (trigger_event) {
+                aux_trigger_event(quantity.symbol.code(), name("swapdeposit"), from, to, quantity, _asset, _asset);
+            }
             
             PRINT("vapaee::token::exchange::action_swapdeposit() ...\n"); 
         }        
 
         void handler_transfer(name from, name to, asset quantity, string memo) {
             // skipp handling outcoming transfers from this contract to outside
+            asset _quantity;
             if (to != get_self()) {
                 print(from.to_string(), " to ", to.to_string(), ": ", quantity.to_string(), " vapaee::token::exchange::handler_transfer() skip...\n");
                 return;
@@ -1447,20 +1464,25 @@ namespace vapaee {
                 PRINT(" receiver: ", receiver.to_string(), "\n");
                 eosio_assert(is_account(receiver), "receiver is not a valid account");
                 PRINT(" ram_payer: ", ram_payer.to_string(), "\n");
-                quantity = aux_extend_asset(quantity);
-                PRINT(" quantity extended: ", quantity.to_string(), "\n");
-                aux_add_deposits(receiver, quantity, get_self());
-                aux_register_event(from, name("deposit"), receiver.to_string() + "|" + quantity.to_string());
-                aux_trigger_event(quantity.symbol.code(), name("deposit"));
+                _quantity = aux_extend_asset(quantity);
+                PRINT(" _quantity extended: ", _quantity.to_string(), "\n");
+                aux_add_deposits(receiver, _quantity, get_self());
+                aux_register_event(from, name("deposit"), receiver.to_string() + "|" + _quantity.to_string());
+                aux_trigger_event(_quantity.symbol.code(), name("deposit"), from, receiver, _quantity, _asset, _asset);
             }
 
             PRINT("vapaee::token::exchange::handler_transfer() ...\n");
         }
 
-        void aux_trigger_event(const symbol_code & sym_code, name event) {
+        void aux_trigger_event(const symbol_code & sym_code, name event, name user, name peer, const asset & quantity, const asset & payment, const asset & price) {
             PRINT("vapaee::token::exchange::aux_trigger_event()\n");
             PRINT(" sym_code: ",  sym_code.to_string(), "\n");
             PRINT(" event: ",  event.to_string(), "\n");
+            PRINT(" user: ",  user.to_string(), "\n");
+            PRINT(" peer: ",  peer.to_string(), "\n");
+            PRINT(" quantity: ",  quantity.to_string(), "\n");
+            PRINT(" payment: ",  payment.to_string(), "\n");
+            PRINT(" price: ",  price.to_string(), "\n");
 
             tokenevents tokeneventstable(get_self(), sym_code.raw());
             auto itr = tokeneventstable.find(event.value);
@@ -1469,6 +1491,19 @@ namespace vapaee {
                 PRINT(" -> receptor: ",  receptor.to_string(), "\n");
                 PRINT(" -> carbon copy sent to:: ",  receptor.to_string(), "\n");
                 require_recipient (receptor);
+
+                action(
+                    permission_level{get_self(),name("active")},
+                    receptor,
+                    name("dexevent"),
+                    std::make_tuple(
+                        event,
+                        user,
+                        peer,
+                        quantity,
+                        payment,
+                        price)
+                ).send();
             }
 
             PRINT("vapaee::token::exchange::aux_trigger_event()... \n");
@@ -1561,14 +1596,16 @@ namespace vapaee {
                             create_error_asset2(ERROR_AGSO_6, a.demand.total, return_amount).c_str());
                         a.demand.total -= return_amount;
                     });
-                }           
+                }
 
                 action(
                     permission_level{get_self(),name("active")},
                     get_self(),
                     name("swapdeposit"),
-                    std::make_tuple(get_self(), owner, return_amount, string("order canceled, payment returned"))
+                    std::make_tuple(get_self(), owner, return_amount, false, string("order canceled, payment returned"))
                 ).send();
+
+                aux_trigger_event(return_amount.symbol.code(), name("cancel"), owner, get_self(), return_amount, _asset, _asset);
             }
 
             userorders buyerorders(get_self(), owner.value);

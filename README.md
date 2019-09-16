@@ -2,7 +2,7 @@
 
 # Vapaée DEX - source code
 
-current version: DELUXE (v3.0.0)
+current version: DELUXE (v3.1.0)
 
 https://vapaee.io
 
@@ -55,13 +55,14 @@ cd script
     submits.
     - [x] UI should allow token admin to easily update token data content
   - [x] Timezone
-  - [ ] Contract Events
+  - [x] Contract Events
     - [x] list all possible actions and categorize them in terms of which one should be sending a message to whom.
-    - [x] code the "copy" to send inline action to remintents
-  - [ ] Skins
-    - [ ] combobox to select one of three prototype skins
-    - [ ] handler, on skin change, delete current style, install new style system
-    - [ ] implement three simple color prototypes of skins
+    - [x] send and event inline action to handler contract
+    - [x] UI should allow token owner to manage event subscription
+  - [x] Skins
+    - [x] combobox to select one of three prototype skins
+    - [x] handler, on skin change, delete current style, install new style system
+    - [x] implement three simple color prototypes of skins
 - ### Issues
   - [x] we lost communication with sqrl wallet after ScatterJS update. Consider rollback while not supporting Lynx
 
