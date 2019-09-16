@@ -149,10 +149,10 @@
                                             <li class="checked">30K TLOS will be returned to the eosio.saving account because of impossibility to make the promised review video</li>
                                         </ul>
                                     </li>
-                                    <li class="margin-top">
+                                    <li class="margin-top checked subtitle">
                                         <p><strong>Cycle 2</strong> - 140K TLOS</p>
                                         <ul>
-                                            <li>Development of the <strong>Deluxe</strong> version of <a target="_blank" href="https://vapaee.io"
+                                            <li class="checked">Development of the <strong>Deluxe</strong> version of <a target="_blank" href="https://vapaee.io"
                                                 target="_blank">Vapaée.io</a></li>
                                         </ul>
                                     </li>
@@ -193,7 +193,7 @@
 
 
 
-                                    <li class="margin-top-lg checked title">
+                                    <li class="margin-top-lg checked big">
                                         <p><span class="text-lg "><strong>Basic</strong> (v1.x.x)</span><br>
                                             This one is already deployed and ready to test. It only requires 2 more important features such as trading
                                             history chart and Sqrl wallet support. The rest is already up and running on Telos main net.
@@ -211,7 +211,7 @@
 
 
 
-                                    <li class="margin-top-lg checked title">
+                                    <li class="margin-top-lg checked big">
                                         <p><span class="text-lg"><strong>Premium</strong> (v2.x.x)</span><br>
                                             This one is a refined and more polished version than the previous one, which includes basically a lot
                                             of work in the presentation layer or the front-end, that in this case would be the website. In this cycle, I have
@@ -236,23 +236,16 @@
 
 
 
-                                    <li class="margin-top-lg checked title">
+                                    <li class="margin-top-lg checked big">
                                         <p><span class="text-lg"><strong>Deluxe</strong> (v3.x.x)</span><br>
                                             This advanced version aims to have an independent software, managed by its own users (and not so much by me).
                                             Again, there will be a lot of work in the interface but also modifications in the contract to be able to support these features.<br>
                                         This version includes:</p>
                                         <ul>
-                                        <li class="checked"><strong>Free to join</strong>: The contract <strong>vapaeetokens</strong> already admit anyone to create
-                                            and/or register any standard token on Telos but the website has no interface for that. I will create
-                                            a very intuitive page to create a new token on the <strong>vapaeetoken</strong> smart contract or register
-                                            an existing one along with all the token info. All registered tokens will get listed in the exchange automatically.</li>
-                                        <li class="checked"><strong>Token info page</strong>: each token will have its own page with all its info (title, description,
-                                            links, video, contacts, transaction history, top N holders, etc). This information will be submitted and maintained
-                                            by each token's manager. In this Token page I will add a basic form to execute standard token's actions like
-                                            "transfer", "issue", "claim", "open", "close", "retire", etc.</li>
-                                        <li class="checked"><strong>Timezone</strong>: currently the time displayed for the transactions is the blockchain date time. I will implement
-                                            an easy way to set the user's local timezone to display the date times in local time. In fact, I will
-                                            make the website to detect and set automatically the local timezone for the user.</li>
+                                        <li class="checked"><strong>Trade any pair</strong>: currently, all trading pairs have TLOS as currency and the other token as a commodity.
+                                            For this <strong>Deluxe</strong> version, anyone will be able to create a new market buy simply create an order (requiring token X
+                                            and offering token Y). This feature will be especially useful when we have EOS representative token on Telos or even a
+                                            new stable coin (based on the dollar, for example).</li>
                                         <li class="checked"><strong>Invert tokens pair</strong>: something that I came across when I developed the first version is that you 
                                             can see a sell-order (you have X and wants to sell it for Y) as an inverse of a buy-order (where you have X and
                                             wants to use it as payment for Y). It's the same trade but with two different points of view. The smart contract 
@@ -261,16 +254,23 @@
                                             with the sell-orders.<br>
                                             At this time we may have IBC running and we may have an EOS representative token on Telos network that can be 
                                             added to this DEX. Then you will be able to see the TLOS being priced in EOS and vice versa in Vapaée.io.</li>
-                                        <li class="checked"><strong>Trade any pair</strong>: currently, all trading pairs have TLOS as currency and the other token as a commodity.
-                                            For this <strong>Deluxe</strong> version, anyone will be able to create a new market buy simply create an order (requiring token X
-                                            and offering token Y). This feature will be especially useful when we have EOS representative token on Telos or even a
-                                            new stable coin (based on the dollar, for example).</li>
+                                        <li class="checked"><strong>Token info page</strong>: each token will have its own page with all its info (title, description,
+                                            links, video, contacts, transaction history, top N holders, etc). This information will be submitted and maintained
+                                            by each token's manager. In this Token page I will add a basic form to execute standard token's actions like
+                                            "transfer", "issue", "claim", "open", "close", "retire", etc.</li>
+                                        <li class="checked"><strong>Free to join</strong>: The contract <strong>vapaeetokens</strong> already admit anyone to create
+                                            and/or register any standard token on Telos but the website has no interface for that. I will create
+                                            a very intuitive page to create a new token on the <strong>vapaeetoken</strong> smart contract or register
+                                            an existing one along with all the token info. All registered tokens will get listed in the exchange automatically.</li>
                                         <li class="checked"><strong>Contract Events</strong>: to be a really useful tool, all Dapps owning any token being traded in this
                                             DEX should be able to 'react' when any event involving its token occurs. eg: deposits, withdraws, order, transaction, etc.
                                             So the <strong>vapaeetokens</strong> smart contract should be modified to send a signal to the Dapp contract owning
                                             the token involved in the event.<br>
                                             This will allow, for example, the current Telos voting system to update your "voting power" taking in account your
                                             deposits and earnings in the DEX, without you to actually having to withdraw your TLOS for that.</li>
+                                        <li class="checked"><strong>Timezone</strong>: currently the time displayed for the transactions is the blockchain date time. I will implement
+                                            an easy way to set the user's local timezone to display the date times in local time. In fact, I will
+                                            make the website to detect and set automatically the local timezone for the user.</li>
                                         <li class="checked"><strong>Skins</strong>: I will create a skin system and will add a few different skins for you to choose.</li>
                                         </ul>
                                     </li>
@@ -278,19 +278,44 @@
 
 
                                     <li class="margin-top-lg">
-                                        <p><span class="text-lg"><strong>Golden</strong> (v4.x.x)</span><br>
-                                            This last version will include two new major token related features plus a proper final product 
+                                        <p><span class="text-lg"><strong>Golden</strong> (v4.x.x)</span>
+                                            <span class="btn btn-sm margin-left"
+                                                (click)="new_version = true;"
+                                                [ngClass]="{'btn-success': new_version, 'btn-primary':!new_version}">
+                                                <i class="material-icons" style="font-size: 100%;">check</i>
+                                                New Version
+                                            </span>
+                                            <span class="btn btn-sm margin-left"
+                                                (click)="new_version = false;"
+                                                [ngClass]="{'btn-success': !new_version, 'btn-primary':new_version}">
+                                                <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                                Old Version
+                                            </span>
+                                            <br>
+                                            <span [hidden]="!new_version">
+                                                This last version will be a transition from a private dapp to an official dex of the network 
+                                            </span>
+                                            <span [ngClass]="{'text-strike':new_version, 'text-muted':new_version}">
+                                                This last version will include two new major token related features
+                                            </span>
+                                            plus a proper final product 
                                             delivery. It will require big tech changes on the smart contract and a lot of work on tutorials, 
                                             source code preparation and documentation. If you support this WP until this final stage, we all
-                                             will be enjoying a <strong>Golden DEX</strong>.<br>
-                                        This version includes:</p>
+                                                will be enjoying a <strong>Golden DEX</strong>.<br>
+                                            This version includes:
+                                            </p>
                                         <ul>
-                                        <li><strong>Token Auction</strong>: users will be able to put any amount of any token to be auctioned and get
+                                        <li [hidden]="!new_version"><strong>DAO</strong>: TLOS holders will run the governance of Telos DEX using the trail system (settings fees, available currencies, banning tokens, etc)<br>
+                                        <li [hidden]="!new_version"><strong>Integration with Trail</strong>: all tokens deposited in Telos DEX should be reflected in the voting power in trail system<br>
+                                        <li [hidden]="!new_version"><strong>Integration with REX</strong>: REX status should be reflected in user account page (Balance Breakdown) <br>
+                                        <li [hidden]="!new_version"><strong>BP Multisig</strong>: Telos DEX will be deployed in a separated account controlled by BPs multisig and will no longer exist in <strong>vapaeetokens</strong><br>
+                                        <li [hidden]="!new_version"><strong>Incentive UI creation</strong>: Each UI can register as such and start earning the fees generated by its users.<br>
+                                        <li [ngClass]="{'text-strike':new_version, 'text-muted':new_version}"><strong>Token Auction</strong>: users will be able to put any amount of any token to be auctioned and get
                                             paid in a specific currency and have all tokens sold in a specific time. This allows you to automatically
                                             convert any amount of token X to the best amount of token Y in a specific period of time, having the smart
                                             contract selling little amounts of X periodically in your name to the best Y offer each time.<br>
                                             This feature allows anyone to perform a long-term ICO (something similar to what it was the EOS ICO in 2017-2018).</li>
-                                        <li><strong>Vapaée Token / Passive Income</strong>: as you can imagine there's a very little fee that both
+                                        <li [ngClass]="{'text-strike':new_version, 'text-muted':new_version}"><strong>Vapaée Token / Passive Income</strong>: as you can imagine there's a very little fee that both
                                             parts of the deal have to pay on each transaction and that determines the earnings of the contract.
                                             I will create a Vapaée Token that can be staked for <strong>passive income</strong> funded by these earnings.</li>
                                         <li><strong>Internationalization</strong>: this project already implements a "text localization" system,
@@ -315,55 +340,6 @@
                 
                             </div>
                         </div>            
-                
-                
-                        <div class="row margin-top">
-                            <div class="col text-justify text-lg" id="review-video-by-louis-thomas">
-                                <span strike>Review Video by Louis Thomas</span>
-                            </div>
-                        </div>
-                
-                
-                        <div class="row margin-top">
-                            <div strike class="col text-justify text-sm">
-                                <p>If you don't know him, Louis Thomas is a very well known crypto influencer who has a very popular <a
-                                    href="https://www.youtube.com/channel/UCpceefaJ9vs4RYUTsO9Y3FA" target="_blank">channel on youtube</a> where he 
-                                    talks about crypto projects like this one. He has an enormous amount of followers (almost 100K users) all 
-                                    around the world (Asia 50%, Europe 35% . America 10%, Africa 5%).</p>
-                                <p>We have been talking about working together to create a review video to publicize this project and the Telos 
-                                    blockchain itself. He estimates that a review video for this project can have over 35k views in the first 3 weeks.</p>
-                                <p>If you approve the first cycle, you will be funding the Premium version development plus this review video. 
-                                    At the time this video hits the public, we will have this Premium version released and running, 
-                                    ready to receive all new investors that come from the video post.</p>            
-                            </div>
-                        </div>                
-                
-                
-                        <div class="row margin-top">
-                            <div class="col text-justify text-lg" id="readmap">
-                                Roadmap
-                            </div>
-                        </div>
-                
-                
-                        <div class="row margin-top">
-                            <div class="col text-justify text-sm">
-                                
-                                <p>The following are estimated release dates for each version:</p>
-                                <ul>
-                                    <li><strong>May 20th - Basic</strong>: this day will be enabled the trading with real tokens.
-                                        We will have a functional chart and Sqrl wallet support.</li>
-                                    <li><strong>June 10th - Premium</strong>: at this day we will have a much better interface website.
-                                        It will become a reference site because telos users will be able to check their balances expressed in USD (or any other preferred currency).<br>
-                                        <span strike>We also have a great review video by <a target="_blank" href="https://www.youtube.com/channel/UCpceefaJ9vs4RYUTsO9Y3FA"
-                                        target="_blank">Louis Thomas</a> that will bring a lot of users to the DEX and the blockchain.</span></li>
-                                    <li><strong>July 08th - Delux</strong>: at this point, we will have an independent software managed by
-                                        its users. The more relevant feature will be the possibility to trade in any token pair market.</li>
-                                    <li><strong>July 29th - Golden</strong>: finally, we will have an excellent competitive product, with 
-                                        lots of new and innovative features, such as token auctioning or Vapaée token passive income.</li>
-                                </ul>
-                            </div>
-                        </div>                
                 
                         <!--div style="height: 50px"></div-->
                     </div>

@@ -1510,6 +1510,7 @@ namespace vapaee {
         }
 
         void action_cancel(name owner, name type, const symbol_code & token_a, const symbol_code & token_p, const std::vector<uint64_t> & orders) {
+            // viterbotelos, sell, ACORN, TELOSD, [1]
             PRINT("vapaee::token::exchange::action_cancel()\n");
             PRINT(" owner: ", owner.to_string(), "\n");
             PRINT(" type: ", type.to_string(), "\n");
@@ -1522,20 +1523,21 @@ namespace vapaee {
             // create scope for the orders table
             name scope_buy = aux_get_scope_for_tokens(token_a, token_p);
             name scope_sell = aux_get_scope_for_tokens(token_p, token_a);
-            name scope = aux_get_canonical_scope_for_symbols(token_a, token_p);
+            name scope_canonical = aux_get_canonical_scope_for_symbols(token_a, token_p);
 
             if (type == name("sell")) {
-                aux_cancel_sell_order(owner, scope, scope_buy, orders);
+                aux_cancel_sell_order(owner, scope_canonical, scope_buy, orders);
             }
 
             if (type == name("buy")) {
-                aux_cancel_sell_order(owner, scope, scope_sell, orders);
+                aux_cancel_sell_order(owner, scope_canonical, scope_sell, orders);
             }
 
             PRINT("vapaee::token::exchange::action_cancel() ...\n");
         }
 
         void aux_cancel_sell_order(name owner, name canonical, name scope, const std::vector<uint64_t> & orders) {
+            // viterbotelos, acorn.telosd, acorn.telosd, [1]
             PRINT("vapaee::token::exchange::aux_cancel_sell_order()\n");
             PRINT(" owner: ", owner.to_string(), "\n");
             PRINT(" canonical: ", canonical.to_string(), "\n");
@@ -1621,8 +1623,49 @@ namespace vapaee {
             int count = 0;
 
 
+            // cancelar ordenes de copmpra
+            // std::vector<uint64_t> vec;
+            // vec.push_back(2);
+            // aux_cancel_sell_order(name("heydqnjzgene"), name("acorn.telosd"), name("acorn.telosd"), vec);
+            // vec.pop_back(); 
+            // 
+            // vec.push_back(0);
+            // vec.push_back(1);
+            // vec.push_back(2);
+            // vec.push_back(3);
+            // vec.push_back(4);
+            // vec.push_back(5);
+            // vec.push_back(6);
+            // vec.push_back(7);
+            // aux_cancel_sell_order(name("ghtdghvfkzfo"), name("telosd.tlos"), name("tlos.telosd"), vec);
+            // vec.pop_back(); 
+            // vec.pop_back(); 
+            // vec.pop_back(); 
+            // vec.pop_back(); 
+            // vec.pop_back(); 
+            // vec.pop_back(); 
+            // vec.pop_back(); 
+            // vec.pop_back(); 
+            // vec.push_back(8);
+            // aux_cancel_sell_order(name("b1"), name("telosd.tlos"), name("tlos.telosd"), vec);
+            // vec.pop_back(); 
+            // 
 
-
+            // restore ordersummary
+            // ordersummary o_summary(get_self(), get_self().value);
+            // o_summary.emplace(get_self(), [&]( auto& a ) {
+            //     a.table = name("acorn.telosd");
+            //     a.demand.orders = 0;
+            //     a.supply.orders = 3;
+            //     a.demand.total = asset(0, symbol(symbol_code("TELOSD"), 8));;
+            //     a.supply.total = asset(11332755301, symbol(symbol_code("ACORN"), 8));;
+            //     a.supply.ascurrency = 0;
+            //     a.demand.ascurrency = 0;
+            //     a.sell = symbol_code("ACORN");
+            //     a.pay = symbol_code("TELOSD");
+            //     a.deals = 0;
+            //     a.blocks = 0;
+            // });
 
 
             // stats statstable(get_self(), symbol_code("CNT").raw());
@@ -1674,9 +1717,19 @@ namespace vapaee {
             //     a.amount.amount = 100000000000;
             // });
 
+            
+            // Borrar token
+            // tokens tokens_table(get_self(), get_self().value);
+            // auto carbon_ptr = tokens_table.find(symbol_code("TELOSD").raw());
+            // tokens_table.erase(carbon_ptr);
 
-            // Borrar ordertables
-            // tokens table0(get_self(), get_self().value);
+            // Borrar token de ordersummary
+            // ordersummary o_summary(get_self(), get_self().value);
+            // auto acorntelosd_ptr = o_summary.find(name("acorn.telosd").value);
+            // o_summary.erase(acorntelosd_ptr);
+            // auto carbonsumm_ptr = o_summary.find(name("ezar.telosd").value);
+            // o_summary.erase(carbonsumm_ptr);
+
             // for (auto ptr = table0.begin(); ptr != table0.end(); ptr = table0.begin()) {
             //     table0.erase(*ptr);
             //     if (count++ > num) break;
@@ -1748,10 +1801,11 @@ namespace vapaee {
             //     o_sum.erase(*ptr);
             // }
 
+            // Modify some token fixed property
             // tokens tokens_table(get_self(), get_self().value);
-            // auto carbon_ptr = tokens_table.find(symbol_code("TELOSD").raw());
+            // auto carbon_ptr = tokens_table.find(symbol_code("CNT").raw());
             // tokens_table.modify(*carbon_ptr, get_self(), [&]( auto& a ) {
-            //     a.currency = true;
+            //     a.owner = name("viterbotelos");
             // });
             
             // // copy from old structure to newone

@@ -1,9 +1,9 @@
-:host {
+/*:host {
     width: 100vw !important;
     height: 100vh !important;
     overflow: auto;
     display: block;
-}
+}*/
 
 li.checked {
     display: block;
@@ -20,7 +20,7 @@ li.checked {
         width: 19px;
         display: inline-block;
     }
-    &.title:before {
+    &.big:before {
         left: -28px;
         height: 30px;
         width: 30px;

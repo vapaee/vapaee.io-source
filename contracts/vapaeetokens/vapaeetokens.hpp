@@ -148,6 +148,7 @@ CONTRACT vapaeetokens : public eosio::contract {
         };
 
         ACTION cancel(name owner, name type, const symbol_code & commodity, const symbol_code & currency, const std::vector<uint64_t> & orders) {
+            // viterbotelos, buy, TELOSD, TLOS, [9]
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.cancel()\n");
             vapaee::token::exchange e;

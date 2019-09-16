@@ -42,7 +42,7 @@
                         <div class="col-4 text-center col-padding-left col-padding-right" [hidden]="true">                            
                         </div>
                         <div class="text-right col-padding-left col-6">
-                            <span [hidden]="token.symbol == 'TLOS' || !token.tradeable || token.owner == logged"
+                            <span [hidden]="token.symbol == 'TLOS' || token.owner == logged"
                                 (click)="goToTokenPage(token)"
                                 class="btn btn-primary btn-sm margin-top">{{local.string.info|titlecase}}</span>
                             <span [hidden]="token.owner != logged"
