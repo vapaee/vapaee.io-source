@@ -1,59 +1,3 @@
--- EXAMPLE token --
-https://cdn.pixabay.com/photo/2015/10/23/07/28/banner-1002455_960_720.jpg
-http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/96/coin-us-dollar-icon.png
-
-
-
--- CNT EXtra Data --
-youtube: Promo video      - https://youtu.be/YSVJgKsSobA
-twitter: Membership cards - https://twitter.com/TokensCards/status/1109668817175748608
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 -- CAMBIOS EN EL WP#12 / 3 --
 - DAO: (integrating with eosio.trail) método para governanza descentralizada y pode ajustar las variables
 - integration Voting Power: all TLOS tokens deposited in DEX should be counted for voting power 
@@ -61,24 +5,52 @@ twitter: Membership cards - https://twitter.com/TokensCards/status/1109668817175
 - BP Multisig ownership: Telos DEX will be deployed in a separated account controlled by BP multisig
 - incentive UI creation: UIs should be earning fees
 
--- Video: guión --
-(borarr moneda AAA, generar movimiento en algunas monedas)
-- Trade any pair: creación de un market
-- Invert tokens pair: invertir
-- Token info page:
-- Free to join: creación de un token nuevo, incluir extra data
-- Contract Events: en la creación de de token, mostrar la subscripción a eventos
-- Timezone: hacer una transacción y ver q ue los datos de tiepo coinciden con la hora local
-- Skins
-- Vote / Support
+
+
+I'm happy to anounce that Vapaée Telos DEX v3.1.1 is finally released and here you can check all the new features.
+
+<center>
+https://www.youtube.com/watch?v=BvjnqnFmwU0
+</center>
+
+As you may probably know, this work is funded by a worker proposal (WP#12) in the Telos network and the third and last cycle just started. Here's the claim action over the previous cycle that I pushed two days ago:
+https://telostracker.io/trx/91bcf7f9fec41b3ae6b883eb8e4297c1cba96c3a2e20d40ccd8225892d0df26c
+
+In the time that has passed since the last version delivery, many members of the community had reached me out with concerns about the future of the DEX.
+
+In one hand, there were concerns about the liquidity being splitted too much if many DEXs deploys on Telos. On the other hand, there were concerns about Vapaée brand along with the dark theme and user experience. In other words, the UI could be much better.
+
+I'm a systems engineer and a very good at it, but I'm not that good at designing or marketing. And given that I certainly love this Telos blockchain and community, I decided to do what's best for all. So I will renounce ownership of the smart contract and adapt it to be part of the Telos core contract group.
+
+This way, we can have an "official" DEX smart contract to concentrate all the liquidity and at the same time promote the creation of great private UI for the same DEX by redirecting earning to the UI creators.
+
+This big change now forms part of the third part of the WP#12 that is being now receiving votes. So if you like the idea of having Vapáee DEX just as one of many UI for the same main DEX's smart contract, please vote for this WP#12 !!!
+
+To read more about the work that is going to be done, please check this link:
+https://vapaee.io/exchange/wp#golden
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -- TODO --
 - listar los siguientes tokens:
-  - MAIL (dMail)
   - WORD (token de WordProof)
   - EKSH
   - EBRL
-  - TLOSD
   - KNIGHTS
 
 
@@ -101,7 +73,7 @@ cleos push action vapaeetokens order '["bob", "sell", "10.00000000 AAA", "0.0400
 Icons:
 https://iconmonstr.com/
 
--- TODO: VERSION v3.1.0 --
+-- TODO: VERSION v3.1.1 --
 
   - si estamos en edition mode:
     - cada entry va a tener un par de botones: edit y remove

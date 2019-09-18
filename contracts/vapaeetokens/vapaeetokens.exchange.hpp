@@ -1720,8 +1720,11 @@ namespace vapaee {
             
             // Borrar token
             // tokens tokens_table(get_self(), get_self().value);
-            // auto carbon_ptr = tokens_table.find(symbol_code("TELOSD").raw());
-            // tokens_table.erase(carbon_ptr);
+            // auto token_ptr = tokens_table.find(symbol_code("EXAMPLE").raw());
+            // tokens_table.erase(token_ptr);
+            // stats statstable( _self, symbol_code("EXAMPLE").raw() );
+            // auto existing = statstable.find( symbol_code("EXAMPLE").raw() );
+            // statstable.erase(*existing);
 
             // Borrar token de ordersummary
             // ordersummary o_summary(get_self(), get_self().value);

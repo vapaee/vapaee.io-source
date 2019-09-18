@@ -1,6 +1,6 @@
 {
   "name": "vapaee.io-source",
-  "version": "v3.1.0",
+  "version": "v3.1.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --poll=2000 -o",
