@@ -32,7 +32,9 @@
                             <i class="material-icons"> forward </i> 
                         </a>
                     </div>
-                    <div class="text-md margin-top token-brief">{{token?.brief}}</div>
+                    <div class="text-md margin-top token-brief">
+                        <markdown [data]="token?.brief"></markdown>
+                    </div>
                 </div>
                 <div class="margin-top-md margin-bottom-md">
                     <hr class="line">
@@ -90,7 +92,9 @@
                             <i class="material-icons"> forward </i> 
                         </a>
                     </div>
-                    <div class="text-md margin-top token-brief">{{token?.brief}}</div>
+                    <div class="text-md margin-top token-brief">
+                        <markdown [data]="token?.brief"></markdown>
+                    </div>
                 </div>
             </div>
 

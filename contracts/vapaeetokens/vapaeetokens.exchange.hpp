@@ -1254,6 +1254,25 @@ namespace vapaee {
         }
         
 
+        void action_set_token_owner (const symbol_code & sym_code, name newowner) {
+            PRINT("vapaee::token::exchange::action_set_token_owner()\n");
+            PRINT(" sym_code: ", sym_code.to_string(), "\n");
+            PRINT(" newowner: ", newowner.to_string(), "\n");
+
+            tokens tokenstable(get_self(), get_self().value);
+            auto itr = tokenstable.find(sym_code.raw());
+            eosio_assert(itr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
+            
+            eosio_assert(has_auth(get_self()), "only admin can modify the token.owner");
+
+            tokenstable.modify( *itr, same_payer, [&]( auto& a ){
+                a.owner = newowner;
+            });
+
+            PRINT("vapaee::token::exchange::action_set_token_owner() ...\n");
+        }
+        
+
         void action_set_token_as_currency (const symbol_code & sym_code, bool is_currency) {
             PRINT("vapaee::token::exchange::action_set_token_as_currency()\n");
             PRINT(" sym_code: ", sym_code.to_string(), "\n");
