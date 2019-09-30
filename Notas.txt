@@ -1,18 +1,39 @@
--- Video Vapaée DEX v3.0 --
-https://cdn.pixabay.com/photo/2015/10/23/07/28/banner-1002455_960_720.jpg
-http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/96/coin-us-dollar-icon.png
-http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-11/256/coin-us-dollar-icon.png
+telosmain push action vapaeetokens tokenowner '["WORD", "viterbotelos"]' -p vapaeetokens@active
+
+
+-- TODO --
+- listar los siguientes tokens:
+
+  - KNIGHTS
+
+
+https://telostracker.io/trx/91bcf7f9fec41b3ae6b883eb8e4297c1cba96c3a2e20d40ccd8225892d0df26c
 
 
 
+
+cleos push action vapaeetokens issue '["bob", "1000.00 AAA", ""]' -p bob
+
+cleos push action vapaeetokens edittkevent '["AAA", "withdraw", "add", "eventhandler"]' -p bob
+cleos push action vapaeetokens edittkevent '["AAA", "swapdeposit", "add", "eventhandler"]' -p bob
+cleos push action vapaeetokens edittkevent '["AAA", "deposit", "add", "eventhandler"]' -p bob
+
+cleos push action vapaeetokens order '["bob", "sell", "10.00000000 AAA", "0.04000000 TLOS"]' -p bob
 
 
 
 Icons:
 https://iconmonstr.com/
 
+<<<<<<< HEAD
 -- TODO: VERSION v3.0.0 --
   - Token Page. Edición de eventos
+=======
+-- TODO: VERSION v3.2.0 --
+
+  - si estamos en edition mode:
+    - cada entry va a tener un par de botones: edit y remove
+>>>>>>> d5654502e4eec251a48b274eafabde74a2c7bf7a
     - las cajas de markets desaparecen y en su lugar aparece la lista de todos los eventos.
       - si está subscripto aparece un tock verde y el nombre del destinatario del evento
       - botones edit y subscribe/unsubscribe
@@ -27,7 +48,12 @@ https://iconmonstr.com/
   - que la token page incluya una sección de actions (transfer, claim, burn, issue)
   - el selector de markets de la página trade debería permitir markets basados en todas las currencies (incluyendo TELOSD)
   - Upgrade to Angular 8: https://medium.com/mr-frontend-community/upgrade-to-angular-7-beta-within-10-minutes-c14fc380edd
+<<<<<<< HEAD
   - cada evento habría que replicarlo si o si para los usuarios participantes (aparte del dueño del token)
+=======
+  - cuando el usuario vende todo o compra todo según lo que puede pagar, debería calcularse para que falte y arreglarse en el contrato inteligente para que no falle por falta de fondos.
+  
+>>>>>>> d5654502e4eec251a48b274eafabde74a2c7bf7a
 
 
 

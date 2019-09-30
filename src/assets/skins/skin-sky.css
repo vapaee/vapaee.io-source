@@ -3,6 +3,16 @@ body {
     color: black !important;
 }
 
+body.wp a, body.wp strong {
+    color: #0054f9 !important;
+    font-weight: bold;
+}
+
+body.wp li.checked:before {
+    background-image: url(/assets/img/vapaee-check-black.png);
+}
+
+
 body ng-sidebar-container {
     background-image: url(/assets/uploads/landscape-4436636_960_720.jpg);    
     background-size: cover;    
@@ -37,6 +47,12 @@ nav.navbar.vpe-background-navbar div.navbar-collapse a {
     -webkit-filter: none;
     filter: none;
     border-left: 1px solid rgba(0,0,0,0.2);
+}
+
+.nav-item.highlight {
+    -webkit-box-shadow: inset 0px 0px 17px 0px rgba(255,255,255,1);
+    -moz-box-shadow: inset 0px 0px 17px 0px rgba(255,255,255,1);
+    box-shadow: inset 0px 0px 17px 0px rgba(255,255,255,1);
 }
 
 

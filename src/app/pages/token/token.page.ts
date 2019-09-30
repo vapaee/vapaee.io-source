@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { VapaeeDEX, TokenDEX, TokenData } from '@vapaee/dex';
+import { VapaeeDEX, TokenDEX, TokenData, TokenEvent } from '@vapaee/dex';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
@@ -21,6 +21,8 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
     token: TokenDEX;
     editing: boolean;
     feed: Feedback;
+    events: string[];
+    editevent: TokenEvent;
     _safe_url_cache = {};
     
     constructor(
@@ -181,6 +183,8 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         }).catch(e => { console.error(e); });        
     }
 
+    // Token Data Entries -----------------------
+
     confirmData(info:TokenData) {
         console.log("TokenPage.confirmData()", [info]);
         var action = "modify";
@@ -205,7 +209,7 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     removeData(info:TokenData) {
-        console.log("TokenPage.confirmData()", [info]);
+        console.log("TokenPage.removeData()", [info]);
         var action = "remove";
         info.symbol = this.token.symbol;
         this.feed.setLoading("info-" + info.id, true);
@@ -229,14 +233,119 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
     createDataEntry() {
         var entry: TokenData = {
             id:-1,
-            category: "link",
+            category: "youtube",
             editing: true,
             symbol: this.token.symbol,
             link: "",
             text: "New Data Entry",
             date: new Date(),
         };
-        this.token.data.push(entry);
+
+        var found = false;
+        for (var i in this.token.data) {
+            if (this.token.data[i].id == -1) {
+                found = true;
+                entry = this.token.data[i];
+            }
+        }
+        if (!found) {
+            this.token.data.push(entry);
+        }
+        
+        setTimeout(_ => {
+            entry.editing = true;
+            window.document.getElementById("input-1").focus();
+        }, 100);
     }
+
+    // Token Events -----------------------
+
+    editTokenEvent(evt:TokenEvent) {
+        this.cancelTokenEvent();
+        this.editevent = evt;
+        this.editevent.editing = true;
+        setTimeout(_ => {
+            window.document.getElementById("new-event").focus();
+        }, 100);        
+    }
+
+    cancelTokenEvent() {
+        console.log("TokenPage.cancelTokenEvent()", [this.editevent]);
+        if (this.editevent) {
+            if (this.editevent.new) {
+                for (var i=0; i<this.token.events.length; i++) {
+                    if (this.token.events[i].event == this.editevent.event) {
+                        this.token.events.splice(i, 1);
+                    }
+                }    
+            }
+            delete this.editevent.editing;    
+        }
+        this.editevent = null;
+    }
+
+    confirmEvent(evt:TokenEvent) {
+        console.log("TokenPage.confirmEvent()", [evt]);
+        var action = "modify";
+        if (evt.new) action = "add";
+        var feedid = "event-save";
+        this.feed.setLoading(feedid, true);
+        this.feed.clearError("event");
+        this.dex.edittkevent(action, this.token.symbol, evt).then(_ => {
+            console.log("EXITO:", _);
+            delete evt.editing;
+            delete evt.new;
+            delete this.editevent;
+            this.feed.setLoading(feedid, false);
+        }).catch(e => {
+            console.error(e);
+            this.feed.setLoading(feedid, false);
+            this.feed.setError("event", typeof e == "string" ? e : JSON.stringify(e,null,4));
+        });
+    }
+
+    removeEvent(evt:TokenEvent) {
+        console.log("TokenPage.removeEvent()", [evt]);
+        var feedid = "event-remove";
+        this.feed.setLoading(feedid, true);
+        this.feed.clearError("event");
+        this.dex.edittkevent("remove", this.token.symbol, evt).then(_ => {
+            console.log("EXITO:", _);
+            for (var i=0; i<this.token.events.length; i++) {
+                if (this.token.events[i].event == evt.event) {
+                    this.token.events.splice(i, 1);
+                }
+            }
+            this.editevent = null;
+            this.feed.setLoading(feedid, false);
+        }).catch(e => {
+            console.error(e);
+            this.feed.setLoading(feedid, false);
+            this.feed.setError("event", typeof e == "string" ? e : JSON.stringify(e,null,4));
+        });
+    }
+
+    createTokenEvent() {
+        this.cancelTokenEvent();
+        this.events = ["cancel", "deal", "deposit", "order", "swapdeposit", "withdraw"];
+        for (var i in this.token.events) {
+            var event = this.token.events[i].event;
+            this.events = this.events.filter(e => e != event);
+        }
+
+        this.editevent = {
+            new: true,
+            editing: true,
+            receptor: "",
+            event: this.events[0]
+        };
+
+        this.token.events.push(this.editevent);
+
+        setTimeout(_ => {
+            window.document.getElementById("new-event").focus();
+        }, 100);
+    }
+
 
 }

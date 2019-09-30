@@ -24,6 +24,12 @@ vpe-panel table {
     color: white !important;
 }
 
+.nav-item.highlight {
+    -webkit-box-shadow: inset 0px 0px 17px 0px rgba(255,255,255,1);
+    -moz-box-shadow: inset 0px 0px 17px 0px rgba(255,255,255,1);
+    box-shadow: inset 0px 0px 17px 0px rgba(255,255,255,1);
+}
+
 /* HOME */
 div div.jumbotron.vpe-background-jumbotron {
     background-image: linear-gradient(to bottom, #1b211fd0 0%, #2a332ad0 100%);

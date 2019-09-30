@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { CommonServicesModule } from './services/common/common.module';
 import { HttpClient, HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
+import { MarkdownModule } from 'ngx-markdown';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -76,6 +77,7 @@ import { DirectivesModule } from './directives/directives.module';
         ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
         SidebarModule.forRoot(),
         FormsModule,
+        MarkdownModule.forRoot(),
         DirectivesModule
     ],
     providers: [

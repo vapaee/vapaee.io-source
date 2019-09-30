@@ -67,7 +67,7 @@
 }
 .input-icon {
     position: absolute;
-    top: 12px;
+    top: 8px;
     right: 25px;
     font-weight: bold;
 }
@@ -583,7 +583,9 @@ small, .small {
     font-weight: 700;
 }
 
-
+.text-strike {
+    text-decoration: line-through;
+}
 .text-bold {
     font-weight: bold;
 }

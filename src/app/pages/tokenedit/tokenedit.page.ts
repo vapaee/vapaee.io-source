@@ -73,6 +73,11 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
         
     }
 
+    editToken(tkn:TokenDEX) {
+        this.app.setGlobal("edit-token", true);
+        this.app.navigate("/exchange/token/"+tkn.symbol.toLowerCase());
+    }
+
     init() {
         var symbol = this.route.snapshot.paramMap.get('symbol') || "";
         this.newtoken = new ETokenDEX({symbol:"NEW-TOKEN", precision: 4, contract:"vapaeetokens"});
@@ -191,7 +196,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
     
 
 
-
+/*
     prueba () {
 
 
@@ -226,7 +231,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
             this.app.navigate("/exchange/tokenedit/"+this.newtoken.symbol.toLowerCase());
             this.changeTab(this.TAB.EDIT);
         }).catch(e => { console.error(e); });        
-    }
+    }*/
 
     confirm() {
         switch(this.tab) {
@@ -254,8 +259,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
                 });                
                 this.dex.addtoken(token).then(_ => {
                     console.log("EXITO:", _);
-                    this.app.setGlobal("edit-token", true);
-                    this.app.navigate("/exchange/token/"+this.newtoken.symbol.toLowerCase());
+                    this.editToken(this.newtoken);
                 }).catch(e => { console.error(e); });
                 break;
             case this.TAB.EDIT:

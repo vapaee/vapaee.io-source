@@ -14,6 +14,7 @@ import { Feedback } from '@vapaee/feedback';
 })
 export class WPPage implements OnInit, OnDestroy {
 
+    public new_version: boolean;
     public contract: SmartContract;
     public feed: Feedback;
     public proposalID: string = "17";
@@ -32,6 +33,7 @@ export class WPPage implements OnInit, OnDestroy {
         this.user_dismiss = !!this.cookie.get("user_dismiss");
         this.contract = this.scatter.getSmartContract("eosio.trail");
         this.feed = new Feedback();
+        this.new_version = true;
         this.onAccountChange(null);
     }
 
@@ -196,7 +198,7 @@ export class WPPage implements OnInit, OnDestroy {
         return this.contract.getTable("votereceipts", {scope:account || this.dex.current.name, limit:1, lower_bound:this.proposalID}).then(result => {
             if (result.rows.length > 0) {
                 console.assert(result.rows[0].ballot_id == this.proposalID, result.rows[0].ballot_id, typeof result.rows[0].ballot_id, this.proposalID, typeof this.proposalID);
-                if (result.rows[0].directions.length == 1 && result.rows[0].directions[0] == 1 && result.rows[0].expiration > 1559488802) {
+                if (result.rows[0].directions.length == 1 && result.rows[0].directions[0] == 1 && result.rows[0].expiration > 1571155349) {
                     this.user_voted_us = true;
                 } else {
                     this.cookie.delete("user_dismiss");

@@ -32,7 +32,9 @@
                             <i class="material-icons"> forward </i> 
                         </a>
                     </div>
-                    <div class="text-md margin-top token-brief">{{token?.brief}}</div>
+                    <div class="text-md margin-top token-brief">
+                        <markdown [data]="token?.brief"></markdown>
+                    </div>
                 </div>
                 <div class="margin-top-md margin-bottom-md">
                     <hr class="line">
@@ -90,7 +92,9 @@
                             <i class="material-icons"> forward </i> 
                         </a>
                     </div>
-                    <div class="text-md margin-top token-brief">{{token?.brief}}</div>
+                    <div class="text-md margin-top token-brief">
+                        <markdown [data]="token?.brief"></markdown>
+                    </div>
                 </div>
             </div>
 
@@ -212,7 +216,7 @@
             </div>
 
             
-
+            <!-- Token Data Entry -->
             <div class="margin-top-md card"
                 *ngFor="let info of token?.data"
             >
@@ -222,7 +226,7 @@
 
                     <!-- YouTube video-->
                     <div class="margin-top embed-responsive embed-responsive-16by9"
-                        *ngIf="info.category == 'youtube'"
+                        *ngIf="info.category == 'youtube' && info.link"
                     >
                         <iframe class="embed-responsive-item" [src]="getEmbedLink(info)" allowfullscreen></iframe>
                     </div>
@@ -235,83 +239,10 @@
                         <img [src]="info?.link" style="width: 100%; height: auto">
                     </div>
 
-                    <hr class="line">
-
-                    <!-- Info Error -->
-                    <div class="form-group row">
-                        <div class="col-12 margin-top" [hidden]="!feed.error('info-' + info.id)">
-                            <div class="alert alert-danger">
-                                <div class="pull-right">
-                                    <button type="button" class="close text-white" (click)="feed.setError('info-' + info.id, null)">
-                                        <i class="material-icons" style="font-size: 100%;">cancel</i>
-                                    </button>                
-                                </div>
-                                {{feed.error('info-' + info.id)}}
-                            </div>
-                        </div>
-                    </div>                      
-
-                    <div class="margin-top-md" [hidden]="info.editing">
-                        <span class="btn btn-sm btn-success" (click)="info.editing = true; feed.clearError('info-' + info.id)">
-                            <i class="material-icons">edit</i>
-                            Edit this entry
-                        </span>
-                        <span class="btn btn-sm btn-danger margin-left" (click)="removeData(info)">
-                            <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('info-' + info.id)"></span>
-                            <i class="material-icons" [hidden]="feed.loading('info-' + info.id)">save_alt</i>
-                            {{local.string.delete|titlecase}}
-                        </span>                           
-                    </div>
-                    
-                    <div class="margin-top-md" [hidden]="!info.editing">
-
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label nowrap">{{local.string.category | titlecase}}:</label>
-                            <div class="col-sm-9">
-                                
-                                <div class="nav-item dropdown" placement="bottom-right" ngbDropdown>
-                                    <a  class="btn btn-primary dropdown-toggle" data-toggle="dropdown" id="category">
-                                        {{info.category | titlecase}}
-                                        <span class="caret"></span>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right" placement="bottom-right" aria-labelledby="category">
-                                        <span class="cursor-pointer dropdown-item" (click)="info.category = 'link';">
-                                            <i class="color-white material-icons vertical-align-bottom"> link </i>
-                                            &nbsp; link
-                                        </span>
-                                        <span class="cursor-pointer dropdown-item" (click)="info.category = 'image';">
-                                            <i class="color-white material-icons vertical-align-bottom"> image </i>
-                                            &nbsp; image
-                                        </span>
-                                        <span class="cursor-pointer dropdown-item" (click)="info.category = 'twitter';">
-                                            <img style="width: 24px; height: 24px; " src="/assets/img/twitter.png">
-                                            &nbsp; twitter
-                                        </span>
-                                        <span class="cursor-pointer dropdown-item" (click)="info.category = 'youtube';">
-                                            <img style="width: 24px; height: 24px; " src="/assets/img/youtube.png">
-                                            &nbsp; youtube
-                                        </span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
+                    <div [hidden]="hide_edit_btn && !editing">
                         
 
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label nowrap">Text:</label>
-                            <div class="col-sm-9" >
-                                <input class="form-control col-form-label" placeholder="text" [(ngModel)]="info.text" autofocus>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label nowrap">Link:</label>
-                            <div class="col-sm-9" >
-                                <input class="form-control col-form-label" placeholder="link" [(ngModel)]="info.link" autofocus>
-                            </div>
-                        </div>
+                        <hr class="line">
 
                         <!-- Info Error -->
                         <div class="form-group row">
@@ -325,26 +256,105 @@
                                     {{feed.error('info-' + info.id)}}
                                 </div>
                             </div>
-                        </div>  
+                        </div>                      
     
-                        <!-- Info Save btn -->
-                        <div class="form-group row">
-                            <div class="col-12 margin-top text-right">
-                                <span class="btn btn-sm btn-danger" (click)="info.editing = false">
-                                    <i class="material-icons" [hidden]="feed.loading('info-' + info.id)">cancel</i>
-                                    {{local.string.cancel|titlecase}}
-                                </span>
-                                <span class="btn btn-sm btn-success margin-left" (click)="confirmData(info)">
-                                    <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('info-' + info.id)"></span>
-                                    <i class="material-icons" [hidden]="feed.loading('info-' + info.id)">save_alt</i>
-                                    {{local.string.save|titlecase}}
-                                </span>
-                            </div>
+                        <div class="margin-top-md" [hidden]="info.editing">
+                            <span class="btn btn-sm btn-success" (click)="info.editing = true; feed.clearError('info-' + info.id)">
+                                <i class="material-icons">edit</i>
+                                Edit this entry
+                            </span>
+                            <span class="btn btn-sm btn-danger margin-left" (click)="removeData(info)">
+                                <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('info-' + info.id)"></span>
+                                <i class="material-icons" [hidden]="feed.loading('info-' + info.id)">save_alt</i>
+                                {{local.string.delete|titlecase}}
+                            </span>                           
                         </div>
+                        
+                        <div class="margin-top-md" [hidden]="!info.editing">
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.category | titlecase}}:</label>
+                                <div class="col-sm-9">
+                                    
+                                    <div class="dropdown" placement="bottom-right" ngbDropdown>
+                                        <a  class="btn btn-primary dropdown-toggle" data-toggle="dropdown" id="category">
+                                            {{info.category | titlecase}}
+                                            <span class="caret"></span>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right" placement="bottom-right" aria-labelledby="category">
+                                            <!--span class="cursor-pointer dropdown-item" (click)="info.category = 'link';">
+                                                <i class="color-white material-icons vertical-align-bottom"> link </i>
+                                                &nbsp; link
+                                            </span-->
+                                            <span class="cursor-pointer dropdown-item" (click)="info.category = 'image';">
+                                                <i class="color-white material-icons vertical-align-bottom"> image </i>
+                                                &nbsp; image
+                                            </span>
+                                            <span class="cursor-pointer dropdown-item" (click)="info.category = 'twitter';">
+                                                <img style="width: 24px; height: 24px; " src="/assets/img/twitter.png">
+                                                &nbsp; twitter
+                                            </span>
+                                            <span class="cursor-pointer dropdown-item" (click)="info.category = 'youtube';">
+                                                <img style="width: 24px; height: 24px; " src="/assets/img/youtube.png">
+                                                &nbsp; youtube
+                                            </span>
+                                        </div>
+                                    </div>
+    
+                                </div>
+                            </div>
+    
+                            <a id="{{'entry'+info.id}}"></a>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">Text:</label>
+                                <div class="col-sm-9" >
+                                    <input id="{{'input'+info.id}}" class="form-control col-form-label" placeholder="text" [(ngModel)]="info.text">
+                                </div>
+                            </div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">Link:</label>
+                                <div class="col-sm-9" >
+                                    <input class="form-control col-form-label" placeholder="link" [(ngModel)]="info.link">
+                                </div>
+                            </div>
+    
+                            <!-- Info Error -->
+                            <div class="form-group row">
+                                <div class="col-12 margin-top" [hidden]="!feed.error('info-' + info.id)">
+                                    <div class="alert alert-danger">
+                                        <div class="pull-right">
+                                            <button type="button" class="close text-white" (click)="feed.setError('info-' + info.id, null)">
+                                                <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                            </button>                
+                                        </div>
+                                        {{feed.error('info-' + info.id)}}
+                                    </div>
+                                </div>
+                            </div>  
+        
+                            <!-- Info Save btn -->
+                            <div class="form-group row">
+                                <div class="col-12 margin-top text-right">
+                                    <span class="btn btn-sm btn-danger" (click)="info.editing = false">
+                                        <i class="material-icons" [hidden]="feed.loading('info-' + info.id)">cancel</i>
+                                        {{local.string.cancel|titlecase}}
+                                    </span>
+                                    <span class="btn btn-sm btn-success margin-left" (click)="confirmData(info)">
+                                        <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('info-' + info.id)"></span>
+                                        <i class="material-icons" [hidden]="feed.loading('info-' + info.id)">save_alt</i>
+                                        {{local.string.save|titlecase}}
+                                    </span>
+                                </div>
+                            </div>
+    
+                        </div>
+                        
+                        <!-- editing -->
 
                     </div>
-                    
-                    <!-- editing -->
+
                 </div>
             </div>
 
@@ -380,8 +390,10 @@
                 <img style="height:64px; width: 64px; margin-top: 15px;" [src]="token?.logolg">
             </div>
 
+
+            <!-- Token Data Entries -->
             <div class="margin-top-md token-markets" [hidden]="!editing">
-                <div>
+                <div class="text-md">
                     Extra Data: {{token?.data.length}}
                 </div>
                 <div>
@@ -391,6 +403,104 @@
                     </span>
                 </div>
             </div>
+
+            <!-- Token Events -->
+            <div class="margin-top-md token-markets" [hidden]="!editing">
+                <div class="row">
+                    <div class="col-8">
+                        <span class="text-md">Events: {{token?.events.length}}</span>
+                    </div>
+                    <div class="col-4">
+                        <span class="btn btn-sm btn-primary" (click)="createTokenEvent()">
+                            <i class="material-icons">playlist_add</i>
+                            add
+                        </span>            
+                    </div>
+                </div>
+
+                <hr class="line" />
+
+                <div class="row margin-top" *ngFor="let evt of token?.events" [hidden]="evt.editing">
+                    <div class="col-8">
+                        <span class="text-bold">event: {{evt.event}}</span><br>
+                        <span class="text-xs">handler: {{evt.receptor}}</span>        
+                    </div>
+                    <div class="col-4">
+                        <span class="btn btn-sm btn-primary margin-top" (click)="editTokenEvent(evt)">
+                            <i class="material-icons">edit</i>
+                            {{local.string.edit}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="margin-top-md token-markets" *ngIf="editing && editevent">
+                <div class="row form-group">
+                    <label class="col-4 col-form-label nowrap text-bold"> event: </label>
+                    <label class="col-8 col-form-label nowrap text-bold" [hidden]="editevent.new"> {{editevent.event}} </label>
+                    <div [hidden]="!editevent.new" class="col-8 text-right">
+                        <div class="dropdown" placement="bottom-right" ngbDropdown>
+                            <a  class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" id="event">
+                                {{editevent.event}}
+                                <span class="caret"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" placement="bottom-right" aria-labelledby="event">
+                                <span class="cursor-pointer dropdown-item"
+                                    *ngFor="let event of events"
+                                    (click)="editevent.event = event;">
+                                    {{event}}
+                                </span>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-4 col-form-label nowrap"> receptor: </label>
+                    <div class="col-8">
+                        <input id="new-event" class="form-control col-form-label" placeholder="text" [(ngModel)]="editevent.receptor">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <span class="btn btn-sm btn-danger margin-top" (click)="cancelTokenEvent()">
+                            <i class="material-icons">cancel</i>
+                            {{local.string.cancel}}
+                        </span>
+                    </div>
+                    <div class="col-4">
+                        <span [hidden]="editevent.new" class="btn btn-sm btn-danger margin-top" (click)="removeEvent(editevent)">
+                                <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('event-remove')"></span>
+                                <i class="material-icons" [hidden]="feed.loading('event-remove')">remove_circle</i>
+                            {{local.string.delete}}
+                        </span>                        
+                    </div>
+                    <div class="col-4">
+                        <span class="btn btn-sm btn-success margin-top" (click)="confirmEvent(editevent)">
+                            <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('event-save')"></span>
+                            <i class="material-icons" [hidden]="feed.loading('event-save')">save_alt</i>
+                            {{local.string.save}}
+                        </span>
+                    </div>
+                </div>
+                <!-- Error -->
+                <div class="form-group row">
+                    <div class="col-12 margin-top" [hidden]="!feed.error('event')">
+                        <div class="alert alert-danger">
+                            <div class="pull-right">
+                                <button type="button" class="close text-white" (click)="feed.clearError('event')">
+                                    <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                </button>                
+                            </div>
+                            {{feed.error('event')}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!--
+            <div class="margin-top-md token-markets">
+                <pre>{{token?.events|json}}</pre>
+            </div>
+-->
 
 
         </div>

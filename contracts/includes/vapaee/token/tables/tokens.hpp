@@ -30,30 +30,3 @@
         > tokens;
         // ------------------------------------
         
-        
-        // TABLE oldtokens (registered currency) -----------
-        // scope: contract
-        TABLE reg_oldtoken_table {
-            symbol_code symbol;
-            uint8_t precision;
-            name contract;
-            name owner;
-            string title;
-            string website;
-            string brief;
-            string banner;
-            string logo;
-            string logolg;
-            time_point_sec date;
-            bool tradeable;
-            bool banned;
-            uint32_t data;
-            uint64_t primary_key() const { return symbol.raw(); }
-            uint64_t by_contract_key() const { return contract.value; }
-        };
-
-        typedef eosio::multi_index< "oldtokens"_n, reg_oldtoken_table,
-            indexed_by<"contract"_n, const_mem_fun<reg_oldtoken_table, uint64_t, &reg_oldtoken_table::by_contract_key>>
-        > oldtokens;
-        // ------------------------------------
-        

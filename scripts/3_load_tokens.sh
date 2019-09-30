@@ -166,9 +166,9 @@ echo "-- register TEACH --"
 cleos push action vapaeetokens addtoken '["teachology14","TEACH",4,"vapaeetokens", "Teachology", "http://teachology.io", "", "", "/assets/logos/teach.svg", "/assets/logos/teach-lg.png",true]' -p vapaeetokens@active
 echo "-- register ROBO --" 
 cleos push action vapaeetokens addtoken '["proxibotstkn","ROBO",4,"vapaeetokens", "Proxibots", "https://proxibots.io", "", "", "/assets/logos/proxibots.png", "/assets/logos/proxibots-lg.png",true]' -p vapaeetokens@active
-echo "-- register TELOSD --" 
-cleos push action vapaeetokens addtoken '["stablecarbon","TELOSD",4,"vapaeetokens", "Carbon", "https://www.carbon.money", "", "", "/assets/logos/carbon.svg", "/assets/logos/carbon.svg",true]' -p vapaeetokens@active
-cleos push action vapaeetokens setcurrency '["TELOSD", true]' -p vapaeetokens@active
+echo "-- register TLOSD --" 
+cleos push action vapaeetokens addtoken '["stablecarbon","TLOSD",4,"vapaeetokens", "Carbon", "https://www.carbon.money", "", "", "/assets/logos/carbon.svg", "/assets/logos/carbon.svg",true]' -p vapaeetokens@active
+cleos push action vapaeetokens setcurrency '["TLOSD", true]' -p vapaeetokens@active
 
 echo "-- register TLOSDAC --" 
 cleos push action vapaeetokens addtoken '["telosdacdrop","TLOSDAC",4,"vapaeetokens", "TelosDAC", "https://telosdac.io/", "", "", "/assets/logos/telosdac.png", "/assets/logos/telosdac-lg.png",true]' -p vapaeetokens@active

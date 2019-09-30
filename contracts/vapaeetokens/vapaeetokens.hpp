@@ -126,6 +126,13 @@ CONTRACT vapaeetokens : public eosio::contract {
             e.action_update_token_info(sym_code, title, website, brief, banner, logo, logolg, tradeable);
         };
 
+        ACTION tokenowner (const symbol_code & symbol, name owner) {
+            MAINTENANCE();
+            PRINT("\nACTION vapaeetokens.tokenowner()\n");
+            vapaee::token::exchange e;
+            e.action_set_token_owner(symbol, owner);
+        };
+
         ACTION setcurrency (const symbol_code & sym_code, bool is_currency) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.setcurrency()\n");
@@ -148,6 +155,7 @@ CONTRACT vapaeetokens : public eosio::contract {
         };
 
         ACTION cancel(name owner, name type, const symbol_code & commodity, const symbol_code & currency, const std::vector<uint64_t> & orders) {
+            // viterbotelos, buy, TELOSD, TLOS, [9]
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.cancel()\n");
             vapaee::token::exchange e;
@@ -169,11 +177,11 @@ CONTRACT vapaeetokens : public eosio::contract {
             e.action_withdraw(owner, quantity);
         };        
 
-        ACTION swapdeposit(name from, name to, const asset & quantity, string  memo) {
+        ACTION swapdeposit(name from, name to, const asset & quantity, bool trigger, string memo) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.swapdeposit()\n");
             vapaee::token::exchange e;
-            e.action_swapdeposit(from, to, quantity, memo);
+            e.action_swapdeposit(from, to, quantity, trigger, memo);
         };
 
         HANDLER htransfer(name from, name to, asset quantity, string  memo ) {

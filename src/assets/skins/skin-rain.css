@@ -15,6 +15,12 @@ nav.navbar.vpe-background-navbar div.navbar-collapse a {
     color: white !important;
 }
 
+.nav-item.highlight {
+    -webkit-box-shadow: inset 0px 0px 17px 0px rgba(255,255,255,1);
+    -moz-box-shadow: inset 0px 0px 17px 0px rgba(255,255,255,1);
+    box-shadow: inset 0px 0px 17px 0px rgba(255,255,255,1);
+}
+
 ng-sidebar div.sidebar-content {
     background: linear-gradient(to bottom, rgba(71,83,102,1) 0%, rgba(45,48,51,1) 100%); 
 }

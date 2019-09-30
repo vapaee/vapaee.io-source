@@ -13,7 +13,12 @@ export interface TokenData {
     editing?: boolean,
 }
 
-
+export interface TokenEvent {
+    event: string,
+    receptor: string,
+    editing?: boolean,
+    new?: boolean
+}
 
 export class TokenDEX extends Token {
 
@@ -45,7 +50,9 @@ export class TokenDEX extends Token {
         percent_str?:string
     }
     
-    markets: Market[];
+    events: TokenEvent[] = [];
+
+    markets: Market[] = [];
 
     constructor(obj:any = null) {
         super(obj);
@@ -62,6 +69,7 @@ export class TokenDEX extends Token {
         var cp = new TokenDEX(this);
 
         cp.markets = [];
+        cp.events = [];
         cp.stat = Object.assign({}, this.stat);
         delete cp.summary;
         delete cp._str;
@@ -78,6 +86,7 @@ export class TokenDEX extends Token {
         cp.contract = this.contract;
         cp.precision = this.precision;
         cp.markets = [];
+        cp.events = [];
         cp.stat = Object.assign({}, this.stat);
         return cp;
     }

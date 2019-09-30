@@ -53,13 +53,13 @@ import { VapaeeStyle } from '@vapaee/style';
                             {{local.string.Account | titlecase}}
                         </a>
                     </li>
-                    <!--li class="nav-item highlight" [ngClass]="{active: app.stateStartsWith('wp')}" (click)="app.closeSideMenu()">
+                    <li class="nav-item wp highlight" [ngClass]="{active: app.stateStartsWith('wp')}" (click)="app.closeSideMenu()">
                         <a class="nav-link" [routerLink]="'/exchange/wp'" >
                             <i class="material-icons nav"> navigate_next </i>
                             <i class="material-icons"> how_to_vote </i>
                             WP
                         </a>
-                    </li-->
+                    </li>
                     <li class="nav-item skin dropdown">
                         <a class="nav-link dropdown-toggle cursor-pointer" (click)="dropdown.drop('skin')">
                             <i class="material-icons"> palette </i>
@@ -121,7 +121,7 @@ export class AppComponent {
         public style: VapaeeStyle,
         public dropdown: DropdownService
     ) {
-        this.app.init("v3.0.0");
+        this.app.init("v3.2.1");
     }
     
     ngOnInit() {
