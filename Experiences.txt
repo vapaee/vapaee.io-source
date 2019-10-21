@@ -171,3 +171,17 @@ Resulta que no puedo cargar con RAM al usuario, si registro ese evento lo tengo 
 - tener cuidado de declarar las actions en el dispatcher (actionname)
   te puede pasar que escribas una action y esté perfecta, compila y todo, pero cuando la llamás a pesar de no dar errores no se ejecuta.
   Si usás el EOSIO_DISPATCH macro y no agregás la action ahi (actionname) el handler ignora cualquier intento de ejecución de actionname action
+- No se pueden hacer índices secundarios con enteros con menos de 64 bits. La solución pasa por castear el valor a uint64_t
+    TABLE escrutinio {
+        uint64_t id;
+        uint16_t sobreord;
+        uint64_t listaid;
+        time_point_sec timestamp;
+        uint64_t primary_key() const { return id; }
+        uint64_t by_sobreord() const { return (uint64_t) sobreord; } // <<------ casteo a uint64_t para que funcione
+        uint64_t by_listaid() const { return listaid; }
+    };
+    typedef eosio::multi_index< "escrutinios"_n, escrutinio, 
+        indexed_by<"sobreord"_n, const_mem_fun<escrutinio, uint64_t, &escrutinio::by_sobreord>>,
+        indexed_by<"listaid"_n, const_mem_fun<escrutinio, uint64_t, &escrutinio::by_listaid>>
+    > escrutinios;
