@@ -175,7 +175,7 @@ CONTRACT vapaeetokens : public eosio::contract {
             PRINT("\nACTION vapaeetokens.withdraw()\n");
             vapaee::token::exchange e;
             e.action_withdraw(owner, quantity);
-        };        
+        };
 
         ACTION swapdeposit(name from, name to, const asset & quantity, bool trigger, string memo) {
             MAINTENANCE();

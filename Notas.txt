@@ -1,40 +1,53 @@
-telosmain push action vapaeetokens tokenowner '["WORD", "viterbotelos"]' -p vapaeetokens@active
+--- TODO pensar ---
+- LISTA: indentificar cuales son todas las que pueden/deben ser decididas entre todos.
+  - banning a token -> is not allowed te be traded!! should not be listed either (this is up to the UI)
+  - delisting token -> is not allowed te be traded!! but is not banned, can be shown (this is up to the UI)
+  - maker fees -> apply percent to taker money and give to the account of the UI maker is using
+  - taker fees -> apply percent to make money and give to the account of the UI taker is using
+  - set token as currency -> allow people to create markets with this token as currency
+    - set token as currency of a group of tokens -> this allow a group of tokens to have it's own currency only withing the group.
+  - history pruning -> to release RAM people can decide to prune the oldest history entries     
 
 
--- TODO --
-- listar los siguientes tokens:
 
 
-https://telostracker.io/trx/91bcf7f9fec41b3ae6b883eb8e4297c1cba96c3a2e20d40ccd8225892d0df26c
+
+Verificar Tlos tokens que tiene https://telos.bloks.io/account/teloscharity
+
+Icons:
+https://iconmonstr.com/
+
+
+
+corenettaxes
+ethangabriel
+funds4people
+rewardstelos
+
+onlinemarket by teloscharity
+
+
+buynamespace by buysellspace by teloscharity
+
+muchas transacciones de ida y vuelta
+teloscharity -> mytelosdrick: by eosswedencor
+             -> corenetadmin: by yourtelostip by eosswedencor
+             -> corenettaxes: by yourtelostip by eosswedencor
+
+
+
 
 hay que verificar las ddependencias de vapaee/dex ?????
 npm WARN @vapaee/dex@2.2.3 requires a peer of @angular/common@^6.0.0-rc.0 || ^6.0.0 but none is installed. You must install peer dependencies yourself.
 npm WARN @vapaee/dex@2.2.3 requires a peer of @angular/core@^6.0.0-rc.0 || ^6.0.0 but none is installed. You must install peer dependencies yourself.
 
 
-cleos push action vapaeetokens issue '["bob", "1000.00 AAA", ""]' -p bob
-
-cleos push action vapaeetokens edittkevent '["AAA", "withdraw", "add", "eventhandler"]' -p bob
-cleos push action vapaeetokens edittkevent '["AAA", "swapdeposit", "add", "eventhandler"]' -p bob
-cleos push action vapaeetokens edittkevent '["AAA", "deposit", "add", "eventhandler"]' -p bob
-
-cleos push action vapaeetokens order '["bob", "sell", "10.00000000 AAA", "0.04000000 TLOS"]' -p bob
 
 
 
-Icons:
-https://iconmonstr.com/
 
--- TODO: VERSION v3.2.0 --
 
-  - si estamos en edition mode:
-    - cada entry va a tener un par de botones: edit y remove
-    - las cajas de markets desaparecen y en su lugar aparece la lista de todos los eventos.
-      - si está subscripto aparece un tock verde y el nombre del destinatario del evento
-      - botones edit y subscribe/unsubscribe
-  - hacer un archivo json que sirva para parametrizar la UI
-    - skin por defecto
-    - filtro de tokens      
+
 
 - Wish list
   --> agregar una category (para los data entries de los tokens) que sea "telegram". Así se pueden poner cosas de telegram también
@@ -43,8 +56,8 @@ https://iconmonstr.com/
   - que la token page incluya una sección de actions (transfer, claim, burn, issue)
   - el selector de markets de la página trade debería permitir markets basados en todas las currencies (incluyendo TELOSD)
   - Upgrade to Angular 8: https://medium.com/mr-frontend-community/upgrade-to-angular-7-beta-within-10-minutes-c14fc380edd
+  - cada evento habría que replicarlo si o si para los usuarios participantes (aparte del dueño del token)
   - cuando el usuario vende todo o compra todo según lo que puede pagar, debería calcularse para que falte y arreglarse en el contrato inteligente para que no falle por falta de fondos.
-  
 
 
 
@@ -71,6 +84,8 @@ https://buy.carbon.money/
 - hacer que el dex.service.ts los incluya en la lista de currencies basándose en este parámetro (dejando a TLOS como primero)
 - hacer que el contrato sólo permita la creación de nuevos mercados sólo si alguna de las dos tokens es una currency
 - Hacer que la página de Token muestre algo coherente si no tiene datos
+
+
 
 telosmain push action vapaeetokens addtoken '["yanggangcoin","YANG",4,"vapaeetokens"]' -p vapaeetokens@active
 telosmain push action vapaeetokens updatetoken '["YANG", "Yang Gang Coin", "https://www.yang2020.com/", "Together, We Can Build a New Kind of Economy, One That Puts People First.", "/assets/uploads/yang-banner.jpg", "/assets/logos/yang-coin.png", "/assets/logos/yang-coin-lg.png",true]' -p vapaeetokens@active
