@@ -47,14 +47,16 @@ teloscharity -> mytelosdrick: by eosswedencor
 
 
 
+
 - Wish list
+  --> agregar una category (para los data entries de los tokens) que sea "telegram". Así se pueden poner cosas de telegram también
   - que el desglose del balance incluya los tokesn del REX y los que están depositados en el DEX.
   + el loading podría incluir un svg del logo vapaee
   - que la token page incluya una sección de actions (transfer, claim, burn, issue)
   - el selector de markets de la página trade debería permitir markets basados en todas las currencies (incluyendo TELOSD)
   - Upgrade to Angular 8: https://medium.com/mr-frontend-community/upgrade-to-angular-7-beta-within-10-minutes-c14fc380edd
+  - cada evento habría que replicarlo si o si para los usuarios participantes (aparte del dueño del token)
   - cuando el usuario vende todo o compra todo según lo que puede pagar, debería calcularse para que falte y arreglarse en el contrato inteligente para que no falle por falta de fondos.
-  
 
 
 
@@ -705,3 +707,11 @@ Por ejemplo, se pueden exigir comisiones por cada evento, cumplir con mínimos o
 
 
 ---------------------------------------------
+
+
+
+
+
+
+Cookies:
+"Our site uses cookies to improve the functionality of our services and products, as well as improve your experience. We require your consent before you continue. You should read our Privacy Policy here and our Cookies Policy <a href="https://www.chainrift.com/cookies">here</a>"
