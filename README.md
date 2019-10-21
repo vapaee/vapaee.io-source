@@ -17,6 +17,54 @@ cd script
 ./init.sh
 ```
 
+
+## features for next version - GOLDEN (v4.x.x)
+- ### Critical
+  
+- ### Normal
+  - [ ] Incentive UI creation
+    - [ ] each UI should be registered as such (name, url, picture, etc) with an account name to which receive the earnings from fees
+    - [ ] modify table of orders to include the account name of the UI being used.
+    - [ ] redirect earnings
+      - [ ] when charging fees, fonds must be to the account of the UI that is being used
+      - [ ] when withdrawing, if after withdraw the user still has microfonds redirect those fonds to the UI account as earning.
+      - [ ] the order and withdraw functions should include the account name of the UI.
+  - [ ] Integration with REX
+    - [ ] study the REX contract to understand how to get the data
+    - [ ] create a #vapaee/rex library to interact with this component from the blockchain
+    - [ ] modify user account page to reflect REX status (Balance Breakdown)
+  - [ ] Integration with Trail
+    - [ ] study the Trail 2.0 contract to understand how does it work
+    - [ ] hoy is it possible for trail system to know how much tokens the user has inside the DEX?
+  - [ ] Deposits and order funds should be reflected in user account page
+  - [ ] DAO. Telos DEX should be subject to modifications through the Trail 2.0 system
+    - [ ] Set a global list of variables and change contract behavior to adjust to those variables:
+      - [ ] banning a token: the token will not allowed te be traded!! should not be listed either (this is up to the UI)
+      - [ ] delisting token: is not allowed te be traded!! but is not banned, can be shown (this is up to the UI)
+      - [ ] maker fees: apply percent to taker money and give to the account of the UI maker is using
+      - [ ] taker fees: apply percent to maker money and give to the account of the UI taker is using
+      - [ ] set token as currency: allow people to create markets with this token as currency
+      - [ ] history pruning: to release RAM people can decide to prune the oldest history entries
+    - [ ] 
+  - [ ] allow UI to filter tokens easely with a config json file 
+  - [ ] BP Multisig 
+  - [ ] more skins    
+  - 
+- ### Issues
+  - [ ] Currently all markets scopes are names &lt;TokenA&gt;&lt;dot&gt;&lt;TokenB&gt; but limited to 12 chars. If token symbols are too big this can't be done. A separated table with scopes and IDs must be created and all current markets should be replaced carefully to the new structure.
+  - [ ] change the concept "token owner" for "token admin" because is more self-explanatory (thanks to SrKnight for the suggestion)
+- ### Wishlist
+  - #### UI
+    - [ ] in the _order editor panel_ to be able to cancel more than one order at a time
+    - [ ] cache the blockhistoy data in client.
+    - [ ] show personal activity in account page
+    - [ ] get Dapp actually listed on Lynx Explorer
+    - [ ] All time entries will show time in terms of how long ago that entry was recorded. Then concrete dates if is too long ago.
+    - [ ] modificate interaction to create two actions in a sigle transaction to bypass the deposit and withdraw steps.
+  - #### Contract
+    - [ ] al history entries should be recorded as an internal inline action instead of using RAM. Both solution can live together. 
+    - [ ] the same admin can register several tokens and define one of them as the currency for the group. Then only markets with tokens within the group are allowed only one of them is the gourp currency. In this case the admin does not need DAO approval to set as currency.
+
 ------------------
 ## features for next version - DELUXE (v3.x.x)
 - ### Critical
@@ -65,12 +113,6 @@ cd script
     - [x] implement three simple color prototypes of skins
 - ### Issues
   - [x] we lost communication with sqrl wallet after ScatterJS update. Consider rollback while not supporting Lynx
-
-- ### Wishlist
-  - [ ] All time entries will show time in terms of how long ago that entry was recorded. Then concrete dates if is too long ago.
-
-
-
 
 
 
