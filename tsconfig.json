@@ -46,6 +46,12 @@
       ],
       "@vapaee/style/*": [
         "dist/vapaee/style/*"
+      ],
+      "@vapaee/rex": [
+        "dist/vapaee/rex"
+      ],
+      "@vapaee/rex/*": [
+        "dist/vapaee/rex/*"
       ]
     }
   }

@@ -334,6 +334,46 @@
           }
         }
       }
+    },
+    "@vapaee/rex": {
+      "root": "projects/vapaee/rex",
+      "sourceRoot": "projects/vapaee/rex/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/vapaee/rex/tsconfig.lib.json",
+            "project": "projects/vapaee/rex/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/vapaee/rex/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/vapaee/rex/src/test.ts",
+            "tsConfig": "projects/vapaee/rex/tsconfig.spec.json",
+            "karmaConfig": "projects/vapaee/rex/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/vapaee/rex/tsconfig.lib.json",
+              "projects/vapaee/rex/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "vapaee.io"

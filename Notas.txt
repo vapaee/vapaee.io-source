@@ -1,16 +1,10 @@
---- TODO pensar ---
-- LISTA: indentificar cuales son todas las que pueden/deben ser decididas entre todos.
-  - banning a token -> is not allowed te be traded!! should not be listed either (this is up to the UI)
-  - delisting token -> is not allowed te be traded!! but is not banned, can be shown (this is up to the UI)
-  - maker fees -> apply percent to taker money and give to the account of the UI maker is using
-  - taker fees -> apply percent to make money and give to the account of the UI taker is using
-  - set token as currency -> allow people to create markets with this token as currency
-    - set token as currency of a group of tokens -> this allow a group of tokens to have it's own currency only withing the group.
-  - history pruning -> to release RAM people can decide to prune the oldest history entries     
-
-
-
-
+-- TODO --
+- crear una biblioteca nueva @vapaee/rex
+- crear tipo de dato (interface) AccountREX que contiene el estado del la cuenta en el REX:
+  - rexfund: plata depositada (liquido disponible)
+  - rexbal: vote_stake, rex_balance, matured_rex, rex_maturities
+- crear tipo de dato (interface) REXPool que contenga as variables globales del REX: rexpool
+- función simple que dado un account te trae su estado actual
 
 Verificar Tlos tokens que tiene https://telos.bloks.io/account/teloscharity
 
@@ -19,25 +13,9 @@ https://iconmonstr.com/
 
 
 
-corenettaxes
-ethangabriel
-funds4people
-rewardstelos
-
-onlinemarket by teloscharity
 
 
-buynamespace by buysellspace by teloscharity
-
-muchas transacciones de ida y vuelta
-teloscharity -> mytelosdrick: by eosswedencor
-             -> corenetadmin: by yourtelostip by eosswedencor
-             -> corenettaxes: by yourtelostip by eosswedencor
-
-
-
-
-hay que verificar las ddependencias de vapaee/dex ?????
+hay que verificar las dependencias de vapaee/dex ?????
 npm WARN @vapaee/dex@2.2.3 requires a peer of @angular/common@^6.0.0-rc.0 || ^6.0.0 but none is installed. You must install peer dependencies yourself.
 npm WARN @vapaee/dex@2.2.3 requires a peer of @angular/core@^6.0.0-rc.0 || ^6.0.0 but none is installed. You must install peer dependencies yourself.
 
