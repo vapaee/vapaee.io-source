@@ -170,9 +170,6 @@ export class WPPage implements OnInit, OnDestroy {
         this.feed.setLoading("user-registered", true);
 
         var encodedName = this.scatter.utils.encodeName(account || this.dex.current.name);
-
-        console.assert(encodedName.toString() == "4399453885987553280", encodedName.toString(), "4399453885987553280");
-
         
         return this.contract.getTable("balances", {
             scope:"VOTE",

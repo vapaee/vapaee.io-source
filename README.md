@@ -54,6 +54,10 @@ cd script
   - [ ] Currently all markets scopes are names &lt;TokenA&gt;&lt;dot&gt;&lt;TokenB&gt; but limited to 12 chars. If token symbols are too big this can't be done. A separated table with scopes and IDs must be created and all current markets should be replaced carefully to the new structure.
   - [ ] change the concept "token owner" for "token admin" because is more self-explanatory (thanks to SrKnight for the suggestion)
 - ### Wishlist
+  - #### wallets support
+    - [ ] Lynx support
+    - [ ] EOSio authenticator support: https://github.com/EOSIO/eosio-reference-chrome-extension-authenticator-app
+    - [ ] LeafWallet www.leafwallet.io (https://www.leafwallet.io/)
   - #### UI
     - [ ] in the _order editor panel_ to be able to cancel more than one order at a time
     - [ ] cache the blockhistoy data in client.

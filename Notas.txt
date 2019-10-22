@@ -12,9 +12,6 @@ Icons:
 https://iconmonstr.com/
 
 
-
-
-
 hay que verificar las dependencias de vapaee/dex ?????
 npm WARN @vapaee/dex@2.2.3 requires a peer of @angular/common@^6.0.0-rc.0 || ^6.0.0 but none is installed. You must install peer dependencies yourself.
 npm WARN @vapaee/dex@2.2.3 requires a peer of @angular/core@^6.0.0-rc.0 || ^6.0.0 but none is installed. You must install peer dependencies yourself.
