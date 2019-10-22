@@ -17,9 +17,11 @@ npm WARN @vapaee/dex@2.2.3 requires a peer of @angular/common@^6.0.0-rc.0 || ^6.
 npm WARN @vapaee/dex@2.2.3 requires a peer of @angular/core@^6.0.0-rc.0 || ^6.0.0 but none is installed. You must install peer dependencies yourself.
 
 
-
-
-
+------------
+--> BUG <--
+porque no se ven los TLOS en los balances????
+https://vapaee.io/exchange/account/piedpipernet
+-------------
 
 
 
