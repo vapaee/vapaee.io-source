@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { VapaeeRex } from './rex.service';
+import { VapaeeREX } from './rex.service';
 
 @NgModule({
   imports: [
   ],
   declarations: [],
-  providers: [VapaeeRex],
+  providers: [VapaeeREX],
   exports: []
 })
 export class VapaeeRexModule { }

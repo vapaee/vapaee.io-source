@@ -21,6 +21,7 @@ import { DropdownService } from './services/dropdown.service';
 import { VapaeeComponentsModule } from './components/vpe-components.module';
 import { VapaeeScatterModule } from '@vapaee/scatter';
 import { VapaeeDexModule } from '@vapaee/dex';
+import { VapaeeRexModule } from '@vapaee/rex';
 
 
 import { WPPage } from './pages/wp/wp.page';
@@ -39,6 +40,7 @@ import { TimezoneService } from './services/timezone.service';
 import { TokenEditPage } from './pages/tokenedit/tokenedit.page';
 import { FormsModule } from '@angular/forms';
 import { DirectivesModule } from './directives/directives.module';
+
 
 
 
@@ -74,6 +76,7 @@ import { DirectivesModule } from './directives/directives.module';
         VapaeeComponentsModule,
         VapaeeScatterModule,
         VapaeeDexModule,
+        VapaeeRexModule,
         ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
         SidebarModule.forRoot(),
         FormsModule,

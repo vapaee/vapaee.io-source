@@ -1,6 +1,10 @@
 import { TokenDEX } from "./token-dex.class";
 import { AssetDEX } from "./asset-dex.class";
 
+export interface DEXdata {
+    
+}
+
 export interface MarketMap {
     [key:string]: Market;
 }

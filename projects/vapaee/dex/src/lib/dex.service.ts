@@ -771,9 +771,9 @@ export class VapaeeDEX {
                 account = this.current.name;
             }            
             if (account) {
-                _balances = await this.fetchBalances(account);
+                await this.fetchBalances(account);
             }
-            this.balances = _balances;
+            // this.balances = _balances;
             // console.log("VapaeeDEX balances updated");
             this.feed.setLoading("balances", false);
             return this.balances;
@@ -1765,28 +1765,41 @@ export class VapaeeDEX {
     }
 
     private async fetchBalances(account): Promise<any> {
+        console.log("VapaeeDex.fetchBalances() ------ (ini)");
         return this.waitTokensLoaded.then(async _ => {
             var contracts = {};
-            var balances = [];
+            // var balances = [];
             for (var i in this.tokens) {
                 if (this.tokens[i].offchain) continue;
                 contracts[this.tokens[i].contract] = true;
             }
+            let promises:Promise<any>[] = [];         
             for (var contract in contracts) {
-                this.feed.setLoading("balances-"+contract, true);
-            }            
-            for (var contract in contracts) {
-                var result = await this.contract.getTable("accounts", {
-                    contract:contract,
-                    scope: account || this.current.name
-                });
-                for (var i in result.rows) {
-                    balances.push(new AssetDEX(result.rows[i].balance, this));
-                }
-                this.feed.setLoading("balances-"+contract, false);
+                promises.push(this.fetchBalancesOnContract(account, contract));
             }
-            return balances;
+            return Promise.all(promises).then(_ => console.log("VapaeeDex.fetchBalances() ------ (fin)") ).then(_ => this.balances);
         });
+    }
+
+    private async fetchBalancesOnContract(account:string, contract:string) {
+        console.log("VapaeeDex.fetchBalancesOnContract()", account, contract);
+        this.feed.setLoading("balances-"+contract, true);
+        var result = await this.contract.getTable("accounts", {
+            contract:contract,
+            scope: account || this.current.name
+        });
+        let _balances = [];
+        for (var i in result.rows) {
+            let _balance = new AssetDEX(result.rows[i].balance, this);
+            if (_balance.token) {
+                console.log("adding balance: ", result.rows[i].balance, "(" + contract + ")");
+                _balances.push(_balance);
+            } else {
+                console.warn("Token found but not registered on contract", contract, result.rows[i].balance);
+            }
+        }
+        this.balances = _balances.concat(this.balances);;
+        this.feed.setLoading("balances-"+contract, false);
     }
 
     private fetchOrders(params:TableParams): Promise<TableResult> {

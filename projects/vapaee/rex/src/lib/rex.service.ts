@@ -4,9 +4,9 @@ import { Feedback } from '@vapaee/feedback';
 
 
 export interface REXdata {
-    "deposits": Asset,   // TLOS
-    "balance": Asset,   // TLOS
-    "profits": Asset,   // TLOS
+    "deposits": Asset,             // TLOS
+    "balance": Asset,              // TLOS
+    "profits": Asset,              // TLOS
     "tables": {
         "rexfund": REXdeposits,
         "rexbal": REXbalance
@@ -16,14 +16,14 @@ export interface REXdata {
 export interface REXdeposits {
     "version": 0,
     "owner": string,
-    "balance": Asset,                 // TLOS
+    "balance": Asset,              // TLOS
 }
 
 export interface REXbalance {
     "version": number,
     "owner": string,
-    "vote_stake": Asset,                 // TLOS
-    "rex_balance": Asset,                // REX
+    "vote_stake": Asset,           // TLOS
+    "rex_balance": Asset,          // REX
     "matured_rex": number,
     "rex_maturities": {
         "first": Date,
@@ -45,7 +45,7 @@ export interface REXpool {
 @Injectable({
     providedIn: "root"
 })
-export class VapaeeRex {
+export class VapaeeREX {
 
     public contract: SmartContract;
     public contract_name: string;

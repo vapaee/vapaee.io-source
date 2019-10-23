@@ -3,10 +3,10 @@ import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Subscriber } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { VapaeeDEX, AssetDEX } from '@vapaee/dex';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
-import { UserOrdersMap } from '@vapaee/dex';
 import { VpePanelWalletComponent } from 'src/app/components/vpe-panel-wallet/vpe-panel-wallet.component';
+import { VapaeeDEX, AssetDEX, UserOrdersMap } from '@vapaee/dex';
+import { VapaeeREX } from '@vapaee/rex';
 
 
 @Component({
@@ -26,9 +26,10 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
         public local: LocalStringsService,
         public route: ActivatedRoute,
         public dex: VapaeeDEX,
-        public components: VpeComponentsService
+        public components: VpeComponentsService,
+        public rex: VapaeeREX
     ) {
-        this.subscriber = new Subscriber<string>(this.onCntCurrentAccountChange.bind(this));
+        this.subscriber = new Subscriber<string>(this.onDexCurrentAccountChange.bind(this));
         this.current_mode = true;        
     }
 
@@ -66,22 +67,22 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
         setTimeout(_ => {
             if (!name) {
                 name = "guest";
-                this.onCntCurrentAccountChange(name);
+                this.onDexCurrentAccountChange(name);
             } else {
                 this.dex.resetCurrentAccount(name);
             };
         }, 0);
     }
 
-    onCntCurrentAccountChange(account: string) {
-        // console.log("VaeProfilePage.onCntCurrentAccountChange() ----------------->", account);
+    onDexCurrentAccountChange(account: string) {
+        // console.log("VaeProfilePage.onDexCurrentAccountChange() ----------------->", account);
         var url = "/exchange/account/";
         if (account) {
             url += account;
         } else {
             url += "guest";
         };
-        // console.log("accountPage.onCntCurrentAccountChange()", [account], " --> ", url);
+        // console.log("accountPage.onDexCurrentAccountChange()", [account], " --> ", url);
         this.app.navigate(url);
     }
 

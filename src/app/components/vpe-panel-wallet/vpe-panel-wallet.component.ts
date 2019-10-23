@@ -74,6 +74,10 @@ export class VpePanelWalletComponent implements OnChanges {
         if (this._nonfake_balances) return this._nonfake_balances;
         this._nonfake_balances = this._nonfake_balances || [];
         for (var i in this.balances) {
+            if (!this.balances[i].token) {
+                console.error("ERROR: invalid balance on index i: ", i, this.balances);
+                continue;
+            }
             if (!this.balances[i].token.offchain) {
                 this._nonfake_balances.push(this.balances[i]);
             }

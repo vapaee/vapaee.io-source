@@ -5,7 +5,15 @@
     "ng": "ng",
     "start": "ng serve --poll=2000 -o",
     "serve": "ng serve --poll=2000 -o",
-    "libs": "ng build @vapaee/feedback --prod && ng build @vapaee/style --prod && ng build @vapaee/scatter --prod && ng build @vapaee/rex --prod && ng build @vapaee/dex --prod",
+
+    "libs": "npm run lib-feedback && npm run lib-style && npm run lib-scatter && npm run lib-rex && npm run lib-dex",
+
+    "lib-rex": "ng build @vapaee/rex --prod",
+    "lib-dex": "ng build @vapaee/dex --prod",
+    "lib-style": "ng build @vapaee/style --prod",
+    "lib-scatter": "ng build @vapaee/scatter --prod",
+    "lib-feedback": "ng build @vapaee/feedback --prod",
+
     "build": "ng build --aot --buildOptimizer --prod",
     "deploy": "npm run libs && ng build --aot --buildOptimizer --prod && cp .htaccess /var/www/vapaee.io/.htaccess && cp cert/* /var/www/vapaee.io/ && cd /var/www/vapaee.io && git add -A && git commit -m 'save' && git push && amazon_server_console",
     "postinstall": "node src/patch.js; npm run libs; cd contracts/_examples; if [ ! -d 'eosio.contracts' ]; then git clone https://github.com/Telos-Foundation/eosio.contracts; fi; npm run serve",
