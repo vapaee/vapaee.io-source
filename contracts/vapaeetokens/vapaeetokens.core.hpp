@@ -33,7 +33,7 @@ namespace vapaee {
             auto existing = statstable.find( sym.code().raw() );
             eosio_assert( existing == statstable.end(), "token with symbol already exists" );
 
-            statstable.emplace( _self, [&]( auto& s ) {
+            statstable.emplace( owner, [&]( auto& s ) {
                 s.supply.symbol = maximum_supply.symbol;
                 s.max_supply    = maximum_supply;
                 s.issuer        = owner;

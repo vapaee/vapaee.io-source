@@ -104,7 +104,7 @@ namespace vapaee {
                 if (ratio == 0) {
                     amount = 0;
                 } else {
-                    amount = (int64_t)(amount * ratio / unit);
+                    amount = (int64_t)(int128_t(amount) * ratio / unit);
                 }
             }
 

@@ -49,7 +49,7 @@ cd script
   - [ ] allow UI to filter tokens easely with a config json file 
   - [ ] BP Multisig 
   - [ ] more skins    
-  - 
+  - [ ] check all interface in a cell phone
 - ### Issues
   - [ ] Currently all markets scopes are names &lt;TokenA&gt;&lt;dot&gt;&lt;TokenB&gt; but limited to 12 chars. If token symbols are too big this can't be done. A separated table with scopes and IDs must be created and all current markets should be replaced carefully to the new structure.
   - [ ] change the concept "token owner" for "token admin" because is more self-explanatory (thanks to SrKnight for the suggestion)
@@ -65,12 +65,14 @@ cd script
     - [ ] get Dapp actually listed on Lynx Explorer
     - [ ] All time entries will show time in terms of how long ago that entry was recorded. Then concrete dates if is too long ago.
     - [ ] modificate interaction to create two actions in a sigle transaction to bypass the deposit and withdraw steps.
+    - [ ] delegate the signing of transactions and be able to be embeded inside an iframe. This is for blocks.io to embed Vapaée as a Telos DEX (like newdex)
   - #### Contract
+    - [ ] autowithdraw. User shoud be able to set an order to autowithdraw if completed.
     - [ ] al history entries should be recorded as an internal inline action instead of using RAM. Both solution can live together. 
     - [ ] the same admin can register several tokens and define one of them as the currency for the group. Then only markets with tokens within the group are allowed only one of them is the gourp currency. In this case the admin does not need DAO approval to set as currency.
 
 ------------------
-## features for next version - DELUXE (v3.x.x)
+## features for version - DELUXE (v3.x.x)
 - ### Critical
   - [x] Trade any pair
     - [x] smart contract adaptation
@@ -119,17 +121,8 @@ cd script
   - [x] we lost communication with sqrl wallet after ScatterJS update. Consider rollback while not supporting Lynx
 
 
-
-
-
-
-
-
-
-
-
-
-## features for current version - PREMIUM (v2.x.x)
+-----------------
+## features for version - PREMIUM (v2.x.x)
 
 - ### Critical
   - [x] PWA
