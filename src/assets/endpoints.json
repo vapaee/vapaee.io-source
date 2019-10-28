@@ -53,8 +53,8 @@
     "telos-testnet": {
         "name": "TELOS TestNet",
         "symbol": "TLOS",
-        "explorer": "https://monitor.telosfoundation.io",
-        "chainId":"335e60379729c982a6f04adeaad166234f7bf5bf1191252b8941783559aec33e",
+        "explorer": "https://telos-test.bloks.io",
+        "chainId":"1eaa0824707c8c16bd25145493bf062aecddfeb56c736f6ba6397f3195f33c9f",
         "endpoints":[
         {
             "protocol":"https",
@@ -62,7 +62,7 @@
             "port":443
         },
         {
-            "protocol":"http2",
+            "protocol":"https",
             "host":"api.telosmadrid.io",
             "port":443
         }]

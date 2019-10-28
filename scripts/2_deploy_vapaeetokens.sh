@@ -13,6 +13,13 @@ if [ "$2" == "force" ]; then
    force=true
 fi
 
+if [ "$1" == "prod" ]; then
+   NET='--url https://telos.eos.barcelona'
+fi
+
+if [ "$1" == "test" ]; then
+   NET='--url https://testnet.telos.caleos.io'
+fi
 
 VAPAEETOKENS_HOME=$HOME/contracts/vapaeetokens
 
@@ -33,13 +40,14 @@ cleos $NET set contract vapaeetokens $PWD -p vapaeetokens@active
 
 
 EVENTHANDLER_HOME=$HOME/contracts/eventhandler
-
-echo "-------- eventhandler ---------"
-cd $EVENTHANDLER_HOME
-pwd
-if [[ eventhandler.hpp -nt eventhandler.wasm || 
-      $force == true ]]; then
-    eosio-cpp -o eventhandler.wasm eventhandler.cpp --abigen -I ../includes
+if [ "$NET" == "" ]; then
+    echo "-------- eventhandler ---------"
+    cd $EVENTHANDLER_HOME
+    pwd
+    if [[ eventhandler.hpp -nt eventhandler.wasm || 
+        $force == true ]]; then
+        eosio-cpp -o eventhandler.wasm eventhandler.cpp --abigen -I ../includes
+    fi
+    echo "cleos $NET set contract eventhandler $PWD -p eventhandler@active"
+    cleos $NET set contract eventhandler $PWD -p eventhandler@active
 fi
-echo "cleos $NET set contract eventhandler $PWD -p eventhandler@active"
-cleos $NET set contract eventhandler $PWD -p eventhandler@active

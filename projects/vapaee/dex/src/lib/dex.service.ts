@@ -1768,7 +1768,7 @@ export class VapaeeDEX {
         console.log("VapaeeDex.fetchBalances() ------ (ini)");
         return this.waitTokensLoaded.then(async _ => {
             var contracts = {};
-            // var balances = [];
+            this.balances = [];
             for (var i in this.tokens) {
                 if (this.tokens[i].offchain) continue;
                 contracts[this.tokens[i].contract] = true;

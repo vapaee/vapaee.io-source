@@ -140,7 +140,8 @@ namespace vapaee {
                 PRINT("  itr->amount > amount: ", itr->amount.to_string(), " > ", amount.to_string(),  "\n");
                 eosio_assert(itr->amount > amount,
                         create_error_asset2(ERROR_ASD_3, amount, itr->amount).c_str());
-                depositstable.modify(*itr, aux_get_modify_payer(ram_payer), [&](auto& a){
+                
+                depositstable.modify(*itr, same_payer, [&](auto& a){
                     a.amount -= amount;
                 });
             }
@@ -161,6 +162,7 @@ namespace vapaee {
             depusers depuserstable(get_self(), get_self().value);
             auto user_itr = depuserstable.find(owner.value);
             if (user_itr == depuserstable.end()) {
+                eosio_assert(has_auth(ram_payer), "ERROR: attempt to allocate RAM without authorization for depusers table");
                 depuserstable.emplace( ram_payer, [&]( auto& a ){
                     a.account = owner;
                 });
@@ -169,11 +171,12 @@ namespace vapaee {
             deposits depositstable(get_self(), owner.value);
             auto itr = depositstable.find(amount.symbol.code().raw());
             if (itr == depositstable.end()) {
+                eosio_assert(has_auth(ram_payer), "ERROR: attempt to allocate RAM without authorization for deposits table");
                 depositstable.emplace( ram_payer, [&]( auto& a ){
                     a.amount = amount;
                 });
             } else {
-                depositstable.modify(*itr, aux_get_modify_payer(ram_payer), [&](auto& a){
+                depositstable.modify(*itr, same_payer, [&](auto& a){
                     eosio_assert(a.amount.symbol == amount.symbol,
                         create_error_asset2(ERROR_AAD_1, a.amount, amount).c_str());                    
                     a.amount += amount;
@@ -792,10 +795,10 @@ namespace vapaee {
             aux_register_event(owner, name(type.to_string() + ".order"), total.to_string() + "|" + price.to_string() );
 
 
-// // this code is useful to hot-debugging
-// eosio_assert(owner.value != name("viterbotelos").value,
-//     create_error_asset4("DEBUG IN PROGRESS. PLEASE WAIT",
-//     price, total, inverse, payment).c_str()); 
+            // // this code is useful to hot-debugging
+            // eosio_assert(owner.value != name("viterbotelos").value,
+            //     create_error_asset4("DEBUG IN PROGRESS. PLEASE WAIT",
+            //     price, total, inverse, payment).c_str()); 
 
             if (type == name("sell")) {
                 aux_generate_sell_order(false, owner, scope_sell, scope_buy, total, payment, price, inverse, ram_payer);
@@ -888,10 +891,10 @@ namespace vapaee {
                         current_total = remaining;  // CNT
                         current_payment.amount = vapaee::utils::multiply(remaining, b_ptr->inverse);
 
-// // this code is useful to hot-debugging
-// eosio_assert(owner.value != name("viterbotelos").value,
-//     create_error_asset4("DEBUG IN PROGRESS. PLEASE WAIT",
-//     current_payment, b_ptr->inverse, remaining, b_ptr->total).c_str());                          
+                        // // this code is useful to hot-debugging
+                        // eosio_assert(owner.value != name("viterbotelos").value,
+                        //     create_error_asset4("DEBUG IN PROGRESS. PLEASE WAIT",
+                        //     current_payment, b_ptr->inverse, remaining, b_ptr->total).c_str());                          
 
                         buytable.modify(*b_ptr, aux_get_modify_payer(ram_payer), [&](auto& a){
                             double percent = (double)remaining.amount / (double)a.total.amount;
@@ -992,7 +995,7 @@ namespace vapaee {
 
                     // transfer to buyer CNT
                     action(
-                        permission_level{owner,name("active")},
+                        permission_level{get_self(),name("active")},
                         get_self(),
                         name("swapdeposit"),
                         std::make_tuple(owner, buyer, seller_gains, true, string("exchange made for ") + buyer_gains.to_string())
@@ -1001,7 +1004,7 @@ namespace vapaee {
                         
                     // transfer to contract fees on CNT
                     action(
-                        permission_level{owner,name("active")},
+                        permission_level{get_self(),name("active")},
                         get_self(),
                         name("swapdeposit"),
                         std::make_tuple(owner, get_self(), buyer_fee, true, string("exchange made for ") + buyer_gains.to_string())
@@ -1062,7 +1065,7 @@ namespace vapaee {
 
                 // transfer payment deposits to contract
                 action(
-                    permission_level{owner,name("active")},
+                    permission_level{get_self(),name("active")},
                     get_self(),
                     name("swapdeposit"),
                     std::make_tuple(owner, get_self(), remaining, false, string("future payment for order"))
@@ -1410,7 +1413,11 @@ namespace vapaee {
             PRINT(" memo: ", memo.c_str(), "\n");
             
             eosio_assert( from != to, "cannot swap deposits to self" );
-            require_auth( from );
+
+            // if is not an internal inline action then the user "from" must have beed signed this transaction
+            if ( !has_auth( get_self() )) {
+                require_auth( from );
+            }
             
             eosio_assert( is_account( to ), "to account does not exist");
             auto sym = quantity.symbol.code();
