@@ -15,9 +15,9 @@
 
             <vpe-panel-wallet #wallet1 (confirmWithdraw)="onWalletConfirmWithdraw($event, wallet1)" (confirmDeposit)="onWalletConfirmDeposit($event, wallet1)"  [deposit_error]="deposit_error" [withdraw_error]="withdraw_error" [loading]="loading" [actions]="true" [hideuser]="true" [hideheader]="true" [title]="local.string.wallet" [deposits]="deposits" [balances]="balances"></vpe-panel-wallet>
 
-            <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [current]="dex.current"> </vpe-panel-account-resources>
+            <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [account]="dex.current"> </vpe-panel-account-resources>
                 
-            <vpe-panel-balance-breakdown [title]="local.string.balbreak" [hideheader]="true" [current]="dex.current"></vpe-panel-balance-breakdown>
+            <vpe-panel-balance-breakdown [title]="local.string.balbreak" [hideheader]="true" [account]="dex.current"></vpe-panel-balance-breakdown>
 
             <!--vpe-panel-user-orders [userorders]="userorders" [hideheader]="true" [title]="local.string.orders"></vpe-panel-user-orders-->
         </div>
@@ -35,8 +35,8 @@
 
     <div class="row" [hidden]="dex.current.name == dex.default.name">
         <div class="col-6 col-padding-right">
-            <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [current]="dex.current"> </vpe-panel-account-resources>
-            <vpe-panel-balance-breakdown [title]="local.string.balbreak" [hideheader]="true" [current]="dex.current"></vpe-panel-balance-breakdown>
+            <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [account]="dex.current"> </vpe-panel-account-resources>
+            <vpe-panel-balance-breakdown [title]="local.string.balbreak" [hideheader]="true" [account]="dex.current"></vpe-panel-balance-breakdown>
             <vpe-panel-user-orders (onTableSelected)="navigateToTable($event)" [userorders]="userorders" [hideheader]="true" [title]="local.string.orders"></vpe-panel-user-orders>
         </div>
         <div class="col-6 col-padding-left">

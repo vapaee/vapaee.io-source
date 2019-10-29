@@ -36,7 +36,7 @@ export class TimezoneService {
             var local = new Date();
             local.setTime(time + this.offset);
             this.map[id] = local;
-            console.log(local);
+            // console.log(local);
         }
         return this.map[id];
     }

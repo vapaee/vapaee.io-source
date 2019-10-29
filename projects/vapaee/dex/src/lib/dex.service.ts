@@ -1782,7 +1782,7 @@ export class VapaeeDEX {
     }
 
     private async fetchBalancesOnContract(account:string, contract:string) {
-        console.log("VapaeeDex.fetchBalancesOnContract()", account, contract);
+        // console.log("VapaeeDex.fetchBalancesOnContract()", account, contract);
         this.feed.setLoading("balances-"+contract, true);
         var result = await this.contract.getTable("accounts", {
             contract:contract,

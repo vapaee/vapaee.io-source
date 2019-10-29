@@ -21,7 +21,7 @@ export class VpePanelAccountResourcesComponent implements OnChanges {
     @Input() public title: string;
     @Input() public loading: boolean;
     @Input() public error: string;
-    @Input() public current: Account;
+    @Input() public account: Account;
 
     @Output() confirmDeposit: EventEmitter<any> = new EventEmitter();
     @Output() confirmWithdraw: EventEmitter<any> = new EventEmitter();
@@ -37,7 +37,7 @@ export class VpePanelAccountResourcesComponent implements OnChanges {
         this.hideheader = false;
         this.margintop = true;
         this.expanded = true; 
-        this.current = this.dex.default;
+        this.account = this.dex.default;
     }
 
     async updateSize(event:ResizeEvent) {

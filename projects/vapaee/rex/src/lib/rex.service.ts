@@ -61,6 +61,7 @@ export class VapaeeREX {
         this.contract = this.scatter.getSmartContract(this.contract_name);
         this.feed = new Feedback();
         this.balances = {};
+        this.deposits = {};
         this.pool = {
             version: 0,
             loan_num:0,
@@ -160,7 +161,7 @@ export class VapaeeREX {
     }
 
 
-    getAccountREXData(account: string) {
+    async getAccountREXData(account: string) {
         this.feed.setLoading("REXData", false);
         delete this.balances[account];
         delete this.deposits[account];
@@ -193,6 +194,7 @@ export class VapaeeREX {
         }).catch(e => {
             console.error("ERROR: ", e);
             this.feed.setLoading("REXData", false);
+            return null;
         });  
     }
 
