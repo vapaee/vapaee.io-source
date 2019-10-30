@@ -51,6 +51,7 @@ export class VapaeeREX {
     public contract_name: string;
     public feed: Feedback;
     public pool: REXpool;
+    public default: REXdata;
     public balances: {[account:string]:REXbalance};
     public deposits: {[account:string]:REXdeposits};
     
@@ -62,6 +63,26 @@ export class VapaeeREX {
         this.feed = new Feedback();
         this.balances = {};
         this.deposits = {};
+        this.default = {
+            "deposits": new Asset(),
+            "balance": new Asset(),
+            "profits": new Asset(),
+            "tables": {
+                "rexfund": {
+                    "version": 0,
+                    "owner": this.scatter.username,
+                    "balance": new Asset(),                     
+                },
+                "rexbal": {
+                    "version": 0,
+                    "owner": this.scatter.username,
+                    "vote_stake": new Asset(),
+                    "rex_balance": new Asset(),
+                    "matured_rex": 0,
+                    "rex_maturities": []
+                }
+            }
+        }
         this.pool = {
             version: 0,
             loan_num:0,
@@ -175,7 +196,14 @@ export class VapaeeREX {
 
             let ratio = this.pool.total_lendable.amount.dividedBy(this.pool.total_rex.amount);
             let balance_ammount = _rexbal.rex_balance.amount.multipliedBy(ratio);
-            let balance: Asset = new Asset(balance_ammount.toString() + " TLOS");
+
+
+            //console.log("------------------------------------");
+            //console.log("balance_ammount: ", balance_ammount);
+
+            let balance: Asset = new Asset(balance_ammount.toString() + " TLOS", 4);
+            //console.log("balance.toString(): ", balance.toString());
+            //console.log("------------------------------------");
 
             let deposits: Asset = _rexfund.balance;
 

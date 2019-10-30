@@ -31,7 +31,11 @@ export class Asset {
         }
 
         if (typeof a == "string") {
-            this.parse(a);
+            if (typeof b == "number") {
+                this.parse(a, b);
+            } else {
+                this.parse(a);
+            }            
             console.assert(this.amount instanceof BigNumber, "ERROR: Asset string malformed: '"+a+"'");
             return;
         }
@@ -55,19 +59,20 @@ export class Asset {
         return new Asset(this.amount, this.token);
     }
 
-    parse(text: string) {
+    parse(text: string, precision:number = 0) {
         if (text == "") return;
         var sym = text.split(" ")[1];
         var amount_str = text.split(" ")[0];
         this.amount = new BigNumber(amount_str);
 
-        var precision = 0;
-        if (amount_str.split(".").length == 2) {
-            precision = amount_str.split(".")[1].length;
-        } else if (amount_str.split(".").length == 1) {
-            if (isNaN(parseInt(amount_str))) {
-                console.error("ERROR: Asset malformed string: '"+text+"'");
-            }
+        if (precision == 0) {
+            if (amount_str.split(".").length == 2) {
+                precision = amount_str.split(".")[1].length;
+            } else if (amount_str.split(".").length == 1) {
+                if (isNaN(parseInt(amount_str))) {
+                    console.error("ERROR: Asset malformed string: '"+text+"'");
+                }
+            }    
         }
         
         this.token = new Token({

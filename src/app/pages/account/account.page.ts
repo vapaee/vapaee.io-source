@@ -7,13 +7,7 @@ import { VpeComponentsService } from 'src/app/components/vpe-components.service'
 import { VpePanelWalletComponent } from 'src/app/components/vpe-panel-wallet/vpe-panel-wallet.component';
 import { VapaeeDEX, AssetDEX, UserOrdersMap } from '@vapaee/dex';
 import { VapaeeREX, REXdata } from '@vapaee/rex';
-import { AccountData } from '@vapaee/scatter';
-
-interface LocalAccount {
-    name: string;
-    data?: AccountData;
-    rex?: REXdata;
-}
+import { Account } from '@vapaee/scatter';
 
 @Component({
     selector: 'account-page',
@@ -26,7 +20,8 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
     current_mode: boolean;
     loading: boolean;
     error: string;
-    account: LocalAccount;
+    account: Account;
+    rexdata: REXdata;
    
     constructor(
         public app: AppService,
@@ -38,7 +33,7 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
     ) {
         this.subscriber = new Subscriber<string>(this.onDexCurrentAccountChange.bind(this));
         this.current_mode = true;
-        this.account = this.dex.default;
+        this.rexdata = this.rex.default;
     }
 
 
@@ -88,9 +83,9 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
         if (account) {
             url += account;
             this.account = this.dex.current;
-            this.account.rex = await this.rex.getAccountREXData(account);
-            console.log("------>", this.account);
+            this.rexdata = await this.rex.getAccountREXData(account);
             console.log("------>", this.rex);
+            console.log("------>", this.rexdata);
         } else {
             this.account = this.dex.default;
             url += "guest";

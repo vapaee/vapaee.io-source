@@ -60,7 +60,7 @@ export class RootPage implements OnInit {
 
 
         // ----------------------
-        this.CheckWP();
+        // this.CheckWP();
     }
 
     collapseMenu() {
@@ -81,12 +81,13 @@ export class RootPage implements OnInit {
     }
 
     // ----------------------------------------------------------
+    /*
     CheckWP() {
         this.user_voted_us = true;
         this.subscriber = new Subscriber<string>(this.onAccountChange.bind(this));
         this.dex.onCurrentAccountChange.subscribe(this.subscriber);
     }
-
+    
     user_voted_us:boolean;
     private subscriber: Subscriber<string>;
     findOutIfUserVotedUs(account:string = null){
@@ -110,5 +111,6 @@ export class RootPage implements OnInit {
     onAccountChange(account: string) {
         return this.findOutIfUserVotedUs(account);
     }
+    */
 
 }

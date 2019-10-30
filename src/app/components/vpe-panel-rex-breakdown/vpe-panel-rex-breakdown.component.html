@@ -1,0 +1,23 @@
+<vpe-panel [id]="'vpe-panel-balance-breakdown'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.balbreak">
+    <div class="row">
+        <div class="col-sm-12" [hidden]="!title">
+            <div class="text-lg text-center">
+                {{title | titlecase}}
+                <span class="spinner-border spinner-border-sm" [hidden]="!rex.feed.loading('REXData')"></span>
+            </div>
+        </div>                
+        <div class="col-sm-12">
+            <table class="table right-aligned margin-top">
+                <tbody>
+                    <tr><td>Balance:
+                        <span class="btn btn-xs btn-primary" [hidden]="detail" (click)="detail=true">+</span>
+                        <span class="btn btn-xs btn-primary" [hidden]="!detail"  (click)="detail=false">-</span>
+                    </td><td>{{data.balance.toString()}}</td></tr>
+                    <tr [hidden]="!detail"><td>&nbsp; - &nbsp;Vote Stake:</td><td>{{data.tables.rexbal.vote_stake.toString()}}</td></tr>
+                    <tr [hidden]="!detail"><td>&nbsp; - &nbsp;Profit:</td><td>{{data.profits.toString()}}</td></tr>
+                    <tr><td>Liquid Deposits:</td><td>{{data.deposits.toString()}}</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</vpe-panel>

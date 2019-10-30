@@ -18,7 +18,8 @@
             <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [account]="dex.current"> </vpe-panel-account-resources>
                 
             <vpe-panel-balance-breakdown [title]="local.string.balbreak" [hideheader]="true" [account]="dex.current"></vpe-panel-balance-breakdown>
-
+            
+            <vpe-panel-rex-breakdown [title]="local.string.rexbreak" [hideheader]="true" [data]="rexdata"></vpe-panel-rex-breakdown>
             <!--vpe-panel-user-orders [userorders]="userorders" [hideheader]="true" [title]="local.string.orders"></vpe-panel-user-orders-->
         </div>
     </div>
@@ -37,6 +38,8 @@
         <div class="col-6 col-padding-right">
             <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [account]="dex.current"> </vpe-panel-account-resources>
             <vpe-panel-balance-breakdown [title]="local.string.balbreak" [hideheader]="true" [account]="dex.current"></vpe-panel-balance-breakdown>
+            <vpe-panel-rex-breakdown [title]="local.string.rexbreak" [hideheader]="true" [data]="rexdata"></vpe-panel-rex-breakdown>
+
             <vpe-panel-user-orders (onTableSelected)="navigateToTable($event)" [userorders]="userorders" [hideheader]="true" [title]="local.string.orders"></vpe-panel-user-orders>
         </div>
         <div class="col-6 col-padding-left">

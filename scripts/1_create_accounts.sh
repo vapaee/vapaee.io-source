@@ -33,4 +33,8 @@ cleos set account permission vapaeetokens active '{"threshold": 1,"keys": [{"key
 
 
 
+# telostest set account permission acorntkntest active '{"threshold": 1,"keys": [{"key": "EOS7JYMQL2QE8XLYqoEwHgAhbhdf3nhZFnCpeRrdRyLVTWUcBza9N","weight": 1}],"accounts": [{"permission":{"actor":"acorntkntest","permission":"eosio.code"},"weight":1}]}' owner -p acorntkntest
+
+
+
 

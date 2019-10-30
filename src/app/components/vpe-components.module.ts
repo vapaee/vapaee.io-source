@@ -29,6 +29,7 @@ import { VpePanelMarketsCardDeckComponent } from './vpe-panel-markets-card-deck/
 import { VpePanelHistoryComponent } from './vpe-panel-history/vpe-panel-history.component';
 import { VpePanelWalletComponent } from './vpe-panel-wallet/vpe-panel-wallet.component';
 import { VpePanelBalanceBreakdawnComponent } from './vpe-panel-balance-breakdown/vpe-panel-balance-breakdown.component';
+import { VpePanelREXBreakdawnComponent } from './vpe-panel-rex-breakdown/vpe-panel-rex-breakdown.component';
 import { VpePanelAccountResourcesComponent } from './vpe-panel-account-resources/vpe-panel-account-resources.component';
 import { VpePanelAccountHeaderComponent } from './vpe-panel-account-header/vpe-panel-account-header.component';
 import { VpePanelChartComponent } from './vpe-panel-chart/vpe-panel-chart.component';
@@ -58,6 +59,7 @@ import { VpeCheckboxComponent } from './vpe-checkbox/vpe-checkbox.component';
         VpePanelHistoryComponent,
         VpePanelWalletComponent,
         VpePanelBalanceBreakdawnComponent,
+        VpePanelREXBreakdawnComponent,
         VpePanelAccountResourcesComponent,
         VpePanelAccountHeaderComponent,
         VpePanelChartComponent,
@@ -95,6 +97,7 @@ import { VpeCheckboxComponent } from './vpe-checkbox/vpe-checkbox.component';
         VpePanelHistoryComponent,
         VpePanelWalletComponent,
         VpePanelBalanceBreakdawnComponent,
+        VpePanelREXBreakdawnComponent,
         VpePanelAccountResourcesComponent,
         VpePanelAccountHeaderComponent,
         VpePanelChartComponent,
