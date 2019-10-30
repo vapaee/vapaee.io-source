@@ -4,6 +4,7 @@ import { Feedback } from '@vapaee/feedback';
 
 
 export interface REXdata {
+    "total": Asset,                // TLOS
     "deposits": Asset,             // TLOS
     "balance": Asset,              // TLOS
     "profits": Asset,              // TLOS
@@ -64,6 +65,7 @@ export class VapaeeREX {
         this.balances = {};
         this.deposits = {};
         this.default = {
+            "total": new Asset(),
             "deposits": new Asset(),
             "balance": new Asset(),
             "profits": new Asset(),
@@ -206,9 +208,12 @@ export class VapaeeREX {
             //console.log("------------------------------------");
 
             let deposits: Asset = _rexfund.balance;
-
             let profits: Asset = new Asset(balance.amount.minus(_rexbal.vote_stake.amount), balance.token);
+
+            let total: Asset = balance.plus(deposits);
+
             let data:REXdata = {
+                total: total,
                 deposits: deposits,
                 balance: balance,
                 profits: profits,

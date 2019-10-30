@@ -8,7 +8,7 @@
 -->
 <div class="container" [hidden]="!app.device.portrait">
 
-    <vpe-panel-account-header [current]="dex.current"></vpe-panel-account-header>
+    <vpe-panel-account-header [current]="dex.current" [rexdata]="rexdata"></vpe-panel-account-header>
 
     <div class="row" [hidden]="dex.current.name == dex.default.name">
         <div class="col-12">
@@ -32,7 +32,7 @@
 
 <div class="container" [hidden]="app.device.portrait">
 
-    <vpe-panel-account-header [current]="dex.current"></vpe-panel-account-header>
+    <vpe-panel-account-header [current]="dex.current" [rexdata]="rexdata"></vpe-panel-account-header>
 
     <div class="row" [hidden]="dex.current.name == dex.default.name">
         <div class="col-6 col-padding-right">

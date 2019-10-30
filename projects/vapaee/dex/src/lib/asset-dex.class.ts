@@ -47,6 +47,11 @@ export class AssetDEX extends Asset {
         if (text == "") return;
         var sym = text.split(" ")[1];
         this.token = dex.getTokenNow(sym);
+        /*if (this.token) {
+            let tmp = new AssetDEX();
+            this.token = tmp.token || <TokenDEX>{};
+            console.assert(!!this.token, "ERROR: parsin assetDEX. Token unknown", text);
+        }*/
         var amount_str = text.split(" ")[0];
         this.amount = new BigNumber(amount_str);
     }

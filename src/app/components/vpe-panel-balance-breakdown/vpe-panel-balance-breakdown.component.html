@@ -9,10 +9,22 @@
         <div class="col-sm-12">
             <table class="table right-aligned margin-top">
                 <tbody>
-                    <tr><td>Available:</td><td>{{account.data.core_liquid_balance_asset}}</td></tr>
-                    <tr><td>Refunding:</td><td>{{account.data.refund_request.total_asset}}</td></tr>
-                    <tr><td>CPU Staked:</td><td>{{account.data.total_resources.cpu_weight}}</td></tr>
-                    <tr><td>NET Staked:</td><td>{{account.data.total_resources.net_weight}}</td></tr>
+                    <tr>
+                        <td>Available:</td><td>{{account.data.core_liquid_balance_asset}}</td>
+                        <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(account.data.core_liquid_balance_asset)}} </span></td>
+                    </tr>
+                    <tr>
+                        <td>Refunding:</td><td>{{account.data.refund_request.total_asset}}</td>
+                        <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(account.data.refund_request.total_asset)}} </span></td>
+                    </tr>
+                    <tr>
+                        <td>CPU Staked:</td><td>{{account.data.total_resources.cpu_weight_asset}}</td>
+                        <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(account.data.total_resources.cpu_weight_asset)}} </span></td>
+                    </tr>
+                    <tr>
+                        <td>NET Staked:</td><td>{{account.data.total_resources.net_weight_asset}}</td>
+                        <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(account.data.total_resources.net_weight_asset)}} </span></td>
+                    </tr>
                 </tbody>
             </table>
         </div>

@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { VapaeeDEX, TokenDEX, AssetDEX } from '@vapaee/dex';
 import { CookieService } from 'ngx-cookie-service';
 import { TimezoneService } from '../services/timezone.service';
+import { Asset } from '@vapaee/scatter';
 
 
 
@@ -110,10 +111,10 @@ export class VpeComponentsService {
 
     // Quesries -----------------------------------
     cacheTIC:any = {};
-    public getTelosInCurrentCurrency(value: AssetDEX | string) {
-        var asset: AssetDEX;
+    public getTelosInCurrentCurrency(value: Asset | string) {
+        var asset: Asset;
         if (value == "") return new AssetDEX();
-        if (value instanceof AssetDEX) {
+        if (value instanceof Asset) {
             asset = value;
             value = asset.toString();
         }
@@ -133,10 +134,16 @@ export class VpeComponentsService {
     public getTokenInCurrentCurrency(value: AssetDEX | string) {
         var asset: AssetDEX;
         var telos: AssetDEX;
-        if (value == "") return new AssetDEX();
+        if (!value) return new AssetDEX();
+        if (value == "0 AUX") return new AssetDEX();
         if (value instanceof AssetDEX) {
-            asset = value;
+            let temp:any = value;
+            asset = temp;
             value = asset.toString();
+        } else {
+            if (<any>value instanceof Asset) {
+                value = value.toString();
+            }    
         }
         if (typeof value == "string") {
             if (this.cacheTIC[value]) return this.cacheTIC[value];

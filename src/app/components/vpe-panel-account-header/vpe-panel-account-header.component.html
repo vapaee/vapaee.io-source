@@ -44,17 +44,17 @@
                 <div class="col-12">            
 
                     <!-- Total balance (if any) -->
-                    <div class="text-md nowrap margin-top-xs" [hidden]="!current.data.total_balance">
-                        <span class="text-md"> {{current.data.total_balance}} </span>
-                        <span class="text-sm total-balance calculated-in-currency d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
+                    <div class="text-md nowrap margin-top-xs" [hidden]="!total_balance">
+                        <span class="text-md"> {{total_balance}} </span>
+                        <span class="text-sm total-balance calculated-in-currency d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(total_balance)}}) </span>
                     </div>
-                    <div class="text-md nowrap  margin-top-xs" [hidden]="!current.data.total_balance">
+                    <div class="text-md nowrap  margin-top-xs" [hidden]="!total_balance">
 
                         <div class="pull-right">
                             <vpe-offchain-combobox [btn]="'xs'"></vpe-offchain-combobox>
                         </div> 
 
-                        <span class="text-sm calculated-in-currency d-sm d-md-none"> {{service.getTelosInCurrentCurrency(current.data.total_balance)}} </span>
+                        <span class="text-sm calculated-in-currency d-sm d-md-none"> {{service.getTelosInCurrentCurrency(total_balance)}} </span>
                     </div>
 
                 </div>
@@ -93,7 +93,7 @@
                 </div>
                 <div class="col col-padding-left">
                     <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}">
-                        <div class="pull-right text-center" [hidden]="!current.data.total_balance">
+                        <div class="pull-right text-center" [hidden]="!total_balance">
                             <span class="btn btn-sm btn-primary" (click)="dex.login()">
                                 <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('log-state')"></span>
                                 {{local.string.retry | titlecase}}
@@ -106,7 +106,7 @@
 
                     <!-- current != guest - Wallet detected but not logged -->
                     <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}">
-                        <div class="pull-right text-right"  [hidden]="!current.data.total_balance">
+                        <div class="pull-right text-right"  [hidden]="!total_balance">
                             <span class="btn btn-sm btn-success" (click)="dex.login()">
                                 <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
                                 {{local.string.LoginWScOrSq}}
@@ -129,7 +129,7 @@
                     </div>
 
                     <!-- No Wallet detected -->
-                    <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}" [hidden]="current.data.total_balance">
+                    <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}" [hidden]="total_balance">
                         <div class="pull-right text-center">
                             <span class="btn btn-sm btn-primary" (click)="dex.login()">
                                 <span class="spinner-border spinner-border-sm" [hidden]="!scatter.feed.loading('connect')"></span>
@@ -140,7 +140,7 @@
                     </div>
 
                     <!-- Wallet detected but not logged -->
-                    <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}" [hidden]="current.data.total_balance">
+                    <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}" [hidden]="total_balance">
                         <div class="pull-right text-center">
                             <span class="btn btn-sm btn-primary" (click)="dex.login()">
                                 <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
@@ -151,17 +151,17 @@
                     </div>
 
                     <!-- Total balance (if any) -->
-                    <div class="text-md nowrap" [hidden]="!current.data.total_balance">
+                    <div class="text-md nowrap" [hidden]="!total_balance" (click)="print_debug()">
                         <small>total balance: </small>
-                        <span class="text-md"> {{current.data.total_balance}} </span>
-                        <span class="text-sm total-balance calculated-in-currency d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
+                        <span class="text-md"> {{total_balance}} </span>
+                        <span class="text-sm total-balance calculated-in-currency d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(total_balance)}}) </span>
 
                         <div class="pull-right" [hidden]="!dex.logged || dex.loginState == 'no-scatter'">
                             <vpe-offchain-combobox></vpe-offchain-combobox>
                         </div>                    
                     </div>
-                    <div class="text-md nowrap" [hidden]="!current.data.total_balance">
-                        <span class="text-sm calculated-in-currency d-sm d-md-none"> ({{service.getTelosInCurrentCurrency(current.data.total_balance)}}) </span>
+                    <div class="text-md nowrap" [hidden]="!total_balance">
+                        <span class="text-sm calculated-in-currency d-sm d-md-none"> ({{service.getTelosInCurrentCurrency(total_balance)}}) </span>
                     </div>
                     
                 </div>
