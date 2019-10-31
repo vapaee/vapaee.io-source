@@ -24,6 +24,11 @@ https://vapaee.io/exchange/account/piedpipernet
 -------------
 
 
+{"code":500,"message":"Internal Service Error","error":{"code":3090003,"name":"unsatisfied_authorization","what":"Provided keys, permissions, and delays do not satisfy declared authorizations","details":[{"message":"transaction declares authority '${auth}', but does not have signatures for it under a provided delay of 0 ms, provided permissions ${provided_permissions}, provided keys ${provided_keys}, and a delay max limit of 3888000000 ms","file":"authorization_manager.cpp","line_number":524,"method":"check_authorization"}]}}
+
+{"code":500,"message":"Internal Service Error","error":{"code":3050003,"name":"eosio_assert_message_exception","what":"eosio_assert_message assertion failure","details":[{"message":"assertion failure with message: ERROR: attempt to allocate RAM without authorization for deposits table","file":"wasm_interface.cpp","line_number":964,"method":"eosio_assert"}]}}
+
+
 
 
 - Wish list
