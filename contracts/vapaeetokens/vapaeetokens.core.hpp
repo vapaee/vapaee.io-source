@@ -39,22 +39,6 @@ namespace vapaee {
                 s.issuer        = owner;
             });
 
-            /*
-            action(
-                permission_level{owner,"active"_n},
-                get_self(),
-                "addtoken"_n,
-                std::make_tuple(
-                    get_self(),
-                    maximum_supply.symbol.code(),
-                    maximum_supply.symbol.precision(),
-                    owner,
-                    maximum_supply.symbol.code().to_string(),
-                    "", "", "", "", "", false
-                    )
-            ).send();
-            */
-
             PRINT("vapaee::token::core::action_create_token() ...\n");
         }
 
@@ -156,16 +140,16 @@ namespace vapaee {
                 s.supply += quantity;
             });
 
-            // update issuer balance silently
-            add_balance( issuer, quantity, issuer );
+            // update contract balance silently
+            add_balance( get_self(), quantity, get_self() );
 
-            // if target user is not issuer the send an inline action
-            if( to != issuer ) {
+            // if target user is not the contract then send an inline action
+            if( to != get_self() ) {
                 action(
-                    permission_level{issuer,"active"_n},
+                    permission_level{get_self(),"active"_n},
                     get_self(),
                     "transfer"_n,
-                    std::make_tuple(issuer, to, quantity, memo)
+                    std::make_tuple(get_self(), to, quantity, memo)
                 ).send();
             }
             PRINT("vapaee::token::core::action_issue() ...\n");
@@ -206,9 +190,8 @@ namespace vapaee {
             PRINT(" quantity: ", quantity.to_string(), "\n");
             PRINT(" memo: ", memo.c_str(), "\n");
 
-
             eosio_assert( from != to, "cannot transfer to self" );
-            require_auth( from );
+
             eosio_assert( is_account( to ), "to account does not exist");
             auto sym = quantity.symbol.code();
             stats statstable( _self, sym.raw() );
@@ -226,7 +209,7 @@ namespace vapaee {
 
             sub_balance( from, quantity );
             add_balance( to, quantity, ram_payer );
-            
+
             PRINT("vapaee::token::core::action_transfer() ...\n");
         }
 
@@ -248,11 +231,11 @@ namespace vapaee {
 
             if (amount == 0) {
                 action(
-                    permission_level{owner,"active"_n},
+                    permission_level{get_self(),"active"_n},
                     get_self(),
                     "close"_n,
                     std::make_tuple(owner, value.symbol)
-                ).send();                
+                ).send();
             }
             PRINT("vapaee::token::core::action_sub_balance() ...\n");
         }
@@ -305,8 +288,10 @@ namespace vapaee {
             PRINT("vapaee::token::core::action_close()\n");
             PRINT(" owner: ", owner.to_string(), "\n");
             PRINT(" symbol: ", symbol.code().to_string(), "\n");
-
-            require_auth( owner );
+            
+            if (!has_auth(get_self())) {
+                require_auth( owner );
+            }
             accounts acnts( _self, owner.value );
             auto it = acnts.find( symbol.code().raw() );
             eosio_assert( it != acnts.end(), "Balance row already deleted or never existed. Action won't have any effect." );

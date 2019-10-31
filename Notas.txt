@@ -1,3 +1,7 @@
+---- URGNTE ----
+
+transaction declares authority '{"actor":"fiscalesvote","permission":"active"}', but does not have signatures for it under a provided delay of 0 ms, provided permissions [{"actor":"vapaeetokens","permission":"eosio.code"}], provided keys [], and a delay max limit of 3888000000 ms
+
 -- TODO --
 - crear una biblioteca nueva @vapaee/rex
 - crear tipo de dato (interface) AccountREX que contiene el estado del la cuenta en el REX:
@@ -5,6 +9,7 @@
   - rexbal: vote_stake, rex_balance, matured_rex, rex_maturities
 - crear tipo de dato (interface) REXPool que contenga as variables globales del REX: rexpool
 - función simple que dado un account te trae su estado actual
+
 
 Verificar Tlos tokens que tiene https://telos.bloks.io/account/teloscharity
 

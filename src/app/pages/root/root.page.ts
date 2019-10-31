@@ -45,7 +45,7 @@ export class RootPage implements OnInit {
             this.scatter.setEndpoints(endpoints);
 
             var network = "telos-testnet";
-            // network = "telos";
+            network = "telos";
             // network = "local";
             if ( this.scatter.network.slug != network || !this.scatter.connected ) {
                 this.scatter.setNetwork(network);
@@ -71,13 +71,81 @@ export class RootPage implements OnInit {
         }
     }
     
+
+    // -----------------------------------------------
+    cantidadDeCartas(album: number[]): number {
+        let cant = 0;
+        for (let i=0; i<album.length; i++) {
+            cant += album[i];
+        }
+        return cant;
+    }
+
+    isFull(album: number[]): boolean {
+        for (let i=0; i<album.length; i++) {
+            if (album[i] == 0) return false;
+        }
+        return true;
+    }
+
+    abrirSobre(album: number[], cartas: number) {
+        for (let i=0; i<cartas; i++) {
+            album[Math.floor(album.length * Math.random())]++;
+        }
+        return album;
+    }
+
+    crearAlbum(size:number) {
+        let album: number[] = [];
+        for (let i=0; i<size; i++) { album.push(0); }
+        return album;
+    }
+
+    startCalculo() {
+        let resultados = [];
+
+        setInterval(_ => {
+            let album: number[] = this.crearAlbum(50);
+            let sobres = 0;
+            let max = 1000;
+            let cartas = 0;
+            let cartasXsobre = 2;
+            while(!this.isFull(album)) {
+                sobres++;
+                album = this.abrirSobre(album, cartasXsobre);
+                if (sobres >= max) break;
+            }
+    
+            if (sobres >= max) {
+                console.error("ERROR: demasiados sobres", album);
+            } else {
+                cartas = this.cantidadDeCartas(album);
+                resultados.push({sobres, cartas});
+                let promedioCartas = 0;
+                let promedioSobres = 0;
+                for (let i in resultados) {
+                    promedioCartas += resultados[i].cartas;
+                    promedioSobres += resultados[i].sobres;
+                }
+                promedioCartas = Math.round(promedioCartas / resultados.length);
+                promedioSobres = Math.round(promedioSobres / resultados.length);
+                console.log("sobres: ", sobres, "cartas: ", cartas, "- promedioSobres: ", promedioSobres, "promedioCartas: ", promedioCartas);
+            }
+        }, 200);
+    }
+
+    // -----------------------------------------------
+
     debug(){
-        
+        /*
         console.log("--------------------------------");
         console.log("VPE", [this.dex]);
         console.log("Scatter", [this.scatter]);
         console.log("Components", [this.components]);
         console.log("--------------------------------");
+        */
+       this.startCalculo();
+        
     }
 
     // ----------------------------------------------------------
