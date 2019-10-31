@@ -27,6 +27,7 @@ export class VpePanelBalanceBreakdawnComponent implements OnChanges {
     @Output() confirmWithdraw: EventEmitter<any> = new EventEmitter();
     public deposit: AssetDEX;
     public withdraw: AssetDEX;
+    public detail: boolean;
     constructor(
         public dex: VapaeeDEX,
         public local: LocalStringsService,

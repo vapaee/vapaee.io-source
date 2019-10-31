@@ -21,6 +21,7 @@ export class VpePanelREXBreakdawnComponent implements OnChanges {
     @Input() public error: string;
     @Input() public data: REXdata;
     
+    public detail: boolean;
     constructor(
         public rex: VapaeeREX,
         public local: LocalStringsService,

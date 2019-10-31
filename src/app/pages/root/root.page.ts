@@ -10,9 +10,6 @@ import { VpeComponentsService } from 'src/app/components/vpe-components.service'
 import { HttpClient } from '@angular/common/http';
 import { DropdownService } from 'src/app/services/dropdown.service';
 import { TimezoneService } from 'src/app/services/timezone.service';
-import { Subscriber } from 'rxjs';
-
-
 
 declare var $:any;
 
@@ -71,6 +68,56 @@ export class RootPage implements OnInit {
         }
     }
     
+
+    // -----------------------------------------------
+
+    debug(){
+        //*
+        console.log("--------------------------------");
+        console.log("VPE", [this.dex]);
+        console.log("Scatter", [this.scatter]);
+        console.log("Components", [this.components]);
+        console.log("--------------------------------");
+        
+       /*/
+       this.startCalculo();
+       //*/
+        
+    }
+
+    // ----------------------------------------------------------
+    /*
+    CheckWP() {
+        this.user_voted_us = true;
+        this.subscriber = new Subscriber<string>(this.onAccountChange.bind(this));
+        this.dex.onCurrentAccountChange.subscribe(this.subscriber);
+    }
+    
+    user_voted_us:boolean;
+    private subscriber: Subscriber<string>;
+    findOutIfUserVotedUs(account:string = null){
+        var contract = this.scatter.getSmartContract("eosio.trail");
+        var proposalID = "17";
+        console.log("findOutIfUserVotedUs(",account,")");
+        return contract.getTable("votereceipts", {scope:account || this.dex.current.name, limit:1, lower_bound:proposalID}).then(result => {
+            this.user_voted_us = account == "guest";
+            if (result.rows.length > 0) {
+                console.assert(result.rows[0].ballot_id == proposalID, result.rows[0].ballot_id, typeof result.rows[0].ballot_id, proposalID, typeof proposalID);
+                if (result.rows[0].directions.length == 1 && result.rows[0].directions[0] == 1 && result.rows[0].expiration > 1571155349) {
+                    console.log("YES !!!");
+                    this.user_voted_us = true;
+                }
+            }
+            
+        }).catch(e => {
+        });
+    }
+
+    onAccountChange(account: string) {
+        return this.findOutIfUserVotedUs(account);
+    }
+    */
+
 
     // -----------------------------------------------
     cantidadDeCartas(album: number[]): number {
@@ -134,51 +181,5 @@ export class RootPage implements OnInit {
         }, 200);
     }
 
-    // -----------------------------------------------
-
-    debug(){
-        /*
-        console.log("--------------------------------");
-        console.log("VPE", [this.dex]);
-        console.log("Scatter", [this.scatter]);
-        console.log("Components", [this.components]);
-        console.log("--------------------------------");
-        */
-       this.startCalculo();
-        
-    }
-
-    // ----------------------------------------------------------
-    /*
-    CheckWP() {
-        this.user_voted_us = true;
-        this.subscriber = new Subscriber<string>(this.onAccountChange.bind(this));
-        this.dex.onCurrentAccountChange.subscribe(this.subscriber);
-    }
-    
-    user_voted_us:boolean;
-    private subscriber: Subscriber<string>;
-    findOutIfUserVotedUs(account:string = null){
-        var contract = this.scatter.getSmartContract("eosio.trail");
-        var proposalID = "17";
-        console.log("findOutIfUserVotedUs(",account,")");
-        return contract.getTable("votereceipts", {scope:account || this.dex.current.name, limit:1, lower_bound:proposalID}).then(result => {
-            this.user_voted_us = account == "guest";
-            if (result.rows.length > 0) {
-                console.assert(result.rows[0].ballot_id == proposalID, result.rows[0].ballot_id, typeof result.rows[0].ballot_id, proposalID, typeof proposalID);
-                if (result.rows[0].directions.length == 1 && result.rows[0].directions[0] == 1 && result.rows[0].expiration > 1571155349) {
-                    console.log("YES !!!");
-                    this.user_voted_us = true;
-                }
-            }
-            
-        }).catch(e => {
-        });
-    }
-
-    onAccountChange(account: string) {
-        return this.findOutIfUserVotedUs(account);
-    }
-    */
 
 }

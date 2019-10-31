@@ -14,15 +14,22 @@
                         <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(account.data.core_liquid_balance_asset)}} </span></td>
                     </tr>
                     <tr>
-                        <td>Refunding:</td><td>{{account.data.refund_request.total_asset}}</td>
+                        <td>Staked:
+                            <span class="btn btn-xs btn-primary" [hidden]="detail" (click)="detail=true">+</span>
+                            <span class="btn btn-xs btn-primary" [hidden]="!detail"  (click)="detail=false">-</span>
+                        </td><td>{{account.data.total_staked_asset}}</td>
+                        <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(account.data.total_staked_asset)}} </span></td>
+                    </tr>
+                    <tr [hidden]="!detail">
+                        <td>- Refunding:</td><td>{{account.data.refund_request.total_asset}}</td>
                         <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(account.data.refund_request.total_asset)}} </span></td>
                     </tr>
-                    <tr>
-                        <td>CPU Staked:</td><td>{{account.data.total_resources.cpu_weight_asset}}</td>
+                    <tr [hidden]="!detail">
+                        <td>- CPU Staked:</td><td>{{account.data.total_resources.cpu_weight_asset}}</td>
                         <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(account.data.total_resources.cpu_weight_asset)}} </span></td>
                     </tr>
-                    <tr>
-                        <td>NET Staked:</td><td>{{account.data.total_resources.net_weight_asset}}</td>
+                    <tr [hidden]="!detail">
+                        <td>- NET Staked:</td><td>{{account.data.total_resources.net_weight_asset}}</td>
                         <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(account.data.total_resources.net_weight_asset)}} </span></td>
                     </tr>
                 </tbody>

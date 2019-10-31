@@ -190,6 +190,8 @@ export interface AccountData {
     cpu_weight?: number,
     total_balance: string,
     total_balance_asset: Asset,
+    total_staked: string,
+    total_staked_asset: Asset,
     ram_limit?: {
         percentStr?: string,
         used?: number,
@@ -394,6 +396,8 @@ export class VapaeeScatter {
             data: {
                 total_balance: "",
                 total_balance_asset: new Asset(),
+                total_staked: "",
+                total_staked_asset: new Asset(),
                 cpu_limit: {},
                 net_limit: {},
                 ram_limit: {},
@@ -657,7 +661,11 @@ export class VapaeeScatter {
     // AccountData and Balances ---------------------------------
     calculateTotalBalance(account) {
         return new Asset("0.0000 " + this.symbol)
-            .plus(account.core_liquid_balance_asset)
+            .plus(this.calculateTotalStaked(account));
+    }
+
+    calculateTotalStaked(account) {
+        return new Asset("0.0000 " + this.symbol)
             .plus(account.refund_request.net_amount_asset)
             .plus(account.refund_request.cpu_amount_asset)
             .plus(account.self_delegated_bandwidth.cpu_weight_asset)
@@ -753,6 +761,9 @@ export class VapaeeScatter {
 
                     account_data.total_balance_asset = this.calculateTotalBalance(account_data);
                     account_data.total_balance = account_data.total_balance_asset.toString();
+
+                    account_data.total_staked_asset = this.calculateTotalStaked(account_data);
+                    account_data.total_staked = account_data.total_staked_asset.toString();
 
                     account_data.cpu_limit = this.calculateResourceLimit(account_data.cpu_limit);
                     account_data.net_limit = this.calculateResourceLimit(account_data.net_limit);
