@@ -65,21 +65,21 @@ export class VapaeeREX {
         this.balances = {};
         this.deposits = {};
         this.default = {
-            "total": new Asset(),
-            "deposits": new Asset(),
-            "balance": new Asset(),
-            "profits": new Asset(),
+            "total": new Asset("0.0000 " + this.scatter.symbol),
+            "deposits": new Asset("0.0000 " + this.scatter.symbol),
+            "balance": new Asset("0.0000 " + this.scatter.symbol),
+            "profits": new Asset("0.0000 " + this.scatter.symbol),
             "tables": {
                 "rexfund": {
                     "version": 0,
                     "owner": this.scatter.username,
-                    "balance": new Asset(),                     
+                    "balance": new Asset("0.0000 " + this.scatter.symbol),                  
                 },
                 "rexbal": {
                     "version": 0,
                     "owner": this.scatter.username,
-                    "vote_stake": new Asset(),
-                    "rex_balance": new Asset(),
+                    "vote_stake": new Asset("0.0000 " + this.scatter.symbol),
+                    "rex_balance": new Asset("0.0000 REX"),
                     "matured_rex": 0,
                     "rex_maturities": []
                 }
@@ -125,8 +125,8 @@ export class VapaeeREX {
             let _rexbal:REXbalance = {
                 version: 0,
                 owner: this.scatter.default.name,
-                vote_stake: new Asset(),
-                rex_balance: new Asset(),
+                vote_stake: new Asset("0.0000 " + this.scatter.symbol),
+                rex_balance: new Asset("0.0000 REX"),
                 matured_rex: 0,
                 rex_maturities: []
             }            
@@ -164,7 +164,7 @@ export class VapaeeREX {
             let _rexfund:REXdeposits = {
                 version: 0,
                 owner: this.scatter.default.name,
-                balance: new Asset()
+                balance: new Asset("0.0000 " + this.scatter.symbol)
             }            
             if (_row) {
                 _rexfund = {

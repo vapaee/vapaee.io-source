@@ -10,6 +10,7 @@ import { VpeComponentsService } from 'src/app/components/vpe-components.service'
 import { HttpClient } from '@angular/common/http';
 import { DropdownService } from 'src/app/services/dropdown.service';
 import { TimezoneService } from 'src/app/services/timezone.service';
+import { VapaeeREX } from '@vapaee/rex';
 
 declare var $:any;
 
@@ -27,6 +28,7 @@ export class RootPage implements OnInit {
         public elRef: ElementRef,
         public scatter: VapaeeScatter,
         public dex: VapaeeDEX,
+        public rex: VapaeeREX,
         public style: VapaeeStyle,
         public analytics: AnalyticsService,
         private components: VpeComponentsService,
@@ -42,7 +44,7 @@ export class RootPage implements OnInit {
             this.scatter.setEndpoints(endpoints);
 
             var network = "telos-testnet";
-            network = "telos";
+            //network = "telos";
             // network = "local";
             if ( this.scatter.network.slug != network || !this.scatter.connected ) {
                 this.scatter.setNetwork(network);
@@ -75,6 +77,7 @@ export class RootPage implements OnInit {
         //*
         console.log("--------------------------------");
         console.log("VPE", [this.dex]);
+        console.log("REX", [this.rex]);
         console.log("Scatter", [this.scatter]);
         console.log("Components", [this.components]);
         console.log("--------------------------------");

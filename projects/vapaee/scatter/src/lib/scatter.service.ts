@@ -315,7 +315,7 @@ export class VapaeeScatter {
     private scatterutils = new ScatterUtils();
     public error: string;
     private appTitle: string;
-    private symbol: string;
+    public symbol: string;
     private _connected: boolean;
     private lib: Scatter;
     private rpc: RPC; // eosjs2
@@ -428,9 +428,10 @@ export class VapaeeScatter {
         this.lib.identity = identity;
         this.lib.forgotten = false;
         this._account = this.lib.identity.accounts.find(x => x.blockchain === "eos" || x.blockchain === "tlos");
-        if (!this.account) {
-            console.error("ScatterService.setIdentity()", [identity]);
-        }
+        this.updateAccountData();
+    }
+
+    updateAccountData() {
         // console.log("ScatterService.setIdentity() -> ScatterService.queryAccountData() : " , [this.account.name]);
         this.queryAccountData(this.account.name).then(account => {
             this.account.data = account;
@@ -438,8 +439,8 @@ export class VapaeeScatter {
         }).catch(_ => {
             this.account.data = this.default.data;
             this.onLogggedStateChange.next(true);
-        });
-    }    
+        });        
+    }
 
     // ----------------------------------------------------------
     // Networks (eosio blockchains) & Endpoints -----------------
@@ -662,6 +663,7 @@ export class VapaeeScatter {
     // AccountData and Balances ---------------------------------
     calculateTotalBalance(account) {
         return new Asset("0.0000 " + this.symbol)
+            .plus(account.core_liquid_balance_asset)
             .plus(this.calculateTotalStaked(account));
     }
 

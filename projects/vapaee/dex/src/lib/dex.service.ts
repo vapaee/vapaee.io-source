@@ -367,8 +367,9 @@ export class VapaeeDEX {
         }).then(async result => {
             this.feed.setLoading("withdraw", false);
             this.feed.setLoading("withdraw-"+quantity.token.symbol.toLowerCase(), false);
-            /*await*/ this.getDeposits();
-            /*await*/ this.getBalances();
+            this.getDeposits();
+            this.getBalances();
+            this.scatter.updateAccountData();
             return result;
         }).catch(e => {
             this.feed.setLoading("withdraw", false);
@@ -1768,7 +1769,6 @@ export class VapaeeDEX {
         console.log("VapaeeDex.fetchBalances() ------ (ini)");
         return this.waitTokensLoaded.then(async _ => {
             var contracts = {};
-            this.balances = [];
             for (var i in this.tokens) {
                 if (this.tokens[i].offchain) continue;
                 contracts[this.tokens[i].contract] = true;
@@ -1777,7 +1777,16 @@ export class VapaeeDEX {
             for (var contract in contracts) {
                 promises.push(this.fetchBalancesOnContract(account, contract));
             }
-            return Promise.all(promises).then(_ => console.log("VapaeeDex.fetchBalances() ------ (fin)") ).then(_ => this.balances);
+            return Promise.all(promises).then(result => {
+                console.log("VapaeeDex.fetchBalances() ------ (fin 1) -----");
+                let _balances = [];
+                for (let i=0; i<result.length; i++) {
+                    _balances = _balances.concat(result[i]);
+                }
+                console.log(_balances);
+                this.balances = _balances;
+                console.log("VapaeeDex.fetchBalances() ------ (fin 2) -----");
+            }).then(_ => this.balances);
         });
     }
 
@@ -1800,6 +1809,7 @@ export class VapaeeDEX {
         }
         this.balances = _balances.concat(this.balances);;
         this.feed.setLoading("balances-"+contract, false);
+        return _balances;
     }
 
     private fetchOrders(params:TableParams): Promise<TableResult> {
