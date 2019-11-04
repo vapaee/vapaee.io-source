@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, Output, OnInit, OnDestroy } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { VapaeeDEX, AssetDEX } from '@vapaee/dex';
-import { LocalStringsService, CommonServicesModule } from 'src/app/services/common/common.services';
+import { VapaeeDEX, DEXdata } from '@vapaee/dex';
+import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Account, VapaeeScatter, Asset } from '@vapaee/scatter';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 import { REXdata, VapaeeREX } from '@vapaee/rex';
@@ -25,6 +24,7 @@ export class VpePanelAccountHeaderComponent implements OnInit, OnDestroy, OnChan
     @Input() public error: string;
     @Input() public current: Account;
     @Input() public rexdata: REXdata;
+    @Input() public dexdata: DEXdata;
 
     
     public total: Asset;

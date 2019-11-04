@@ -6,8 +6,8 @@ import { DatePipe } from '@angular/common';
 import { TokenDEX, TokenData, TokenEvent } from './token-dex.class';
 import { AssetDEX } from './asset-dex.class';
 import { Feedback } from '@vapaee/feedback';
-import { VapaeeScatter, Account, AccountData, SmartContract, TableResult, TableParams } from '@vapaee/scatter';
-import { MarketMap, UserOrdersMap, MarketSummary, EventLog, Market, HistoryTx, TokenOrders, Order, UserOrders, OrderRow, HistoryBlock } from './types-dex';
+import { VapaeeScatter, Account, AccountData, SmartContract, TableResult, TableParams, Asset } from '@vapaee/scatter';
+import { MarketMap, UserOrdersMap, MarketSummary, EventLog, Market, HistoryTx, TokenOrders, Order, UserOrders, OrderRow, HistoryBlock, DEXdata } from './types-dex';
 
 
 @Injectable({
@@ -26,6 +26,7 @@ export class VapaeeDEX {
     */
     private _markets: MarketMap;
     private _reverse: MarketMap;
+    private _dexdata: DEXdata;
     public topmarkets: Market[];
 
     public zero_telos: AssetDEX;
@@ -39,6 +40,7 @@ export class VapaeeDEX {
     public contract_name: string;   
     public deposits: AssetDEX[];
     public balances: AssetDEX[];
+    public inorders: AssetDEX[];
     public userorders: UserOrdersMap;
     public onLoggedAccountChange:Subject<string> = new Subject();
     public onCurrentAccountChange:Subject<string> = new Subject();
@@ -118,7 +120,7 @@ export class VapaeeDEX {
         // })
 
 
-        var timer;
+        let timer;
         this.onMarketSummary.subscribe(summary => {
             clearTimeout(timer);
             timer = setTimeout(_ => {
@@ -169,6 +171,18 @@ export class VapaeeDEX {
     get waitLogged() {
         return this.scatter.waitLogged;
     }
+
+    get dexdata(): DEXdata {
+        if (!this._dexdata) {
+            this._dexdata = {
+                deposits: this.deposits,
+                userorders: this.userorders,
+                inorders: this.inorders,
+                balances: this.balances
+            }
+        };
+        return this._dexdata;
+    }    
 
     // -- User Log State ---------------------------------------------------
     login() {
@@ -241,7 +255,9 @@ export class VapaeeDEX {
             }
             // this.scopes = {};
             this.balances = [];
-            this.userorders = {};            
+            this.userorders = {};
+            this.inorders = [];
+            delete this._dexdata;
             // console.log("this.onCurrentAccountChange.next(this.current.name) !!!!!!");
             this.onCurrentAccountChange.next(this.current.name);
             this.updateCurrentUser();
@@ -264,8 +280,8 @@ export class VapaeeDEX {
             console.log("VapaeeDEX.updateLogState() ", this.loginState, this.feed.loading("log-state"));
         });
 
-        var timer2;
-        var timer1 = setInterval(_ => {
+        let timer2;
+        let timer1 = setInterval(_ => {
             if (!this.scatter.feed.loading("connect")) {
                 this.feed.setLoading("log-state", false);
                 clearInterval(timer1);
@@ -311,7 +327,7 @@ export class VapaeeDEX {
         // '["alice", "buy", "CNT", "TLOS", [1,0]]'
         // name owner, name type, const asset & total, const asset & price
         this.feed.setLoading("cancel-"+type, true);
-        for (var i in orders) { this.feed.setLoading("cancel-"+type+"-"+orders[i], true); }
+        for (let i in orders) { this.feed.setLoading("cancel-"+type+"-"+orders[i], true); }
         return this.contract.excecute("cancel", {
             owner:  this.scatter.account.name,
             type: type,
@@ -321,11 +337,11 @@ export class VapaeeDEX {
         }).then(async result => {
             this.updateTrade(commodity, currency);
             this.feed.setLoading("cancel-"+type, false);
-            for (var i in orders) { this.feed.setLoading("cancel-"+type+"-"+orders[i], false); }    
+            for (let i in orders) { this.feed.setLoading("cancel-"+type+"-"+orders[i], false); }    
             return result;
         }).catch(e => {
             this.feed.setLoading("cancel-"+type, false);
-            for (var i in orders) { this.feed.setLoading("cancel-"+type+"-"+orders[i], false); }    
+            for (let i in orders) { this.feed.setLoading("cancel-"+type+"-"+orders[i], false); }    
             console.error(e);
             throw e;
         });
@@ -333,7 +349,7 @@ export class VapaeeDEX {
 
     deposit(quantity:AssetDEX) {
         // name owner, name type, const asset & total, const asset & price
-        var contract = this.scatter.getSmartContract(quantity.token.contract);
+        let contract = this.scatter.getSmartContract(quantity.token.contract);
         this.feed.setError("deposit", null);
         this.feed.setLoading("deposit", true);
         this.feed.setLoading("deposit-"+quantity.token.symbol.toLowerCase(), true);
@@ -382,7 +398,7 @@ export class VapaeeDEX {
     // Tokens Action --------------------------------------------------------------
 
     addtoken(token:TokenDEX) {
-        var feedid = "addtoken";
+        let feedid = "addtoken";
         this.feed.setError(feedid, null);
         this.feed.setLoading(feedid, true);
 
@@ -410,7 +426,7 @@ export class VapaeeDEX {
     }
 
     updatetoken(token:TokenDEX) {
-        var feedid = "updatetoken";
+        let feedid = "updatetoken";
         this.feed.setError(feedid, null);
         this.feed.setLoading(feedid, true);
         return this.contract.excecute("updatetoken", {
@@ -433,7 +449,7 @@ export class VapaeeDEX {
     }
 
     settokeninfo(action:string, info:TokenData) {
-        var feedid = "settokeninfo";
+        let feedid = "settokeninfo";
         this.feed.setError(feedid, null);
         this.feed.setLoading(feedid, true);
         return this.contract.excecute("settokendata", {
@@ -454,7 +470,7 @@ export class VapaeeDEX {
     }
 
     edittkevent(action:string, symbol:string, evt:TokenEvent) {
-        var feedid = "edittkevent";
+        let feedid = "edittkevent";
         this.feed.setError(feedid, null);
         this.feed.setLoading(feedid, true);
         return this.contract.excecute("edittkevent", {
@@ -474,7 +490,7 @@ export class VapaeeDEX {
 
 
     createtoken(asset:AssetDEX) {
-        var feedid = "createtoken";
+        let feedid = "createtoken";
         this.feed.setError(feedid, null);
         this.feed.setLoading(feedid, true);
         return this.contract.excecute("create", {
@@ -519,7 +535,7 @@ export class VapaeeDEX {
 
     public market(scope:string): Market {
         if (this._markets[scope]) return this._markets[scope];        // ---> direct
-        var reverse = this.inverseScope(scope);
+        let reverse = this.inverseScope(scope);
         if (this._reverse[reverse]) return this._reverse[reverse];    // ---> reverse
         if (!this._markets[reverse]) return null;                     // ---> table does not exist (or has not been loaded yet)
         return this.reverse(scope);
@@ -531,10 +547,10 @@ export class VapaeeDEX {
     }    
 
     private reverse(scope:string): Market {
-        var canonical = this.canonicalScope(scope);
-        var reverse_scope = this.inverseScope(canonical);
+        let canonical = this.canonicalScope(scope);
+        let reverse_scope = this.inverseScope(canonical);
         console.assert(canonical != reverse_scope, "ERROR: ", canonical, reverse_scope);
-        var reverse_table:Market = this._reverse[reverse_scope];
+        let reverse_table:Market = this._reverse[reverse_scope];
         if (!reverse_table && this._markets[canonical]) {
             this._reverse[reverse_scope] = this.createReverseTableFor(reverse_scope);
         }
@@ -542,7 +558,7 @@ export class VapaeeDEX {
     }
 
     public marketFor(commodity:TokenDEX, currency:TokenDEX): Market {
-        var scope = this.getScopeFor(commodity, currency);
+        let scope = this.getScopeFor(commodity, currency);
         return this.table(scope);
     }
 
@@ -552,14 +568,14 @@ export class VapaeeDEX {
     }
 
     public createReverseTableFor(scope:string): Market {
-        var canonical = this.canonicalScope(scope);
-        var reverse_scope = this.inverseScope(canonical);
-        var table:Market = this._markets[canonical];
+        let canonical = this.canonicalScope(scope);
+        let reverse_scope = this.inverseScope(canonical);
+        let table:Market = this._markets[canonical];
 
-        var inverse_history:HistoryTx[] = [];
+        let inverse_history:HistoryTx[] = [];
 
-        for (var i in table.history) {
-            var hTx:HistoryTx = {
+        for (let i in table.history) {
+            let hTx:HistoryTx = {
                 id: table.history[i].id,
                 str: "",
                 price: table.history[i].inverse.clone(),
@@ -578,19 +594,19 @@ export class VapaeeDEX {
         }
         
     
-        var inverse_orders:TokenOrders = {
+        let inverse_orders:TokenOrders = {
             buy: [], sell: []
         };
 
-        for (var type in {buy:"buy", sell:"sell"}) {
-            var row_orders:Order[];
-            var row_order:Order;
+        for (let type in {buy:"buy", sell:"sell"}) {
+            let row_orders:Order[];
+            let row_order:Order;
 
-            for (var i in table.orders[type]) {
-                var row = table.orders[type][i];
+            for (let i in table.orders[type]) {
+                let row = table.orders[type][i];
 
                 row_orders = [];
-                for (var j=0; j<row.orders.length; j++) {
+                for (let j=0; j<row.orders.length; j++) {
                     row_order = {
                         deposit: row.orders[j].deposit.clone(),
                         id: row.orders[j].id,
@@ -603,7 +619,7 @@ export class VapaeeDEX {
                     row_orders.push(row_order);
                 }
 
-                var newrow:OrderRow = {
+                let newrow:OrderRow = {
                     inverse: row.price.clone(),
                     orders: row_orders,
                     owners: row.owners,
@@ -619,7 +635,7 @@ export class VapaeeDEX {
             }
         }
 
-        var reverse:Market = {
+        let reverse:Market = {
             scope: reverse_scope,
             commodity: table.currency,
             currency: table.commodity,
@@ -678,18 +694,18 @@ export class VapaeeDEX {
     public inverseScope(scope:string) {
         if (!scope) return scope;
         console.assert(typeof scope =="string", "ERROR: string scope expected, got ", typeof scope, scope);
-        var parts = scope.split(".");
+        let parts = scope.split(".");
         console.assert(parts.length == 2, "ERROR: scope format expected is xxx.yyy, got: ", typeof scope, scope);
-        var inverse = parts[1] + "." + parts[0];
+        let inverse = parts[1] + "." + parts[0];
         return inverse;
     }
 
     public canonicalScope(scope:string) {
         if (!scope) return scope;
         console.assert(typeof scope =="string", "ERROR: string scope expected, got ", typeof scope, scope);
-        var parts = scope.split(".");
+        let parts = scope.split(".");
         console.assert(parts.length == 2, "ERROR: scope format expected is xxx.yyy, got: ", typeof scope, scope);
-        var inverse = parts[1] + "." + parts[0];
+        let inverse = parts[1] + "." + parts[0];
         if (parts[1] == "tlos") {
             return scope;
         }
@@ -713,7 +729,7 @@ export class VapaeeDEX {
     // Getters 
 
     getBalance(token:TokenDEX) {
-        for (var i in this.balances) {
+        for (let i in this.balances) {
             if (this.balances[i].token.symbol == token.symbol) {
                 return this.balances[i];
             }
@@ -721,9 +737,18 @@ export class VapaeeDEX {
         return new AssetDEX("0 " + token.symbol, this);
     }
 
+    getInOrders(token: TokenDEX) {
+        for (let i in this.inorders) {
+            if (this.inorders[i].token.symbol == token.symbol) {
+                return this.inorders[i];
+            }
+        }
+        return new AssetDEX("0 " + token.symbol, this);
+    }
+
     getTokenNow(sym:string): TokenDEX {
         if (!sym) return null;
-        for (var i in this.tokens) {
+        for (let i in this.tokens) {
             // there's a little bug. This is a justa  work arround
             if (this.tokens[i].symbol.toUpperCase() == "TLOS" && this.tokens[i].offchain) {
                 // this solves attaching wrong tlos token to asset
@@ -747,17 +772,18 @@ export class VapaeeDEX {
         console.log("VapaeeDEX.getDeposits()");
         this.feed.setLoading("deposits", true);
         return this.waitTokensLoaded.then(async _ => {
-            var deposits: AssetDEX[] = [];
+            let deposits: AssetDEX[] = [];
             if (!account && this.current.name) {
                 account = this.current.name;
             }
             if (account) {
-                var result = await this.fetchDeposits(account);
-                for (var i in result.rows) {
+                let result = await this.fetchDeposits(account);
+                for (let i in result.rows) {
                     deposits.push(new AssetDEX(result.rows[i].amount, this));
                 }
             }
             this.deposits = deposits;
+            delete this._dexdata;
             this.feed.setLoading("deposits", false);
             return this.deposits;
         });
@@ -767,7 +793,7 @@ export class VapaeeDEX {
         console.log("VapaeeDEX.getBalances()");
         this.feed.setLoading("balances", true);
         return this.waitTokensLoaded.then(async _ => {
-            var _balances: AssetDEX[];
+            let _balances: AssetDEX[];
             if (!account && this.current.name) {
                 account = this.current.name;
             }            
@@ -784,11 +810,11 @@ export class VapaeeDEX {
     async getThisSellOrders(table:string, ids:number[]): Promise<any[]> {
         this.feed.setLoading("thisorders", true);
         return this.waitTokensLoaded.then(async _ => {
-            var result = [];
-            for (var i in ids) {
-                var id = ids[i];
-                var gotit = false;
-                for (var j in result) {
+            let result = [];
+            for (let i in ids) {
+                let id = ids[i];
+                let gotit = false;
+                for (let j in result) {
                     if (result[j].id == id) {
                         gotit = true;
                         break;
@@ -797,7 +823,7 @@ export class VapaeeDEX {
                 if (gotit) {
                     continue;
                 }
-                var res:TableResult = await this.fetchOrders({scope:table, limit:1, lower_bound:id.toString()});
+                let res:TableResult = await this.fetchOrders({scope:table, limit:1, lower_bound:id.toString()});
 
                 result = result.concat(res.rows);
             }
@@ -810,19 +836,19 @@ export class VapaeeDEX {
         console.log("VapaeeDEX.getUserOrders()");
         this.feed.setLoading("userorders", true);
         return this.waitTokensLoaded.then(async _ => {
-            var userorders: TableResult;
+            let userorders: TableResult;
             if (!account && this.current.name) {
                 account = this.current.name;
             }            
             if (account) {
                 userorders = await this.fetchUserOrders(account);
             }
-            var list: UserOrders[] = <UserOrders[]>userorders.rows;
-            var map: UserOrdersMap = {};
-            for (var i=0; i<list.length; i++) {
-                var ids = list[i].ids;
-                var table = list[i].table;
-                var orders = await this.getThisSellOrders(table, ids);
+            let list: UserOrders[] = <UserOrders[]>userorders.rows;
+            let map: UserOrdersMap = {};
+            for (let i=0; i<list.length; i++) {
+                let ids = list[i].ids;
+                let table = list[i].table;
+                let orders = await this.getThisSellOrders(table, ids);
                 map[table] = {
                     table: table,
                     orders: this.auxProcessRowsToOrders(orders),
@@ -830,6 +856,24 @@ export class VapaeeDEX {
                 };
             }
             this.userorders = map;
+
+            // calculate inorders array
+            let inorders_map = {};
+            for (let i in this.userorders) {
+                for (let o in this.userorders[i].orders) {
+                    let _deposit = this.userorders[i].orders[o].deposit;
+                    if (!inorders_map[_deposit.token.symbol]) {
+                        inorders_map[_deposit.token.symbol] = new Asset("0 " + _deposit.token.symbol, this);
+                    }
+                    inorders_map[_deposit.token.symbol] = inorders_map[_deposit.token.symbol].plus(_deposit);
+                }
+            }
+            this.inorders = [];
+            for (let i in inorders_map) {
+                this.inorders.push(inorders_map[i]);
+            }
+
+            delete this._dexdata;
             // console.log(this.userorders);
             this.feed.setLoading("userorders", false);
             return this.userorders;
@@ -839,8 +883,8 @@ export class VapaeeDEX {
 
     async updateActivity() {
         this.feed.setLoading("activity", true);
-        var pagesize = this.activityPagesize;
-        var pages = await this.getActivityTotalPages(pagesize);
+        let pagesize = this.activityPagesize;
+        let pages = await this.getActivityTotalPages(pagesize);
         await Promise.all([
             this.fetchActivity(pages-2, pagesize),
             this.fetchActivity(pages-1, pagesize),
@@ -852,10 +896,10 @@ export class VapaeeDEX {
     async loadMoreActivity() {
         if (this.activity.list.length == 0) return;
         this.feed.setLoading("activity", true);
-        var pagesize = this.activityPagesize;
-        var first = this.activity.list[this.activity.list.length-1];
-        var id = first.id - pagesize;
-        var page = Math.floor((id-1) / pagesize);
+        let pagesize = this.activityPagesize;
+        let first = this.activity.list[this.activity.list.length-1];
+        let id = first.id - pagesize;
+        let page = Math.floor((id-1) / pagesize);
 
         await this.fetchActivity(page, pagesize);
         this.feed.setLoading("activity", false);
@@ -863,7 +907,7 @@ export class VapaeeDEX {
 
     async updateTrade(commodity:TokenDEX, currency:TokenDEX, updateUser:boolean = true): Promise<any> {
         console.log("VapaeeDEX.updateTrade()");
-        var chrono_key = "updateTrade";
+        let chrono_key = "updateTrade";
         this.feed.startChrono(chrono_key);
 
         if(updateUser) this.updateCurrentUser();
@@ -902,12 +946,12 @@ export class VapaeeDEX {
 
     private getBlockHistoryTotalPagesFor(scope:string, pagesize: number) {
         if (!this._markets) return 0;
-        var market = this.market(scope);
+        let market = this.market(scope);
         if (!market) return 0;
-        var total = market.blocks;
-        var mod = total % pagesize;
-        var dif = total - mod;
-        var pages = dif / pagesize;
+        let total = market.blocks;
+        let mod = total % pagesize;
+        let dif = total - mod;
+        let pages = dif / pagesize;
         if (mod > 0) {
             pages +=1;
         }
@@ -917,12 +961,12 @@ export class VapaeeDEX {
 
     private getHistoryTotalPagesFor(scope:string, pagesize: number) {
         if (!this._markets) return 0;
-        var market = this.market(scope);
+        let market = this.market(scope);
         if (!market) return 0;
-        var total = market.deals;
-        var mod = total % pagesize;
-        var dif = total - mod;
-        var pages = dif / pagesize;
+        let total = market.deals;
+        let mod = total % pagesize;
+        let dif = total - mod;
+        let pages = dif / pagesize;
         if (mod > 0) {
             pages +=1;
         }
@@ -934,11 +978,11 @@ export class VapaeeDEX {
             limit: 1
         }).then(result => {
             if (result.rows.length == 0) return 0;
-            var params = result.rows[0].params;
-            var total = parseInt(params.split(" ")[0])-1;
-            var mod = total % pagesize;
-            var dif = total - mod;
-            var pages = dif / pagesize;
+            let params = result.rows[0].params;
+            let total = parseInt(params.split(" ")[0])-1;
+            let mod = total % pagesize;
+            let dif = total - mod;
+            let pages = dif / pagesize;
             if (mod > 0) {
                 pages +=1;
             }
@@ -949,16 +993,16 @@ export class VapaeeDEX {
     }
 
     async getTransactionHistory(commodity:TokenDEX, currency:TokenDEX, page:number = -1, pagesize:number = -1, force:boolean = false): Promise<any> {
-        var scope:string = this.canonicalScope(this.getScopeFor(commodity, currency));
-        var aux = null;
-        var result = null;
+        let scope:string = this.canonicalScope(this.getScopeFor(commodity, currency));
+        let aux = null;
+        let result = null;
         this.feed.setLoading("history."+scope, true);
         aux = this.waitOrderSummary.then(async _ => {
             if (pagesize == -1) {
                 pagesize = 10;                
             }
             if (page == -1) {
-                var pages = this.getHistoryTotalPagesFor(scope, pagesize);
+                let pages = this.getHistoryTotalPagesFor(scope, pagesize);
                 page = pages-3;
                 if (page < 0) page = 0;
             }
@@ -988,8 +1032,8 @@ export class VapaeeDEX {
     }
 
     private auxHourToLabel(hour:number): string {
-        var d = new Date(hour * 1000 * 60 * 60);
-        var label = d.getHours() == 0 ? this.datePipe.transform(d, 'dd/MM') : d.getHours() + "h";
+        let d = new Date(hour * 1000 * 60 * 60);
+        let label = d.getHours() == 0 ? this.datePipe.transform(d, 'dd/MM') : d.getHours() + "h";
         
         return label;
     }
@@ -997,53 +1041,53 @@ export class VapaeeDEX {
     async getBlockHistory(commodity:TokenDEX, currency:TokenDEX, page:number = -1, pagesize:number = -1, force:boolean = false): Promise<any> {
         console.log("VapaeeDEX.getBlockHistory()", commodity.symbol, page, pagesize);
         // // elapsed time
-        // var startTime:Date = new Date();
-        // var diff:number;
-        // var sec:number;
+        // let startTime:Date = new Date();
+        // let diff:number;
+        // let sec:number;
 
-        var scope:string = this.canonicalScope(this.getScopeFor(commodity, currency));
-        var aux = null;
-        var result = null;
+        let scope:string = this.canonicalScope(this.getScopeFor(commodity, currency));
+        let aux = null;
+        let result = null;
         this.feed.setLoading("block-history."+scope, true);
 
         aux = this.waitOrderSummary.then(async _ => {
-            var fetchBlockHistoryStart:Date = new Date();
-
+            let fetchBlockHistoryStart:Date = new Date();
+            let pages = 0;
             if (pagesize == -1) {
                 pagesize = 10;
             }
             if (page == -1) {
-                var pages = this.getBlockHistoryTotalPagesFor(scope, pagesize);
+                pages = this.getBlockHistoryTotalPagesFor(scope, pagesize);
                 page = pages-3;
                 if (page < 0) page = 0;
             }
-            var promises = [];
-            for (var i=0; i<=pages; i++) {
-                var promise = this.fetchBlockHistory(scope, i, pagesize);
+            let promises = [];
+            for (let i=0; i<=pages; i++) {
+                let promise = this.fetchBlockHistory(scope, i, pagesize);
                 promises.push(promise);
             }
 
             return Promise.all(promises).then(_ => {
                 // // elapsed time
-                // var fetchBlockHistoryTime:Date = new Date();
+                // let fetchBlockHistoryTime:Date = new Date();
                 // diff = fetchBlockHistoryTime.getTime() - fetchBlockHistoryStart.getTime();
                 // sec = diff / 1000;
                 // console.log("** VapaeeDEX.getBlockHistory() fetchBlockHistoryTime sec: ", sec, "(",diff,")");
 
 
                 this.feed.setLoading("block-history."+scope, false);
-                var market: Market = this.market(scope);
+                let market: Market = this.market(scope);
                 market.blocklist = [];
                 market.reverseblocks = [];
-                var now = new Date();
-                var hora = 1000 * 60 * 60;
-                var hour = Math.floor(now.getTime()/hora);
+                let now = new Date();
+                let hora = 1000 * 60 * 60;
+                let hour = Math.floor(now.getTime()/hora);
                 // console.log("->", hour);
-                var last_block = null;
-                var last_hour = null;
+                let last_block = null;
+                let last_hour = null;
 
-                var ordered_blocks = [];
-                for (var i in market.block) {
+                let ordered_blocks = [];
+                for (let i in market.block) {
                     ordered_blocks.push(market.block[i]);
                 }
 
@@ -1054,38 +1098,38 @@ export class VapaeeDEX {
 
 
 
-                for (var i in ordered_blocks) {
-                    var block:HistoryBlock = ordered_blocks[i];
-                    var label = this.auxHourToLabel(block.hour);
+                for (let i in ordered_blocks) {
+                    let block:HistoryBlock = ordered_blocks[i];
+                    let label = this.auxHourToLabel(block.hour);
                     /*
                     // console.log("->", i, label, block);
-                    var date = block.date;
-                    var dif = now.getTime() - block.date.getTime();
-                    var mes = 30 * 24 * hora;
-                    var elapsed_months = dif / mes;
+                    let date = block.date;
+                    let dif = now.getTime() - block.date.getTime();
+                    let mes = 30 * 24 * hora;
+                    let elapsed_months = dif / mes;
                     if (elapsed_months > 3) {
                         console.log("dropping block too old", [block, block.date.toUTCString()]);
                         continue;
                     }
                     */
-
+                   let aux;
                     if (last_block) {
-                        var dif = block.hour - last_block.hour;
-                        for (var j=1; j<dif; j++) {
-                            var label_i = this.auxHourToLabel(last_block.hour+j);
+                        let dif = block.hour - last_block.hour;
+                        for (let j=1; j<dif; j++) {
+                            let label_i = this.auxHourToLabel(last_block.hour+j);
                             // console.log("-->", j, label_i, block);
 
                             // coninical ----------------------------
-                            var price = last_block.price.amount.toNumber();
-                            var aux = [label_i, price, price, price, price];
+                            let price = last_block.price.amount.toNumber();
+                            aux = [label_i, price, price, price, price];
                             market.blocklist.push(aux);
                             // reverse ----------------------------
-                            var inverse = last_block.inverse.amount.toNumber();
-                            var aux = [label_i, inverse, inverse, inverse, inverse];
+                            let inverse = last_block.inverse.amount.toNumber();
+                            aux = [label_i, inverse, inverse, inverse, inverse];
                             market.reverseblocks.push(aux);
                         }
                     }
-                    var obj:any[];
+                    let obj:any[];
                     // coninical ----------------------------
                     obj = [label];
                     obj.push(block.max.amount.toNumber());
@@ -1103,25 +1147,26 @@ export class VapaeeDEX {
                     last_block = block;
                 }
 
+                let aux;
                 if (last_block && hour != last_block.hour) {
-                    var dif = hour - last_block.hour;
-                    for (var j=1; j<=dif; j++) {
-                        var label_i = this.auxHourToLabel(last_block.hour+j);
+                    let dif = hour - last_block.hour;
+                    for (let j=1; j<=dif; j++) {
+                        let label_i = this.auxHourToLabel(last_block.hour+j);
 
                         // coninical ----------------------------
-                        var price = last_block.price.amount.toNumber();
-                        var aux = [label_i, price, price, price, price];
+                        let price = last_block.price.amount.toNumber();
+                        aux = [label_i, price, price, price, price];
                         market.blocklist.push(aux);
 
                         // reverse ----------------------------
-                        var inverse = last_block.inverse.amount.toNumber();
-                        var aux = [label_i, inverse, inverse, inverse, inverse];
+                        let inverse = last_block.inverse.amount.toNumber();
+                        aux = [label_i, inverse, inverse, inverse, inverse];
                         market.reverseblocks.push(aux);
                     }
                 }
 
                 // // elapsed time
-                // var firstLevelTime:Date = new Date();
+                // let firstLevelTime:Date = new Date();
                 // diff = firstLevelTime.getTime() - fetchBlockHistoryTime.getTime();
                 // sec = diff / 1000;
                 // console.log("** VapaeeDEX.getBlockHistory() firstLevelTime sec: ", sec, "(",diff,")");                
@@ -1131,22 +1176,22 @@ export class VapaeeDEX {
                 return market;
             }).then(market => {
                 // // elapsed time
-                // var allLevelsStart:Date = new Date();                
+                // let allLevelsStart:Date = new Date();                
                 
-                var limit = 256;
-                var levels = [market.blocklist];
-                var reverses = [market.reverseblocks];
-                for (var current = 0; levels[current].length > limit; current++) {
+                let limit = 256;
+                let levels = [market.blocklist];
+                let reverses = [market.reverseblocks];
+                for (let current = 0; levels[current].length > limit; current++) {
                     // console.log(current ,levels[current].length);
-                    var newlevel:any[][] = [];
-                    var newreverse:any[][] = [];
-                    var merged:any[] = [];
-                    for (var i=0; i<levels[current].length; i+=2) {
+                    let newlevel:any[][] = [];
+                    let newreverse:any[][] = [];
+                    let merged:any[] = [];
+                    for (let i=0; i<levels[current].length; i+=2) {
                         // canonical -----------------------------
-                        var v_1:any[] = levels[current][i];
-                        var v_2 = levels[current][i+1];
-                        var merged = [];
-                        for (var x=0; x<5; x++) merged[x] = v_1[x]; // clean copy
+                        let v_1:any[] = levels[current][i];
+                        let v_2 = levels[current][i+1];
+                        let merged = [];
+                        for (let x=0; x<5; x++) merged[x] = v_1[x]; // clean copy
                         if (v_2) {
                             merged[0] = v_1[0].split("/").length > 1 ? v_1[0] : v_2[0];
                             merged[1] = Math.max(v_1[1], v_2[1]);
@@ -1160,7 +1205,7 @@ export class VapaeeDEX {
                         v_1 = reverses[current][i];
                         v_2 = reverses[current][i+1];
                         merged = [];
-                        for (var x=0; x<5; x++) merged[x] = v_1[x]; // clean copy
+                        for (let x=0; x<5; x++) merged[x] = v_1[x]; // clean copy
                         if (v_2) {
                             merged[0] = v_1[0].split("/").length > 1 ? v_1[0] : v_2[0];
                             merged[1] = Math.min(v_1[1], v_2[1]);
@@ -1188,7 +1233,7 @@ export class VapaeeDEX {
 
                 
                 // // elapsed time
-                // var allLevelsTime:Date = new Date();
+                // let allLevelsTime:Date = new Date();
                 // diff = allLevelsTime.getTime() - allLevelsStart.getTime();
                 // sec = diff / 1000;
                 // console.log("** VapaeeDEX.getBlockHistory() allLevelsTime sec: ", sec, "(",diff,")");
@@ -1212,18 +1257,18 @@ export class VapaeeDEX {
     }
 
     async getSellOrders(commodity:TokenDEX, currency:TokenDEX, force:boolean = false): Promise<any> {
-        var scope:string = this.getScopeFor(commodity, currency);
-        var canonical:string = this.canonicalScope(scope);
-        var reverse:string = this.inverseScope(canonical);
-        var aux = null;
-        var result = null;
+        let scope:string = this.getScopeFor(commodity, currency);
+        let canonical:string = this.canonicalScope(scope);
+        let reverse:string = this.inverseScope(canonical);
+        let aux = null;
+        let result = null;
         this.feed.setLoading("sellorders", true);
         aux = this.waitTokensLoaded.then(async _ => {
-            var orders = await this.fetchOrders({scope:canonical, limit:100, index_position: "2", key_type: "i64"});
+            let orders = await this.fetchOrders({scope:canonical, limit:100, index_position: "2", key_type: "i64"});
             this._markets[canonical] = this.auxAssertScope(canonical);
             // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("-------------");
             // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("Sell crudo:", orders);
-            var sell: Order[] = this.auxProcessRowsToOrders(orders.rows);
+            let sell: Order[] = this.auxProcessRowsToOrders(orders.rows);
             sell.sort(function(a:Order, b:Order) {
                 if(a.price.amount.isLessThan(b.price.amount)) return -11;
                 if(a.price.amount.isGreaterThan(b.price.amount)) return 1;
@@ -1231,11 +1276,11 @@ export class VapaeeDEX {
             });
             // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("sorted:", sell);
             // grouping together orders with the same price.
-            var list: OrderRow[] = [];
-            var row: OrderRow;
+            let list: OrderRow[] = [];
+            let row: OrderRow;
             if (sell.length > 0) {
-                for(var i=0; i<sell.length; i++) {
-                    var order: Order = sell[i];
+                for(let i=0; i<sell.length; i++) {
+                    let order: Order = sell[i];
                     if (list.length > 0) {
                         row = list[list.length-1];
                         if (row.price.amount.eq(order.price.amount)) {
@@ -1264,10 +1309,10 @@ export class VapaeeDEX {
                 }
             }
 
-            var sum = new BigNumber(0);
-            var sumtelos = new BigNumber(0);
-            for (var j in list) {
-                var order_row = list[j];
+            let sum = new BigNumber(0);
+            let sumtelos = new BigNumber(0);
+            for (let j in list) {
+                let order_row = list[j];
                 sumtelos = sumtelos.plus(order_row.telos.amount);
                 sum = sum.plus(order_row.total.amount);
                 order_row.sumtelos = new AssetDEX(sumtelos, order_row.telos.token);
@@ -1291,20 +1336,20 @@ export class VapaeeDEX {
     }
     
     async getBuyOrders(commodity:TokenDEX, currency:TokenDEX, force:boolean = false): Promise<any> {
-        var scope:string = this.getScopeFor(commodity, currency);
-        var canonical:string = this.canonicalScope(scope);
-        var reverse:string = this.inverseScope(canonical);
+        let scope:string = this.getScopeFor(commodity, currency);
+        let canonical:string = this.canonicalScope(scope);
+        let reverse:string = this.inverseScope(canonical);
 
 
-        var aux = null;
-        var result = null;
+        let aux = null;
+        let result = null;
         this.feed.setLoading("buyorders", true);
         aux = this.waitTokensLoaded.then(async _ => {
-            var orders = await await this.fetchOrders({scope:reverse, limit:50, index_position: "2", key_type: "i64"});
+            let orders = await await this.fetchOrders({scope:reverse, limit:50, index_position: "2", key_type: "i64"});
             this._markets[canonical] = this.auxAssertScope(canonical);
             // console.log("-------------");
             // console.log("Buy crudo:", orders);            
-            var buy: Order[] = this.auxProcessRowsToOrders(orders.rows);
+            let buy: Order[] = this.auxProcessRowsToOrders(orders.rows);
             buy.sort(function(a:Order, b:Order){
                 if(a.price.amount.isLessThan(b.price.amount)) return 1;
                 if(a.price.amount.isGreaterThan(b.price.amount)) return -1;
@@ -1314,11 +1359,11 @@ export class VapaeeDEX {
             // console.log("buy sorteado:", buy);
 
             // grouping together orders with the same price.
-            var list: OrderRow[] = [];
-            var row: OrderRow;
+            let list: OrderRow[] = [];
+            let row: OrderRow;
             if (buy.length > 0) {
-                for(var i=0; i<buy.length; i++) {
-                    var order: Order = buy[i];
+                for(let i=0; i<buy.length; i++) {
+                    let order: Order = buy[i];
                     if (list.length > 0) {
                         row = list[list.length-1];
                         if (row.price.amount.eq(order.price.amount)) {
@@ -1347,10 +1392,10 @@ export class VapaeeDEX {
                 }
             }            
 
-            var sum = new BigNumber(0);
-            var sumtelos = new BigNumber(0);
-            for (var j in list) {
-                var order_row = list[j];
+            let sum = new BigNumber(0);
+            let sumtelos = new BigNumber(0);
+            for (let j in list) {
+                let order_row = list[j];
                 sumtelos = sumtelos.plus(order_row.telos.amount);
                 sum = sum.plus(order_row.total.amount);
                 order_row.sumtelos = new AssetDEX(sumtelos, order_row.telos.token);
@@ -1374,11 +1419,11 @@ export class VapaeeDEX {
     
     async getOrderSummary(): Promise<any> {
         console.log("VapaeeDEX.getOrderSummary()");
-        var tables = await this.fetchOrderSummary();
+        let tables = await this.fetchOrderSummary();
 
-        for (var i in tables.rows) {
-            var scope:string = tables.rows[i].table;
-            var canonical = this.canonicalScope(scope);
+        for (let i in tables.rows) {
+            let scope:string = tables.rows[i].table;
+            let canonical = this.canonicalScope(scope);
             console.assert(scope == canonical, "ERROR: scope is not canonical", scope, [i, tables]);
             this._markets[canonical] = this.auxAssertScope(canonical);
 
@@ -1398,22 +1443,22 @@ export class VapaeeDEX {
     }
 
     async getMarketSummary(token_a:TokenDEX, token_b:TokenDEX, force:boolean = false): Promise<MarketSummary> {
-        var scope:string = this.getScopeFor(token_a, token_b);
-        var canonical:string = this.canonicalScope(scope);
-        var inverse:string = this.inverseScope(canonical);
+        let scope:string = this.getScopeFor(token_a, token_b);
+        let canonical:string = this.canonicalScope(scope);
+        let inverse:string = this.inverseScope(canonical);
 
-        var commodity = this.auxGetcommodityToken(canonical); 
-        var currency = this.auxGetCurrencyToken(canonical);
+        let commodity = this.auxGetcommodityToken(canonical); 
+        let currency = this.auxGetCurrencyToken(canonical);
 
-        var ZERO_commodity = "0.00000000 " + commodity.symbol;
-        var ZERO_CURRENCY = "0.00000000 " + currency.symbol;
+        let ZERO_commodity = "0.00000000 " + commodity.symbol;
+        let ZERO_CURRENCY = "0.00000000 " + currency.symbol;
 
         this.feed.setLoading("summary."+canonical, true);
         this.feed.setLoading("summary."+inverse, true);
-        var aux = null;
-        var result:MarketSummary = null;
+        let aux = null;
+        let result:MarketSummary = null;
         aux = this.waitTokensLoaded.then(async _ => {
-            var summary = await this.fetchSummary(canonical);
+            let summary = await this.fetchSummary(canonical);
             //if(canonical=="telosd.tlos")console.log(scope, "---------------------------------------------------");
             //if(canonical=="telosd.tlos")console.log("Summary crudo:", summary.rows);
 
@@ -1430,20 +1475,20 @@ export class VapaeeDEX {
                 records: summary.rows
             };
 
-            var now:Date = new Date();
-            var now_sec: number = Math.floor(now.getTime() / 1000);
-            var now_hour: number = Math.floor(now_sec / 3600);
-            var start_hour = now_hour - 23;
+            let now:Date = new Date();
+            let now_sec: number = Math.floor(now.getTime() / 1000);
+            let now_hour: number = Math.floor(now_sec / 3600);
+            let start_hour = now_hour - 23;
             //if(canonical=="telosd.tlos")console.log("now_hour:", now_hour);
             //if(canonical=="telosd.tlos")console.log("start_hour:", start_hour);
 
             // proceso los datos crudos 
-            var price = ZERO_CURRENCY;
-            var inverse = ZERO_commodity;
-            var crude = {};
-            var last_hh = 0;
-            for (var i=0; i<summary.rows.length; i++) {
-                var hh = summary.rows[i].hour;
+            let price = ZERO_CURRENCY;
+            let inverse = ZERO_commodity;
+            let crude = {};
+            let last_hh = 0;
+            for (let i=0; i<summary.rows.length; i++) {
+                let hh = summary.rows[i].hour;
                 if (summary.rows[i].label == "lastone") {
                     // price = summary.rows[i].price;
                 } else {
@@ -1465,22 +1510,22 @@ export class VapaeeDEX {
             //if(canonical=="telosd.tlos")console.log("price:", price);
 
             // genero una entrada por cada una de las últimas 24 horas
-            var last_24h = {};
-            var volume = new AssetDEX(ZERO_CURRENCY, this);
-            var amount = new AssetDEX(ZERO_commodity, this);
-            var price_asset = new AssetDEX(price, this);
-            var inverse_asset = new AssetDEX(inverse, this);
+            let last_24h = {};
+            let volume = new AssetDEX(ZERO_CURRENCY, this);
+            let amount = new AssetDEX(ZERO_commodity, this);
+            let price_asset = new AssetDEX(price, this);
+            let inverse_asset = new AssetDEX(inverse, this);
             // if(canonical=="cnt.tlos")console.log("price ", price);
-            var max_price = price_asset.clone();
-            var min_price = price_asset.clone();
-            var max_inverse = inverse_asset.clone();
-            var min_inverse = inverse_asset.clone();
-            var price_fst:AssetDEX = null;
-            var inverse_fst:AssetDEX = null;
-            for (var i=0; i<24; i++) {
-                var current = start_hour+i;
-                var current_date = new Date(current * 3600 * 1000);
-                var nuevo:any = crude[current];
+            let max_price = price_asset.clone();
+            let min_price = price_asset.clone();
+            let max_inverse = inverse_asset.clone();
+            let min_inverse = inverse_asset.clone();
+            let price_fst:AssetDEX = null;
+            let inverse_fst:AssetDEX = null;
+            for (let i=0; i<24; i++) {
+                let current = start_hour+i;
+                let current_date = new Date(current * 3600 * 1000);
+                let nuevo:any = crude[current];
                 if (nuevo) {
                     
                 } else {
@@ -1499,7 +1544,7 @@ export class VapaeeDEX {
 
                 // coninical ----------------------------
                 price = last_24h[current].price;
-                var vol = new AssetDEX(last_24h[current].volume, this);
+                let vol = new AssetDEX(last_24h[current].volume, this);
                 console.assert(vol.token.symbol == volume.token.symbol, "ERROR: different tokens", vol.str, volume.str);
                 volume.amount = volume.amount.plus(vol.amount);
                 if (price != ZERO_CURRENCY && !price_fst) {
@@ -1517,7 +1562,7 @@ export class VapaeeDEX {
 
                 // reverse ----------------------------
                 inverse = last_24h[current].inverse;
-                var amo = new AssetDEX(last_24h[current].amount, this);
+                let amo = new AssetDEX(last_24h[current].amount, this);
                 console.assert(amo.token.symbol == amount.token.symbol, "ERROR: different tokens", amo.str, amount.str);
                 amount.amount = amount.amount.plus(amo.amount);
                 if (inverse != ZERO_commodity && !inverse_fst) {
@@ -1537,29 +1582,29 @@ export class VapaeeDEX {
             if (!price_fst) {
                 price_fst = new AssetDEX(last_24h[start_hour].price, this);
             }
-            var last_price =  new AssetDEX(last_24h[now_hour].price, this);
-            var diff = last_price.clone();
+            let last_price =  new AssetDEX(last_24h[now_hour].price, this);
+            let diff = last_price.clone();
             // diff.amount 
             diff.amount = last_price.amount.minus(price_fst.amount);
-            var ratio:number = 0;
+            let ratio:number = 0;
             if (price_fst.amount.toNumber() != 0) {
                 ratio = diff.amount.dividedBy(price_fst.amount).toNumber();
             }
-            var percent = Math.floor(ratio * 10000) / 100;
+            let percent = Math.floor(ratio * 10000) / 100;
 
             // reverse ----------------------------
             if (!inverse_fst) {
                 inverse_fst = new AssetDEX(last_24h[start_hour].inverse, this);
             }
-            var last_inverse =  new AssetDEX(last_24h[now_hour].inverse, this);
-            var idiff = last_inverse.clone();
+            let last_inverse =  new AssetDEX(last_24h[now_hour].inverse, this);
+            let idiff = last_inverse.clone();
             // diff.amount 
             idiff.amount = last_inverse.amount.minus(inverse_fst.amount);
             ratio = 0;
             if (inverse_fst.amount.toNumber() != 0) {
                 ratio = idiff.amount.dividedBy(inverse_fst.amount).toNumber();
             }
-            var ipercent = Math.floor(ratio * 10000) / 100;
+            let ipercent = Math.floor(ratio * 10000) / 100;
             //if(canonical=="telosd.tlos")console.log("price_fst:", price_fst.str);
             //if(canonical=="telosd.tlos")console.log("inverse_fst:", inverse_fst.str);
 
@@ -1606,11 +1651,11 @@ export class VapaeeDEX {
 
     async getAllTablesSumaries(): Promise<any> {
         return this.waitOrderSummary.then(async _ => {
-            var promises = [];
+            let promises = [];
 
-            for (var i in this._markets) {
+            for (let i in this._markets) {
                 if (i.indexOf(".") == -1) continue;
-                var p = this.getMarketSummary(this._markets[i].commodity, this._markets[i].currency, true);
+                let p = this.getMarketSummary(this._markets[i].commodity, this._markets[i].currency, true);
                 promises.push(p);
             }
 
@@ -1625,17 +1670,17 @@ export class VapaeeDEX {
     // --------------------------------------------------------------
     // Aux functions
     private auxProcessRowsToOrders(rows:any[]): Order[] {
-        var result: Order[] = [];
-        for (var i=0; i < rows.length; i++) {
-            var price = new AssetDEX(rows[i].price, this);
-            var inverse = new AssetDEX(rows[i].inverse, this);
-            var selling = new AssetDEX(rows[i].selling, this);
-            var total = new AssetDEX(rows[i].total, this);
-            var order:Order;
+        let result: Order[] = [];
+        for (let i=0; i < rows.length; i++) {
+            let price = new AssetDEX(rows[i].price, this);
+            let inverse = new AssetDEX(rows[i].inverse, this);
+            let selling = new AssetDEX(rows[i].selling, this);
+            let total = new AssetDEX(rows[i].total, this);
+            let order:Order;
 
-            var scope = this.getScopeFor(price.token, inverse.token);
-            var canonical = this.canonicalScope(scope);
-            var reverse_scope = this.inverseScope(canonical);
+            let scope = this.getScopeFor(price.token, inverse.token);
+            let canonical = this.canonicalScope(scope);
+            let reverse_scope = this.inverseScope(canonical);
             
 
             if (reverse_scope == scope) {
@@ -1665,7 +1710,7 @@ export class VapaeeDEX {
     }
 
     private auxGetLabelForHour(hh:number): string {
-        var hours = [
+        let hours = [
             "h.zero",
             "h.one",
             "h.two",
@@ -1697,26 +1742,26 @@ export class VapaeeDEX {
     private auxGetCurrencyToken(scope: string) {
         console.assert(!!scope, "ERROR: invalid scope: '"+ scope +"'");
         console.assert(scope.split(".").length == 2, "ERROR: invalid scope: '"+ scope +"'");
-        var currency_sym = scope.split(".")[1].toUpperCase();
-        var currency = this.getTokenNow(currency_sym);
+        let currency_sym = scope.split(".")[1].toUpperCase();
+        let currency = this.getTokenNow(currency_sym);
         return currency;
     }
 
     private auxGetcommodityToken(scope: string) {
         console.assert(!!scope, "ERROR: invalid scope: '"+ scope +"'");
         console.assert(scope.split(".").length == 2, "ERROR: invalid scope: '"+ scope +"'");
-        var commodity_sym = scope.split(".")[0].toUpperCase();
-        var commodity = this.getTokenNow(commodity_sym);
+        let commodity_sym = scope.split(".")[0].toUpperCase();
+        let commodity = this.getTokenNow(commodity_sym);
         return commodity;        
     }
 
     private auxAssertScope(scope:string): Market {
-        var commodity = this.auxGetcommodityToken(scope);
-        var currency = this.auxGetCurrencyToken(scope);
-        var aux_asset_com = new AssetDEX(0, commodity);
-        var aux_asset_cur = new AssetDEX(0, currency);
+        let commodity = this.auxGetcommodityToken(scope);
+        let currency = this.auxGetCurrencyToken(scope);
+        let aux_asset_com = new AssetDEX(0, commodity);
+        let aux_asset_cur = new AssetDEX(0, currency);
 
-        var market_summary:MarketSummary = {
+        let market_summary:MarketSummary = {
             scope: scope,
             price: aux_asset_cur,
             price_24h_ago: aux_asset_cur,
@@ -1768,13 +1813,13 @@ export class VapaeeDEX {
     private async fetchBalances(account): Promise<any> {
         console.log("VapaeeDex.fetchBalances() ------ (ini)");
         return this.waitTokensLoaded.then(async _ => {
-            var contracts = {};
-            for (var i in this.tokens) {
+            let contracts = {};
+            for (let i in this.tokens) {
                 if (this.tokens[i].offchain) continue;
                 contracts[this.tokens[i].contract] = true;
             }
             let promises:Promise<any>[] = [];         
-            for (var contract in contracts) {
+            for (let contract in contracts) {
                 promises.push(this.fetchBalancesOnContract(account, contract));
             }
             return Promise.all(promises).then(result => {
@@ -1785,6 +1830,7 @@ export class VapaeeDEX {
                 }
                 console.log(_balances);
                 this.balances = _balances;
+                delete this._dexdata;
                 console.log("VapaeeDex.fetchBalances() ------ (fin 2) -----");
             }).then(_ => this.balances);
         });
@@ -1793,12 +1839,12 @@ export class VapaeeDEX {
     private async fetchBalancesOnContract(account:string, contract:string) {
         // console.log("VapaeeDex.fetchBalancesOnContract()", account, contract);
         this.feed.setLoading("balances-"+contract, true);
-        var result = await this.contract.getTable("accounts", {
+        let result = await this.contract.getTable("accounts", {
             contract:contract,
             scope: account || this.current.name
         });
         let _balances = [];
-        for (var i in result.rows) {
+        for (let i in result.rows) {
             let _balance = new AssetDEX(result.rows[i].balance, this);
             if (_balance.token) {
                 console.log("adding balance: ", result.rows[i].balance, "(" + contract + ")");
@@ -1807,7 +1853,8 @@ export class VapaeeDEX {
                 console.warn("Token found but not registered on contract", contract, result.rows[i].balance);
             }
         }
-        this.balances = _balances.concat(this.balances);;
+        // this.balances = _balances.concat(this.balances);
+        // delete this._dexdata
         this.feed.setLoading("balances-"+contract, false);
         return _balances;
     }
@@ -1825,16 +1872,16 @@ export class VapaeeDEX {
     }
 
     private fetchBlockHistory(scope:string, page:number = 0, pagesize:number = 25): Promise<TableResult> {
-        var canonical:string = this.canonicalScope(scope);
-        var pages = this.getBlockHistoryTotalPagesFor(canonical, pagesize);
-        var id = page*pagesize;
+        let canonical:string = this.canonicalScope(scope);
+        let pages = this.getBlockHistoryTotalPagesFor(canonical, pagesize);
+        let id = page*pagesize;
         // console.log("VapaeeDEX.fetchBlockHistory(", scope, ",",page,",",pagesize,"): id:", id, "pages:", pages);
         if (page < pages) {
             if (this._markets && this._markets[canonical] && this._markets[canonical].block["id-" + id]) {
-                var result:TableResult = {more:false,rows:[]};
-                for (var i=0; i<pagesize; i++) {
-                    var id_i = id+i;
-                    var block = this._markets[canonical].block["id-" + id_i];
+                let result:TableResult = {more:false,rows:[]};
+                for (let i=0; i<pagesize; i++) {
+                    let id_i = id+i;
+                    let block = this._markets[canonical].block["id-" + id_i];
                     if (block) {
                         result.rows.push(block);
                     } else {
@@ -1854,8 +1901,8 @@ export class VapaeeDEX {
             this._markets[canonical] = this.auxAssertScope(canonical);
             this._markets[canonical].block = this._markets[canonical].block || {}; 
             // console.log("this._markets[scope].block:", this._markets[scope].block);
-            for (var i=0; i < result.rows.length; i++) {
-                var block:HistoryBlock = {
+            for (let i=0; i < result.rows.length; i++) {
+                let block:HistoryBlock = {
                     id: result.rows[i].id,
                     hour: result.rows[i].hour,
                     str: "",
@@ -1878,16 +1925,16 @@ export class VapaeeDEX {
     }    
 
     private fetchHistory(scope:string, page:number = 0, pagesize:number = 25): Promise<TableResult> {
-        var canonical:string = this.canonicalScope(scope);
-        var pages = this.getHistoryTotalPagesFor(canonical, pagesize);
-        var id = page*pagesize;
+        let canonical:string = this.canonicalScope(scope);
+        let pages = this.getHistoryTotalPagesFor(canonical, pagesize);
+        let id = page*pagesize;
         // console.log("VapaeeDEX.fetchHistory(", scope, ",",page,",",pagesize,"): id:", id, "pages:", pages);
         if (page < pages) {
             if (this._markets && this._markets[canonical] && this._markets[canonical].tx["id-" + id]) {
-                var result:TableResult = {more:false,rows:[]};
-                for (var i=0; i<pagesize; i++) {
-                    var id_i = id+i;
-                    var trx = this._markets[canonical].tx["id-" + id_i];
+                let result:TableResult = {more:false,rows:[]};
+                for (let i=0; i<pagesize; i++) {
+                    let id_i = id+i;
+                    let trx = this._markets[canonical].tx["id-" + id_i];
                     if (trx) {
                         result.rows.push(trx);
                     } else {
@@ -1911,8 +1958,8 @@ export class VapaeeDEX {
 
             // console.log("this.scopes[scope].tx:", this.scopes[scope].tx);
 
-            for (var i=0; i < result.rows.length; i++) {
-                var transaction:HistoryTx = {
+            for (let i=0; i < result.rows.length; i++) {
+                let transaction:HistoryTx = {
                     id: result.rows[i].id,
                     str: "",
                     amount: new AssetDEX(result.rows[i].amount, this),
@@ -1930,7 +1977,7 @@ export class VapaeeDEX {
                 this._markets[canonical].tx["id-" + transaction.id] = transaction;
             }
 
-            for (var j in this._markets[canonical].tx) {
+            for (let j in this._markets[canonical].tx) {
                 this._markets[canonical].history.push(this._markets[canonical].tx[j]);
             }
 
@@ -1948,14 +1995,14 @@ export class VapaeeDEX {
     }
     
     private async fetchActivity(page:number = 0, pagesize:number = 25) {
-        var id = page*pagesize+1;
+        let id = page*pagesize+1;
         // console.log("VapaeeDEX.fetchActivity(", page,",",pagesize,"): id:", id);
         
         if (this.activity.events["id-" + id]) {
-            var pageEvents = [];
-            for (var i=0; i<pagesize; i++) {
-                var id_i = id+i;
-                var event = this.activity.events["id-" + id_i];
+            let pageEvents = [];
+            for (let i=0; i<pagesize; i++) {
+                let id_i = id+i;
+                let event = this.activity.events["id-" + id_i];
                 if (!event) {
                     break;
                 }
@@ -1967,11 +2014,11 @@ export class VapaeeDEX {
 
         return this.contract.getTable("events", {limit:pagesize, lower_bound:""+id}).then(result => {
             // console.log("Activity crudo:", result);
-            var list:EventLog[] = [];
+            let list:EventLog[] = [];
 
-            for (var i=0; i < result.rows.length; i++) {
-                var id = result.rows[i].id;
-                var event:EventLog = <EventLog>result.rows[i];
+            for (let i=0; i < result.rows.length; i++) {
+                let id = result.rows[i].id;
+                let event:EventLog = <EventLog>result.rows[i];
                 if (!this.activity.events["id-" + id]) {
                     this.activity.events["id-" + id] = event;
                     list.push(event);
@@ -2035,8 +2082,8 @@ export class VapaeeDEX {
         this.feed.setLoading("token-stats", true);
         return this.waitTokensLoaded.then(_ => {
 
-            var priomises = [];
-            for (var i in this.tokens) {
+            let priomises = [];
+            for (let i in this.tokens) {
                 if (this.tokens[i].offchain) continue;
                 priomises.push(this.fetchTokenStats(this.tokens[i]));
             }
@@ -2054,8 +2101,8 @@ export class VapaeeDEX {
         this.feed.setLoading("token-events", true);
         return this.waitTokensLoaded.then(_ => {
 
-            var priomises = [];
-            for (var i in this.tokens) {
+            let priomises = [];
+            for (let i in this.tokens) {
                 if (this.tokens[i].offchain) continue;
                 priomises.push(this.fetchTokenEvents(this.tokens[i]));
             }
@@ -2073,8 +2120,8 @@ export class VapaeeDEX {
         this.feed.setLoading("token-data", true);
         return this.waitTokensLoaded.then(_ => {
 
-            var priomises = [];
-            for (var i in this.tokens) {
+            let priomises = [];
+            for (let i in this.tokens) {
                 if (this.tokens[i].offchain) continue;
                 priomises.push(this.fetchTokenData(this.tokens[i]));
             }
@@ -2094,16 +2141,17 @@ export class VapaeeDEX {
             this.waitMarketSummary
         ]).then(_ => {
             // a cada token le asigno un price que sale de verificar su price en el mercado principal XXX/TLOS
-            for (var i in this.tokens) {
+            let token;
+            for (let i in this.tokens) {
                 if (this.tokens[i].offchain) continue; // discard tokens that are not on-chain
                 
-                var token = this.tokens[i];
-                var quantity:AssetDEX = new AssetDEX(0, token);
+                token = this.tokens[i];
+                let quantity:AssetDEX = new AssetDEX(0, token);
                 token.markets = [];
 
-                for (var scope in this._markets) {
+                for (let scope in this._markets) {
                     if (scope.indexOf(".") == -1) continue;
-                    var table:Market = this._markets[scope];
+                    let table:Market = this._markets[scope];
 
                     if (table.currency.symbol == token.symbol) {
                         table = this.market(this.inverseScope(scope));
@@ -2113,26 +2161,26 @@ export class VapaeeDEX {
                         token.markets.push(table);
                     }
                 }
-            }
 
-            token.markets.sort((a:Market, b:Market) => {
-                // push offchain tokens to the end of the token list
-                var a_amount = a.summary ? a.summary.amount : new AssetDEX();
-                var b_amount = b.summary ? b.summary.amount : new AssetDEX();
+                token.markets.sort((a:Market, b:Market) => {
+                    // push offchain tokens to the end of the token list
+                    let a_amount = a.summary ? a.summary.amount : new AssetDEX();
+                    let b_amount = b.summary ? b.summary.amount : new AssetDEX();
+        
+                    console.assert(a_amount.token.symbol == b_amount.token.symbol, "ERROR: comparing two different tokens " + a_amount.str + ", " + b_amount.str)
+                    if(a_amount.amount.isGreaterThan(b_amount.amount)) return -1;
+                    if(a_amount.amount.isLessThan(b_amount.amount)) return 1;
     
-                console.assert(a_amount.token.symbol == b_amount.token.symbol, "ERROR: comparing two different tokens " + a_amount.str + ", " + b_amount.str)
-                if(a_amount.amount.isGreaterThan(b_amount.amount)) return -1;
-                if(a_amount.amount.isLessThan(b_amount.amount)) return 1;
-
-                return 0;
-            });
-
+                    return 0;
+                });
+    
+            }
         });   
     }
     
     private updateTokensSummary(times: number = 20) {
         if (times > 1) {
-            for (var i = times; i>0; i--) this.updateTokensSummary(1);
+            for (let i = times; i>0; i--) this.updateTokensSummary(1);
             this.resortTokens();
             return;
         }
@@ -2144,18 +2192,18 @@ export class VapaeeDEX {
             // console.log("Vapaee.updateTokensSummary()"); 
 
             // mapping of how much (amount of) tokens have been traded agregated in all markets
-            var amount_map:{[key:string]:AssetDEX} = {};
+            let amount_map:{[key:string]:AssetDEX} = {};
 
             // a cada token le asigno un price que sale de verificar su price en el mercado principal XXX/TLOS
-            for (var i in this.tokens) {
+            for (let i in this.tokens) {
                 if (this.tokens[i].offchain) continue; // discard tokens that are not on-chain
                 
-                var token = this.tokens[i];
-                var quantity:AssetDEX = new AssetDEX(0, token);
+                let token = this.tokens[i];
+                let quantity:AssetDEX = new AssetDEX(0, token);
 
-                for (var j in this._markets) {
+                for (let j in this._markets) {
                     if (j.indexOf(".") == -1) continue;
-                    var table:Market = this._markets[j];
+                    let table:Market = this._markets[j];
                     
                     if (table.commodity.symbol == token.symbol) {
                         quantity = quantity.plus(table.summary.amount);
@@ -2202,32 +2250,32 @@ export class VapaeeDEX {
 
 
             
-            var ONE = new BigNumber(1);
+            let ONE = new BigNumber(1);
 
-            for (var i in this.tokens) {
-                var token = this.tokens[i];
+            for (let i in this.tokens) {
+                let token = this.tokens[i];
                 if (token.offchain) continue;
                 if (!token.summary) continue;
                 if (token.symbol == this.telos.symbol) continue;
                 // console.log("TOKEN: -------- ", token.symbol, token.summary.price.str, token.summary.price_24h_ago.str );
                 
-                var volume = new AssetDEX(0, this.telos);
-                var price = new AssetDEX(0, this.telos);
-                var price_init = new AssetDEX(0, this.telos);
-                var total_quantity = amount_map[token.symbol];
+                let volume = new AssetDEX(0, this.telos);
+                let price = new AssetDEX(0, this.telos);
+                let price_init = new AssetDEX(0, this.telos);
+                let total_quantity = amount_map[token.symbol];
 
                 if (total_quantity.toNumber() == 0) continue;
 
                 // if (token.symbol == "ACORN") console.log("TOKEN: -------- ", token.symbol, token.summary.price.str, token.summary.price_24h_ago.str );
-                for (var j in this._markets) {
+                for (let j in this._markets) {
                     if (j.indexOf(".") == -1) continue;
-                    var table = this._markets[j];
-                    var currency_price = table.currency.symbol == "TLOS" ? ONE : table.currency.summary.price.amount;
-                    var currency_price_24h_ago = table.currency.symbol == "TLOS" ? ONE : table.currency.summary.price_24h_ago.amount;
+                    let table = this._markets[j];
+                    let currency_price = table.currency.symbol == "TLOS" ? ONE : table.currency.summary.price.amount;
+                    let currency_price_24h_ago = table.currency.symbol == "TLOS" ? ONE : table.currency.summary.price_24h_ago.amount;
                     if (table.commodity.symbol == token.symbol || table.currency.symbol == token.symbol) {
 
                         // how much quantity is involved in this market
-                        var quantity = new AssetDEX();
+                        let quantity = new AssetDEX();
                         if (table.commodity.symbol == token.symbol) {
                             quantity = table.summary.amount.clone();
                         } else if (table.currency.symbol == token.symbol) {
@@ -2235,10 +2283,10 @@ export class VapaeeDEX {
                         }
 
                         // calculate the influence-weight of this market over the token
-                        var weight = quantity.amount.dividedBy(total_quantity.amount);
+                        let weight = quantity.amount.dividedBy(total_quantity.amount);
 
                         // calculate the price of this token in this market (expressed in TLOS)
-                        var price_amount;
+                        let price_amount;
                         if (table.commodity.symbol == token.symbol) {
                             price_amount = table.summary.price.amount.multipliedBy(table.currency.summary.price.amount);
                         } else if (table.currency.symbol == token.symbol) {
@@ -2246,10 +2294,10 @@ export class VapaeeDEX {
                         }
 
                         // calculate this market token price multiplied by the wight of this market (ponderated price)
-                        var price_i = new AssetDEX(price_amount.multipliedBy(weight), this.telos);
+                        let price_i = new AssetDEX(price_amount.multipliedBy(weight), this.telos);
 
                         // calculate the price of this token in this market 24h ago (expressed in TLOS)
-                        var price_init_amount;
+                        let price_init_amount;
                         if (table.commodity.symbol == token.symbol) {
                             price_init_amount = table.summary.price_24h_ago.amount.multipliedBy(table.currency.summary.price_24h_ago.amount);
                         } else if (table.currency.symbol == token.symbol) {
@@ -2257,10 +2305,10 @@ export class VapaeeDEX {
                         }
 
                         // calculate this market token price 24h ago multiplied by the weight of this market (ponderated init_price)
-                        var price_init_i = new AssetDEX(price_init_amount.multipliedBy(weight), this.telos);
+                        let price_init_i = new AssetDEX(price_init_amount.multipliedBy(weight), this.telos);
 
                         // how much volume is involved in this market
-                        var volume_i;
+                        let volume_i;
                         if (table.commodity.symbol == token.symbol) {
                             volume_i = table.summary.volume.clone();
                         } else if (table.currency.symbol == token.symbol) {
@@ -2293,13 +2341,13 @@ export class VapaeeDEX {
                     }
                 }
 
-                var diff = price.minus(price_init);
-                var ratio:number = 0;
+                let diff = price.minus(price_init);
+                let ratio:number = 0;
                 if (price_init.amount.toNumber() != 0) {
                     ratio = diff.amount.dividedBy(price_init.amount).toNumber();
                 }
-                var percent = Math.floor(ratio * 10000) / 100;
-                var percent_str = (isNaN(percent) ? 0 : percent) + "%";
+                let percent = Math.floor(ratio * 10000) / 100;
+                let percent_str = (isNaN(percent) ? 0 : percent) + "%";
 
                 // console.log("price", price.str);
                 // console.log("price_24h_ago", price_init.str);
@@ -2326,11 +2374,11 @@ export class VapaeeDEX {
         console.log("Vapaee.fetchTokens()");
 
         return this.contract.getTable("tokens").then(result => {
-            var data = {
+            let data = {
                 tokens: <TokenDEX[]>result.rows
             }
 
-            for (var i in data.tokens) {
+            for (let i in data.tokens) {
                 data.tokens[i].scope = data.tokens[i].symbol.toLowerCase() + ".tlos";
             }
 
@@ -2350,8 +2398,8 @@ export class VapaeeDEX {
             // console.log(" --- ", a.symbol, "-", b.symbol, " --- ");
             // console.log("     ", a.summary ? a.summary.volume.str : "0", "-", b.summary ? b.summary.volume.str : "0");
             
-            var a_vol = a.summary ? a.summary.volume : new AssetDEX();
-            var b_vol = b.summary ? b.summary.volume : new AssetDEX();
+            let a_vol = a.summary ? a.summary.volume : new AssetDEX();
+            let b_vol = b.summary ? b.summary.volume : new AssetDEX();
 
             if(a_vol.amount.isGreaterThan(b_vol.amount)) return -1;
             if(a_vol.amount.isLessThan(b_vol.amount)) return 1;
@@ -2371,9 +2419,9 @@ export class VapaeeDEX {
         this.waitTokenSummary.then(_ => {
 
             this.topmarkets = [];
-            var inverse: string;
-            var market:Market;
-            for (var scope in this._markets) {
+            let inverse: string;
+            let market:Market;
+            for (let scope in this._markets) {
                 market = this._markets[scope];
                 if (market.direct >= market.inverse) {
                     this.topmarkets.push(market);
@@ -2386,8 +2434,8 @@ export class VapaeeDEX {
 
             this.topmarkets.sort((a:Market, b:Market) => {
                 
-                var a_vol = a.summary ? a.summary.volume : new AssetDEX();
-                var b_vol = b.summary ? b.summary.volume : new AssetDEX();
+                let a_vol = a.summary ? a.summary.volume : new AssetDEX();
+                let b_vol = b.summary ? b.summary.volume : new AssetDEX();
 
                 if (a_vol.token != this.telos) {
                     a_vol = new AssetDEX(a_vol.amount.multipliedBy(a_vol.token.summary.price.amount),this.telos);

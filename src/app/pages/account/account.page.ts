@@ -5,7 +5,7 @@ import { Subscriber } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 import { VpePanelWalletComponent } from 'src/app/components/vpe-panel-wallet/vpe-panel-wallet.component';
-import { VapaeeDEX, AssetDEX, UserOrdersMap } from '@vapaee/dex';
+import { VapaeeDEX, AssetDEX, UserOrdersMap, DEXdata } from '@vapaee/dex';
 import { VapaeeREX, REXdata } from '@vapaee/rex';
 import { Account } from '@vapaee/scatter';
 
@@ -45,8 +45,16 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
         return this.dex.balances;
     }    
 
+    get inorders(): AssetDEX[] {
+        return this.dex.inorders;
+    }    
+
     get userorders(): UserOrdersMap {
         return this.dex.userorders;
+    }
+
+    get dexdata(): DEXdata {
+        return this.dex.dexdata;
     }
     
     ngAfterViewInit()  {

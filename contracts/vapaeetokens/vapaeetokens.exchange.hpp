@@ -178,7 +178,7 @@ namespace vapaee {
                 if (ram_payer != get_self()) {
                     // change from using contract RAM to user's RAM 
                     PRINT(" -> depuserstable.modify() : \n");
-                    depuserstable.modify(*user_itr, ram_payer, [&]( auto& a ){
+                    depuserstable.modify(*user_itr, same_payer, [&]( auto& a ){
                         a.account = owner;
                     });
                 }
@@ -193,7 +193,7 @@ namespace vapaee {
                     a.amount = amount;
                 });
             } else {
-                depositstable.modify(*itr, aux_get_modify_payer(owner) , [&](auto& a){
+                depositstable.modify(*itr, same_payer , [&](auto& a){
                     eosio_assert(a.amount.symbol == amount.symbol,
                         create_error_asset2(ERROR_AAD_1, a.amount, amount).c_str());                    
                     a.amount += amount;
@@ -201,6 +201,38 @@ namespace vapaee {
             }
 
             PRINT("vapaee::token::exchange::aux_add_deposits() ...\n");
+        }
+
+        void aux_put_deposits_on_user_ram(name owner, const asset & amount) {
+            PRINT("vapaee::token::exchange::aux_put_deposits_on_user_ram()\n");
+            PRINT(" owner: ", owner.to_string(), "\n");
+            PRINT(" amount: ", amount.to_string(), "\n");
+
+            if (!has_auth(owner)) {
+                PRINT(" user has no auth -> quitting\n");
+                PRINT("vapaee::token::exchange::aux_put_deposits_on_user_ram()...\n");
+                return;
+            }
+
+            depusers depuserstable(get_self(), get_self().value);
+            auto user_itr = depuserstable.find(owner.value);
+            if (user_itr != depuserstable.end()) {
+                // change from using contract RAM to user's RAM 
+                PRINT(" -> depuserstable.modify() : \n");
+                depuserstable.modify(*user_itr, owner, [&]( auto& a ){
+                    a.account = a.account; // dummie operation
+                });
+            }
+
+            deposits depositstable(get_self(), owner.value);
+            auto itr = depositstable.find(amount.symbol.code().raw());
+            if (itr != depositstable.end()) {
+                depositstable.modify(*itr, owner , [&](auto& a){
+                    a.amount = a.amount; // dummie operation
+                });
+            }
+
+            PRINT("vapaee::token::exchange::aux_put_deposits_on_user_ram() ...\n");
         }        
 
         void aux_add_earnings(const asset & quantity) {
@@ -232,62 +264,6 @@ namespace vapaee {
             lock.concept = itr->concept;
             lock.foreign = itr->foreign;
             lock.scope = itr->scope;
-        }
-
-        uint64_t aux_create_lock(name owner, const asset & amount, uint64_t expire, name concept, uint64_t foreign, uint64_t scope, name ram_payer) {
-            PRINT("vapaee::token::exchange::aux_create_lock()\n");
-            PRINT(" owner: ", owner.to_string(), "\n");
-            PRINT(" amount: ", amount.to_string(), "\n");
-            PRINT(" expire: ", std::to_string((unsigned) expire), "\n");
-            PRINT(" concept: ", concept.to_string(), "\n");
-            PRINT(" foreign: ", std::to_string((unsigned) foreign), "\n");
-            PRINT(" scope: ", std::to_string((unsigned) scope), "\n");
-            PRINT(" ram_payer: ", ram_payer.to_string(), "\n");
-
-            aux_substract_deposits(owner, amount, ram_payer);
-            locks lockstable(get_self(), get_self().value);
-            uint64_t id = lockstable.available_primary_key();
-
-            PRINT("  lockstable.emplace(): ", std::to_string((unsigned long long) id), "\n");
-            lockstable.emplace( ram_payer, [&]( auto& a ){
-                a.id = id;
-                a.owner = owner;
-                a.amount = amount;
-                a.expire = expire;
-                a.concept = concept;
-                a.foreign = foreign;
-                a.scope = scope;
-            });
-            
-
-            PRINT("vapaee::token::exchange::aux_create_lock() ...\n");
-            return id;
-        }
-
-        void aux_cancel_lock(uint64_t id, name owner, name ram_payer) {
-            /*
-            PRINT("vapaee::token::exchange::aux_cancel_lock()\n");
-            PRINT(" id: ", std::to_string((unsigned) id), "\n");
-            PRINT(" owner: ", owner.to_string(), "\n");
-            PRINT(" ram_payer: ", ram_payer.to_string(), "\n");
-
-            locks lockstable(get_self(), get_self().value);
-            auto itr = lockstable.find(id);
-            eosio_assert(itr != lockstable.end(), "no lock with this id was found");
-            eosio_assert(owner != itr->owner, "lock owner is different from caller owner");
-
-            // load lock data (amount)
-            locks_table lock;
-            aux_load_lock(id, lock);
-
-            // erase lock entry
-            lockstable.erase(*itr);
-            
-            // deposit back the users tokens
-            aux_add_deposits(owner, lock.amount, ram_payer);
-
-            PRINT("vapaee::token::exchange::aux_cancel_lock() ...\n");
-            */
         }
 
         asset aux_which_one_is_tlos(const asset & amount_a, const asset & amount_b) {
@@ -416,23 +392,23 @@ namespace vapaee {
             PRINT("   lowest_extended_value: ", lowest_extended_value.to_string(), "\n");
             PRINT("   itr->amount: ", itr->amount.to_string(), "\n");
             if (itr->amount < lowest_extended_value) {
-                    // transfer to contract fees on CNT
-                    action(
-                        permission_level{owner,name("active")},
-                        get_self(),
-                        name("swapdeposit"),
-                        std::make_tuple(owner, get_self(), itr->amount, true, string(" withdraw micro-change fees: ") + itr->amount.to_string())
-                    ).send();
+                // transfer to contract fees on CNT
+                action(
+                    permission_level{get_self(),name("active")},
+                    get_self(),
+                    name("swapdeposit"),
+                    std::make_tuple(owner, get_self(), itr->amount, true, string(" withdraw micro-change fees: ") + itr->amount.to_string())
+                ).send();
 
-                    PRINT("     -- withdraw micro-change fees: ",  itr->amount.to_string(), " from ", owner.to_string(),"\n");
-                    // convert deposits to earnings
-                    action(
-                        permission_level{get_self(),name("active")},
-                        get_self(),
-                        name("deps2earn"),
-                        std::make_tuple(itr->amount)
-                    ).send();
-                    PRINT("     -- converting micro-chang fees ", itr->amount.to_string(), " to earnings\n");
+                PRINT("     -- withdraw micro-change fees: ",  itr->amount.to_string(), " from ", owner.to_string(),"\n");
+                // convert deposits to earnings
+                action(
+                    permission_level{get_self(),name("active")},
+                    get_self(),
+                    name("deps2earn"),
+                    std::make_tuple(itr->amount)
+                ).send();
+                PRINT("     -- converting micro-chang fees ", itr->amount.to_string(), " to earnings\n");
             }
 
             PRINT("vapaee::token::exchange::aux_earn_micro_change() ...\n");
@@ -871,6 +847,7 @@ namespace vapaee {
 
             
             vector<asset> deposits;
+            aux_put_deposits_on_user_ram(owner, payment);
             aux_clone_user_deposits(owner, deposits);
 
             locks lockstable(get_self(), get_self().value);

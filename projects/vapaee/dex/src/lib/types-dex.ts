@@ -2,7 +2,10 @@ import { TokenDEX } from "./token-dex.class";
 import { AssetDEX } from "./asset-dex.class";
 
 export interface DEXdata {
-    
+    deposits: AssetDEX[];
+    inorders: AssetDEX[];
+    balances: AssetDEX[];
+    userorders: UserOrdersMap;
 }
 
 export interface MarketMap {
@@ -120,7 +123,7 @@ export interface UserOrdersMap {
 export interface UserOrders {
     table: string;
     ids: number[];
-    orders?:any[];
+    orders?:Order[];
 }
 
 export interface OrderRow {

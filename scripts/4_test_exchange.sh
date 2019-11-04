@@ -16,10 +16,10 @@ cleos push action qubicletoken transfer  '["alice","vapaeetokens","100.0000 QBE"
 cleos push action qubicletoken transfer  '["tom",  "vapaeetokens","100.0000 QBE","deposit"]' -p tom@active
 cleos push action qubicletoken transfer  '["kate", "vapaeetokens","100.0000 QBE","deposit"]' -p kate@active
 
-cleos push action stablecarbon transfer  '["bob",  "vapaeetokens","1000.0000 TELOSD","deposit"]' -p bob@active
-cleos push action stablecarbon transfer  '["alice","vapaeetokens","1000.0000 TELOSD","deposit"]' -p alice@active
-cleos push action stablecarbon transfer  '["tom",  "vapaeetokens","1000.0000 TELOSD","deposit"]' -p tom@active
-cleos push action stablecarbon transfer  '["kate", "vapaeetokens","1000.0000 TELOSD","deposit"]' -p kate@active
+cleos push action stablecarbon transfer  '["bob",  "vapaeetokens","1000.0000 TLOSD","deposit"]' -p bob@active
+cleos push action stablecarbon transfer  '["alice","vapaeetokens","1000.0000 TLOSD","deposit"]' -p alice@active
+cleos push action stablecarbon transfer  '["tom",  "vapaeetokens","1000.0000 TLOSD","deposit"]' -p tom@active
+cleos push action stablecarbon transfer  '["kate", "vapaeetokens","1000.0000 TLOSD","deposit"]' -p kate@active
 
 cleos push action stablecoin.z transfer  '["bob",  "vapaeetokens","1000.00 EZAR","deposit"]' -p bob@active
 cleos push action stablecoin.z transfer  '["alice","vapaeetokens","1000.00 EZAR","deposit"]' -p alice@active
@@ -114,94 +114,94 @@ cleos push action vapaeetokens transfer  '["alice","vapaeetokens","1000.0000 BOX
 #cleos push action vapaeetokens order '["alice", "buy", "10.00000000 ACORN", "0.29000000 OLIVE"]' -p alice
 
 
-echo "-- alice sells TLOS/TELOSD --"
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04000000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04100000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04200000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04300000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04400000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04500000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04600000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04700000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04800000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04900000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05000000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05100000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05200000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05300000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05400000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05500000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05600000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05700000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05800000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05900000 TELOSD"]' -p alice
+echo "-- alice sells TLOS/TLOSD --"
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04000000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04100000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04200000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04300000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04400000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04500000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04600000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04700000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04800000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.04900000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05000000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05100000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05200000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05300000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05400000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05500000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05600000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05700000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05800000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 TLOS", "0.05900000 TLOSD"]' -p alice
 
-echo "-- alice buys TLOS/TELOSD --"
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01000000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01100000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01200000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01300000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01400000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01500000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01600000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01700000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01800000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01900000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02000000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02100000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02200000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02300000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02400000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02500000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02600000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02700000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02800000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02900000 TELOSD"]' -p alice
+echo "-- alice buys TLOS/TLOSD --"
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01000000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01100000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01200000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01300000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01400000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01500000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01600000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01700000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01800000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.01900000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02000000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02100000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02200000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02300000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02400000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02500000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02600000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02700000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02800000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 TLOS", "0.02900000 TLOSD"]' -p alice
 
 
-echo "-- alice sells CNT/TELOSD --"
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00400000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00410000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00420000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00430000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00440000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00450000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00460000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00470000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00480000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00490000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00500000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00510000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00520000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00530000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00540000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00550000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00560000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00570000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00580000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00590000 TELOSD"]' -p alice
+echo "-- alice sells CNT/TLOSD --"
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00400000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00410000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00420000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00430000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00440000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00450000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00460000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00470000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00480000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00490000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00500000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00510000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00520000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00530000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00540000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00550000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00560000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00570000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00580000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "sell", "10.00000000 CNT", "0.00590000 TLOSD"]' -p alice
 
-echo "-- alice buys CNT/TELOSD --"
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00100000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00110000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00120000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00130000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00140000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00150000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00160000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00170000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00180000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00190000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00200000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00210000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00220000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00230000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00240000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00250000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00260000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00270000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00280000 TELOSD"]' -p alice
-cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00290000 TELOSD"]' -p alice
+echo "-- alice buys CNT/TLOSD --"
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00100000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00110000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00120000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00130000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00140000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00150000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00160000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00170000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00180000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00190000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00200000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00210000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00220000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00230000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00240000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00250000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00260000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00270000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00280000 TLOSD"]' -p alice
+cleos push action vapaeetokens order '["alice", "buy", "10.00000000 CNT", "0.00290000 TLOSD"]' -p alice
 
 
 
