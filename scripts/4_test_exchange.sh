@@ -6,6 +6,11 @@ cleos push action acornaccount transfer  '["alice","vapaeetokens","1000.0000 ACO
 cleos push action acornaccount transfer  '["tom",  "vapaeetokens","50.0000 ACORN","deposit"]' -p tom@active
 cleos push action acornaccount transfer  '["kate", "vapaeetokens","50.0000 ACORN","deposit"]' -p kate@active
 
+cleos push action futboltokens transfer  '["bob",  "vapaeetokens","1000.0000 FUTBOL","deposit"]' -p bob@active
+cleos push action futboltokens transfer  '["alice","vapaeetokens","1000.0000 FUTBOL","deposit"]' -p alice@active
+cleos push action futboltokens transfer  '["tom",  "vapaeetokens","1000.0000 FUTBOL","deposit"]' -p tom@active
+cleos push action futboltokens transfer  '["kate", "vapaeetokens","1000.0000 FUTBOL","deposit"]' -p kate@active
+
 cleos push action qubicletoken transfer  '["bob",  "vapaeetokens","100.0000 QBE","deposit"]' -p bob@active
 cleos push action qubicletoken transfer  '["alice","vapaeetokens","100.0000 QBE","deposit"]' -p alice@active
 cleos push action qubicletoken transfer  '["tom",  "vapaeetokens","100.0000 QBE","deposit"]' -p tom@active

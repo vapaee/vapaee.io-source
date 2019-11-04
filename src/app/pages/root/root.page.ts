@@ -128,9 +128,9 @@ export class RootPage implements OnInit {
         return cant;
     }
 
-    isFull(album: number[]): boolean {
+    isFull(album: number[], cuantos:number): boolean {
         for (let i=0; i<album.length; i++) {
-            if (album[i] == 0) return false;
+            if (album[i] < cuantos) return false;
         }
         return true;
     }
@@ -153,11 +153,12 @@ export class RootPage implements OnInit {
 
         setInterval(_ => {
             let album: number[] = this.crearAlbum(50);
-            let sobres = 0;
-            let max = 1000;
             let cartas = 0;
-            let cartasXsobre = 2;
-            while(!this.isFull(album)) {
+            let sobres = 0;
+            let max = 1000000;
+            let llenos = 44000;
+            let cartasXsobre = 5;
+            while(!this.isFull(album, llenos)) {
                 sobres++;
                 album = this.abrirSobre(album, cartasXsobre);
                 if (sobres >= max) break;
@@ -178,7 +179,7 @@ export class RootPage implements OnInit {
                 promedioSobres = Math.round(promedioSobres / resultados.length);
                 console.log("sobres: ", sobres, "cartas: ", cartas, "- promedioSobres: ", promedioSobres, "promedioCartas: ", promedioCartas);
             }
-        }, 200);
+        }, 100);
     }
 
 

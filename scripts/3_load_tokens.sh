@@ -57,6 +57,14 @@ cleos push action revelation21 issue '["bob", "100.0000 HEART", "memo HEART"]' -
 cleos push action revelation21 issue '["tom", "100.0000 HEART", "memo HEART"]' -p eosio@active
 cleos push action revelation21 issue '["kate", "100.0000 HEART", "memo HEART"]' -p eosio@active
 
+echo "-------- futboltokens (FUTBOL) ---------"
+cleos set contract futboltokens $PWD -p futboltokens@active
+cleos push action futboltokens create '[ "eosio", "2100000000.0000 FUTBOL"]' -p futboltokens@active
+cleos push action futboltokens issue '["alice", "1000.0000 FUTBOL", "memo FUTBOL"]' -p eosio@active
+cleos push action futboltokens issue '["bob", "1000.0000 FUTBOL", "memo FUTBOL"]' -p eosio@active
+cleos push action futboltokens issue '["tom", "1000.0000 FUTBOL", "memo FUTBOL"]' -p eosio@active
+cleos push action futboltokens issue '["kate", "1000.0000 FUTBOL", "memo FUTBOL"]' -p eosio@active
+
 echo "-------- viitasphere1 (VIITA) ---------"
 cleos set contract viitasphere1 $PWD -p viitasphere1@active
 cleos push action viitasphere1 create '[ "eosio", "10000000000.0000 VIITA"]' -p viitasphere1@active
@@ -104,13 +112,13 @@ cleos push action proxibotstkn issue '["bob", "100.0000 ROBO", "memo ROBO"]' -p 
 cleos push action proxibotstkn issue '["tom", "100.0000 ROBO", "memo ROBO"]' -p eosio@active
 cleos push action proxibotstkn issue '["kate", "100.0000 ROBO", "memo ROBO"]' -p eosio@active
 
-echo "-------- stablecarbon (TELOSD) ---------"
+echo "-------- stablecarbon (TLOSD) ---------"
 cleos set contract stablecarbon $PWD -p stablecarbon@active
-cleos push action stablecarbon create '[ "eosio", "1000000000.0000 TELOSD"]' -p stablecarbon@active
-cleos push action stablecarbon issue '["alice", "1000.0000 TELOSD", "memo TELOSD"]' -p eosio@active
-cleos push action stablecarbon issue '["bob", "1000.0000 TELOSD", "memo TELOSD"]' -p eosio@active
-cleos push action stablecarbon issue '["tom", "1000.0000 TELOSD", "memo TELOSD"]' -p eosio@active
-cleos push action stablecarbon issue '["kate", "1000.0000 TELOSD", "memo TELOSD"]' -p eosio@active
+cleos push action stablecarbon create '[ "eosio", "1000000000.0000 TLOSD"]' -p stablecarbon@active
+cleos push action stablecarbon issue '["alice", "1000.0000 TLOSD", "memo TLOSD"]' -p eosio@active
+cleos push action stablecarbon issue '["bob", "1000.0000 TLOSD", "memo TLOSD"]' -p eosio@active
+cleos push action stablecarbon issue '["tom", "1000.0000 TLOSD", "memo TLOSD"]' -p eosio@active
+cleos push action stablecarbon issue '["kate", "1000.0000 TLOSD", "memo TLOSD"]' -p eosio@active
 
 echo "-------- telosdacdrop (TLOSDAC) ---------"
 cleos set contract telosdacdrop $PWD -p telosdacdrop@active
@@ -155,6 +163,11 @@ cleos push action vapaeetokens addtoken '["acornaccount","ACORN",4,"vapaeetokens
 echo "-- register YANG --" 
 cleos push action vapaeetokens addtoken '["yanggangcoin","YANG",4,"vapaeetokens", "Yang Gang Coin", "https://www.yang2020.com/", "Together, We Can Build a New Kind of Economy, One That Puts People First.", "/assets/uploads/yang-banner.jpg", "/assets/logos/yang-coin.png", "/assets/logos/yang-coin-lg.png",true]' -p vapaeetokens@active
 cleos push action vapaeetokens settokendata '["YANG", 0, "add", "twitter", "Official Twitter Account", "https://twitter.com/andrewyang"]' -p vapaeetokens@active
+
+
+echo "-- register FUTBOL --" 
+cleos push action vapaeetokens addtoken '["futboltokens","FUTBOL",4,"vapaeetokens", "Fútbol Tokens", "http://futboltokens.online/", "Collect the best football trading cards and win prizes", "/assets/uploads/futboltokens-banner.jpg", "/assets/logos/futboltokens.png", "/assets/logos/futboltokens.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens settokendata '["FUTBOL", 0, "add", "youtube", "Video en español", "https://www.youtube.com/watch?v=4fYHjH5ylnA"]' -p vapaeetokens@active
 
 echo "-- register OLIVE --" 
 cleos push action vapaeetokens addtoken '["oliveaccount","OLIVE",4,"vapaeetokens", "OLIVE", "http://democratic.money/olive", "", "", "/assets/logos/olive.png", "/assets/logos/olive-lg.png",true]' -p vapaeetokens@active

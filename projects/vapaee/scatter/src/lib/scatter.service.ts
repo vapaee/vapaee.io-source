@@ -402,7 +402,8 @@ export class VapaeeScatter {
                 net_limit: {},
                 ram_limit: {},
                 refund_request: {},
-                total_resources: {}
+                total_resources: {},
+                self_delegated_bandwidth: {}
             }
         }
     }

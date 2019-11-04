@@ -66,8 +66,8 @@ namespace vapaee {
             return result;
         }
 
-        name aux_get_modify_payer(name ram_payer) {
-            return (ram_payer == get_self()) ? same_payer : ram_payer;
+        name aux_get_modify_payer(name owner) {
+            return (has_auth(owner)) ? owner : same_payer; 
         }
 
         name aux_get_scope_for_tokens(const symbol_code & a, const symbol_code & b) {
@@ -154,6 +154,13 @@ namespace vapaee {
             PRINT(" amount: ", amount.to_string(), "\n");
             PRINT(" ram_payer: ", ram_payer.to_string(), "\n");
 
+            if (has_auth(owner)) {
+                PRINT(" -> owner has auth : ", owner.to_string(), "\n");
+            }
+            if (has_auth(get_self())) {
+                PRINT(" -> owner has auth : ", owner.to_string(), "\n");
+            }
+
             tokens tokenstable(get_self(), get_self().value);
             auto tk_itr = tokenstable.find(amount.symbol.code().raw());
             eosio_assert(tk_itr != tokenstable.end(), "The token is not registered");
@@ -162,21 +169,31 @@ namespace vapaee {
             depusers depuserstable(get_self(), get_self().value);
             auto user_itr = depuserstable.find(owner.value);
             if (user_itr == depuserstable.end()) {
-                eosio_assert(has_auth(ram_payer), "ERROR: attempt to allocate RAM without authorization for depusers table");
+                PRINT(" -> depuserstable.emplace() : \n");
+                // eosio_assert(has_auth(ram_payer), "ERROR: attempt to allocate RAM without authorization for depusers table");
                 depuserstable.emplace( ram_payer, [&]( auto& a ){
                     a.account = owner;
                 });
+            } else {
+                if (ram_payer != get_self()) {
+                    // change from using contract RAM to user's RAM 
+                    PRINT(" -> depuserstable.modify() : \n");
+                    depuserstable.modify(*user_itr, ram_payer, [&]( auto& a ){
+                        a.account = owner;
+                    });
+                }
             }
 
             deposits depositstable(get_self(), owner.value);
             auto itr = depositstable.find(amount.symbol.code().raw());
             if (itr == depositstable.end()) {
-                eosio_assert(has_auth(ram_payer), "ERROR: attempt to allocate RAM without authorization for deposits table");
+                
+                // eosio_assert(has_auth(ram_payer), "ERROR: attempt to allocate RAM without authorization for deposits table");
                 depositstable.emplace( ram_payer, [&]( auto& a ){
                     a.amount = amount;
                 });
             } else {
-                depositstable.modify(*itr, same_payer, [&](auto& a){
+                depositstable.modify(*itr, aux_get_modify_payer(owner) , [&](auto& a){
                     eosio_assert(a.amount.symbol == amount.symbol,
                         create_error_asset2(ERROR_AAD_1, a.amount, amount).c_str());                    
                     a.amount += amount;
@@ -1431,8 +1448,16 @@ namespace vapaee {
             eosio_assert( quantity.amount > 0, "must transfer positive quantity" );
             eosio_assert( quantity.symbol.precision() == internal_precision, "symbol precision mismatch" );
             eosio_assert( memo.size() <= 256, "memo has more than 256 bytes" );
-            auto ram_payer = has_auth( to ) ? to : from;
-
+            
+            name ram_payer;
+            if ( has_auth( to ) ) {
+                ram_payer = to;
+            } else if (has_auth( from )) {
+                ram_payer = from;
+            } else {
+                ram_payer = get_self();
+            }
+            PRINT("   -> ram_payer: ", ram_payer.to_string(), "\n");
             aux_substract_deposits(from, quantity, ram_payer);
             aux_add_deposits(to, quantity, ram_payer);
 
