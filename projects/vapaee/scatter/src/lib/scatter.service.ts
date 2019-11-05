@@ -17,6 +17,7 @@ import Eos from 'eosjs';
 import { Asset } from './asset.class';
 import { SmartContract } from './contract.class';
 import { ScatterUtils } from './utils.class';
+import { Token } from './token.class';
 //*/
 
 // declare let ScatterJS:any;
@@ -367,7 +368,7 @@ export class VapaeeScatter {
             }]
         };
         
-        this.symbol = "EOS";
+        this.symbol = "TLOS";
         // this.waitReady.then(() => console.log("ScatterService.setReady()"));
         // console.error("scatter interrumpido --------------------------------");
         
@@ -477,6 +478,7 @@ export class VapaeeScatter {
             if (this._networks[slug].endpoints.length > index && index >= 0) {
                 let network: Network = this._networks[slug];
                 let endpoint:Endpoint = network.endpoints[index];
+                this.symbol = network.symbol;
                 network.slug = slug;
                 network.index = index;
                 network.eosconf = {
@@ -721,6 +723,9 @@ export class VapaeeScatter {
                     let account_data: AccountData = <AccountData>response;
 
                     if (account_data.core_liquid_balance) {
+                        if (this.symbol != account_data.core_liquid_balance.split(" ")[1]) {
+                            console.error("endpoint has native token", this.symbol, "but account data saids", account_data.core_liquid_balance.split(" ")[1]);
+                        }
                         this.symbol = account_data.core_liquid_balance.split(" ")[1];
                     } else {
                         account_data.core_liquid_balance = "0.0000 " + this.symbol;
@@ -1035,6 +1040,19 @@ export class VapaeeScatter {
         });
         //*/
 
+    }
+
+    isNative(thing: Asset | Token) {
+        if (thing instanceof Asset) {
+            return (<Asset>thing).token.symbol == this.symbol;
+        }
+        if (thing instanceof Token) {
+            return (<Token>thing).symbol == this.symbol;
+        }
+        if (typeof thing == "string") {
+            return this.isNative(new Asset((<string>thing)));
+        }
+        return false;
     }
 
 }

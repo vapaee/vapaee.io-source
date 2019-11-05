@@ -51,13 +51,18 @@ export class VpePanelAccountHeaderComponent implements OnInit, OnDestroy, OnChan
     get total_balance() {
         if (!this.current.data.total_balance) return "";
         if (!this.total) {
-            if (this.rexdata.total.token.symbol == this.current.data.total_balance_asset.token.symbol) {
-                this.total = this.rexdata.total.plus(this.current.data.total_balance_asset);
-            } else {
-                return this.current.data.total_balance;
+            if (this.scatter.isNative(this.current.data.total_balance_asset)) {
+                this.total = this.current.data.total_balance_asset;
+
+                if (this.scatter.isNative(this.rexdata.total)) {
+                    this.total = this.total.plus(this.rexdata.total);
+                }
+    
+                if (this.scatter.isNative(this.dexdata.total)) {
+                    this.total = this.total.plus(this.dexdata.total);
+                }    
             }
         }
-        //console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB", this.total.toString());
         return this.total;
     }
 
@@ -82,9 +87,9 @@ export class VpePanelAccountHeaderComponent implements OnInit, OnDestroy, OnChan
     }
 
     print_debug() {
-        console.log(this.rexdata.total.toString());
-        console.log(this.rexdata.balance.toString());
-        console.log(this.current.data.total_balance);
+        console.log([this.rexdata], this.rexdata.total.toString());
+        console.log([this.dexdata], this.dexdata.total.toString());
+        console.log([this.current], this.current.data.total_balance);
     }
 
     setCurrency(currency:string) {

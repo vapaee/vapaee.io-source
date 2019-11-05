@@ -2,7 +2,7 @@
     <div class="card text-white bg-dark margin-top overflow-visible">
 
         <!-- portrait -->
-        <div class="card-header vpe-background-card-header" *ngIf="portrait">
+        <div class="card-header vpe-background-card-header" *ngIf="portrait" (click)="print_debug()">
             <div class="row">
                 <div class="col-auto col-padding-right">
                     <vpe-identicon class="portrait" [value]="current.name"></vpe-identicon>
@@ -86,7 +86,7 @@
 
 
         <!-- wide -->
-        <div class="card-header vpe-background-card-header" *ngIf="!portrait">
+        <div class="card-header vpe-background-card-header" *ngIf="!portrait" (click)="print_debug()">
             <div class="row">
                 <div class="col-sm-auto col-padding-right">
                     <vpe-identicon [value]="current.name"></vpe-identicon>
@@ -151,7 +151,7 @@
                     </div>
 
                     <!-- Total balance (if any) -->
-                    <div class="text-md nowrap" [hidden]="!total_balance" (click)="print_debug()">
+                    <div class="text-md nowrap" [hidden]="!total_balance">
                         <small>total balance: </small>
                         <span class="text-md"> {{total_balance}} </span>
                         <span class="text-sm total-balance calculated-in-currency d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(total_balance)}}) </span>

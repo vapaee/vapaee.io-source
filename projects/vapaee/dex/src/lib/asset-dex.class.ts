@@ -31,6 +31,8 @@ export class AssetDEX extends Asset {
 
     plus(b:AssetDEX) {
         console.assert(!!b, "ERROR: b is not an Asset", b, this.str);
+        console.assert(!!b.token, "ERROR: b has no token", b, this.str);
+        console.assert(!!this.token, "ERROR: this has no token", b, this);
         console.assert(b.token.symbol == this.token.symbol, "ERROR: trying to sum assets with different tokens: " + this.str + " and " + b.str);
         var amount = this.amount.plus(b.amount);
         return new AssetDEX(amount, this.token);
@@ -38,6 +40,8 @@ export class AssetDEX extends Asset {
 
     minus(b:AssetDEX) {
         console.assert(!!b, "ERROR: b is not an Asset", b, this.str);
+        console.assert(!!b.token, "ERROR: b has no token", b, this.str);
+        console.assert(!!this.token, "ERROR: this has no token", b, this);
         console.assert(b.token.symbol == this.token.symbol, "ERROR: trying to substract assets with different tokens: " + this.str + " and " + b.str);
         var amount = this.amount.minus(b.amount);
         return new AssetDEX(amount, this.token);
@@ -47,6 +51,9 @@ export class AssetDEX extends Asset {
         if (text == "") return;
         var sym = text.split(" ")[1];
         this.token = dex.getTokenNow(sym);
+        if (!this.token) {
+            this.token = new TokenDEX({symbol: sym});
+        }
         /*if (this.token) {
             let tmp = new AssetDEX();
             this.token = tmp.token || <TokenDEX>{};

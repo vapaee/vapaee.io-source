@@ -174,7 +174,24 @@ export class VapaeeDEX {
 
     get dexdata(): DEXdata {
         if (!this._dexdata) {
+            let total: AssetDEX;
+            let total_deposits: AssetDEX = new AssetDEX("0.0000 " + this.scatter.symbol, this);
+            let total_inorders: AssetDEX = new AssetDEX("0.0000 " + this.scatter.symbol, this);
+            for (let i in this.deposits) {
+                if (this.scatter.isNative(this.deposits[i])) {
+                    total_deposits = total_deposits.plus(this.deposits[i]);
+                }
+            }
+            for (let i in this.inorders) {
+                if (this.scatter.isNative(this.inorders[i])) {
+                    total_inorders = total_inorders.plus(this.inorders[i]);
+                }
+            }
+            total = total_deposits.plus(total_inorders);
             this._dexdata = {
+                total: total,
+                total_inorders: total_inorders,
+                total_deposits: total_deposits,
                 deposits: this.deposits,
                 userorders: this.userorders,
                 inorders: this.inorders,
@@ -244,15 +261,7 @@ export class VapaeeDEX {
             this.feed.setLoading("account", true);
             this.current = this.default;
             this.current.name = profile;
-            if (profile != "guest") {
-                this.current.data = await this.getAccountData(this.current.name);
-            } else {
-                console.error("------------------------------------------");
-                console.error("------------------------------------------");
-                console.error("WARNING!!! current is guest", [profile, this.account, this.current]);
-                console.error("------------------------------------------");
-                console.error("------------------------------------------");
-            }
+            
             // this.scopes = {};
             this.balances = [];
             this.userorders = {};
@@ -297,6 +306,7 @@ export class VapaeeDEX {
     }
 
     private async getAccountData(name: string): Promise<AccountData>  {
+        if (name == this.default.name) return Promise.resolve(this.default.data);
         return this.scatter.queryAccountData(name).catch(async _ => {
             return this.default.data;
         });
@@ -361,8 +371,7 @@ export class VapaeeDEX {
         }).then(async result => {
             this.feed.setLoading("deposit", false);
             this.feed.setLoading("deposit-"+quantity.token.symbol.toLowerCase(), false);    
-            /*await*/ this.getDeposits();
-            /*await*/ this.getBalances();
+            this.updateCurrentUser();
             return result;
         }).catch(e => {
             this.feed.setLoading("deposit", false);
@@ -383,9 +392,7 @@ export class VapaeeDEX {
         }).then(async result => {
             this.feed.setLoading("withdraw", false);
             this.feed.setLoading("withdraw-"+quantity.token.symbol.toLowerCase(), false);
-            this.getDeposits();
-            this.getBalances();
-            this.scatter.updateAccountData();
+            this.updateCurrentUser();
             return result;
         }).catch(e => {
             this.feed.setLoading("withdraw", false);
@@ -932,6 +939,7 @@ export class VapaeeDEX {
         // console.log("VapaeeDEX.updateCurrentUser()");
         this.feed.setLoading("current", true);        
         return Promise.all([
+            this.getUserData(),
             this.getUserOrders(),
             this.getDeposits(),
             this.getBalances()
@@ -943,6 +951,16 @@ export class VapaeeDEX {
             throw e;
         });
     }
+
+    async getUserData() {
+        this.current = {
+            name: this.current.name,
+            data: await this.getAccountData(this.current.name)
+        }
+        delete this._dexdata;
+        return this.current;
+    }
+    
 
     private getBlockHistoryTotalPagesFor(scope:string, pagesize: number) {
         if (!this._markets) return 0;
@@ -1853,8 +1871,6 @@ export class VapaeeDEX {
                 console.warn("Token found but not registered on contract", contract, result.rows[i].balance);
             }
         }
-        // this.balances = _balances.concat(this.balances);
-        // delete this._dexdata
         this.feed.setLoading("balances-"+contract, false);
         return _balances;
     }

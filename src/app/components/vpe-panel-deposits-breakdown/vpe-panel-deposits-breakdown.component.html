@@ -1,0 +1,31 @@
+<vpe-panel [id]="'vpe-panel-balance-breakdown'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.balbreak">
+    <div class="row">
+        <div class="col-sm-12" [hidden]="!title">
+            <div class="text-lg text-center">
+                {{title | titlecase}}
+                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('account')"></span>
+            </div>
+        </div>                
+        <div class="col-sm-12">
+            <table class="table right-aligned margin-top">
+                <tbody>
+                    <tr>
+                        <td>Total inside DEX:
+                            <span class="btn btn-xs btn-primary" [hidden]="detail" (click)="detail=true">+</span>
+                            <span class="btn btn-xs btn-primary" [hidden]="!detail"  (click)="detail=false">-</span>
+                        </td><td>{{dexdata.total}}</td>
+                        <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(dexdata.total)}} </span></td>
+                    </tr>
+                    <tr [hidden]="!detail">
+                        <td>- Deposits:</td><td>{{dexdata.total_deposits}}</td>
+                        <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(dexdata.total_deposits)}} </span></td>
+                    </tr>
+                    <tr [hidden]="!detail">
+                        <td>- In orders:</td><td>{{dexdata.total_inorders}}</td>
+                        <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(dexdata.total_inorders)}} </span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</vpe-panel>

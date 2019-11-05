@@ -2,6 +2,9 @@ import { TokenDEX } from "./token-dex.class";
 import { AssetDEX } from "./asset-dex.class";
 
 export interface DEXdata {
+    total: AssetDEX;
+    total_inorders: AssetDEX;
+    total_deposits: AssetDEX;
     deposits: AssetDEX[];
     inorders: AssetDEX[];
     balances: AssetDEX[];
