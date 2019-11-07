@@ -2061,6 +2061,38 @@ namespace vapaee {
             //     if (count++ > num) break;
             // }
 
+            // Borrar token
+            // tokens tokenstable(get_self(), get_self().value);
+            // auto itr1 = tokenstable.find(symbol_code("ROG").raw()); 
+            // tokenstable.erase(*itr1);
+            // // --
+            // accounts accountstable(get_self(), name("viterbo4test").value);
+            // auto itr2 = accountstable.begin();
+            // accountstable.erase(*itr2);
+            // --
+            // accounts accountstable(get_self(), name("vapaeetokens").value);
+            // auto itr2 = accountstable.begin();
+            // accountstable.erase(*itr2);
+            // // --
+            // deposits depositstable(get_self(), name("viterbo4test").value);
+            // auto itr5 = depositstable.find(symbol_code("ROG").raw()); 
+            // depositstable.erase(*itr5);
+            // // --
+            // stats statstable(get_self(), symbol_code("ROG").raw()); 
+            // auto itr3 = statstable.begin();
+            // statstable.erase(*itr3);
+            // --
+            // ordersummary ordersummarytable(get_self(), get_self().value);
+            // auto itr4 = ordersummarytable.find(name("rog.tlos").value); 
+            // ordersummarytable.erase(*itr4);
+            
+
+            
+            // for (auto ptr = table6.begin(); ptr != table6.end(); ptr = table6.begin()) {
+            //     table6.erase(*ptr);
+            //     if (count++ > num) break;
+            // }
+
             // ordertables orderstables(get_self(), get_self().value);
             // auto orders_itr = orderstables.find(account.value);
             // 

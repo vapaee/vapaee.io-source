@@ -132,7 +132,7 @@
     "tknregist": "token registration",
     "tknedition": "token edition",
     "tkncreationtxt": "You can create a brand new token in Telos blockchain using Vapaée's smart contract without coding.",
-    "tknregisttxt": "You may register you own already existing tokens to get listed in Telos DEX.",
+    "tknregisttxt": "You may register your own already existing tokens to get listed in Telos DEX.",
     "tkneditiontxt": "From here you can modify any data related to your token.",
     "logintoedit": "You need to be logged in order to create or register any token.",
     "contract": "contract",
@@ -153,8 +153,9 @@
     "edittkn": "edit token",
     "tknyaregist": "This token is already registered.",
     "wannaedittkn": "Do you want to edit the token information?",
-    "onlyowneredit": "Only the owner of the token can modify its information",
+    "onlyadminedit": "Only the admin of the token can modify its information",
     "category": "category",
     "save": "save",
-    "delete": "delete"
+    "delete": "delete",
+    "neededfield": "This field is mandatory."
 }

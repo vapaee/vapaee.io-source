@@ -122,6 +122,7 @@ namespace vapaee {
 
             if (issuer != everyone) {
                 // we need sirius issuer signature
+                PRINT( "require_auth( issuer )", issuer.to_string(), "\n");
                 require_auth( issuer );
             } else {
                 // for fake token, everyone can issue. No need for signature

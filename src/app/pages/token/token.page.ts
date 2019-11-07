@@ -156,6 +156,7 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     clearError() {
+        this.showerrors = false;
         this.dex.feed.clearError("updatetoken");
     }
 
@@ -170,13 +171,21 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         this.renderEntries();
     }
 
-
     onTokenInfoChange() {
         console.log("TokenPage.onTokenInfoChange()");
     }
 
+    showerrors: boolean;
     confirm() {
         this.clearError();
+        if (!this.token.title || !this.token.brief) {
+            this.showerrors = true;
+            return;
+        }
+        this.token.logo = this.token.logo || "/assets/logos/no-icon.png";
+        this.token.logolg = this.token.logolg || "/assets/logos/no-icon.png";
+        this.token.banner = this.token.banner || "";
+        this.token.website = this.token.website || "";
         this.dex.updatetoken(this.token).then(_ => {
             console.log("EXITO:", _);
             this.editing = false;

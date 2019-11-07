@@ -233,7 +233,9 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
         }).catch(e => { console.error(e); });        
     }*/
 
+    showerrors: boolean;
     confirm() {
+        this.showerrors = true;
         switch(this.tab) {
             case this.TAB.CREATE:
                 var max_supply: AssetDEX = new AssetDEX(new BigNumber(this.max_supply), this.newtoken);
@@ -245,35 +247,41 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
                 }).catch(e => { console.error(e); });
                 break;
             case this.TAB.REGISTER:
+                if (!this.editing.title || !this.editing.brief) {
+                    return;
+                }
                 var token = new TokenDEX({
-                    banner: this.editing.banner,
-                    brief: this.editing.brief,
+                    banner: this.editing.banner || "",
+                    brief: this.editing.brief || "",
                     contract: this.thetoken.contract,
-                    logo: this.editing.logo,
-                    logolg: this.editing.logolg,
+                    logo: this.editing.logo || "/assets/logos/no-icon.png",
+                    logolg: this.editing.logolg || "/assets/logos/no-icon.png",
                     precision: this.thetoken.precision || 0,
-                    website: this.editing.website,
+                    website: this.editing.website || "",
                     symbol: this.thetoken.symbol,
-                    title: this.editing.title,
-                    tradeable:1
-                });                
+                    title: this.editing.title || "",
+                    tradeable: this.editing.tradeable || 0
+                });
                 this.dex.addtoken(token).then(_ => {
                     console.log("EXITO:", _);
                     this.editToken(this.newtoken);
                 }).catch(e => { console.error(e); });
                 break;
             case this.TAB.EDIT:
+                if (!this.editing.title || !this.editing.brief) {
+                    return;
+                }
                 var token = new TokenDEX({
-                    banner: this.editing.banner,
-                    brief: this.editing.brief,
+                    banner: this.editing.banner || "",
+                    brief: this.editing.brief || "",
                     contract: this.thetoken.contract,
-                    logo: this.editing.logo,
-                    logolg: this.editing.logolg,
+                    logo: this.editing.logo || "/assets/logos/no-icon.png",
+                    logolg: this.editing.logolg || "/assets/logos/no-icon.png",
                     precision: this.thetoken.precision || 0,
-                    website: this.editing.website,
+                    website: this.editing.website || "",
                     symbol: this.thetoken.symbol,
-                    title: this.editing.title,
-                    tradeable: 1
+                    title: this.editing.title || "",
+                    tradeable: this.editing.tradeable || 0
                 });                
                 this.dex.updatetoken(token).then(_ => {
                     console.log("EXITO:", _);
