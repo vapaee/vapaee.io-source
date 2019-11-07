@@ -29,14 +29,14 @@ cd script
       - [ ] when charging fees, fonds must be to the account of the UI that is being used
       - [ ] when withdrawing, if after withdraw the user still has microfonds redirect those fonds to the UI account as earning.
       - [ ] the order and withdraw functions should include the account name of the UI.
-  - [ ] Integration with REX
-    - [ ] study the REX contract to understand how to get the data
-    - [ ] create a #vapaee/rex library to interact with this component from the blockchain
-    - [ ] modify user account page to reflect REX status (Balance Breakdown)
+  - [x] Integration with REX
+    - [x] study the REX contract to understand how to get the data
+    - [x] create a #vapaee/rex library to interact with this component from the blockchain
+    - [x] modify user account page to reflect REX status (Balance Breakdown)
   - [ ] Integration with Trail
     - [ ] study the Trail 2.0 contract to understand how does it work
-    - [ ] hoy is it possible for trail system to know how much tokens the user has inside the DEX?
-  - [ ] Deposits and order funds should be reflected in user account page
+    - [ ] how is it possible for trail system to know how much tokens the user has inside the DEX?
+  - [x] Deposits and order funds should be reflected in user account page
   - [ ] DAO. Telos DEX should be subject to modifications through the Trail 2.0 system
     - [ ] Set a global list of variables and change contract behavior to adjust to those variables:
       - [ ] banning a token: the token will not allowed te be traded!! should not be listed either (this is up to the UI)
@@ -46,7 +46,7 @@ cd script
       - [ ] set token as currency: allow people to create markets with this token as currency
       - [ ] history pruning: to release RAM people can decide to prune the oldest history entries
     - [ ] 
-  - [ ] allow UI to filter tokens easely with a config json file 
+  - [ ] allow UI to filter tokens easily with a config json file
   - [ ] BP Multisig 
   - [ ] more skins    
   - [ ] check all interface in a cell phone

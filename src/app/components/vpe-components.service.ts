@@ -131,12 +131,12 @@ export class VpeComponentsService {
         return asset;
     }
 
-    public getTokenInCurrentCurrency(value: AssetDEX | string) {
+    public getTokenInCurrentCurrency(value: Asset | string) {
         var asset: AssetDEX;
         var telos: AssetDEX;
         if (!value) return new AssetDEX();
         if (value == "0 AUX") return new AssetDEX();
-        if (value instanceof AssetDEX) {
+        if (value instanceof Asset) {
             let temp:any = value;
             asset = temp;
             value = asset.toString();
