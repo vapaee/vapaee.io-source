@@ -1,5 +1,6 @@
 <div class="container" >
 
+    <!-- Buttons to change wetween tabs -->
     <div class="row margin-top" [hidden]="!dex.logged">
         <div class="col-auto margin-top">
             <span class="btn btn-lg" [ngClass]="{'btn-primary':tab!=TAB.CREATE,'btn-success':tab==TAB.CREATE}" (click)="changeTab(TAB.CREATE)">
@@ -8,13 +9,14 @@
             </span>
         </div>
         <div class="col-auto margin-top">
-            <span class="btn btn-lg" [ngClass]="{'btn-primary':tab!=TAB.REGISTER,'btn-success':tab==TAB.REGISTER}" (click)="changeTab(TAB.REGISTER)">
+            <span class="btn btn-lg" [ngClass]="{'btn-primary':tab!=TAB.REGISTER,'btn-success':tab==TAB.REGISTER}" (click)="changeTab(TAB.REGISTER); checkToken()">
                 <i class="material-icons"> playlist_add </i>
-                <span> {{local.string.registertkn}} </span>
+                <span> {{local.string.registeretkn}} </span>
             </span>
         </div>
     </div>
 
+    <!-- Brief text on header explaining the options of each tab -->
     <div class="margin-top-md">
         <div class="card text-white bg-dark">
             <div class="card-header vpe-background-card-header" [hidden]="!dex.logged">
@@ -45,7 +47,7 @@
         </div>
     </div>
 
-
+    <!-- card showing the existing token -->
     <div class="margin-top-md" [hidden]="!thetoken">
         <div class="card text-white bg-dark">
             <div class="card-header vpe-background-card-header">
@@ -58,8 +60,8 @@
                                 forget
                             </span>
                         </div>                        
-                        <span class="text-lg" [hidden]="editable">Token: {{thetoken?.symbol}}</span> 
-                        <span class="text-lg" [hidden]="!editable">
+                        <span class="text-lg" *ngIf="!editable">Token: {{thetoken?.symbol}}</span> 
+                        <span class="text-lg" *ngIf="editable">
                             <img style="height:20px; width: 20px; margin-top:-3px" [src]="editing?.logo">
                             <span class="card-title">
                                 {{editing?.title}}
@@ -153,7 +155,25 @@
     
                 </div>
 
-                <div [hidden]="tab == TAB.CREATE || !thetoken || editable">
+                <!-- Tokens just created syccessfully. Wanna register in DEX? -->
+                <div [hidden]="!stepOneSucceed">
+                    <div class="pull-right">
+                        <a class="btn btn-lg btn-success"
+                            (click)="stepOneSucceed=false"
+                        >
+                            <span>
+                                <i class="material-icons" [hidden]="loading">edit</i> {{local.string.registertkn|titlecase}}
+                            </span>
+                        </a>
+                    </div>
+                    <span class="text-md">
+                        <span>{{local.string.tknsucceed}} <i style="vertical-align: -6px;" class="text-success material-icons" [hidden]="loading">done</i></span><br>
+                        <span>{{local.string.wannaregtkn}}</span>
+                    </span>                   
+                </div>
+
+                <!-- This forms appears only if we are editing or registering a token -->
+                <div [hidden]="!showRegisteringForm">
                     <!-- title -->
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label nowrap">{{local.string.title|titlecase}}*:</label>
@@ -216,8 +236,7 @@
                         </div>
                     </div>
 
-                </div>                
-
+                </div>
 
                 <!-- Error -->
                 <div class="form-group row">
@@ -233,10 +252,8 @@
                     </div>
                 </div>     
 
-
-
                 <!-- confirm -->
-                <div class="form-group row margin-top" [hidden]="editable">
+                <div class="form-group row margin-top" [hidden]="editable || stepOneSucceed">
                     <label class="col-sm-2 col-form-label nowrap"></label>
                     <div class="col-sm-10 text-right">
                         <span class="btn btn-lg btn-success"
@@ -249,8 +266,8 @@
                     </div>
                 </div>
 
-
-                <div [hidden]="!editable">
+                <!-- token already registered (wanna edit?) -->
+                <div [hidden]="!editable || stepOneSucceed">
                     <div class="pull-right">
                         <a class="btn btn-lg btn-success"
                             (click)="editToken(thetoken)"

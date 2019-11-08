@@ -15,6 +15,7 @@ import { Feedback } from '@vapaee/feedback';
 })
 export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
 
+    public stepOneSucceed: boolean;
     public feed: Feedback;
     newtoken: ETokenDEX;
     thetoken: TokenDEX;
@@ -35,6 +36,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
         private http: HttpClient
     ) {
         this.feed = new Feedback();
+        this.stepOneSucceed = false;
     }
 
     get form_token(): TokenDEX {
@@ -53,13 +55,18 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     changeTab(tab:string) {
+        if (tab == this.tab) return;
+        console.log("TokenEditPage.changeTab()", this.tab, " -> ", tab);
+        this.tab = tab;        
+        this.stepOneSucceed = false;
         if (tab == this.TAB.EDIT && !this.editable) {
             return;
         }
         if (tab == this.TAB.CREATE) {
             this.newtoken.contract = "vapaeetokens";
+            this.discardTheToken();
+            this.tab = this.TAB.CREATE; 
         }
-        this.tab = tab;
     }
 
     ngOnDestroy() {
@@ -107,6 +114,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
                 }                
             });
         }
+        this.dex.waitTokensLoaded.then(_ => this.checkToken());
     }
 
     get symbolIsGood(): boolean {
@@ -127,6 +135,8 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
     discardTheToken() {
         this.thetoken = null;
         this.editable = false;
+        this.editing = new TokenDEX();
+        this.stepOneSucceed = false;
         this.changeTab(this.TAB.REGISTER);
     }
     
@@ -135,7 +145,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
     }
      
     onTokenInfoChange(a:any=null) {
-        console.log("onTokenInfoChange()");
+        console.log("TokenEditPage.onTokenInfoChange()");
     }
     
     onTokenChange(a:any=null) {
@@ -144,15 +154,16 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
 
     checkTimer;
     checkToken() {
+        console.log("TokenEditPage.checkToken()");
         this.thetoken = null;
         this.clearError();
         clearTimeout(this.checkTimer);
         this.checkTimer = setTimeout(_ => {
-            console.log("checkToken() timeout");
+            console.log("TokenEditPage.checkToken() timeout");
             if (this.symbolIsGood) {
                 this.dex.waitTokensLoaded.then( _ => {
                     var tok = this.dex.getTokenNow(this.newtoken.symbol);
-                    console.log("checkToken() TokensLoaded", this.newtoken.symbol, [tok]);
+                    console.log("TokenEditPage.checkToken() TokensLoaded", this.newtoken.symbol, [tok]);
                     if (tok) {
                         this.thetoken = tok.basecopy();
                         this.editing = tok;
@@ -162,15 +173,18 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
                         }
                     } else {
                         this.dex.fetchTokenStats(this.newtoken).then( result => {
-                            console.log("checkToken() ---------->", this.newtoken.stat);
+                            console.log("TokenEditPage.checkToken() ---------->", this.newtoken.stat);
                             if (this.newtoken.stat) {
                                 let supply = new AssetDEX(this.newtoken.stat.max_supply);
                                 this.newtoken.precision = supply.token.precision || 0;
                                 this.thetoken = this.newtoken.basecopy();
                                 console.log("supply", this.thetoken);
                                 if (this.tab == this.TAB.CREATE) {
-                                    this.changeTab(this.TAB.REGISTER);
+                                    this.changeTab(this.TAB.REGISTER);                                    
                                 }
+                                if (this.newtoken.contract == "vapaeetokens") {
+                                    this.stepOneSucceed = true;
+                                }                                
                             }
                         });                        
                     }
@@ -192,6 +206,10 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
 
     get loading() {
         return this.dex.feed.loading('createtoken') || this.dex.feed.loading('addtoken') || this.dex.feed.loading('updatetoken');
+    }
+
+    get showRegisteringForm() {
+        return !(this.tab == this.TAB.CREATE || !this.thetoken || this.editable || this.stepOneSucceed);
     }
     
 

@@ -111,6 +111,7 @@ export class VapaeeDEX {
         this.updateLogState();
         this.updateTokens().then(data => {
             this.zero_telos = new AssetDEX("0.0000 TLOS", this);
+            console.log("VapaeeDEX.setTokensLoaded() ****");
             this.setTokensLoaded();
             this.getOrderSummary();
             this.getAllTablesSumaries();

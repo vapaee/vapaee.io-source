@@ -127,7 +127,7 @@
     "invert": "inverter",
     "edittokinf": "Editar informações do token",
     "createnewtkn": "Criar novo token",
-    "registertkn": "Registrar o token existente",
+    "registeretkn": "Registrar o token existente",
     "tkncreation": "criação de token",
     "tknregist": "registro de token",
     "tknedition": "edição de token",
@@ -157,6 +157,9 @@
     "category": "categoria",
     "save": "Salvar",
     "delete": "excluir",
-    "neededfield": "Este campo é obrigatório"
+    "neededfield": "Este campo é obrigatório",
+    "tknsucceed": "Token criado com sucesso",
+    "wannaregtkn": "Deseja registrar esse token no DEX?",
+    "registertkn": "registrar o token"
 
 }
