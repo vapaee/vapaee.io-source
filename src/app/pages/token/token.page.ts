@@ -136,6 +136,14 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
 
     // Token edition ----------------------------------------------------
 
+    get lglogo() {
+        if (!this.token) return "";
+        if (this.token.logolg) return this.token.logolg;
+        if (this.token.logo) return this.token.logo;
+        return "/assets/logos/no-icon.png";
+    }
+    
+
     get hide_edit_btn(): boolean {
         if (this.dex.logged) {
             if (!this.editing) {
