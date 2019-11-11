@@ -159,7 +159,14 @@ export class AppService {
     toggleGlobal(key:string) {
         if (!this.global) this.global = {};
         this.global[key] = !this.global[key];
-    }    
+    }
+
+    consumeGlobal(key:string) {
+        if (!this.global) this.global = {};
+        let aux = this.global[key];
+        delete this.global[key];
+        return aux;
+    }
 
     init(version:string) {
         this._verison = version;

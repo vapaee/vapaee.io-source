@@ -82,7 +82,7 @@
                     <div class="nowrap col-4 col-padding-right">
                         <img class="token-icon" [src]="market.commodity.logo">
                         <span class="margin-left-xs">{{market.commodity.symbol}}</span>
-                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('market.token-stat-'+market.commodity.symbol) && !dex.feed.loading('summary.'+dex.canonicalScope(market.scope))"></span>
+                        <span class="spinner-border spinner-border-sm margin-left-xs" [hidden]="!dex.feed.loading('market.token-stat-'+market.commodity.symbol) && !dex.feed.loading('summary.'+dex.canonicalScope(market.scope))"></span>
                     </div>
                     <div
                         class="nowrap col-2 text-right col-padding-right col-padding-left"

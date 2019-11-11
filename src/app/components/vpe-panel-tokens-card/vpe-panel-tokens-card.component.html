@@ -26,7 +26,8 @@
                     <div>
                         <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('token-stat-'+token.symbol) && !dex.feed.loading('summary.'+token.scope)"></span>
                         <small><span class="label">max:</span><span class="nowrap"> {{token.stat ? token.stat.max_supply : ('0 ' + token.symbol)}} </span></small><br>
-                        <small><span class="label">total:</span><span class="nowrap"> {{token.stat ? token.stat.supply : ('0 ' + token.symbol)}} </span></small>
+                        <small><span class="label">total:</span><span class="nowrap"> {{token.stat ? token.stat.supply : ('0 ' + token.symbol)}} </span></small><br>
+                        <small><a [href]="'https://telos.eosx.io/account/' + token.contract " target="_blank"><span class="nowrap"> {{token.contract}} - {{token.symbol}} </span></a></small>
                     </div>
                 </div>
                 <div>

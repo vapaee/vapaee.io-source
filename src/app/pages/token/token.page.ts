@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { VapaeeDEX, TokenDEX, TokenData, TokenEvent } from '@vapaee/dex';
+import { VapaeeDEX, TokenDEX, TokenData, TokenEvent, AssetDEX } from '@vapaee/dex';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { Feedback } from 'projects/vapaee/feedback/src';
 import { DropdownService } from 'src/app/services/dropdown.service';
+import { Asset } from '@vapaee/scatter';
 
 declare const twttr: any;
 
@@ -23,6 +24,9 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
     feed: Feedback;
     events: string[];
     editevent: TokenEvent;
+    showactions: boolean;
+    action: string;
+    params: any;
     _safe_url_cache = {};
     
     constructor(
@@ -34,19 +38,29 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         public dropdown: DropdownService,
         private http: HttpClient
     ) {
+        
         var symbol = this.route.snapshot.paramMap.get('symbol');
         this.editing = !!this.app.getGlobal("edit-token");
         this.app.setGlobal("edit-token", false);
         this.feed = new Feedback();
+
+        this.params = {}
+        this.showactions = false;
+        this.action = this.app.consumeGlobal("action");
         
         this.dex.waitTokenData.then(_ => {
             this.token = this.dex.getTokenNow(symbol.toUpperCase());
             if (this.token.brief == "") {
                 this.token.brief = null;
             }
-
+            this.params.quantity = new AssetDEX(0, this.token);
             this.renderEntries();
         });
+    }
+
+    toggleActions() {
+        this.showactions = !this.showactions;
+        this.action = "transfer";
     }
 
     fetchTwitter(info: TokenData) {
@@ -97,6 +111,30 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         this.app.navigate('/exchange/trade/'+scope);
     }
 
+    setAction(act:string) {
+        switch (act) {
+            case "transfer":
+                this.params.from = this.dex.logged;
+            case "issue":
+            case "open":
+                break;
+            default:
+                console.error("ERROR: token action unknown: ",act);
+                return;
+        }
+        this.action = act;
+    }
+
+    perform() {
+        this.feed.setLoading("perform", true);
+        this.feed.clearError("perform");
+
+        // aaaaaaaaaaaaaaaaa
+
+        // this.feed.setLoading("perform", false);
+        this.feed.clearError("perform");
+    }
+
     getEmbedLink(info:TokenData) {
         this._safe_url_cache = this._safe_url_cache || {};
         var info_id = "id-"+info.id;
@@ -135,6 +173,16 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // Token edition ----------------------------------------------------
+
+
+    get exploreUrl() {
+        if (this.token) return "https://telos.eosx.io/account/" + this.token.contract;
+        return null;
+    }
+    get actionsUrl() {
+        if (this.token) return "https://telos.eosx.io/tools/contract?contractAccount=" + this.token.contract;
+        return null;
+    }
 
     get lglogo() {
         if (!this.token) return "";

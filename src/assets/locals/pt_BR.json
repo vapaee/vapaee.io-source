@@ -160,6 +160,11 @@
     "neededfield": "Este campo é obrigatório",
     "tknsucceed": "Token criado com sucesso",
     "wannaregtkn": "Deseja registrar esse token no DEX?",
-    "registertkn": "registrar o token"
-
+    "registertkn": "registrar o token",
+    "exlaccount": "explorar conta",
+    "explore": "explorar",
+    "tokenactions": "ações de token",
+    "transfer": "transferência",
+    "issue": "questão",
+    "open": "abrir" 
 }

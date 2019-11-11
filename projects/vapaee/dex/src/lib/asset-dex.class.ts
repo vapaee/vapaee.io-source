@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { TokenDEX } from './token-dex.class';
-import { Asset } from '@vapaee/scatter';
+import { Asset, Token } from '@vapaee/scatter';
 
 export interface IVapaeeDEX {
     getTokenNow(symbol:string): TokenDEX;
@@ -8,14 +8,14 @@ export interface IVapaeeDEX {
 
 export class AssetDEX extends Asset {
     amount:BigNumber;
-    token:TokenDEX;
+    _token:TokenDEX;
     
     constructor(a: any = null, b: any = null) {
         super(a,b);
 
-        if (a instanceof AssetDEX) {
+        if (a instanceof Asset) {
             this.amount = a.amount;
-            this.token = b;
+            this._token = new TokenDEX(a.token);
             return;
         }
 
@@ -23,6 +23,11 @@ export class AssetDEX extends Asset {
             this.parseDex(a,b);
         }
 
+    }
+
+    get token(): TokenDEX {
+        if (!this._token) this._token = new TokenDEX();
+        return this._token;
     }
 
     clone(): AssetDEX {
@@ -50,9 +55,9 @@ export class AssetDEX extends Asset {
     parseDex(text: string, dex: IVapaeeDEX) {
         if (text == "") return;
         var sym = text.split(" ")[1];
-        this.token = dex.getTokenNow(sym);
+        this._token = dex.getTokenNow(sym);
         if (!this.token) {
-            this.token = new TokenDEX({symbol: sym});
+            this._token = new TokenDEX({symbol: sym});
         }
         /*if (this.token) {
             let tmp = new AssetDEX();

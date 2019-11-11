@@ -4,11 +4,11 @@
 
     <div class="card text-white bg-dark margin-top-md overflow-visibl" [hidden]="token?.banner">
         <div class="card-header vpe-background-card-header text-xl" [hidden]="app.device.portrait">
-            <img style="height:64px; width: 64px; margin-top:-0px" [src]="token?.logolg">&nbsp;
+            <img style="height:64px; width: 64px; margin-top:-0px" [src]="lglogo">&nbsp;
             {{token?.title}}
         </div>
         <div class="card-header vpe-background-card-header text-xl" [hidden]="!app.device.portrait">
-            <img style="height:40px; width: 40px; margin-top:-10px" [src]="token?.logolg">&nbsp;
+            <img style="height:40px; width: 40px; margin-top:-10px" [src]="lglogo">&nbsp;
             {{token?.title}}
         </div>
     </div>
@@ -22,22 +22,35 @@
 
     <div class="margin-top-md row">
 
-        <div class="col-lg-8 col-xl-9 d-lg-none">
+        <div class="col-12 d-lg-none">
             <div [hidden]="!token?.brief">
                 <div class="text-xl token-description">
                     <div>
                         <span class="text-lg margin-top token-title">{{token?.title}}</span>&nbsp;
-                        <a class="btn btn-sm btn-primary" target="_blank" [href]="token?.website" [hidden]="!token?.website">
-                            {{local.string.visitwebsite}} 
-                            <i class="material-icons"> forward </i> 
-                        </a>
                     </div>
                     <div class="text-md margin-top token-brief">
                         <markdown [data]="token?.brief"></markdown>
                     </div>
-                </div>
-                <div class="margin-top-md margin-bottom-md">
-                    <hr class="line">
+                    <div class="text-md margin-top">
+                        <a class="btn btn-sm btn-primary margin-right-sm margin-top-xs" target="_blank" [href]="token?.website" [hidden]="!token?.website">
+                            <i class="material-icons"> web </i>
+                            {{local.string.visitwebsite}} 
+                            
+                        </a>
+                        <a class="btn btn-sm btn-primary margin-right-sm margin-top-xs" target="_blank" [href]="exploreUrl" [hidden]="!exploreUrl">
+                            <i class="material-icons"> search </i> 
+                            {{local.string.explore}} {{token?.contract}} 
+                            
+                        </a>
+                        <a class="btn btn-sm btn-primary margin-right-sm margin-top-xs" target="_blank" [href]="actionsUrl" [hidden]="!actionsUrl">
+                            <img style="height: 16px; width: 16px; margin-top: -2px;" [src]="token?.logo" [hidden]="!token?.logo">
+                            {{local.string.tokenactions}}
+                            <!--
+                            <i class="material-icons" [hidden]="showactions"> keyboard_arrow_down </i> 
+                            <i class="material-icons" [hidden]="!showactions"> keyboard_arrow_up </i> 
+                            -->
+                        </a>
+                    </div>
                 </div>            
             </div>
             <div class="margin-top-md" [hidden]="hide_edit_btn">
@@ -48,9 +61,9 @@
             </div>
         </div>
 
-        <div class="col-12 d-lg-none">
+        <div class="col-12 d-lg-none" [hidden]="showactions">
             <div class="text-lg-center margin-top-md token-markets" [hidden]="editing">
-                <img style="height:64px; width: 64px; margin-top:-12px" [src]="token?.logolg">&nbsp;
+                <img style="height:64px; width: 64px; margin-top:-12px" [src]="lglogo">&nbsp;
                 {{local.merge(local.string.tknMarkets, {'symbol': token?.symbol})}}
             </div>
 
@@ -76,24 +89,40 @@
                         <div>
                             {{local.string.bigicon}}
                         </div>
-                        <img style="height:64px; width: 64px; margin-top: 15px;" [src]="token?.logolg">
+                        <img style="height:64px; width: 64px; margin-top: 15px;" [src]="lglogo">
                     </div>
                 </div>
             </div>       
         </div>
 
         <div class="col-lg-8 col-xl-9">
-            <div [hidden]="!token?.brief">
+            <div>
                 <div class="col-12 token-description text-xl d-none d-lg-inline-block margin-top-md">
                     <div>
                         <span class="text-lg margin-top token-title">{{token?.title}}</span>&nbsp;
-                        <a class="btn btn-sm btn-primary" target="_blank" [href]="token?.website" [hidden]="!token?.website">
-                            {{local.string.visitwebsite}} 
-                            <i class="material-icons"> forward </i> 
-                        </a>
                     </div>
-                    <div class="text-md margin-top token-brief">
+                    <div class="text-md margin-top token-brief" [hidden]="!token?.brief">
                         <markdown [data]="token?.brief"></markdown>
+                    </div>
+                    <div class="text-md margin-top">
+                        <a class="btn btn-sm btn-primary margin-right-sm margin-top-xs" target="_blank" [href]="token?.website" [hidden]="!token?.website">
+                            <i class="material-icons"> web </i>
+                            {{local.string.visitwebsite}} 
+                            
+                        </a>
+                        <a class="btn btn-sm btn-primary margin-right-sm margin-top-xs" target="_blank" [href]="exploreUrl" [hidden]="!exploreUrl">
+                            <i class="material-icons"> search </i> 
+                            {{local.string.explore}} {{token?.contract}} 
+                            
+                        </a>
+                        <a class="btn btn-sm btn-primary margin-right-sm margin-top-xs" target="_blank" [href]="actionsUrl" [hidden]="!actionsUrl">
+                            <img style="height: 16px; width: 16px; margin-top: -2px;" [src]="token?.logo" [hidden]="!token?.logo">
+                            {{local.string.tokenactions}}
+                            <!--
+                            <i class="material-icons" [hidden]="showactions"> keyboard_arrow_down </i> 
+                            <i class="material-icons" [hidden]="!showactions"> keyboard_arrow_up </i> 
+                            -->
+                        </a>
                     </div>
                 </div>
             </div>
@@ -152,27 +181,36 @@
                                 </div>
                             </div>
         
-                            <!-- banner -->
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label nowrap">{{local.string.banner|titlecase}}:</label>
-                                <div class="col-sm-9" >
-                                    <input class="form-control col-form-label" placeholder="banner" [(ngModel)]="token.banner" (ngModelChange)="onTokenInfoChange($event)">
-                                </div>
-                            </div>
-        
                             <!-- logo -->
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label nowrap">{{local.string.icon|titlecase}}:</label>
-                                <div class="col-sm-9" >
+                                <div [ngClass]="{'col-sm-9': !token.logo, 'col-sm-8': token.logo}">
                                     <input class="form-control col-form-label" placeholder="logo" [(ngModel)]="token.logo" (ngModelChange)="onTokenInfoChange($event)">
+                                </div>
+                                <div *ngIf="token.logo" class="col-sm-1">
+                                    <img class="expand" [src]="token.logo">
                                 </div>
                             </div>
         
                             <!-- logolg -->
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label nowrap">{{local.string.bigicon|titlecase}}:</label>
-                                <div class="col-sm-9" >
+                                <div [ngClass]="{'col-sm-9': !token.logolg, 'col-sm-7': token.logolg}">
                                     <input class="form-control col-form-label" placeholder="logolg" [(ngModel)]="token.logolg" (ngModelChange)="onTokenInfoChange($event)">
+                                </div>
+                                <div *ngIf="token.logolg" class="col-sm-2">
+                                    <img class="expand" [src]="token.logolg">
+                                </div>
+                            </div>
+
+                            <!-- banner -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.banner|titlecase}}:</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control col-form-label" placeholder="banner" [(ngModel)]="token.banner" (ngModelChange)="onTokenInfoChange($event)">
+                                </div>
+                                <div *ngIf="token.banner" class="col-sm-9 offset-sm-3 margin-top-sm">
+                                    <img class="expand" [src]="token.banner">
                                 </div>
                             </div>
         
@@ -222,6 +260,72 @@
             </div>
 
             
+            <div class="token-actions" [hidden]="!showactions">
+                <div class="margin-top-md token-description">
+                    <div class="row">
+                        <div class="col-12 text-md margin-top token-actions-header">
+                            <div class="row">
+                                <div class="btn btn-sm btn-secondary margin-left-sm"
+                                    [ngClass]="{'btn-success':action=='transfer'}"
+                                    (click)="setAction('transfer')">{{local.string.transfer|titlecase}}</div>
+                                <div class="btn btn-sm btn-secondary margin-left-sm"
+                                    [ngClass]="{'btn-success':action=='issue'}"
+                                    (click)="setAction('issue')">{{local.string.issue|titlecase}}</div>
+                                <div class="btn btn-sm btn-secondary margin-left-sm"
+                                    [ngClass]="{'btn-success':action=='open'}"
+                                    (click)="setAction('open')">{{local.string.open|titlecase}}</div>
+                            </div>
+                        </div>
+                        <div class="col-12 card-body text-md" [hidden]="action!='transfer'">
+                            <!-- memo -->
+                            <div class="form-group row">
+                                <label class="col-sm-2 form-control-sm  nowrap">from:</label>
+                                <div class="col-sm-10" >
+                                    <input class="form-control form-control-sm" placeholder="from" [(ngModel)]="params.from">
+                                </div>
+                            </div>
+                            <!-- to -->
+                            <div class="form-group row">
+                                <label class="col-sm-2 form-control-sm nowrap">to:</label>
+                                <div class="col-sm-10" >
+                                    <input class="form-control form-control-sm" placeholder="to" [(ngModel)]="params.to">
+                                </div>
+                            </div>
+                            <!-- quantity -->
+                            <div class="form-group row">
+                                <label class="col-sm-2 form-control-sm nowrap">quantity:</label>
+                                <div class="col-sm-10" >
+                                    <vpe-token-input
+                                        class="form-control form-control-sm"
+                                        [(asset)]="params.quantity"
+                                        [precision]="token?.precision"
+                                        placeholder="{{local.string.quantity}}"></vpe-token-input>
+                                </div>
+                            </div>
+                            <!-- memo -->
+                            <div class="form-group row">
+                                <label class="col-sm-2 form-control-sm nowrap">memo:</label>
+                                <div class="col-sm-10" >
+                                    <input class="form-control form-control-sm" placeholder="memo" [(ngModel)]="params.memo">
+                                </div>
+                            </div>
+                            <!-- confirm -->
+                            <div class="form-group row">
+                                <div class="offset-10 col-sm-2">
+                                    <div class="btn btn-sm btn-success form-control-sm col-12" (click)="perform(action)">
+                                        <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('perform')"></span>
+                                        <i class="material-icons" [hidden]="feed.loading('perform')">done</i>
+                                        {{local.string.confirm|titlecase}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                    
+                    </div>
+                    
+                </div>
+            </div>   
+
+
             <!-- Token Data Entry -->
             <div class="margin-top-md card"
                 *ngFor="let info of token?.data"

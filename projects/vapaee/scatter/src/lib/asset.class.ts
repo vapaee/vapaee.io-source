@@ -3,30 +3,30 @@ import { Token } from "./token.class";
 
 export class Asset {
     amount:BigNumber;
-    token:Token;
+    protected _token: Token;
     
     constructor(a: any = null, b: any = null) {
         if (a == null && b == null) {
             this.amount = new BigNumber(0);
-            this.token = new Token();
+            this._token = new Token();
             return;
         }
 
         if (a instanceof BigNumber) {
             this.amount = a;
-            this.token = b;
+            this.resolveToken(b);
             return;
         }
 
         if (a instanceof Asset) {
             this.amount = a.amount;
-            this.token = b;
+            this.resolveToken(b || a);
             return;
         }
 
         if (typeof a == "number") {
             this.amount = new BigNumber(a);
-            this.token = b;
+            this.resolveToken(b);
             return;
         }
 
@@ -37,6 +37,22 @@ export class Asset {
                 this.parse(a);
             }            
             console.assert(this.amount instanceof BigNumber, "ERROR: Asset string malformed: '"+a+"'");
+            return;
+        }
+    }
+    
+    get token() {
+        if (!this._token) this._token = new Token();
+        return this._token;
+    }
+
+    resolveToken(t:any) {
+        if (t instanceof Token) {
+            this._token = t;
+            return;
+        }
+        if (t instanceof Asset) {
+            this._token = (<Asset>t).token;
             return;
         }
     }
@@ -79,10 +95,10 @@ export class Asset {
             }    
         }
         
-        this.token = new Token({
+        this.resolveToken(new Token({
             symbol: sym,
             precision: precision
-        }); 
+        }));
     }
 
     valueToString(decimals:number = -1, total:boolean = false): string {
