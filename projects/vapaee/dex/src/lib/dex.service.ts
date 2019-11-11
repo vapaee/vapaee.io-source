@@ -456,6 +456,23 @@ export class VapaeeDEX {
         });
     }
 
+    tokenadmin(token: TokenDEX, newadmin:string) {
+        let feedid = "tokenadmin";
+        this.feed.setError(feedid, null);
+        this.feed.setLoading(feedid, true);
+        return this.contract.excecute("tokenadmin", {
+            sym_code: token.symbol,
+            admin: newadmin
+        }).then(async result => {
+            this.feed.setLoading(feedid, false);
+            return result;
+        }).catch(e => {
+            this.feed.setLoading(feedid, false);
+            this.feed.setError(feedid, typeof e == "string" ? e : JSON.stringify(e,null,4));
+            throw e;
+        });
+    }
+
     settokeninfo(action:string, info:TokenData) {
         let feedid = "settokeninfo";
         this.feed.setError(feedid, null);

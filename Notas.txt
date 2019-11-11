@@ -5,30 +5,41 @@ transaction declares authority '{"actor":"fiscalesvote","permission":"active"}',
 -- TODO --
 - al mostrar el token debe haber un link a un exploer para que la gente vea el token por si mismos
 - poner en los TODOs que tiene que haber una forma de sacar el token del DEX y de cambiar de admin (ambas acciones son voluntarias del admin o forzadas por DAO)
-- crear una biblioteca nueva @vapaee/rex
-- crear tipo de dato (interface) AccountREX que contiene el estado del la cuenta en el REX:
-  - rexfund: plata depositada (liquido disponible)
-  - rexbal: vote_stake, rex_balance, matured_rex, rex_maturities
-- crear tipo de dato (interface) REXPool que contenga as variables globales del REX: rexpool
-- función simple que dado un account te trae su estado actual
+
 
 
 
 -- Football Trades --
-- contratos legales: contratos múltiples que sean nosotros con un club y todos sus jugadores, donde se acuerda que todos los jugadores permiten que se usanusen sus imágenes para crear cartas del club, el cual estará encargado de venderlas al público a un precio fijo por sobre. Éste trae siempre trae 5 cartas al azar pero siempre del club. El reparto de dinero se hace siempre sobre un porcentaje de las entradas de la empresa porconcepto de venta de sobres del club. Lo recaudado por carta es el costo del lsobre dividido 5.
+- álbumes
+  - club-X
+  - Oficiales
+  - Amateur
+
+- sobres:
+  - club-X: se venden únicamente por fiat y están sujetas al contrato contra el club.
+  - Oficiales: se vende únicamente por fiat y están sujetas al contrato contra los clubes.
+  - Amateur: se venden únicamente por tokens.
+
+- Contratoe legales -
+  - contratos legales con los clubes y sus jugadores donde se acuerda la disposición de los derechos de imagen y cómo se reparte el dinero recaudado por concepto de venta de sobrecitos digitales cerrados a cambio de dinero fiat.
+  - contrato inteligente con cualquier jugador que quiera por su cuenta crear sus cartas y participar del álbum amateur. Sus cartas serán agregadas a los sobres de cartas amateur.
+
+- indecisiones:
+  - token: GOAL ??
+  - icono: zzz...
+  - Football Trades logo: zzz...
+  - cuanto de retorno a los inversores? 500%?
+  - porcentaje del vendedor? 15%?
+  
+
+- contratos legales: contratos múltiples que sean nosotros con un club y todos sus jugadores, donde se acuerda que todos los jugadores permiten que se usanusen sus imágenes para crear cartas del club, el cual estará encargado de venderlas al público a un precio fijo por sobre. Éste trae siempre trae 5 cartas al azar pero siempre del club. El reparto de dinero se hace siempre sobre un porcentaje de las entradas de la empresa porconcepto de venta de sobres del club. Lo recaudado por carta es el costo del sobre dividido 5.
 - Las entradas de dinero por concepto de ventas de sobres de un club se dividirán en:
   - 30% nosotros (del cual 1/3 va a los inversores hasta un máximo)
   - 15% vendedor del sobre (que puede ser el propio club)
   - 40% el club a la cual pertenece el sobre.
   - 15% a los jugadores.
-    - 1/3 promedio a todos los jugadores lo mismo
-    - 1/3 ponderado según popularidad de su carta en comparación con el resto del álbum.
-    - 1/3 ponderado según popularidad de su carta en comparación con todas las demás cartas.
-
-- álbumes
-  - club-X
-  - Oficiales
-  - Amateur
+    - 1/2 promedio a todos los jugadores lo mismo
+    - 1/2 ponderado según popularidad de su carta en comparación con el resto del álbum.
 
 
 

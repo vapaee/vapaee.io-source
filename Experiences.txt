@@ -185,3 +185,6 @@ Resulta que no puedo cargar con RAM al usuario, si registro ese evento lo tengo 
         indexed_by<"sobreord"_n, const_mem_fun<escrutinio, uint64_t, &escrutinio::by_sobreord>>,
         indexed_by<"listaid"_n, const_mem_fun<escrutinio, uint64_t, &escrutinio::by_listaid>>
     > escrutinios;
+- Si quieres que el compilador te auto cree el abi debes hacer coincidir el nombre de la clase con el wasm en la linea de compilación
+    eosio-cpp -o xxxxxxxxxx.wasm token.cpp --abigen
+    para crear el xxxxxxxxxx.abi

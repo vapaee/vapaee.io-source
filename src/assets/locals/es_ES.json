@@ -166,5 +166,6 @@
     "tokenactions": "acciones del token",
     "transfer": "transferir",
     "issue": "emitir",
-    "open": "abrir"
+    "open": "abrir",
+    "tokenshowroom": "Showroom de tokens en Telos"
 }

@@ -126,11 +126,11 @@ CONTRACT vapaeetokens : public eosio::contract {
             e.action_update_token_info(sym_code, title, website, brief, banner, logo, logolg, tradeable);
         };
 
-        ACTION tokenowner (const symbol_code & symbol, name owner) {
+        ACTION tokenadmin (const symbol_code & sym_code, name admin) {
             MAINTENANCE();
-            PRINT("\nACTION vapaeetokens.tokenowner()\n");
+            PRINT("\nACTION vapaeetokens.tokenadmin()\n");
             vapaee::token::exchange e;
-            e.action_set_token_owner(symbol, owner);
+            e.action_set_token_admin(sym_code, admin);
         };
 
         ACTION setcurrency (const symbol_code & sym_code, bool is_currency) {

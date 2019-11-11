@@ -1251,19 +1251,20 @@ namespace vapaee {
         }
         
 
-        void action_set_token_owner (const symbol_code & sym_code, name newowner) {
-            PRINT("vapaee::token::exchange::action_set_token_owner()\n");
+        void action_set_token_admin (const symbol_code & sym_code, name newadmin) {
+            PRINT("vapaee::token::exchange::action_set_token_admin()\n");
             PRINT(" sym_code: ", sym_code.to_string(), "\n");
-            PRINT(" newowner: ", newowner.to_string(), "\n");
+            PRINT(" newadmin: ", newadmin.to_string(), "\n");
 
             tokens tokenstable(get_self(), get_self().value);
             auto itr = tokenstable.find(sym_code.raw());
             eosio_assert(itr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
-            
-            eosio_assert(has_auth(get_self()), "only admin can modify the token.owner");
+
+            eosio_assert( is_account( newadmin ), "newadmin account does not exist");
+            eosio_assert(has_auth(get_self()) || has_auth(itr->owner), "only DAO or token's admin can change token admin");
 
             tokenstable.modify( *itr, same_payer, [&]( auto& a ){
-                a.owner = newowner;
+                a.owner = newadmin;
             });
 
             PRINT("vapaee::token::exchange::action_set_token_owner() ...\n");

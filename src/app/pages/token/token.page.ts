@@ -21,6 +21,8 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
 
     token: TokenDEX;
     editing: boolean;
+    newadmin: boolean;
+    adminname: string;
     feed: Feedback;
     events: string[];
     editevent: TokenEvent;
@@ -249,6 +251,21 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // Token Data Entries -----------------------
+    changeAdmin() {
+        this.feed.setLoading("new-admin", true);
+        this.feed.clearError("new-admin");
+        this.dex.tokenadmin(this.token, this.adminname).then(_ => {
+            console.log("EXITO:", _);
+            this.newadmin = false;
+            this.feed.setLoading("new-admin", false);
+            this.renderEntries();
+            this.token.owner = this.adminname;
+        }).catch(e => {
+            console.error(e);
+            this.feed.setLoading("new-admin", false);
+            this.feed.setError("new-admin", typeof e == "string" ? e : JSON.stringify(e,null,4));
+        });
+    }
 
     confirmData(info:TokenData) {
         console.log("TokenPage.confirmData()", [info]);

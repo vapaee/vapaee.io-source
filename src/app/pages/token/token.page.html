@@ -312,7 +312,7 @@
                             <!-- confirm -->
                             <div class="form-group row">
                                 <div class="offset-10 col-sm-2">
-                                    <div class="btn btn-sm btn-success form-control-sm col-12" (click)="perform(action)">
+                                    <div class="btn btn-sm btn-success form-control-sm col-12" (click)="perform()">
                                         <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('perform')"></span>
                                         <i class="material-icons" [hidden]="feed.loading('perform')">done</i>
                                         {{local.string.confirm|titlecase}}
@@ -501,6 +501,47 @@
             </div>
 
 
+            <!-- Token Admin -->
+            <div class="margin-top-md token-markets" [hidden]="!editing">
+                <div class="row" [hidden]="newadmin">
+                    <div class="col-12">
+                        <span class="text-md">Admin: {{token?.owner}}</span>
+                    </div>
+                    <div class="col-12 margin-top-sm">
+                        <span class="btn btn-sm btn-primary" (click)="feed.clearErrors(); newadmin = true">
+                            <i class="material-icons">edit</i>
+                            change
+                        </span>
+                    </div>
+                </div>
+                <div class="row" [hidden]="!newadmin">
+                    <div class="col-12">
+                        <span class="text-md">new admin account</span>
+                    </div>
+                    <div class="col-12 margin-top-sm">
+                        <input id="new-admin" class="form-control col-form-label" placeholder="admin name" [(ngModel)]="adminname">
+                    </div>
+                    <div class="col-12 margin-top" [hidden]="!feed.error('new-admin')">
+                        <div class="alert alert-danger">
+                            <div class="pull-right">
+                                <button type="button" class="close text-white" (click)="feed.clearError('new-admin')">
+                                    <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                </button>
+                            </div>
+                            {{feed.error('new-admin')}}
+                        </div>
+                    </div>                    
+                    <div class="col-12 margin-top-sm">
+                        <span class="btn btn-sm btn-primary" (click)="feed.clearErrors(); changeAdmin()">
+                            <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('new-admin')"></span>
+                            <i class="material-icons" [hidden]="feed.loading('new-admin')">save_alt</i>
+                            {{local.string.confirm}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+
             <!-- Token Data Entries -->
             <div class="margin-top-md token-markets" [hidden]="!editing">
                 <div class="text-md">
@@ -544,6 +585,7 @@
                 </div>
             </div>
             
+            <!-- Editting Token Events -->
             <div class="margin-top-md token-markets" *ngIf="editing && editevent">
                 <div class="row form-group">
                     <label class="col-4 col-form-label nowrap text-bold"> event: </label>

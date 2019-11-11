@@ -103,6 +103,13 @@ export class Feedback {
         this.setError(key, "");
     }
 
+    clearErrors() {
+        for (let key in this.scopes) {
+            if (this.scopes[key].msgtype == "error") {
+                this.clearError(key);
+            }
+        }
+    }
 
     error(key:string) {
         if (this.scopes[key]) {
