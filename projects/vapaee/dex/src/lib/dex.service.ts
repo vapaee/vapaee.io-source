@@ -437,6 +437,7 @@ export class VapaeeDEX {
         let feedid = "updatetoken";
         this.feed.setError(feedid, null);
         this.feed.setLoading(feedid, true);
+        token.website = this.auxFixWebsite(token.website);
         return this.contract.excecute("updatetoken", {
             sym_code: token.symbol,
             title: token.title,
@@ -1715,6 +1716,14 @@ export class VapaeeDEX {
     //
     // --------------------------------------------------------------
     // Aux functions
+
+    private auxFixWebsite (url:string) {
+        if (url.indexOf("http://") == 0) return url;
+        if (url.indexOf("https://") == 0) return url;
+        if (url.indexOf("//") == 0) return url;
+        return "http://" + url;
+    }
+
     private auxProcessRowsToOrders(rows:any[]): Order[] {
         let result: Order[] = [];
         for (let i=0; i < rows.length; i++) {

@@ -19,7 +19,7 @@
                         {{token.title}}
                     </span>
                 </div>
-                <div class="text-center">
+                <div class="text-center" [hidden]="!token.website">
                     <a [href]="token.website" target="_blank"><small class="text-muted">{{token.website}} &nbsp;</small></a>
                 </div>
                 <div class="card-text margin-top">

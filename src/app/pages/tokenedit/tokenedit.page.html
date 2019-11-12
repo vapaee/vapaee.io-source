@@ -87,7 +87,27 @@
 
             </div>
         </div>
-    </div>    
+    </div>
+    
+    <!-- preview of the Title and description -->
+    <div class="margin-top-md" [hidden]="!showRegisteringForm">
+        <div [hidden]="!editing?.title && !editing?.brief">
+            <div class="text-xl token-description">
+                <div>
+                    <span class="text-lg margin-top token-title">{{editing?.title}}</span>&nbsp;
+                </div>
+                <div class="text-md margin-top token-brief">
+                    <markdown [data]="editing?.brief"></markdown>
+                </div>
+                <div class="text-md margin-top">
+                    <a class="btn btn-sm btn-primary margin-right-sm margin-top-xs" target="_blank" [href]="editing?.website" [hidden]="!editing?.website">
+                        <i class="material-icons"> web </i>
+                        {{local.string.visitwebsite}} 
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="margin-top-md">
         <div class="card text-white bg-dark">
@@ -195,7 +215,7 @@
                             </a>
                         </div>            
                     </div>
-                </div>                
+                </div>
 
                 <!-- This forms appears only if we are editing or registering a token -->
                 <div [hidden]="!showRegisteringForm">
@@ -203,7 +223,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label nowrap">{{local.string.title|titlecase}}*:</label>
                         <div class="col-sm-9" >
-                            <input class="form-control col-form-label" placeholder="title" [(ngModel)]="editing.title" (ngModelChange)="onTokenInfoChange($event)">
+                            <input class="form-control col-form-label" placeholder="name of the token" [(ngModel)]="editing.title" (ngModelChange)="onTokenInfoChange($event)">
                         </div>
                         <div class="col-sm-9 offset-sm-3 text-danger margin-top-xs" [hidden]="!showerrors || editing.title" >
                             {{local.string.neededfield}}
@@ -214,7 +234,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label nowrap">{{local.string.about|titlecase}}*:</label>
                         <div class="col-sm-9" >
-                            <textarea class="form-control col-form-label" placeholder="brief" [(ngModel)]="editing.brief" (ngModelChange)="onTokenInfoChange($event)"></textarea>
+                            <textarea class="form-control col-form-label" placeholder="brief description" [(ngModel)]="editing.brief" (ngModelChange)="onTokenInfoChange($event)"></textarea>
                         </div>
                         <div class="col-sm-9 offset-sm-3 text-danger margin-top-xs" [hidden]="!showerrors || editing.brief" >
                             {{local.string.neededfield}}
@@ -233,7 +253,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label nowrap">{{local.string.icon|titlecase}}:</label>
                         <div [ngClass]="{'col-sm-9': !editing.logo, 'col-sm-8': editing.logo}">
-                            <input class="form-control col-form-label" placeholder="logo" [(ngModel)]="editing.logo" (ngModelChange)="onTokenInfoChange($event)">
+                            <input class="form-control col-form-label" placeholder="token icon URL" [(ngModel)]="editing.logo" (ngModelChange)="onTokenInfoChange($event)">
                         </div>
                         <div *ngIf="editing.logo" class="col-sm-1">
                             <img class="expand" [src]="editing.logo">
@@ -244,7 +264,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label nowrap">{{local.string.bigicon|titlecase}}:</label>
                         <div [ngClass]="{'col-sm-9': !editing.logolg, 'col-sm-7': editing.logolg}">
-                            <input class="form-control col-form-label" placeholder="logolg" [(ngModel)]="editing.logolg" (ngModelChange)="onTokenInfoChange($event)">
+                            <input class="form-control col-form-label" placeholder="token larger icon URL" [(ngModel)]="editing.logolg" (ngModelChange)="onTokenInfoChange($event)">
                         </div>
                         <div *ngIf="editing.logolg" class="col-sm-2">
                             <img class="expand" [src]="editing.logolg">
@@ -255,7 +275,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label nowrap">{{local.string.banner|titlecase}}:</label>
                         <div class="col-sm-9">
-                            <input class="form-control col-form-label" placeholder="banner" [(ngModel)]="editing.banner" (ngModelChange)="onTokenInfoChange($event)">
+                            <input class="form-control col-form-label" placeholder="banner image URL" [(ngModel)]="editing.banner" (ngModelChange)="onTokenInfoChange($event)">
                         </div>
                         <div *ngIf="editing.banner" class="col-sm-9 offset-sm-3 margin-top-sm">
                             <img class="expand" [src]="editing.banner">
