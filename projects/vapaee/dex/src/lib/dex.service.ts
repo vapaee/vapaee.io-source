@@ -1479,6 +1479,9 @@ export class VapaeeDEX {
     }
 
     async getMarketSummary(token_a:TokenDEX, token_b:TokenDEX, force:boolean = false): Promise<MarketSummary> {
+        console.log("VapaeeDEX.getOrderSummary()", token_a?token_a.symbol:'null', token_b?token_b.symbol:'null', force);
+        console.assert(!!token_a, "ERROR: token_a is null");
+        console.assert(!!token_b, "ERROR: token_b is null");
         let scope:string = this.getScopeFor(token_a, token_b);
         let canonical:string = this.canonicalScope(scope);
         let inverse:string = this.inverseScope(canonical);
@@ -1691,6 +1694,13 @@ export class VapaeeDEX {
 
             for (let i in this._markets) {
                 if (i.indexOf(".") == -1) continue;
+
+                console.assert(!!this._markets[i].commodity, "ERROR: market has commodity in null");
+                console.assert(!!this._markets[i].currency, "ERROR: market has currency in null");
+                if (!this._markets[i].commodity || !this._markets[i].currency) {
+                    console.error("ERROR: bad formed market", this._markets[i]);
+                    continue;
+                }
                 let p = this.getMarketSummary(this._markets[i].commodity, this._markets[i].currency, true);
                 promises.push(p);
             }
@@ -1859,7 +1869,7 @@ export class VapaeeDEX {
                 promises.push(this.fetchBalancesOnContract(account, contract));
             }
             return Promise.all(promises).then(result => {
-                console.log("VapaeeDex.fetchBalances() ------ (fin 1) -----");
+                // console.log("VapaeeDex.fetchBalances() ------ (fin 1) -----");
                 let _balances = [];
                 for (let i=0; i<result.length; i++) {
                     _balances = _balances.concat(result[i]);
@@ -1867,7 +1877,7 @@ export class VapaeeDEX {
                 console.log(_balances);
                 this.balances = _balances;
                 delete this._dexdata;
-                console.log("VapaeeDex.fetchBalances() ------ (fin 2) -----");
+                console.log("VapaeeDex.fetchBalances() ------ (fin) -----");
             }).then(_ => this.balances);
         });
     }

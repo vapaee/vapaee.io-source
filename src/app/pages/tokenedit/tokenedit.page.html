@@ -93,7 +93,7 @@
         <div class="card text-white bg-dark">
             <div class="card-body">
                 <!-- CREATE TAB -->
-                <div [hidden]="tab != TAB.CREATE || thetoken">
+                <div [hidden]="!showCreateForm">
 
                     <!-- Symbol -->
                     <div class="form-group row">
@@ -102,6 +102,9 @@
                             <i _ngcontent-c4="" class="material-icons input-icon danger" [hidden]="symbolIsGood">cancel</i>
                             <i _ngcontent-c4="" class="material-icons input-icon success" [hidden]="!symbolIsGood">done</i>
                             <input class="form-control col-form-label" placeholder="symbol" [(uppercase)]="newtoken.symbol" (uppercaseChange)="onTokenChange($event)">
+                        </div>
+                        <div class="col-sm-10 offset-sm-2 text-danger margin-top-xs" [hidden]="!showerrors || symbolIsGood" >
+                            {{local.string.invalidsym}}
                         </div>
                     </div>
     
@@ -155,7 +158,7 @@
     
                 </div>
 
-                <!-- Tokens just created syccessfully. Wanna register in DEX? -->
+                <!-- Token just created syccessfully. Wanna register in DEX? -->
                 <div [hidden]="!stepOneSucceed">
                     <div class="pull-right">
                         <a class="btn btn-lg btn-success"
@@ -171,6 +174,25 @@
                         <span>{{local.string.wannaregtkn}}</span>
                     </span>                   
                 </div>
+
+                <!-- Token not own -->
+                <div [hidden]="!tokenNotOwn">
+                    <div class="row">
+                        <span class="text-md col-sm-7 col-md-8 col-lg-9">
+                            <span>{{local.string.notauthtoreg}}  <i style="vertical-align: -6px;" class="text-danger material-icons" [hidden]="loading">error</i></span><br>
+                            <span>{{local.merge(local.string.notauthwhy, {'user': dex.logged, 'issuer': thetoken?.stat.issuer, 'contract':thetoken?.contract})}}</span>
+                        </span>
+                        <div class="col-sm-5 col-md-4 col-lg-3">
+                            <a class="btn btn-lg btn-success disabled"
+                                
+                            >
+                                <span>
+                                    <i class="material-icons" [hidden]="loading">edit</i> {{local.string.registertkn|titlecase}}
+                                </span>
+                            </a>
+                        </div>            
+                    </div>
+                </div>                
 
                 <!-- This forms appears only if we are editing or registering a token -->
                 <div [hidden]="!showRegisteringForm">
@@ -249,7 +271,7 @@
                 </div>
 
                 <!-- Error -->
-                <div class="form-group row">
+                <div class="form-group row" [hidden]="!showConfirmBtn">
                     <div class="col-12 margin-top" [hidden]="!error">
                         <div class="alert alert-danger">
                             <div class="pull-right">
@@ -263,7 +285,7 @@
                 </div>     
 
                 <!-- confirm -->
-                <div class="form-group row margin-top" [hidden]="editable || stepOneSucceed">
+                <div class="form-group row margin-top" [hidden]="!showConfirmBtn">
                     <label class="col-sm-2 col-form-label nowrap"></label>
                     <div class="col-sm-10 text-right">
                         <span class="btn btn-lg btn-success"
@@ -274,7 +296,7 @@
                             {{local.string.confirm|titlecase}}
                         </span>
                     </div>
-                </div>
+                </div>             
 
                 <!-- token already registered (wanna edit?) -->
                 <div [hidden]="!editable || stepOneSucceed">

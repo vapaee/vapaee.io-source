@@ -167,5 +167,8 @@
     "transfer": "transfer",
     "issue": "issue",
     "open": "open",
-    "tokenshowroom": "Telos tokens showroom"
+    "tokenshowroom": "Telos tokens showroom",
+    "notauthtoreg": "You are not authorized to register this token.",
+    "notauthwhy": "You are logged as {{user}} but only {{issuer}} and {{contract}} can register the token.",
+    "invalidsym": "invalid symbol"
 }

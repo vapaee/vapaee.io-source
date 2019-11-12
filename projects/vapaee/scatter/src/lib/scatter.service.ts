@@ -18,6 +18,8 @@ import { Asset } from './asset.class';
 import { SmartContract } from './contract.class';
 import { ScatterUtils } from './utils.class';
 import { Token } from './token.class';
+import { resolve, reject } from 'q';
+import { HttpClient } from '@angular/common/http';
 //*/
 
 // declare let ScatterJS:any;
@@ -308,6 +310,32 @@ export interface ScatterJSDef {
 }
 
 
+export interface GetInfoResponse {
+    block_cpu_limit: number;
+    block_net_limit: number;
+    chain_id: string;
+    fork_db_head_block_id: string;
+    fork_db_head_block_num: number;
+    head_block_id: string;
+    head_block_num: number;
+    head_block_producer: string;
+    head_block_time: string;
+    last_irreversible_block_id: string;
+    last_irreversible_block_num: number;
+    server_version: string;
+    server_version_string: string;
+    virtual_block_cpu_limit: number;
+    virtual_block_net_limit: number;
+}
+
+
+export interface EndpointState {
+    index?:number;
+    endpoint: Endpoint;
+    response: GetInfoResponse;
+}
+
+
 @Injectable({
     providedIn: "root"
 })
@@ -352,6 +380,7 @@ export class VapaeeScatter {
     });    
     
     constructor(
+        private http: HttpClient
     ) {
         this.feed = new Feedback();
         this._networks_slugs = [];
@@ -446,6 +475,7 @@ export class VapaeeScatter {
     // ----------------------------------------------------------
     // Networks (eosio blockchains) & Endpoints -----------------
     public setEndpoints(endpoints: NetworkMap) {
+        console.log("ScatterService.setEndpoints()", [endpoints]);
         this._networks = endpoints || this._networks;
         for (let i in this._networks) {
             this._networks_slugs.push(i);
@@ -453,27 +483,77 @@ export class VapaeeScatter {
         this.setEndpointsReady();
     }
 
-    setNetwork(name:string, index: number = 0) {
-        console.log("ScatterService.setNetwork("+name+","+index+")");
+    setNetwork(name:string) {
+        console.log("ScatterService.setNetwork("+name+")");
         return this.waitEndpoints.then(() => {
-            let n = this.getNetwork(name, index);
-            if (n) {
-                if (this._network.name != n.name) {
-                    this._network = n;
+            if (this._networks[name]) {
+                this.autoSelectEndPoint(name).then(_ => {
                     this.resetIdentity();
                     this.initScatter();
                     this.onNetworkChange.next(this.getNetwork(name));
-                }
+                });
             } else {
-                console.error("ERROR: Scatter.setNetwork() unknown network name-index. Got ("
-                    + name + ", " + index + "). Availables are:", this._networks);
+                console.error("ERROR: Scatter.setNetwork() unknown network name. Got ("
+                    + name + "). Availables are:", this._networks);
                 console.error("Falling back to eos mainnet");
                 return this.setNetwork("eos");
             }    
         });
     }
 
+    autoSelectEndPoint(slug: string) {
+        console.log("ScatterService.autoSelectEndPoint()");
+        return new Promise((resolve, reject) => {
+            let promises:Promise<EndpointState>[] = [];
+
+            // Iterate over endponits and get the first one responding
+            if (this._networks[slug]) {
+                let endpoints: Endpoint[] = this._networks[slug].endpoints;
+                for (let i=0; i<endpoints.length; i++) {
+                    let endpoint: Endpoint = endpoints[i];
+                    promises.push(this.testEndpoint(endpoint, i));
+                }
+            }
+
+            return Promise.race(promises).then(result => {
+                let n = this.getNetwork(slug, result.index);
+                if (n) {
+                    if (this._network.name != n.name) {
+                        this._network = n;
+                        console.log("Selected Endpoint ------------------------->", this._network.eosconf.host, [this._network]);
+                        this.resetIdentity();
+                        this.initScatter();
+                        this.onNetworkChange.next(this._network);
+                    }
+                } else {
+                    console.error("ERROR: can't resolve endpoint", result);
+                }
+            });
+
+            /*
+                setTimeout(_ => {
+                    console.log("Resolving autoSelectEndPoint");
+                    resolve();
+                }, 4000);
+            */
+        });
+    }
+
+    private testEndpoint(endpoint: Endpoint, index:number = 0) {
+        console.log("ScatterService.testEndpoint()", endpoint.host);
+        return new Promise<EndpointState>((resolve) => {
+            let url = endpoint.protocol + "://" + endpoint.host + ":" + endpoint.port + "/v1/chain/get_info";
+            this.http.get<GetInfoResponse>(url).toPromise().then((response) => {
+                console.log("ScatterService.testEndpoint()", endpoint.host, " -> ", response.chain_id);
+                resolve({index, endpoint, response});
+            }).catch(e => {
+                console.warn("WARNING: endpoint not responding", e);
+            });
+        });
+    }
+
     getNetwork(slug:string, index: number = 0): Network {
+
         if (this._networks[slug]) {
             if (this._networks[slug].endpoints.length > index && index >= 0) {
                 let network: Network = this._networks[slug];

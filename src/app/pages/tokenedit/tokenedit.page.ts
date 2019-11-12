@@ -81,7 +81,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     editToken(tkn:TokenDEX) {
-        this.app.setGlobal("edit-token", true);
+        this.app.setGlobal("edit-token", this.editing.owner == this.dex.logged);
         this.app.navigate("/exchange/token/"+tkn.symbol.toLowerCase());
     }
 
@@ -115,6 +115,14 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
             });
         }
         this.dex.waitTokensLoaded.then(_ => this.checkToken());
+    }
+
+    get tokenNotOwn(): boolean {
+        if (this.editable) return false;
+        if (!this.thetoken) return false;
+        if (this.thetoken.contract == this.dex.logged) return false;
+        if (this.thetoken.stat.issuer == this.dex.logged) return false;
+        return true;
     }
 
     get symbolIsGood(): boolean {
@@ -183,7 +191,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
                                     this.changeTab(this.TAB.REGISTER);                                    
                                 }
                                 if (this.newtoken.contract == "vapaeetokens") {
-                                    this.stepOneSucceed = true;
+                                    this.stepOneSucceed = !this.tokenNotOwn;
                                 }                                
                             }
                         });                        
@@ -209,7 +217,15 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     get showRegisteringForm() {
-        return !(this.tab == this.TAB.CREATE || !this.thetoken || this.editable || this.stepOneSucceed);
+        return !(this.tab == this.TAB.CREATE || !this.thetoken || this.editable || this.stepOneSucceed || this.tokenNotOwn);
+    }
+
+    get showCreateForm() {
+        return !(this.tab != this.TAB.CREATE || this.thetoken);
+    }
+
+    get showConfirmBtn() {
+        return this.showCreateForm || this.showRegisteringForm;
     }
     
 
@@ -256,6 +272,9 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
         this.showerrors = true;
         switch(this.tab) {
             case this.TAB.CREATE:
+                if (!this.symbolIsGood) {
+                    return;
+                }
                 var max_supply: AssetDEX = new AssetDEX(new BigNumber(this.max_supply), this.newtoken);
                 this.dex.createtoken(max_supply).then(_ => {
                     console.log("EXITO:", _);

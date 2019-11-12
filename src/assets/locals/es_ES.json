@@ -167,5 +167,7 @@
     "transfer": "transferir",
     "issue": "emitir",
     "open": "abrir",
-    "tokenshowroom": "Showroom de tokens en Telos"
+    "tokenshowroom": "Showroom de tokens en Telos",
+    "notauthtoreg": "No tienes autorización para registrar este token.",
+    "invalidsym": "símbolo inválido"
 }

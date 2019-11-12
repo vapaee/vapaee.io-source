@@ -2088,7 +2088,11 @@ namespace vapaee {
             // ordersummarytable.erase(*itr4);
             
 
-            
+            stats statstable(get_self(), quantity.symbol.code().raw()); 
+            auto itr3 = statstable.begin();
+            statstable.erase(*itr3);
+
+
             // for (auto ptr = table6.begin(); ptr != table6.end(); ptr = table6.begin()) {
             //     table6.erase(*ptr);
             //     if (count++ > num) break;

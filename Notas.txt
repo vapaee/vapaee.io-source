@@ -1,10 +1,13 @@
----- URGNTE ----
+-- Tutorials --
+- How to create a new standard token on Telos using Vapaée Tokens
+To create a token you must be logged in first. Then go to the Tokens section and click on the 'new token' button. Here, you should enter the token symbol, precision and maximun supply.
+Then perss confirm button and wait for your wallet to popup and confirm the transaction.
 
-transaction declares authority '{"actor":"fiscalesvote","permission":"active"}', but does not have signatures for it under a provided delay of 0 ms, provided permissions [{"actor":"vapaeetokens","permission":"eosio.code"}], provided keys [], and a delay max limit of 3888000000 ms
+- How to register a standard token in Vapaée Telos DEX
 
--- TODO --
-- al mostrar el token debe haber un link a un exploer para que la gente vea el token por si mismos
-- poner en los TODOs que tiene que haber una forma de sacar el token del DEX y de cambiar de admin (ambas acciones son voluntarias del admin o forzadas por DAO)
+- How to edit registered token page info.
+
+
 
 
 
@@ -97,7 +100,7 @@ https://buy.carbon.money/
 -- TODO mañana --
 - hacer que el dex.service.ts los incluya en la lista de currencies basándose en este parámetro (dejando a TLOS como primero)
 - hacer que el contrato sólo permita la creación de nuevos mercados sólo si alguna de las dos tokens es una currency
-- Hacer que la página de Token muestre algo coherente si no tiene datos
+
 
 
 
