@@ -16,6 +16,7 @@ import { Feedback } from '@vapaee/feedback';
 export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
 
     public stepOneSucceed: boolean;
+    public askIfWannaRegister: boolean;
     public feed: Feedback;
     newtoken: ETokenDEX;
     thetoken: TokenDEX;
@@ -37,6 +38,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
     ) {
         this.feed = new Feedback();
         this.stepOneSucceed = false;
+        this.askIfWannaRegister = false;
     }
 
     get form_token(): TokenDEX {
@@ -192,7 +194,11 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
                                 }
                                 if (this.newtoken.contract == "vapaeetokens") {
                                     this.stepOneSucceed = !this.tokenNotOwn;
-                                }                                
+                                } else {
+                                    if (!this.tokenNotOwn) {
+                                        this.askIfWannaRegister = true;
+                                    }                                    
+                                }
                             }
                         });                        
                     }
@@ -217,7 +223,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     get showRegisteringForm() {
-        return !(this.tab == this.TAB.CREATE || !this.thetoken || this.editable || this.stepOneSucceed || this.tokenNotOwn);
+        return !(this.tab == this.TAB.CREATE || !this.thetoken || this.editable || this.stepOneSucceed || this.tokenNotOwn || this.askIfWannaRegister);
     }
 
     get showCreateForm() {

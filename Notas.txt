@@ -1,12 +1,12 @@
 -- Tutorials --
-- How to create a new standard token on Telos using Vapaée Tokens
-To create a token you must be logged in first. Then go to the Tokens section and click on the 'new token' button. Here, you should enter the token symbol, precision and maximun supply.
-Then perss confirm button and wait for your wallet to popup and confirm the transaction.
+- How to create a new standard token on Telos using Vapaée Tokens.
+To create a token you must be logged in first. Then go to the Tokens section and click on the 'new token' button. Here, you should enter the token symbol, precision, and maximum supply.
+Then press 'confirm' button and wait for your wallet to popup and confirm the transaction. If it succeeds. you're done! You have created a new token on 'vapaee tokens' account, ready to issue some units and register it in the Vapaée Telos DEX.
 
 - How to register a standard token in Vapaée Telos DEX
+To register a standard token you must be logged in first. Then go to the Tokens section and click on the 'new token' button. Here, you have to change to registration form. Then, enter the symbol and the contract account name of the token you want to register. If the token exist, it will automaticaly fetch the token information and 
 
 - How to edit registered token page info.
-
 
 
 

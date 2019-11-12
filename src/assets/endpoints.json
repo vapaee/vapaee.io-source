@@ -60,11 +60,6 @@
             "protocol":"https",
             "host":"testnet.telos.caleos.io",
             "port":443
-        },
-        {
-            "protocol":"https",
-            "host":"api.telosmadrid.io",
-            "port":443
         }]
     },
     "jungle-testnet": {

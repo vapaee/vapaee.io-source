@@ -159,18 +159,21 @@
                 </div>
 
                 <!-- Token just created syccessfully. Wanna register in DEX? -->
-                <div [hidden]="!stepOneSucceed">
+                <div [hidden]="!stepOneSucceed && !askIfWannaRegister">
                     <div class="pull-right">
                         <a class="btn btn-lg btn-success"
-                            (click)="stepOneSucceed=false"
+                            (click)="stepOneSucceed=false; askIfWannaRegister=false"
                         >
                             <span>
                                 <i class="material-icons" [hidden]="loading">edit</i> {{local.string.registertkn|titlecase}}
                             </span>
                         </a>
                     </div>
-                    <span class="text-md">
+                    <span class="text-md" [hidden]="!stepOneSucceed">
                         <span>{{local.string.tknsucceed}} <i style="vertical-align: -6px;" class="text-success material-icons" [hidden]="loading">done</i></span><br>
+                        <span>{{local.string.wannaregtkn}}</span>
+                    </span>                   
+                    <span class="text-md" [hidden]="!askIfWannaRegister">
                         <span>{{local.string.wannaregtkn}}</span>
                     </span>                   
                 </div>
