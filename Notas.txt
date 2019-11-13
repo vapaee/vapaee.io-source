@@ -17,7 +17,10 @@ Then click on confirm button and wait for your wallet to popup and confirm the t
 
 - How to edit registered token page info.
 Once you have registered your token in the exchange, you can edit the data of the token page or even add more data.
-To do that first, make sure you are logged with the same account you used to register the token. Then, go to the token's page and press the edit token info button.
+To do that first, make sure you are logged with the same account you used to register the token. Then, go tokens page and search for your token. Notice that the info button is replaced with green button that sais edit. Click on it and you'll go the your token's page, in edit mode.
+
+Here you can adjust any information you have entered previously. But you can also register more links or texts using this tool.
+
 
 
 

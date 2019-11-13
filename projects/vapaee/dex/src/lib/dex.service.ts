@@ -111,7 +111,10 @@ export class VapaeeDEX {
         this.updateLogState();
         this.updateTokens().then(data => {
             this.zero_telos = new AssetDEX("0.0000 TLOS", this);
-            console.log("VapaeeDEX.setTokensLoaded() ****");
+            console.log("VapaeeDEX.setTokensLoaded()");
+            for (let i in this.tokens) {
+                console.log(this.tokens[i].contract, " - ", this.tokens[i].symbol,",",this.tokens[i].precision);
+            }
             this.setTokensLoaded();
             this.getOrderSummary();
             this.getAllTablesSumaries();
@@ -1699,7 +1702,7 @@ export class VapaeeDEX {
                 console.assert(!!this._markets[i].commodity, "ERROR: market has commodity in null");
                 console.assert(!!this._markets[i].currency, "ERROR: market has currency in null");
                 if (!this._markets[i].commodity || !this._markets[i].currency) {
-                    console.error("ERROR: bad formed market", this._markets[i]);
+                    console.error("ERROR: bad formed market", i, this._markets[i]);
                     continue;
                 }
                 let p = this.getMarketSummary(this._markets[i].commodity, this._markets[i].currency, true);
@@ -1799,6 +1802,9 @@ export class VapaeeDEX {
         console.assert(scope.split(".").length == 2, "ERROR: invalid scope: '"+ scope +"'");
         let currency_sym = scope.split(".")[1].toUpperCase();
         let currency = this.getTokenNow(currency_sym);
+        if (!currency) {
+            console.log("auxGetCurrencyToken()", scope, currency_sym, "currency null");
+        } 
         return currency;
     }
 
@@ -1807,6 +1813,9 @@ export class VapaeeDEX {
         console.assert(scope.split(".").length == 2, "ERROR: invalid scope: '"+ scope +"'");
         let commodity_sym = scope.split(".")[0].toUpperCase();
         let commodity = this.getTokenNow(commodity_sym);
+        if (!commodity) {
+            console.log("auxGetcommodityToken()", scope, commodity_sym, "commodity null");
+        } 
         return commodity;        
     }
 

@@ -137,7 +137,13 @@ vpe-panel-markets .active-on-hover:hover, vpe-panel-orders .active-on-hover:hove
 /* dropdown */
 
 .dropdown-menu {
+    background-color: #77a1b3;
+    box-shadow: 10px 10px 10px 0 rgba(0, 0, 0, 0.315);
+}
+
+.navbar .dropdown-menu {
     background-color: #e8f8ff;
+    box-shadow:10px 10px 10px 0 transparent;
 }
 
 .dropdown-menu .dropdown-item {
@@ -150,6 +156,7 @@ vpe-panel-markets .active-on-hover:hover, vpe-panel-orders .active-on-hover:hove
     color: white;
     background-color: #4d8a9a;
 }
+
 
 .calculated-in-currency {
     color: #0fa6cc !important;

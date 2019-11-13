@@ -58,3 +58,22 @@ div.title.vpe-background-panel-title {
     background: none;
     background-color: transparent  !important;
 }
+
+
+/* dropdown */
+
+.dropdown-menu {
+    background-color: #e8f8ff;
+    box-shadow: 10px 10px 10px 0 rgba(0, 0, 0, 0.315);
+}
+
+.dropdown-menu .dropdown-item {
+    color: black;
+}
+.dropdown-menu .dropdown-item:hover {
+    color: white;
+}
+.dropdown-menu .dropdown-item.active {
+    color: white;
+    background-color: #4d8a9a;
+}
