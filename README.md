@@ -45,8 +45,13 @@ cd script
       - [ ] taker fees: apply percent to maker money and give to the account of the UI taker is using
       - [ ] set token as currency: allow people to create markets with this token as currency
       - [ ] history pruning: to release RAM people can decide to prune the oldest history entries
-    - [ ] aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-  - [ ] allow token admin to change admin in a separated action
+      
+  - [ ] create a footer
+    - [ ] Sections
+      - [ ] DAO
+      - [ ] Tutorials
+      - [ ] Register UI
+  - [x] allow token admin to change admin in a separated action
   - [ ] allow UI to filter tokens easily with a config json file
   - [ ] BP Multisig 
   - [ ] more skins    
