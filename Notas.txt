@@ -1,80 +1,3 @@
--- Tutorials --
-https://www.naturalreaders.com/online/
-
-------  How to create a new standard token on Telos using Vapaé Tokens. ------
-To create a new standard token on Telos using Vapaé Tokens, first, make sure you are logged using your Scatter or SQRL wallet. Then go to the Tokens section and click on the new token button. Here, you should enter the token symbol, precision, and maximum supply.
-Then click on confirm button and wait for your wallet to popup and confirm the transaction. If it succeeds, you're done!
-You have created a new token on Vapaé tokens account, ready to issue some units and register it in the Vapaé Telos DEX.
-
-------  How to register a standard token in Vapaé Telos DEX ------
-To register a standard token in Vapaé Telos DEX, first, make sure you are logged using your Scatter or SQRL wallet. Then go to the Tokens section and click on the new token button. Here, you have to change to register an existing token. Then, enter the symbol and the contract account name of the token you want to register. If the token exists, it will automatically fetch the token information and ask if you want to register the token. If you do, press the button and a registration form will appear.
-
-Here you have to enter the name of the token and a brief description in plain text. Optionally you can use markdown syntax if you want to enrich this field.
-
-Then you can enter the URL of the website and the three images that will be shown next to your token but none of them are mandatory. However, we suggest that you enter at least the first one, so your token always has an icon image associated.
-
-Finally, you can choose between allowing people to trade your token or just listing it to be shown in the token showroom section.
-
-Then click on the confirm button and wait for your wallet to popup and confirm the transaction. If it succeeds, you're done!
-
-You have registered your token in the Vapaé Telos DEX.
-
-------  How to edit registered token page info. ------
-Once you have registered your token in the Vapaé Telos DEX, you can edit the data of the token page or even add more data.
-
-To do this, first, make sure you are logged in with the same account you used to register the token. Then, go to the Tokens section and look for it. You will notice that the info button was replaced by a green button that says edit. Click it, you will be redirected to the page your token in edit mode.
-
-Once here, you can edit all the data you have previously entered. But if you want you can add more data, images, tweets or videos.
-
-Pressing the New Data Entry button will create a new entry that you can edit. Select the type of data you want to enter, then enter the title and the link. Once you're done, press the save button and wait for your wallet popup to appear to confirm the transaction.
-
-Additionally, if you want to change the administrator of this token in the exchange, you can do it here. Press the change button, enter the new account and then confirm.
-
-Finally, if you need the exchange to send you notifications about any event that occurs with your token within the system, you can add the event and define the receiver account of it. But this part is for another video.
-
-
-
-https://www.youtube.com/watch?v=YSVJgKsSobA
-
-
-
-
-
--- Football Trades --
-- álbumes
-  - club-X
-  - Oficiales
-  - Amateur
-
-- sobres:
-  - club-X: se venden únicamente por fiat y están sujetas al contrato contra el club.
-  - Oficiales: se vende únicamente por fiat y están sujetas al contrato contra los clubes.
-  - Amateur: se venden únicamente por tokens.
-
-- Contratoe legales -
-  - contratos legales con los clubes y sus jugadores donde se acuerda la disposición de los derechos de imagen y cómo se reparte el dinero recaudado por concepto de venta de sobrecitos digitales cerrados a cambio de dinero fiat.
-  - contrato inteligente con cualquier jugador que quiera por su cuenta crear sus cartas y participar del álbum amateur. Sus cartas serán agregadas a los sobres de cartas amateur.
-
-- indecisiones:
-  - token: GOAL ??
-  - icono: zzz...
-  - Football Trades logo: zzz...
-  - cuanto de retorno a los inversores? 500%?
-  - porcentaje del vendedor? 15%?
-  
-
-- contratos legales: contratos múltiples que sean nosotros con un club y todos sus jugadores, donde se acuerda que todos los jugadores permiten que se usanusen sus imágenes para crear cartas del club, el cual estará encargado de venderlas al público a un precio fijo por sobre. Éste trae siempre trae 5 cartas al azar pero siempre del club. El reparto de dinero se hace siempre sobre un porcentaje de las entradas de la empresa porconcepto de venta de sobres del club. Lo recaudado por carta es el costo del sobre dividido 5.
-- Las entradas de dinero por concepto de ventas de sobres de un club se dividirán en:
-  - 30% nosotros (del cual 1/3 va a los inversores hasta un máximo)
-  - 15% vendedor del sobre (que puede ser el propio club)
-  - 40% el club a la cual pertenece el sobre.
-  - 15% a los jugadores.
-    - 1/2 promedio a todos los jugadores lo mismo
-    - 1/2 ponderado según popularidad de su carta en comparación con el resto del álbum.
-
-
-
-
 Verificar Tlos tokens que tiene https://telos.bloks.io/account/teloscharity
 
 Icons:
@@ -84,12 +7,6 @@ https://iconmonstr.com/
 hay que verificar las dependencias de vapaee/dex ?????
 npm WARN @vapaee/dex@2.2.3 requires a peer of @angular/common@^6.0.0-rc.0 || ^6.0.0 but none is installed. You must install peer dependencies yourself.
 npm WARN @vapaee/dex@2.2.3 requires a peer of @angular/core@^6.0.0-rc.0 || ^6.0.0 but none is installed. You must install peer dependencies yourself.
-
-
-
-{"code":500,"message":"Internal Service Error","error":{"code":3090003,"name":"unsatisfied_authorization","what":"Provided keys, permissions, and delays do not satisfy declared authorizations","details":[{"message":"transaction declares authority '${auth}', but does not have signatures for it under a provided delay of 0 ms, provided permissions ${provided_permissions}, provided keys ${provided_keys}, and a delay max limit of 3888000000 ms","file":"authorization_manager.cpp","line_number":524,"method":"check_authorization"}]}}
-
-{"code":500,"message":"Internal Service Error","error":{"code":3050003,"name":"eosio_assert_message_exception","what":"eosio_assert_message assertion failure","details":[{"message":"assertion failure with message: ERROR: attempt to allocate RAM without authorization for deposits table","file":"wasm_interface.cpp","line_number":964,"method":"eosio_assert"}]}}
 
 
 
@@ -138,6 +55,9 @@ telosmain push action vapaeetokens settokendata '["YANG", 0, "add", "twitter", "
 
 
 
+
+-- text to speach --
+https://www.naturalreaders.com/online/
 
 
 
