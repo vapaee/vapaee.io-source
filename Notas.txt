@@ -11,7 +11,7 @@ To register a standard token in Vapaé Telos DEX, first, make sure you are logge
 
 Here you have to enter the name of the token and a brief description in plain text. Optionally you can use markdown syntax if you want to enrich this field.
 
-Then you can enter the URL of the three images that will be shown next to your token but none of them are mandatory. However, we suggest that you enter at least the first one, so your token always has an icon image associated.
+Then you can enter the URL of the website and the three images that will be shown next to your token but none of them are mandatory. However, we suggest that you enter at least the first one, so your token always has an icon image associated.
 
 Finally, you can choose between allowing people to trade your token or just listing it to be shown in the token showroom section.
 
@@ -34,6 +34,7 @@ Finally, if you need the exchange to send you notifications about any event that
 
 
 
+https://www.youtube.com/watch?v=YSVJgKsSobA
 
 
 

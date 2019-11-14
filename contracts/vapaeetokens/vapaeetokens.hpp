@@ -5,11 +5,11 @@ using namespace eosio;
 using namespace std;
 
 using namespace eosio;
-namespace vapaee {
-    namespace bgbox {
-#include <vapaee/bgbox/tables/apps.hpp>
-    };
-};
+// namespace vapaee {
+//     namespace bgbox {
+// #include <vapaee/bgbox/tables/apps.hpp>
+//     };
+// };
 
 #include "vapaeetokens.errors.hpp"
 #include "vapaeetokens.dispatcher.hpp"

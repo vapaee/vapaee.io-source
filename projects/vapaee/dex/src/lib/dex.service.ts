@@ -115,6 +115,16 @@ export class VapaeeDEX {
             for (let i in this.tokens) {
                 console.log(this.tokens[i].contract, " - ", this.tokens[i].symbol,",",this.tokens[i].precision);
             }
+
+            // setTimeout(_ => {
+            //     this.meterToken("1000000000.0000","ROBO", "/assets/logos/proxibots-lg.png","https://proxibots.io");
+            //     this.meterToken("10000000.0000","TLOSD", "/assets/logos/carbon.svg","https://www.carbon.money");
+            //     this.meterToken("461168601842738.0000","ACORN", "/assets/logos/acorn-lg.png","http://acorns.fun");
+            //     this.meterToken("1300000000.0000","EDNA", "/assets/logos/edna-lg.png","https://github.com/EDNA-LIFE");
+            //     this.meterToken("2100000000.0000","HEART", "/assets/logos/beautitude-lg.png","https://steemit.com/@steemchurch");
+            //     this.resortTokens();
+            // }, 4000);
+
             this.setTokensLoaded();
             this.getOrderSummary();
             this.getAllTablesSumaries();
@@ -153,6 +163,32 @@ export class VapaeeDEX {
             this.fetchTokensEvents();
             this.fetchTokensData();
         });
+    }
+
+    private meterToken(num:string, symbol:string, icon: string, website: string) {
+        console.log("VapaeeDEX.meterToken() ", symbol);
+        let token = new TokenDEX({
+            symbol,
+            precision:4,
+            contract:"eosio.token"
+        });
+        token.logo = icon;
+        token.logolg = icon;
+        token.website = website;
+        token.tradeable = true;
+        token.stat = {
+            issuer: "eosio",
+            max_supply: num + " " + symbol,
+            supply: "1000.0000 " + symbol
+        }
+        token.summary = {
+            price: new AssetDEX(0, this.telos),
+            price_24h_ago: new AssetDEX(0, this.telos),
+            volume: new AssetDEX(0, this.telos),
+            percent: 0,
+            percent_str: "0%",
+        }
+        this.tokens.push(token);
     }
 
     // getters -------------------------------------------------------------

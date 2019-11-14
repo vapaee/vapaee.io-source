@@ -1,5 +1,5 @@
 #include <vapaee/bgbox/tables/_aux.hpp>
-
+        /*
         // TABLE account (balances) -----------
             // scope: user
             // row: dice cuantas unidades tiene el usuario de determinado item identificado por un slug
@@ -17,3 +17,4 @@
                 indexed_by<"slug"_n, const_mem_fun<account, uint128_t, &account::slug_key>>
             > accounts;
         // ------------------------------------
+        */

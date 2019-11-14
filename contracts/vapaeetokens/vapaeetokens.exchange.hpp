@@ -5,6 +5,9 @@
 #include <stdlib.h>
 
 
+#include <vapaee/token/tables/accounts.hpp>
+#include <vapaee/token/tables/ordersummary.hpp>
+
 using namespace eosio;
 namespace vapaee {
     namespace token {
@@ -1199,6 +1202,13 @@ namespace vapaee {
 
             require_auth(owner);
 
+            stats statstable( contract, sym_code.raw() );
+            auto token_itr = statstable.find( sym_code.raw() );
+            eosio_assert( token_itr != statstable.end(), "token with symbol not exists" );
+            
+            eosio_assert(has_auth(contract) || has_auth(token_itr->issuer), "only token contract or issuer can add this token to DEX" );
+
+
             tokens tokenstable(get_self(), get_self().value);
             auto itr = tokenstable.find(sym_code.raw());
             eosio_assert(itr == tokenstable.end(), "Token already registered");
@@ -2063,34 +2073,35 @@ namespace vapaee {
             // }
 
             // Borrar token
-            // tokens tokenstable(get_self(), get_self().value);
-            // auto itr1 = tokenstable.find(symbol_code("ROG").raw()); 
-            // tokenstable.erase(*itr1);
-            // // --
-            // accounts accountstable(get_self(), name("viterbo4test").value);
-            // auto itr2 = accountstable.begin();
-            // accountstable.erase(*itr2);
+            tokens tokenstable(get_self(), get_self().value);
+            auto itr1 = tokenstable.find(symbol_code("CNT").raw()); 
+            if (itr1 != tokenstable.end()) tokenstable.erase(*itr1);
+
             // --
-            // accounts accountstable(get_self(), name("vapaeetokens").value);
-            // auto itr2 = accountstable.begin();
-            // accountstable.erase(*itr2);
-            // // --
+            accounts accountstable2(get_self(), name("viterbo4test").value);
+            auto itr2 = accountstable2.begin();
+            if (itr2 != accountstable2.end()) accountstable2.erase(*itr2);
+            // --
+            accounts accountstabl3(get_self(), name("vapaeetokens").value);
+            auto itr3 = accountstabl3.begin();
+            if (itr3 != accountstabl3.end()) accountstabl3.erase(*itr3);
+            // --
             // deposits depositstable(get_self(), name("viterbo4test").value);
-            // auto itr5 = depositstable.find(symbol_code("ROG").raw()); 
-            // depositstable.erase(*itr5);
-            // // --
-            // stats statstable(get_self(), symbol_code("ROG").raw()); 
+            // auto itr4 = depositstable.find(symbol_code("CNT").raw()); 
+            // depositstable.erase(*itr4);
+            // --
+            stats statstable(get_self(), symbol_code("CNT").raw()); 
+            auto itr5 = statstable.begin();
+            if (itr5 != statstable.end()) statstable.erase(*itr5);
+            // --
+            ordersummary ordersummarytable(get_self(), get_self().value);
+            auto itr6 = ordersummarytable.find(name("cnt.tlos").value); 
+            if (itr6 != ordersummarytable.end()) ordersummarytable.erase(*itr6);
+            
+            // Borrar de a un token
+            // stats statstable(get_self(), quantity.symbol.code().raw()); 
             // auto itr3 = statstable.begin();
             // statstable.erase(*itr3);
-            // --
-            // ordersummary ordersummarytable(get_self(), get_self().value);
-            // auto itr4 = ordersummarytable.find(name("rog.tlos").value); 
-            // ordersummarytable.erase(*itr4);
-            
-
-            stats statstable(get_self(), quantity.symbol.code().raw()); 
-            auto itr3 = statstable.begin();
-            statstable.erase(*itr3);
 
 
             // for (auto ptr = table6.begin(); ptr != table6.end(); ptr = table6.begin()) {
