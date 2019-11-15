@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { VapaeeDEX } from '@vapaee/dex';
+import { VapaeeDEX } from 'projects/vapaee/dex/src';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscriber } from 'rxjs';
 import { SmartContract, VapaeeScatter } from '@vapaee/scatter';

@@ -20,7 +20,7 @@ import { DropdownService } from './services/dropdown.service';
 
 import { VapaeeComponentsModule } from './components/vpe-components.module';
 import { VapaeeScatterModule } from '@vapaee/scatter';
-import { VapaeeDexModule } from '@vapaee/dex';
+import { VapaeeDexModule } from 'projects/vapaee/dex/src';
 import { VapaeeRexModule } from '@vapaee/rex';
 
 

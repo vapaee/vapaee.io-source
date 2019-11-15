@@ -2,7 +2,7 @@ import { Component, HostListener, HostBinding } from '@angular/core';
 import { AppService } from './services/common/app.service';
 import { VpeComponentsService, PriceMap } from './components/vpe-components.service';
 import { CoingeckoService } from './services/coingecko.service';
-import { VapaeeDEX, TokenDEX, Market } from '@vapaee/dex';
+import { VapaeeDEX, TokenDEX, Market } from 'projects/vapaee/dex/src';
 import { LocalStringsService } from './services/common/common.services';
 import { DropdownService } from './services/dropdown.service';
 import { VapaeeStyle } from '@vapaee/style';

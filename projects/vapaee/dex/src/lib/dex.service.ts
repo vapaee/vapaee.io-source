@@ -128,6 +128,10 @@ export class VapaeeDEX {
             this.setTokensLoaded();
             this.getOrderSummary();
             this.getAllTablesSumaries();
+
+            setInterval(_ => {
+                this.resortTokens();
+            }, 5000);
         });
 
         // this.waitTokensLoaded.then(_ => {
@@ -2480,6 +2484,7 @@ export class VapaeeDEX {
                 data.tokens[i].scope = data.tokens[i].symbol.toLowerCase() + ".tlos";
             }
 
+            console.log("Vapaee.fetchTokens() -->", data.tokens);
             return data;
         });
     }

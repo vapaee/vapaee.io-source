@@ -766,13 +766,16 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::aux_register_event() ...\n");
         }
 
-        void aux_generate_order(name owner, name type, asset total, asset price, name ram_payer) {
+        void aux_generate_order(name owner, name type, asset total, asset price, name ram_payer
+// new_version        , uint64_t ui
+            ) {
             PRINT("vapaee::token::exchange::aux_generate_order()\n");
             PRINT(" owner: ", owner.to_string(), "\n");
             PRINT(" type: ", type.to_string(), "\n");
             PRINT(" total: ", total.to_string(), "\n");
             PRINT(" price: ", price.to_string(), "\n");
-
+// new_version            PRINT(" ui: ", std::to_string((long unsigned) ui), "\n");
+            
             require_auth(owner);         
 
             // create scope for the orders table
@@ -797,9 +800,13 @@ namespace vapaee {
             //     price, total, inverse, payment).c_str()); 
 
             if (type == name("sell")) {
-                aux_generate_sell_order(false, owner, scope_sell, scope_buy, total, payment, price, inverse, ram_payer);
+                aux_generate_sell_order(false, owner, scope_sell, scope_buy, total, payment, price, inverse, ram_payer
+// new_version                , ui
+                );
             } else if (type == name("buy")) {
-                aux_generate_sell_order(true, owner, scope_buy, scope_sell, payment, total, inverse, price, ram_payer);
+                aux_generate_sell_order(true, owner, scope_buy, scope_sell, payment, total, inverse, price, ram_payer
+// new_version                , ui
+                );
             } else {
                 eosio_assert(false, (string("type must be 'sell' or 'buy' in lower case, got: ") + type.to_string()).c_str());
             }
@@ -807,7 +814,9 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::aux_generate_order() ...\n");
         }
 
-        void aux_generate_sell_order(bool inverted, name owner, name scope_buy, name scope_sell, asset total, asset payment, asset price, asset inverse, name ram_payer) {
+        void aux_generate_sell_order(bool inverted, name owner, name scope_buy, name scope_sell, asset total, asset payment, asset price, asset inverse, name ram_payer
+// new_version        , uint64_t ui
+        ) {
             PRINT("vapaee::token::exchange::aux_generate_sell_order()\n");
             PRINT(" inverted: ", std::to_string(inverted), "\n");
             PRINT(" owner: ", owner.to_string(), "\n");
@@ -818,6 +827,8 @@ namespace vapaee {
             PRINT(" price: ", price.to_string(), "\n");        // price: 2.50000000 CNT
             PRINT(" inverse: ", inverse.to_string(), "\n");    // inverse: 0.40000000 TLOS
             PRINT(" ram_payer: ", ram_payer.to_string(), "\n");
+// new_version            PRINT(" ui: ", std::to_string((long unsigned) ui), "\n");
+
             double buyer_fee_percentage = 0.001;
             double seller_fee_percentage = 0.002;
             
@@ -845,7 +856,8 @@ namespace vapaee {
             name seller = owner;
             // asset inverse = vapaee::utils::inverse(price, total.symbol);
             sell_order_table order;
-
+            name buy_fees_receiver;
+            name sell_fees_receiver;
           
 
             
@@ -1084,6 +1096,7 @@ namespace vapaee {
                     a.inverse = inverse;
                     a.total = payment;
                     a.selling = remaining;
+                    // a.ui = ui;
                 });
 
                 // register new order in the orders table
@@ -1148,15 +1161,20 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::action_convert_deposits_to_earnings() ...\n");
         }
 
-        void action_order(name owner, name type, const asset & total, const asset & price) {
+        void action_order(name owner, name type, const asset & total, const asset & price
+// new_version        , uint64_t ui
+            ) {
             PRINT("vapaee::token::exchange::action_order()\n");
             PRINT(" owner: ", owner.to_string(), "\n");
             PRINT(" type: ", type.to_string(), "\n");      
             PRINT(" total: ", total.to_string(), "\n");      
             PRINT(" price: ", price.to_string(), "\n");      
+// new_version            PRINT(" ui: ", std::to_string((long unsigned) ui), "\n");
             require_auth(owner);
 
-            aux_generate_order(owner, type, total, price, owner);
+            aux_generate_order(owner, type, total, price, owner
+// new_version            , ui
+            );
 
             PRINT("vapaee::token::exchange::action_order() ...\n");      
         }

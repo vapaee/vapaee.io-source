@@ -3,7 +3,7 @@ import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService, AnalyticsService } from 'src/app/services/common/common.services';
 
 import { VapaeeScatter, NetworkMap, SmartContract } from '@vapaee/scatter';
-import { VapaeeDEX } from '@vapaee/dex';
+import { VapaeeDEX } from 'projects/vapaee/dex/src';
 import { VapaeeStyle } from '@vapaee/style';
 
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';

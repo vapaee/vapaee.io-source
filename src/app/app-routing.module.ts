@@ -12,7 +12,7 @@ import { MarketsPage } from './pages/markets/markets.page';
 import { TokenPage } from './pages/token/token.page';
 import { TokenEditPage } from './pages/tokenedit/tokenedit.page';
 
-//*
+/*
 const routes: Routes = [
   { path: '',                            data: { state: "root" }, redirectTo: '/exchange/home', pathMatch: 'full' },
   { path: 'exchange',                    data: { state: "root" }, component: RootPage,

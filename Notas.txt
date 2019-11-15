@@ -1,7 +1,91 @@
-Verificar Tlos tokens que tiene https://telos.bloks.io/account/teloscharity
 
 Icons:
 https://iconmonstr.com/
+
+
+Tablas que tienene mal el scope:
+- history
+- tablesummary
+- sellorders
+- blockhistory
+
+Tablas que tienen mal algún campo:
+- ordersummary.table (name) -> (uint64_t) market
+- sellorders (nuevo campo) -> (uint64_t) ui 
+- tokens.owner (name) -> (name) admin
+- userorders.table (name) -> (string) table
+- userorders.market (name) -> (uint64_t) market
+
+Tablas afectadas (total 7 tablas):
++ history
++ tablesummary
++ sellorders
++ blockhistory
++ ordersummary
++ tokens
++ userorders
+
+-- Estrategia --
++ poner en mantenimiento todo el sistema
++ crear tabla markets
+  + id
+  + name       // este es el antiguo scope pero truncado. No se puede asumir que es único
+  + comodity
+  + currency
++ crear tabla bannedtokens  
+  + id
+  + symbol
+  + contract
++ creat tabla tokengroup
+  + id
+  + title: string
+  + brief: string
+  + website: string
+  + banner: string
+  + currency: symbol_code
++ crear un duplicado de las 7 tablas de forma que estén arregladas
+- hacer un análisis offchain de el contenido de las tablas afectadas:
+  - enumerar los scopes por cada tabla
+  - almacenar una copia de los datos por seguridad (por si la cago)
+- reescribir el código usando las nuevas tablas
+  - recorrer el código y donde se use una tabla vieja afectada, reemplazarla por la nueva y adaptar el código si es necesario
+  - action nueva: alta de UI
+  - action nueva: update de UI
+  - reescribir aux_generate_sell_order:
+    - incluir el UI como destinatario
+    - crear las dos entradas en la tabla markets (el canónico y el inverso)
+- escribir en el hotfix una rutina que borre los datos de las tablas afectadas y los pase a las nuevas.
+  - debe insertar en la tabla de markets todos los mercados y sus reversos
+  - en la nueva tabla tokengroup debería haber un group inicial con id 0 que sea global
+--- > DEPLOY & HOTFIX < ---
+- reescribir las tablas viejas copiando la estructura de las nuevas
+- escribir en el hotfix una rutina que borre los datos de las tablas nuevas y los pase a las viejas arregladas.
+- renombrar en el código, toda referencia a las tablas nuevas y pasarlo a las viejas arregladas
+--- > DEPLOY & HOTFIX < ---
+
+
+
+
+-- TODO --
+- tener un archivo json que tenga la versión actual de la UI y pedirlo con un ?nochache=random para eitar el caché. Si no coincide con la versión del la UI, debería hacerse un refresh con un ?version=vX.X.X para que se recargue toda la UI
+- pie de página as a component. Así todas las páginas lo pueden incluir fácil
+- Secciones nuevas:
+  - regitrar UI: formulario simple donde ponés los datos de la UI
+    - Name: nombre de la UI.
+    - Brief: idem tokens
+    - imagenes: banner pequeño y uno grande. Screenshots ??
+    - link: website
+    - accountname: dirección a donde debería dirigirse las ganancias por concepto de fees en las órdenes
+  - Lista de UIs: tipo token showroom pero con UIs del DEX
+  - DAO: ...
+- Agregar un parámetro nuevo en la creación de una orden para saber que UI se está utilizando.
+  - cambiar la action order
+  - cambiar la tabla de sellorders para incluir ese dato
+  - creación de la tabla nueva de UIs (que se llena desde la sección "regitrar UI")
+
+
+
+
 
 
 hay que verificar las dependencias de vapaee/dex ?????
@@ -24,16 +108,6 @@ npm WARN @vapaee/dex@2.2.3 requires a peer of @angular/core@^6.0.0-rc.0 || ^6.0.
 
 
 
--- TODO ---
-- C++ Smart Contract
-  - podemos hacer el nuevo slug
-
-- FutbolTokens
-  - pasarle varias opciones a Agustín para decidir la estrategia monetaria
-  - hacer cartas y un álbum con Defensor
-
-- Cards & Tokens
-  - arreglar el prototipo para que encare el desplegar los videos bien
 
 
 

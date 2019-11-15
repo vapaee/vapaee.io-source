@@ -1,9 +1,9 @@
 import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
-import { VapaeeDEX } from '@vapaee/dex';
+import { VapaeeDEX } from 'projects/vapaee/dex/src';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 import { Feedback } from '@vapaee/feedback';
-import { OrderRow, Order, AssetDEX, TokenDEX } from '@vapaee/dex';
+import { OrderRow, Order, AssetDEX, TokenDEX } from 'projects/vapaee/dex/src';
 
 
 @Component({
