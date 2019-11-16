@@ -51,7 +51,7 @@ CONTRACT vapaeetokens : public eosio::contract {
         };        
 
         ACTION issue( name to, const asset& quantity, string memo ) {
-            MAINTENANCE();
+            // MAINTENANCE();
             PRINT("\nACTION vapaeetokens.issue()\n");
             vapaee::token::core c;
             c.action_issue(to, quantity, memo);
@@ -65,7 +65,7 @@ CONTRACT vapaeetokens : public eosio::contract {
         };
 
         ACTION transfer(name from, name to, asset quantity, string  memo ) {
-            MAINTENANCE();
+            // MAINTENANCE();
             PRINT("\nACTION vapaeetokens.transfer()\n");
             vapaee::token::core c;
             c.action_transfer(from, to, quantity, memo);
@@ -189,7 +189,7 @@ CONTRACT vapaeetokens : public eosio::contract {
         };
 
         HANDLER htransfer(name from, name to, asset quantity, string  memo ) {
-            MAINTENANCE();
+            // MAINTENANCE();
             PRINT("\nHANDLER vapaeetokens.htransfer()\n");
 
             // skip handling outcoming transfers from this contract to outside
@@ -211,6 +211,7 @@ CONTRACT vapaeetokens : public eosio::contract {
 
             if (order_str == string("deposit")) {
                 vapaee::token::exchange e(get_code());
+                MAINTENANCE();
                 e.handler_transfer(from, to, quantity, memo);                
             }
         }

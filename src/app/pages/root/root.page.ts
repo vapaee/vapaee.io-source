@@ -44,7 +44,7 @@ export class RootPage implements OnInit {
             this.scatter.setEndpoints(endpoints);
 
             var network = "telos-testnet";
-            network = "telos";
+            // network = "telos";
             // network = "local";
             if (window.location.hostname == "vapaee.io") {
                 network = "telos";

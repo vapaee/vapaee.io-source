@@ -26,6 +26,13 @@ namespace vapaee {
         inline name get_self() const { return _self; }
         inline name get_code() const { return _code; }
 
+
+        string create_error_symcode2(const char * text, const symbol_code & sym1, const symbol_code & sym2) {
+            string result = string(text) + " [" + sym1.to_string() + "], [" + sym2.to_string()+"]";
+            return result;
+        }
+
+
         string create_error_symbol1(const char * text, const symbol & sym1) {
             string result = string(text) + " [" + sym1.code().to_string() + "]";
             return result;
@@ -78,6 +85,9 @@ namespace vapaee {
             string b_sym_str = b.to_string();
             string scope_str = a_sym_str + "." + b_sym_str;
             scope_str = aux_to_lowercase(scope_str); 
+            if (scope_str.size() > 12) {
+                scope_str = scope_str.substr(0,12);
+            }
             name scope(scope_str);
             return scope;
         }
@@ -1674,10 +1684,111 @@ namespace vapaee {
             }
         }
 
+
+        uint64_t aux_get_market_id(const symbol_code& commodity, const symbol_code& currency) {
+            PRINT("vapaee::token::exchange::aux_get_market_id()\n");
+            uint64_t market = 0;
+            name scope = aux_get_scope_for_tokens(commodity, currency);
+            markets table(get_self(), get_self().value);
+            auto index = table.template get_index<name("name")>();
+            
+
+            for (auto itr = index.lower_bound(scope.value); itr != index.end(); itr++) {
+                PRINT("  -- itr->name: ", itr->name.to_string(), "\n");
+                if (itr->name == scope) {
+                    if (itr->name) {
+                        if (itr->comodity == commodity && itr->comodity == currency) {
+                            market = itr->id;
+                            break;
+                        }
+                    }
+                } else {
+                    eosio_assert(false,
+                        create_error_symcode2(ERROR_AGMI_1, commodity, currency).c_str());                    
+                }
+            }
+
+            PRINT("vapaee::token::exchange::aux_get_market_id()...\n");
+            return market;
+        }
+
         void action_hotfix(int num, name account, asset quantity) {
             PRINT("vapaee::token::exchange::action_poblate_user_orders_table()\n");
             require_auth(get_self());
-            int count = 0;
+            int count = 1;
+            uint64_t market = 0;
+            uint64_t market_inv = 0;
+            name scope;
+            name scope_inv;
+            
+            
+
+            // copy from old structure to newone
+            ordersummary o_summary(get_self(), get_self().value);
+            ordersum2 o_sum(get_self(), get_self().value);
+            for (auto ptr = o_summary.begin(); ptr != o_summary.end(); ptr++) {
+
+                market = aux_get_market_id(ptr->sell, ptr->pay);
+                market_inv = aux_get_market_id(ptr->pay, ptr->sell);
+                scope = aux_get_scope_for_tokens(ptr->sell, ptr->pay);
+                scope_inv = aux_get_scope_for_tokens(ptr->pay, ptr->sell);
+
+                
+                history h_table(get_self(), ptr->table.value);
+                history2 h2_table(get_self(), ptr->table.value);
+                for (auto ptr_h = h_table.begin(); ptr_h != h_table.end(); ptr_h++) {
+
+                    h2_table.emplace(get_self(), [&]( auto& a ) {
+                        a.id = ptr_h->id;
+                        a.date = ptr_h->date;
+                        a.buyer = ptr_h->buyer;
+                        a.seller = ptr_h->seller;
+                        a.price = ptr_h->price;
+                        a.inverse = ptr_h->inverse;
+                        a.amount = ptr_h->amount;
+                        a.payment = ptr_h->payment;
+                        a.buyfee = ptr_h->buyfee;
+                        a.sellfee = ptr_h->sellfee;
+                        a.isbuy = ptr_h->isbuy;
+                    });
+
+                    h_table.erase(*ptr_h);
+
+                    if (++count>num) return;
+
+                }
+
+                // new ordersummary
+                o_sum.emplace(get_self(), [&]( auto& a ) {
+                    a.market = market;
+                    a.demand.orders = ptr->demand.orders;
+                    a.supply.orders = ptr->supply.orders;
+                    a.demand.total = ptr->demand.total;
+                    a.supply.total = ptr->supply.total;
+                    a.supply.ascurrency = 0;
+                    a.demand.ascurrency = ptr->deals;
+                    a.sell = ptr->sell;
+                    a.pay = ptr->pay;
+                    a.deals = ptr->deals;
+                    a.blocks = ptr->blocks;
+                });
+
+                // borro el viejo
+                o_summary.erase(*ptr);
+
+                if (++count>num) return;
+            }
+
+
+
+            // modificar history
+            // history table2(get_self(), name("tlosdac.tlos").value);
+            // auto ptr2 = table2.find(8);
+            // table2.modify(*ptr2, same_payer, [&](auto & a){
+            //     a.sellfee.amount = 200000000;
+            //     a.amount.amount = 100000000000;
+            // });
+
 
 
             // cancelar ordenes de copmpra
@@ -2091,36 +2202,274 @@ namespace vapaee {
             // }
 
             // Borrar token
-            tokens tokenstable(get_self(), get_self().value);
-            auto itr1 = tokenstable.find(symbol_code("CNT").raw()); 
-            if (itr1 != tokenstable.end()) tokenstable.erase(*itr1);
+            // tokens tokenstable(get_self(), get_self().value);
+            // auto itr1 = tokenstable.find(symbol_code("CNT").raw()); 
+            // if (itr1 != tokenstable.end()) tokenstable.erase(*itr1);
 
-            // --
-            accounts accountstable2(get_self(), name("viterbo4test").value);
-            auto itr2 = accountstable2.begin();
-            if (itr2 != accountstable2.end()) accountstable2.erase(*itr2);
-            // --
-            accounts accountstabl3(get_self(), name("vapaeetokens").value);
-            auto itr3 = accountstabl3.begin();
-            if (itr3 != accountstabl3.end()) accountstabl3.erase(*itr3);
-            // --
+            // // --
+            // accounts accountstable2(get_self(), name("viterbo4test").value);
+            // auto itr2 = accountstable2.begin();
+            // if (itr2 != accountstable2.end()) accountstable2.erase(*itr2);
+            // // --
+            // accounts accountstabl3(get_self(), name("vapaeetokens").value);
+            // auto itr3 = accountstabl3.begin();
+            // if (itr3 != accountstabl3.end()) accountstabl3.erase(*itr3);
+            // // --
             // deposits depositstable(get_self(), name("viterbo4test").value);
             // auto itr4 = depositstable.find(symbol_code("CNT").raw()); 
             // depositstable.erase(*itr4);
-            // --
-            stats statstable(get_self(), symbol_code("CNT").raw()); 
-            auto itr5 = statstable.begin();
-            if (itr5 != statstable.end()) statstable.erase(*itr5);
-            // --
-            ordersummary ordersummarytable(get_self(), get_self().value);
-            auto itr6 = ordersummarytable.find(name("cnt.tlos").value); 
-            if (itr6 != ordersummarytable.end()) ordersummarytable.erase(*itr6);
+            // // --
+            // stats statstable(get_self(), symbol_code("CNT").raw()); 
+            // auto itr5 = statstable.begin();
+            // if (itr5 != statstable.end()) statstable.erase(*itr5);
+            // // --
+            // ordersummary ordersummarytable(get_self(), get_self().value);
+            // auto itr6 = ordersummarytable.find(name("cnt.tlos").value); 
+            // if (itr6 != ordersummarytable.end()) ordersummarytable.erase(*itr6);
             
             // Borrar de a un token
             // stats statstable(get_self(), quantity.symbol.code().raw()); 
             // auto itr3 = statstable.begin();
             // statstable.erase(*itr3);
 
+
+
+//             // poblando la tabla Markets
+//             markets markets_table(get_self(), get_self().value);
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("acorn.tlos");
+//                 a.comodity = symbol_code("ACORN");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.acorn");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("ACORN");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("acorn.tlosd");
+//                 a.comodity = symbol_code("ACORN");
+//                 a.currency = symbol_code("TLOSD");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlosd.acorn");
+//                 a.comodity = symbol_code("TLOSD");
+//                 a.currency = symbol_code("ACORN");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("cnt.tlos");
+//                 a.comodity = symbol_code("CNT");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.cnt");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("CNT");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("edna.tlos");
+//                 a.comodity = symbol_code("EDNA");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.edna");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("EDNA");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("ezar.tlos");
+//                 a.comodity = symbol_code("EZAR");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.ezar");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("EZAR");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("heart.tlos");
+//                 a.comodity = symbol_code("HEART");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.heart");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("HEART");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("lol.tlos");
+//                 a.comodity = symbol_code("LOL");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.lol");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("LOL");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("olive.tlos");
+//                 a.comodity = symbol_code("OLIVE");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.olive");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("OLIVE");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("people.tlos");
+//                 a.comodity = symbol_code("PEOPLE");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.people");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("PEOPLE");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("qbe.tlos");
+//                 a.comodity = symbol_code("QBE");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.qbe");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("QBE");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("qbe.tlosd");
+//                 a.comodity = symbol_code("QBE");
+//                 a.currency = symbol_code("TLOSD");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlosd.qbe");
+//                 a.comodity = symbol_code("TLOSD");
+//                 a.currency = symbol_code("QBE");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("robo.tlos");
+//                 a.comodity = symbol_code("ROBO");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.robo");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("ROBO");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("sqrl.tlos");
+//                 a.comodity = symbol_code("SQRL");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.sqrl");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("SQRL");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("teach.tlos");
+//                 a.comodity = symbol_code("TEACH");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.teach");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("TEACH");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlosd.tlos");
+//                 a.comodity = symbol_code("TLOSD");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.tlosd");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("TLOSD");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlosdac.tlos");
+//                 a.comodity = symbol_code("TLOSDAC");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.tlosdac");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("TLOSDAC");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("yang.tlos");
+//                 a.comodity = symbol_code("TELOSD");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.yang");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("TELOSD");
+//             });
+// 
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("ynt.tlos");
+//                 a.comodity = symbol_code("YNT");
+//                 a.currency = symbol_code("TLOS");
+//             });
+//             markets_table.emplace(get_self(), [&]( auto& a ) {
+//                 a.id = market++;
+//                 a.name = name("tlos.ynt");
+//                 a.comodity = symbol_code("TLOS");
+//                 a.currency = symbol_code("YNT");
+//             });
 
             // for (auto ptr = table6.begin(); ptr != table6.end(); ptr = table6.begin()) {
             //     table6.erase(*ptr);

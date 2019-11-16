@@ -1,6 +1,9 @@
 #!/bin/bash
 # rm /var/www/blockchain/eosio/data -fr
 
+
+
+
 ./1_create_accounts.sh
 
 ./2_deploy_vapaeetokens.sh

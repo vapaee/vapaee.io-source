@@ -13,5 +13,4 @@
 #include "./tables/tablesummary.hpp"
 #include "./tables/blockhistory.hpp"
 #include "./tables/userorders.hpp"
-#include "./tables/interfaces.hpp"
 #include "./tables/events.hpp"

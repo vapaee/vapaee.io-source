@@ -20,6 +20,8 @@
 #define ERROR_AEMC_1 "ERR-AEMC-01: user has no deposits for this symbol: "
 #define ERROR_AEMC_2 "ERR-AEMC-02: internal and external symbols don't match in code: "
 
+// aux_get_market_id
+#define ERROR_AGMI_1 "ERR-AGMI-01: market not found for commodity/currency pair: "
 
 // aux_add_deposits
 #define ERROR_AAD_1 "ERR-AAD-01: symbol mismatch: "

@@ -27,122 +27,123 @@ fi
 
 echo "-------- eosio.token (TLOS) ---------"
 cleos set contract eosio.token $PWD -p eosio.token@active
-cleos push action eosio.token create '[ "eosio", "1000000000.0000 TLOS"]' -p eosio.token@active
-cleos push action eosio.token issue '["alice", "1000.0000 TLOS", "memo 1000 TLOS"]' -p eosio@active
-cleos push action eosio.token issue '["bob", "1000.0000 TLOS", "memo 1000 TLOS"]' -p eosio@active
-cleos push action eosio.token issue '["tom", "1000.0000 TLOS", "memo 1000 TLOS"]' -p eosio@active
-cleos push action eosio.token issue '["kate", "1000.0000 TLOS", "memo 1000 TLOS"]' -p eosio@active
+cleos push action eosio.token create '[ "vapaeetokens", "1000000000.0000 TLOS"]' -p eosio.token@active
+cleos push action eosio.token issue '["alice", "1000.0000 TLOS", "memo 1000 TLOS"]' -p vapaeetokens@active
+cleos push action eosio.token issue '["alice", "1001.0000 TLOS", "memo 1001 TLOS"]' -p vapaeetokens@active
+cleos push action eosio.token issue '["bob", "1000.0000 TLOS", "memo 1000 TLOS"]' -p vapaeetokens@active
+cleos push action eosio.token issue '["tom", "1000.0000 TLOS", "memo 1000 TLOS"]' -p vapaeetokens@active
+cleos push action eosio.token issue '["kate", "1000.0000 TLOS", "memo 1000 TLOS"]' -p vapaeetokens@active
 
 echo "-------- acornaccount (ACORN) ---------"
 cleos set contract acornaccount $PWD -p acornaccount@active
-cleos push action acornaccount create '[ "eosio", "461168601842738.0000 ACORN"]' -p acornaccount@active
-cleos push action acornaccount issue '["alice", "1000.0000 ACORN", "memo ACORN"]' -p eosio@active
-cleos push action acornaccount issue '["bob", "1000.0000 ACORN", "memo ACORN"]' -p eosio@active
-cleos push action acornaccount issue '["tom", "1000.0000 ACORN", "memo ACORN"]' -p eosio@active
-cleos push action acornaccount issue '["kate", "1000.0000 ACORN", "memo ACORN"]' -p eosio@active
+cleos push action acornaccount create '[ "vapaeetokens", "461168601842738.0000 ACORN"]' -p acornaccount@active
+cleos push action acornaccount issue '["alice", "1000.0000 ACORN", "memo ACORN"]' -p vapaeetokens@active
+cleos push action acornaccount issue '["bob", "1000.0000 ACORN", "memo ACORN"]' -p vapaeetokens@active
+cleos push action acornaccount issue '["tom", "1000.0000 ACORN", "memo ACORN"]' -p vapaeetokens@active
+cleos push action acornaccount issue '["kate", "1000.0000 ACORN", "memo ACORN"]' -p vapaeetokens@active
 
 echo "-------- oliveaccount (OLIVE) ---------"
 cleos set contract oliveaccount $PWD -p oliveaccount@active
-cleos push action oliveaccount create '[ "eosio", "461168601842738.0000 OLIVE"]' -p oliveaccount@active
-cleos push action oliveaccount issue '["alice", "100.0000 OLIVE", "memo OLIVE"]' -p eosio@active
-cleos push action oliveaccount issue '["bob", "100.0000 OLIVE", "memo OLIVE"]' -p eosio@active
-cleos push action oliveaccount issue '["tom", "100.0000 OLIVE", "memo OLIVE"]' -p eosio@active
-cleos push action oliveaccount issue '["kate", "100.0000 OLIVE", "memo OLIVE"]' -p eosio@active
+cleos push action oliveaccount create '[ "vapaeetokens", "461168601842738.0000 OLIVE"]' -p oliveaccount@active
+cleos push action oliveaccount issue '["alice", "100.0000 OLIVE", "memo OLIVE"]' -p vapaeetokens@active
+cleos push action oliveaccount issue '["bob", "100.0000 OLIVE", "memo OLIVE"]' -p vapaeetokens@active
+cleos push action oliveaccount issue '["tom", "100.0000 OLIVE", "memo OLIVE"]' -p vapaeetokens@active
+cleos push action oliveaccount issue '["kate", "100.0000 OLIVE", "memo OLIVE"]' -p vapaeetokens@active
 
 echo "-------- revelation21 (HEART) ---------"
 cleos set contract revelation21 $PWD -p revelation21@active
-cleos push action revelation21 create '[ "eosio", "2100000000.0000 HEART"]' -p revelation21@active
-cleos push action revelation21 issue '["alice", "100.0000 HEART", "memo HEART"]' -p eosio@active
-cleos push action revelation21 issue '["bob", "100.0000 HEART", "memo HEART"]' -p eosio@active
-cleos push action revelation21 issue '["tom", "100.0000 HEART", "memo HEART"]' -p eosio@active
-cleos push action revelation21 issue '["kate", "100.0000 HEART", "memo HEART"]' -p eosio@active
+cleos push action revelation21 create '[ "vapaeetokens", "2100000000.0000 HEART"]' -p revelation21@active
+cleos push action revelation21 issue '["alice", "100.0000 HEART", "memo HEART"]' -p vapaeetokens@active
+cleos push action revelation21 issue '["bob", "100.0000 HEART", "memo HEART"]' -p vapaeetokens@active
+cleos push action revelation21 issue '["tom", "100.0000 HEART", "memo HEART"]' -p vapaeetokens@active
+cleos push action revelation21 issue '["kate", "100.0000 HEART", "memo HEART"]' -p vapaeetokens@active
 
 echo "-------- futboltokens (FUTBOL) ---------"
 cleos set contract futboltokens $PWD -p futboltokens@active
-cleos push action futboltokens create '[ "eosio", "2100000000.0000 FUTBOL"]' -p futboltokens@active
-cleos push action futboltokens issue '["alice", "1000.0000 FUTBOL", "memo FUTBOL"]' -p eosio@active
-cleos push action futboltokens issue '["bob", "1000.0000 FUTBOL", "memo FUTBOL"]' -p eosio@active
-cleos push action futboltokens issue '["tom", "1000.0000 FUTBOL", "memo FUTBOL"]' -p eosio@active
-cleos push action futboltokens issue '["kate", "1000.0000 FUTBOL", "memo FUTBOL"]' -p eosio@active
+cleos push action futboltokens create '[ "vapaeetokens", "2100000000.0000 FUTBOL"]' -p futboltokens@active
+cleos push action futboltokens issue '["alice", "1000.0000 FUTBOL", "memo FUTBOL"]' -p vapaeetokens@active
+cleos push action futboltokens issue '["bob", "1000.0000 FUTBOL", "memo FUTBOL"]' -p vapaeetokens@active
+cleos push action futboltokens issue '["tom", "1000.0000 FUTBOL", "memo FUTBOL"]' -p vapaeetokens@active
+cleos push action futboltokens issue '["kate", "1000.0000 FUTBOL", "memo FUTBOL"]' -p vapaeetokens@active
 
 echo "-------- viitasphere1 (VIITA) ---------"
 cleos set contract viitasphere1 $PWD -p viitasphere1@active
-cleos push action viitasphere1 create '[ "eosio", "10000000000.0000 VIITA"]' -p viitasphere1@active
-cleos push action viitasphere1 issue '["alice", "100.0000 VIITA", "memo VIITA"]' -p eosio@active
-cleos push action viitasphere1 issue '["bob", "100.0000 VIITA", "memo VIITA"]' -p eosio@active
-cleos push action viitasphere1 issue '["tom", "100.0000 VIITA", "memo VIITA"]' -p eosio@active
-cleos push action viitasphere1 issue '["kate", "100.0000 VIITA", "memo VIITA"]' -p eosio@active
+cleos push action viitasphere1 create '[ "vapaeetokens", "10000000000.0000 VIITA"]' -p viitasphere1@active
+cleos push action viitasphere1 issue '["alice", "100.0000 VIITA", "memo VIITA"]' -p vapaeetokens@active
+cleos push action viitasphere1 issue '["bob", "100.0000 VIITA", "memo VIITA"]' -p vapaeetokens@active
+cleos push action viitasphere1 issue '["tom", "100.0000 VIITA", "memo VIITA"]' -p vapaeetokens@active
+cleos push action viitasphere1 issue '["kate", "100.0000 VIITA", "memo VIITA"]' -p vapaeetokens@active
 
 echo "-------- viitasphere1 (VIICT) ---------"
-cleos push action viitasphere1 create '[ "eosio", "500000 VIICT"]' -p viitasphere1@active
-cleos push action viitasphere1 issue '["alice", "100 VIICT", "memo VIICT"]' -p eosio@active
-cleos push action viitasphere1 issue '["bob", "100 VIICT", "memo VIICT"]' -p eosio@active
-cleos push action viitasphere1 issue '["tom", "100 VIICT", "memo VIICT"]' -p eosio@active
-cleos push action viitasphere1 issue '["kate", "100 VIICT", "memo VIICT"]' -p eosio@active
+cleos push action viitasphere1 create '[ "vapaeetokens", "500000 VIICT"]' -p viitasphere1@active
+cleos push action viitasphere1 issue '["alice", "100 VIICT", "memo VIICT"]' -p vapaeetokens@active
+cleos push action viitasphere1 issue '["bob", "100 VIICT", "memo VIICT"]' -p vapaeetokens@active
+cleos push action viitasphere1 issue '["tom", "100 VIICT", "memo VIICT"]' -p vapaeetokens@active
+cleos push action viitasphere1 issue '["kate", "100 VIICT", "memo VIICT"]' -p vapaeetokens@active
 
 echo "-------- qubicletoken (QBE) ---------"
 cleos set contract qubicletoken $PWD -p qubicletoken@active
-cleos push action qubicletoken create '[ "eosio", "100000000.0000 QBE"]' -p qubicletoken@active
-cleos push action qubicletoken issue '["alice", "100.0000 QBE", "memo QBE"]' -p eosio@active
-cleos push action qubicletoken issue '["bob", "100.0000 QBE", "memo QBE"]' -p eosio@active
-cleos push action qubicletoken issue '["tom", "100.0000 QBE", "memo QBE"]' -p eosio@active
-cleos push action qubicletoken issue '["kate", "100.0000 QBE", "memo QBE"]' -p eosio@active
+cleos push action qubicletoken create '[ "vapaeetokens", "100000000.0000 QBE"]' -p qubicletoken@active
+cleos push action qubicletoken issue '["alice", "100.0000 QBE", "memo QBE"]' -p vapaeetokens@active
+cleos push action qubicletoken issue '["bob", "100.0000 QBE", "memo QBE"]' -p vapaeetokens@active
+cleos push action qubicletoken issue '["tom", "100.0000 QBE", "memo QBE"]' -p vapaeetokens@active
+cleos push action qubicletoken issue '["kate", "100.0000 QBE", "memo QBE"]' -p vapaeetokens@active
 
 echo "-------- ednazztokens (EDNA) ---------"
 cleos set contract ednazztokens $PWD -p ednazztokens@active
-cleos push action ednazztokens create '[ "eosio", "1300000000.0000 EDNA"]' -p ednazztokens@active
-cleos push action ednazztokens issue '["alice", "100.0000 EDNA", "memo EDNA"]' -p eosio@active
-cleos push action ednazztokens issue '["bob", "100.0000 EDNA", "memo EDNA"]' -p eosio@active
-cleos push action ednazztokens issue '["tom", "100.0000 EDNA", "memo EDNA"]' -p eosio@active
-cleos push action ednazztokens issue '["kate", "100.0000 EDNA", "memo EDNA"]' -p eosio@active
+cleos push action ednazztokens create '[ "vapaeetokens", "1300000000.0000 EDNA"]' -p ednazztokens@active
+cleos push action ednazztokens issue '["alice", "100.0000 EDNA", "memo EDNA"]' -p vapaeetokens@active
+cleos push action ednazztokens issue '["bob", "100.0000 EDNA", "memo EDNA"]' -p vapaeetokens@active
+cleos push action ednazztokens issue '["tom", "100.0000 EDNA", "memo EDNA"]' -p vapaeetokens@active
+cleos push action ednazztokens issue '["kate", "100.0000 EDNA", "memo EDNA"]' -p vapaeetokens@active
 
 echo "-------- teachology14 (TEACH) ---------"
 cleos set contract teachology14 $PWD -p teachology14@active
-cleos push action teachology14 create '[ "eosio", "10000000000.0000 TEACH"]' -p teachology14@active
-cleos push action teachology14 issue '["alice", "100.0000 TEACH", "memo TEACH"]' -p eosio@active
-cleos push action teachology14 issue '["bob", "100.0000 TEACH", "memo TEACH"]' -p eosio@active
-cleos push action teachology14 issue '["tom", "100.0000 TEACH", "memo TEACH"]' -p eosio@active
-cleos push action teachology14 issue '["kate", "100.0000 TEACH", "memo TEACH"]' -p eosio@active
+cleos push action teachology14 create '[ "vapaeetokens", "10000000000.0000 TEACH"]' -p teachology14@active
+cleos push action teachology14 issue '["alice", "100.0000 TEACH", "memo TEACH"]' -p vapaeetokens@active
+cleos push action teachology14 issue '["bob", "100.0000 TEACH", "memo TEACH"]' -p vapaeetokens@active
+cleos push action teachology14 issue '["tom", "100.0000 TEACH", "memo TEACH"]' -p vapaeetokens@active
+cleos push action teachology14 issue '["kate", "100.0000 TEACH", "memo TEACH"]' -p vapaeetokens@active
 
 echo "-------- proxibotstkn (ROBO) ---------"
 cleos set contract proxibotstkn $PWD -p proxibotstkn@active
-cleos push action proxibotstkn create '[ "eosio", "1000000000.0000 ROBO"]' -p proxibotstkn@active
-cleos push action proxibotstkn issue '["alice", "100.0000 ROBO", "memo ROBO"]' -p eosio@active
-cleos push action proxibotstkn issue '["bob", "100.0000 ROBO", "memo ROBO"]' -p eosio@active
-cleos push action proxibotstkn issue '["tom", "100.0000 ROBO", "memo ROBO"]' -p eosio@active
-cleos push action proxibotstkn issue '["kate", "100.0000 ROBO", "memo ROBO"]' -p eosio@active
+cleos push action proxibotstkn create '[ "vapaeetokens", "1000000000.0000 ROBO"]' -p proxibotstkn@active
+cleos push action proxibotstkn issue '["alice", "100.0000 ROBO", "memo ROBO"]' -p vapaeetokens@active
+cleos push action proxibotstkn issue '["bob", "100.0000 ROBO", "memo ROBO"]' -p vapaeetokens@active
+cleos push action proxibotstkn issue '["tom", "100.0000 ROBO", "memo ROBO"]' -p vapaeetokens@active
+cleos push action proxibotstkn issue '["kate", "100.0000 ROBO", "memo ROBO"]' -p vapaeetokens@active
 
 echo "-------- stablecarbon (TLOSD) ---------"
 cleos set contract stablecarbon $PWD -p stablecarbon@active
-cleos push action stablecarbon create '[ "eosio", "1000000000.0000 TLOSD"]' -p stablecarbon@active
-cleos push action stablecarbon issue '["alice", "1000.0000 TLOSD", "memo TLOSD"]' -p eosio@active
-cleos push action stablecarbon issue '["bob", "1000.0000 TLOSD", "memo TLOSD"]' -p eosio@active
-cleos push action stablecarbon issue '["tom", "1000.0000 TLOSD", "memo TLOSD"]' -p eosio@active
-cleos push action stablecarbon issue '["kate", "1000.0000 TLOSD", "memo TLOSD"]' -p eosio@active
+cleos push action stablecarbon create '[ "vapaeetokens", "1000000000.0000 TLOSD"]' -p stablecarbon@active
+cleos push action stablecarbon issue '["alice", "1000.0000 TLOSD", "memo TLOSD"]' -p vapaeetokens@active
+cleos push action stablecarbon issue '["bob", "1000.0000 TLOSD", "memo TLOSD"]' -p vapaeetokens@active
+cleos push action stablecarbon issue '["tom", "1000.0000 TLOSD", "memo TLOSD"]' -p vapaeetokens@active
+cleos push action stablecarbon issue '["kate", "1000.0000 TLOSD", "memo TLOSD"]' -p vapaeetokens@active
 
 echo "-------- telosdacdrop (TLOSDAC) ---------"
 cleos set contract telosdacdrop $PWD -p telosdacdrop@active
-cleos push action telosdacdrop create '[ "eosio", "1000000000.0000 TLOSDAC"]' -p telosdacdrop@active
-cleos push action telosdacdrop issue '["alice", "50000.0000 TLOSDAC", "memo TLOSDAC"]' -p eosio@active
-cleos push action telosdacdrop issue '["bob", "50000.0000 TLOSDAC", "memo TLOSDAC"]' -p eosio@active
-cleos push action telosdacdrop issue '["tom", "50000.0000 TLOSDAC", "memo TLOSDAC"]' -p eosio@active
-cleos push action telosdacdrop issue '["kate", "50000.0000 TLOSDAC", "memo TLOSDAC"]' -p eosio@active
+cleos push action telosdacdrop create '[ "vapaeetokens", "1000000000.0000 TLOSDAC"]' -p telosdacdrop@active
+cleos push action telosdacdrop issue '["alice", "50000.0000 TLOSDAC", "memo TLOSDAC"]' -p vapaeetokens@active
+cleos push action telosdacdrop issue '["bob", "50000.0000 TLOSDAC", "memo TLOSDAC"]' -p vapaeetokens@active
+cleos push action telosdacdrop issue '["tom", "50000.0000 TLOSDAC", "memo TLOSDAC"]' -p vapaeetokens@active
+cleos push action telosdacdrop issue '["kate", "50000.0000 TLOSDAC", "memo TLOSDAC"]' -p vapaeetokens@active
 
 echo "-------- stablecoin.z (EZAR) ---------"
 cleos set contract stablecoin.z $PWD -p stablecoin.z@active
-cleos push action stablecoin.z create '[ "eosio", "1000000000.00 EZAR"]' -p stablecoin.z@active
-cleos push action stablecoin.z issue '["alice", "1000.00 EZAR", "memo EZAR"]' -p eosio@active
-cleos push action stablecoin.z issue '["bob", "1000.00 EZAR", "memo EZAR"]' -p eosio@active
-cleos push action stablecoin.z issue '["tom", "1000.00 EZAR", "memo EZAR"]' -p eosio@active
-cleos push action stablecoin.z issue '["kate", "1000.00 EZAR", "memo EZAR"]' -p eosio@active
+cleos push action stablecoin.z create '[ "vapaeetokens", "1000000000.00 EZAR"]' -p stablecoin.z@active
+cleos push action stablecoin.z issue '["alice", "1000.00 EZAR", "memo EZAR"]' -p vapaeetokens@active
+cleos push action stablecoin.z issue '["bob", "1000.00 EZAR", "memo EZAR"]' -p vapaeetokens@active
+cleos push action stablecoin.z issue '["tom", "1000.00 EZAR", "memo EZAR"]' -p vapaeetokens@active
+cleos push action stablecoin.z issue '["kate", "1000.00 EZAR", "memo EZAR"]' -p vapaeetokens@active
 
 echo "-------- yanggangcoin (YANG) ---------"
 cleos set contract yanggangcoin $PWD -p yanggangcoin@active
-cleos push action yanggangcoin create '[ "eosio", "1000000000.0000 YANG"]' -p yanggangcoin@active
-cleos push action yanggangcoin issue '["alice", "1000.0000 YANG", "memo YANG"]' -p eosio@active
-cleos push action yanggangcoin issue '["bob", "1000.0000 YANG", "memo YANG"]' -p eosio@active
-cleos push action yanggangcoin issue '["tom", "1000.0000 YANG", "memo YANG"]' -p eosio@active
-cleos push action yanggangcoin issue '["kate", "1000.0000 YANG", "memo YANG"]' -p eosio@active
+cleos push action yanggangcoin create '[ "vapaeetokens", "1000000000.0000 YANG"]' -p yanggangcoin@active
+cleos push action yanggangcoin issue '["alice", "1000.0000 YANG", "memo YANG"]' -p vapaeetokens@active
+cleos push action yanggangcoin issue '["bob", "1000.0000 YANG", "memo YANG"]' -p vapaeetokens@active
+cleos push action yanggangcoin issue '["tom", "1000.0000 YANG", "memo YANG"]' -p vapaeetokens@active
+cleos push action yanggangcoin issue '["kate", "1000.0000 YANG", "memo YANG"]' -p vapaeetokens@active
 
 
 echo "----- loading tokens ----"

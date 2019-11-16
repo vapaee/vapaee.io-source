@@ -2475,7 +2475,7 @@ export class VapaeeDEX {
     private fetchTokens(extended: boolean = true) {
         console.log("Vapaee.fetchTokens()");
 
-        return this.contract.getTable("tokens").then(result => {
+        return this.fetchAllTokens().then(result => {
             let data = {
                 tokens: <TokenDEX[]>result.rows
             }
@@ -2487,6 +2487,29 @@ export class VapaeeDEX {
             console.log("Vapaee.fetchTokens() -->", data.tokens);
             return data;
         });
+    }
+
+    private async fetchAllTokens(): Promise<TableResult> {
+        let table = "tokens";
+        let rows = [];
+        let params: TableParams = { limit: 200 }
+        let result:TableResult = { more:true, rows: [] };
+        
+        while(result.more) {
+            if (result.rows.length > 0) {
+                let symbol = result.rows[result.rows.length-1].symbol;
+                params.lower_bound = symbol;
+                rows.splice(rows.length-1, 1);
+            }
+            result = await this.contract.getTable(table, params);
+            rows = rows.concat(result.rows);
+        }
+
+        return {
+            more: false,
+            rows: rows
+        };
+
     }
 
     private resortTokens() {

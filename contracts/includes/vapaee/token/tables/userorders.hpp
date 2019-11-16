@@ -17,7 +17,7 @@
             uint64_t market;
             string table;
             vector<uint64_t> ids;
-            uint64_t primary_key() const { return table.value; }
+            uint64_t primary_key() const { return market; }
         };
         typedef eosio::multi_index< "userorders2"_n, userorders2_table > userorders2;
         // ------------------------------------

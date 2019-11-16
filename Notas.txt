@@ -17,13 +17,41 @@ Tablas que tienen mal algún campo:
 - userorders.market (name) -> (uint64_t) market
 
 Tablas afectadas (total 7 tablas):
++ ordersummary
 + history
 + tablesummary
 + sellorders
 + blockhistory
-+ ordersummary
 + tokens
 + userorders
+
+
+
+
+
+
+
+
+telosmain get table vapaeetokens acorn.tlos history -l 500
+telosmain get table vapaeetokens acorn.tlosd history -l 500
+telosmain get table vapaeetokens cnt.tlos history -l 500
+telosmain get table vapaeetokens edna.tlos history -l 500
+telosmain get table vapaeetokens ezar.tlos history -l 500
+telosmain get table vapaeetokens heart.tlos history -l 500
+telosmain get table vapaeetokens lol.tlos history -l 500
+telosmain get table vapaeetokens olive.tlos history -l 500
+telosmain get table vapaeetokens people.tlos history -l 500
+telosmain get table vapaeetokens qbe.tlos history -l 500
+telosmain get table vapaeetokens qbe.tlosd history -l 500
+telosmain get table vapaeetokens robo.tlos history -l 500
+telosmain get table vapaeetokens sqrl.tlos history -l 500
+telosmain get table vapaeetokens teach.tlos history -l 500
+telosmain get table vapaeetokens tlosd.tlos history -l 500
+telosmain get table vapaeetokens tlosdac.tlos history -l 500
+telosmain get table vapaeetokens yang.tlos history -l 500
+telosmain get table vapaeetokens ynt.tlos history -l 500
+
+
 
 -- Estrategia --
 + poner en mantenimiento todo el sistema
@@ -62,6 +90,8 @@ Tablas afectadas (total 7 tablas):
 - escribir en el hotfix una rutina que borre los datos de las tablas nuevas y los pase a las viejas arregladas.
 - renombrar en el código, toda referencia a las tablas nuevas y pasarlo a las viejas arregladas
 --- > DEPLOY & HOTFIX < ---
+
+
 
 
 
