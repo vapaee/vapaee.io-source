@@ -206,7 +206,7 @@ cleos push action vapaeetokens create '["vapaeetokens","500000000.0000 BOX"]' -p
 cleos push action vapaeetokens addtoken '["vapaeetokens", "BOX", 4, "vapaeetokens", , "Board Game Box", "https://vapaee.io/bgbox", "", "", "/assets/logos/box.png", "/assets/logos/box-lg.png",true]' -p vapaeetokens@active
 echo "-- creating VPE token --" 
 cleos push action vapaeetokens create '["vapaeetokens","1000000.000000 VPE"]' -p vapaeetokens@active
-cleos push action vapaeetokens addtoken '["vapaeetokens", "VPE", 4, "vapaeetokens", , "Vapaée", "https://vapaee.io", "", "", "/assets/logos/vapaee.png", "/assets/logos/vapaee-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["vapaeetokens", "VPE", 6, "vapaeetokens", , "Vapaée", "https://vapaee.io", "", "", "/assets/logos/vapaee.png", "/assets/logos/vapaee-lg.png",true]' -p vapaeetokens@active
 
 
 

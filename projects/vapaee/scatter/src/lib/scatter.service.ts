@@ -1107,24 +1107,21 @@ export class VapaeeScatter {
         // console.log("ScatterService.getTableRows()");
         // https://github.com/EOSIO/eosjs-api/blob/master/docs/api.md#eos.getTableRows
         return new Promise<any>((resolve, reject) => {
-            this.waitEosjs.then(() => {
-                console.assert(!!this.eos, "ERROR: this.eos es null");
-                console.assert(typeof this.eos.getTableRows == "function", "ERROR: typeof this.eos.getTableRows = " + typeof this.eos.getTableRows);
-                if (typeof this.eos.getTableRows != "function") {
-                    console.error(this.eos.getTableRows);
-                }
-                try {
-                    this.eos.getTableRows(true, contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos).then(function (_data) {
-                        resolve(_data);
-                    }).catch(error => {
-                        console.error(error);
-                    });
-                } catch(e) {
-                    if (retry) return this.getTableRows(contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos, false);
-                     
-                    console.error("retrying", [e]);
-                    return Promise.reject(e);
-                }
+            this.waitEosjs.then(_ => {
+                console.assert(!!contract, "ERROR: contract is null");
+                console.assert(!!scope, "ERROR: scope is null");
+                console.assert(!!table, "ERROR: table is null");
+                console.assert(!!tkey, "ERROR: tkey is null");
+                console.assert(!!lowerb, "ERROR: lowerb is null");
+                console.assert(!!upperb, "ERROR: upperb is null");
+                console.assert(!!limit, "ERROR: limit is null");
+                console.assert(!!ktype, "ERROR: ktype is null");
+                console.assert(!!ipos, "ERROR: ipos is null");
+                this.eos.getTableRows(true, contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos).then(function (_data) {
+                    resolve(_data);
+                }).catch(error => {
+                    console.error(error);
+                });
             }).catch((error) => {
                 console.error(error);
                 reject(error);

@@ -153,8 +153,8 @@
                             </div>
                         
                             <div class="nowrap col-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
-                                <i class="material-icons" style="font-size: 100%;" [hidden]="dex.feed.loading('cancel-buy-'+order.id)">cancel</i>
-                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('cancel-buy-'+order.id)"></span>
+                                <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading['sell-' + order.id]">cancel</i>
+                                <span class="spinner-border spinner-border-sm" [hidden]="!c_loading['sell-' + order.id]"></span>
                             </div>
             
                         </div>
@@ -175,8 +175,8 @@
                             </div>
                         
                             <div class="nowrap col-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
-                                <i class="material-icons" style="font-size: 100%;" [hidden]="dex.feed.loading('cancel-sell-'+order.id)">cancel</i>
-                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('cancel-sell-'+order.id)"></span>
+                                <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading['sell-' + order.id]">cancel</i>
+                                <span class="spinner-border spinner-border-sm" [hidden]="!c_loading['sell-' + order.id]"></span>
                             </div>
         
                         </div>
@@ -368,8 +368,8 @@
                     </div>
                 
                     <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
-                        <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.price.token.table + order.id]">cancel</i>
-                        <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.price.token.table + order.id]"></span>
+                        <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading['sell-' + order.id]">cancel</i>
+                        <span class="spinner-border spinner-border-sm" [hidden]="!c_loading['sell-' + order.id]"></span>
                     </div>
     
                 </div>
@@ -390,8 +390,8 @@
                     </div>
                 
                     <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
-                        <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.price.token.table + order.id]">cancel</i>
-                        <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.price.token.table + order.id]"></span>
+                        <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading['buy-' + order.id]">cancel</i>
+                        <span class="spinner-border spinner-border-sm" [hidden]="!c_loading['buy-' + order.id]"></span>
                     </div>
 
                 </div>
@@ -416,11 +416,11 @@
                             <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg text-danger">{{order.price.toString(8)}}</div>
                             <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left text-danger">{{order.total.toString(8)}}</div>
                             <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg">
-                                <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.id]">cancel</i>
-                                <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.id]"></span>
+                                <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading['sell-' + order.id]">cancel</i>
+                                <span class="spinner-border spinner-border-sm" [hidden]="!c_loading['sell-' + order.id]"></span>
                             </div>
                         </div>
-                    </perfect-scrollbar>                    
+                    </perfect-scrollbar>
                 </div>
                 <div class="col-sm-6">
                     <label>{{local.string.buy_orders | titlecase}}</label>
@@ -437,8 +437,8 @@
                             <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg text-success">{{order.price.toString(8)}}</div>
                             <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left text-success">{{order.total.toString(8)}}</div>
                             <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg">
-                                <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[order.id]">cancel</i>
-                                <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[order.id]"></span>
+                                <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading['buy-' + order.id]">cancel</i>
+                                <span class="spinner-border spinner-border-sm" [hidden]="!c_loading['buy-' + order.id]"></span>
                             </div>
                         </div>
                     </perfect-scrollbar>

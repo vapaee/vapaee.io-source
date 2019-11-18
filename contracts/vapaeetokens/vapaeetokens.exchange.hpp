@@ -479,8 +479,9 @@ namespace vapaee {
                 // PRINT(" -> payment: ", payment.to_string(), "\n");
             }
 
+            uint64_t market = aux_get_market_id(A, B);
             // register event on history table
-            history table(get_self(), scope.value);
+            history table(get_self(), market);
             uint64_t h_id = table.available_primary_key();
             table.emplace(get_self(), [&](auto & a){
                 a.id = h_id;
@@ -512,7 +513,7 @@ namespace vapaee {
 
             // find out last price
             asset last_price = price;
-            tablesummary summary(get_self(), scope.value);
+            tablesummary summary(get_self(), market);
             auto ptr = summary.find(name("lastone").value);
             if (ptr != summary.end()) {
                 last_price = ptr->price;
@@ -609,7 +610,7 @@ namespace vapaee {
             }
 
             // save table summary (price & volume/h)
-            blockhistory blocktable(get_self(), scope.value);
+            blockhistory blocktable(get_self(), market);
             uint64_t bh_id = blocktable.available_primary_key();
             auto index = blocktable.template get_index<name("hour")>();
             auto bptr = index.find(hour);
@@ -643,9 +644,9 @@ namespace vapaee {
 
             // update deals (history table) & blocks (blockhistory table) count for scope table
             ordersummary o_summary(get_self(), get_self().value);
-            auto orders_itr = o_summary.find(scope.value);
+            auto orders_itr = o_summary.find(market);
 
-            eosio_assert(orders_itr != o_summary.end(), "Why is this entry missing?");
+            eosio_assert(orders_itr != o_summary.end(), (string("Why is this entry missing? market: ") + std::to_string((unsigned long)market)).c_str());
             o_summary.modify(*orders_itr, same_payer, [&](auto & a){
                 a.deals = h_id+1;
                 a.blocks = bh_id+1;
@@ -1250,7 +1251,7 @@ namespace vapaee {
             PRINT(" action: ", action.to_string(), "\n");
             PRINT(" category: ", category.to_string(), "\n");
             PRINT(" text: ", text.c_str(), "\n");
-            PRINT(" link: ", link.c_str(), "\n");
+            PRINT(" link: ", link.c_str(), "\n"); 
 
             tokens tokenstable(get_self(), get_self().value);
             auto tkitr = tokenstable.find(sym_code.raw());

@@ -373,7 +373,9 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         var key = order.id;
         this.feed.clearError("orders");
         if (order.deposit.token.symbol != order.telos.token.symbol) {
+            key = "sell-" + order.id;
             this.c_loading[key] = true;
+            console.log(key, this.c_loading);
             this.dex.cancelOrder("sell", order.deposit.token, order.telos.token, [order.id]).then(_ => {
                 // success
                 this.c_loading[key] = false;
@@ -388,7 +390,9 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             });;
         }
         if (order.deposit.token.symbol == order.telos.token.symbol) {
+            key = "buy-" + order.id;
             this.c_loading[key] = true;
+            console.log(key, this.c_loading);
             this.dex.cancelOrder("buy", order.total.token, order.telos.token, [order.id]).then(_ => {
                 // success
                 this.c_loading[key] = false;

@@ -60,11 +60,19 @@ export class SmartContract {
 
     getTable(table:string, params:TableParams = {}): Promise<TableResult> {
 
+        // borro los campos que puedan estar en undefined
+        for (let i in params) {
+            if (typeof params[i] == "undefined") {
+                delete params[i];
+            }
+        }
+
         return this.scatter.waitEosjs.then(async _ => {
 
             var _p = Object.assign({
                 contract: this.contract, 
-                scope: this.contract, 
+                scope: this.contract,
+                table: table, 
                 table_key: "0", 
                 lower_bound: "0", 
                 upper_bound: "-1", 
@@ -75,7 +83,8 @@ export class SmartContract {
 
             return this.scatter.getTableRows(
                 _p.contract,
-                _p.scope, table,
+                _p.scope,
+                _p.table,
                 _p.table_key,
                 _p.lower_bound,
                 _p.upper_bound,

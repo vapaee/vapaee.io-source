@@ -32,14 +32,14 @@ using namespace utils;
 #include <vapaee/base/slug_symbol.hpp>
 #include <vapaee/base/utils.hpp>
 
-//*
+/*
 #define MAINTENANCE(...) eosio_assert(has_auth(_self), ">>>>>> This contract is in MAINTENANCE. Please, try later again. <<<<<<");
 /*/
 #define MAINTENANCE(...)
 //*/
 
 
-/*
+//*
 #define PRINT(...) print(__VA_ARGS__)
 #define AUX_DEBUG_ACTIONS(...) __VA_ARGS__
 /*/

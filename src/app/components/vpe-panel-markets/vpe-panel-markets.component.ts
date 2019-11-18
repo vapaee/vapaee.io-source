@@ -125,7 +125,7 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
     
 
     ngOnChanges() {
-        console.log("vpe-panel-markets", this.markets);
+        // console.log("vpe-panel-markets", this.markets);
     }
 
     ngOnInit() {
