@@ -1072,7 +1072,7 @@ export class VapaeeScatter {
         return this._connected;
     }
 
-    getTableRows(contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos): Promise<any> {
+    getTableRows(contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos, retry:boolean = true): Promise<any> {
         /*
         // console.log("ScatterService.getTableRows()");
         // https://github.com/EOSIO/eosjs-api/blob/master/docs/api.md#eos.getTableRows
@@ -1108,11 +1108,23 @@ export class VapaeeScatter {
         // https://github.com/EOSIO/eosjs-api/blob/master/docs/api.md#eos.getTableRows
         return new Promise<any>((resolve, reject) => {
             this.waitEosjs.then(() => {
-                this.eos.getTableRows(true, contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos).then(function (_data) {
-                    resolve(_data);
-                }).catch(error => {
-                    console.error(error);
-                });
+                console.assert(!!this.eos, "ERROR: this.eos es null");
+                console.assert(typeof this.eos.getTableRows == "function", "ERROR: typeof this.eos.getTableRows = " + typeof this.eos.getTableRows);
+                if (typeof this.eos.getTableRows != "function") {
+                    console.error(this.eos.getTableRows);
+                }
+                try {
+                    this.eos.getTableRows(true, contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos).then(function (_data) {
+                        resolve(_data);
+                    }).catch(error => {
+                        console.error(error);
+                    });
+                } catch(e) {
+                    if (retry) return this.getTableRows(contract, scope, table, tkey, lowerb, upperb, limit, ktype, ipos, false);
+                     
+                    console.error("retrying", [e]);
+                    return Promise.reject(e);
+                }
             }).catch((error) => {
                 console.error(error);
                 reject(error);

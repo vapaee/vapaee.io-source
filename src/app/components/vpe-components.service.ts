@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { VapaeeDEX, TokenDEX, AssetDEX } from 'projects/vapaee/dex/src';
 import { CookieService } from 'ngx-cookie-service';
 import { TimezoneService } from '../services/timezone.service';
-import { Asset } from '@vapaee/scatter';
+import { Asset } from 'projects/vapaee/scatter/src';
 
 
 
@@ -114,10 +114,11 @@ export class VpeComponentsService {
     public getTelosInCurrentCurrency(value: Asset | string) {
         var asset: Asset;
         if (value == "") return new AssetDEX();
-        if (value instanceof Asset) {
-            asset = value;
+        if (!!(<Asset>value).token && !!(<Asset>value).amount) {
+            asset = <Asset>value;
             value = asset.toString();
         }
+        
         if (typeof value == "string") {
             if (this.cacheTIC[value]) return this.cacheTIC[value];
             asset = new AssetDEX(value, this.dex);
@@ -127,7 +128,7 @@ export class VpeComponentsService {
         var amount = asset.amount.toNumber();
         var number = amount * cur_price;
         asset = new AssetDEX(number, this.getCurrentToken());
-        this.cacheTIC[value] = asset;
+        this.cacheTIC[<string>value] = asset;
         return asset;
     }
 
@@ -136,14 +137,14 @@ export class VpeComponentsService {
         var telos: AssetDEX;
         if (!value) return new AssetDEX();
         if (value == "0 AUX") return new AssetDEX();
-        if (value instanceof Asset) {
+        if (!!(<Asset>value).token && !!(<Asset>value).amount) {
             let temp:any = value;
             asset = temp;
             value = asset.toString();
-        } else {
-            if (<any>value instanceof Asset) {
-                value = value.toString();
-            }    
+            /*} else {
+                if (<any>value instanceof Asset) {
+                    value = value.toString();
+                }    */
         }
         if (typeof value == "string") {
             if (this.cacheTIC[value]) return this.cacheTIC[value];
@@ -160,7 +161,7 @@ export class VpeComponentsService {
         }
         
         asset = this.getTelosInCurrentCurrency(telos);
-        this.cacheTIC[value] = asset;
+        this.cacheTIC[<string>value] = asset;
         return asset;
     }
 

@@ -4,7 +4,7 @@
         <div class="card token-card text-white margin-top">
             <div class="card-body vpe-background-card-body">
                 <div class="text-center">
-                    <img style="height:64px; width: 64px; margin-top:-3px" [src]="token.logolg">
+                    <img style="height:64px; width: 64px; margin-top:-3px" [src]="token.iconlg">
                     <div style="position: absolute; right: 20px; top: 12px;" class="text-lg" [hidden]="token.symbol == 'TLOS'">
                         <div
                             class="nowrap text-right"
@@ -24,7 +24,7 @@
                 </div>
                 <div class="card-text margin-top">
                     <div>
-                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('token-stat-'+token.symbol) && !dex.feed.loading('summary.'+token.scope)"></span>
+                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('token-stat-'+token.symbol) && !dex.feed.loading('summary.'+token.table)"></span>
                         <small><span class="label">max:</span><span class="nowrap"> {{token.stat ? token.stat.max_supply : ('0 ' + token.symbol)}} </span></small><br>
                         <small><span class="label">total:</span><span class="nowrap"> {{token.stat ? token.stat.supply : ('0 ' + token.symbol)}} </span></small><br>
                         <small><a [href]="'https://telos.eosx.io/account/' + token.contract " target="_blank"><span class="nowrap"> {{token.contract}} - {{token.symbol}} </span></a></small>

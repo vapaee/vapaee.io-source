@@ -1,4 +1,4 @@
-import { Token } from '@vapaee/scatter';
+import { Token } from 'projects/vapaee/scatter/src';
 import { AssetDEX } from "./asset-dex.class";
 import { Market } from './types-dex';
 
@@ -24,17 +24,16 @@ export class TokenDEX extends Token {
 
     public title: string;
     public website: string;
-    public logo: string;
-    public logolg: string;
+    public icon: string;
+    public iconlg: string;
     public tradeable: boolean | number;
     public currency: boolean;
-    public banned: boolean;
     public offchain: boolean;
-    public scope: string;
+    public table: string;
     public data: TokenData[];
     public brief: string;
     public banner: string;
-    public owner: string;
+    public admin: string;
 
     stat?: {
         supply: string,

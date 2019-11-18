@@ -17,7 +17,7 @@ export class MarketsPage implements OnInit, OnDestroy {
     selected: TokenDEX;
     commodity: TokenDEX;
     _markets: Market[];
-    _comodities: TokenDEX[];
+    _commodities: TokenDEX[];
     newmarket: boolean;
 
     constructor(
@@ -44,13 +44,13 @@ export class MarketsPage implements OnInit, OnDestroy {
         if (this._markets) return this._markets;
         if (!this.dex.topmarkets) return this._markets;
         this._markets = [];
-        this._comodities = null;
+        this._commodities = null;
         for (let i in this.dex.topmarkets) {
             let market = this.dex.topmarkets[i];
             if (market.currency.symbol == this.selected.symbol) {
                 this._markets.push(market);
             } else if (market.commodity.symbol == this.selected.symbol) {
-                let inverse = this.dex.inverseScope(market.scope);
+                let inverse = this.dex.inverseTable(market.table);
                 market = this.dex.market(inverse);
                 this._markets.push(market);
             }
@@ -58,18 +58,17 @@ export class MarketsPage implements OnInit, OnDestroy {
         return this._markets;
     }
 
-    get comodities() {
-        if (this._comodities) return this._comodities;
-        this._comodities = [];
+    get commodities() {
+        if (this._commodities) return this._commodities;
+        this._commodities = [];
         var tokens = this.dex.tokens;
         for (var a in tokens) {
             var token = tokens[a];
             if (token.offchain) continue;
-            if (token.banned) continue;
             if (token.symbol == this.selected.symbol) continue;
-            this._comodities.push(token);
+            this._commodities.push(token);
         }
-        return this._comodities;
+        return this._commodities;
     }
 
     ngOnDestroy() {
@@ -80,8 +79,8 @@ export class MarketsPage implements OnInit, OnDestroy {
         // this.dex.onTokensReady.subscribe(this.subscriber);
     }
 
-    tradeMarket(scope:string) {
-        this.app.navigate('/exchange/trade/'+scope);
+    tradeMarket(table:string) {
+        this.app.navigate('/exchange/trade/'+table);
     }
     
     selectCurrency(cur:TokenDEX, newmarket:boolean = false) {
@@ -92,7 +91,7 @@ export class MarketsPage implements OnInit, OnDestroy {
         let aux = this.currency_markets;
         this.newmarket = newmarket;
         if (this.commodity && this.commodity.symbol == this.selected.symbol) {
-            this.commodity = this.comodities[0];
+            this.commodity = this.commodities[0];
         }
     }
 
@@ -101,8 +100,8 @@ export class MarketsPage implements OnInit, OnDestroy {
     }
 
     createNewMarket() {
-        this._comodities = null;
+        this._commodities = null;
         this.newmarket = true;
-        this.commodity = this.comodities[0];
+        this.commodity = this.commodities[0];
     }
 }

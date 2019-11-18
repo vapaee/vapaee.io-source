@@ -53,8 +53,8 @@ show_table() {
 
 show_table vapaeetokens vapaeetokens tokens
 
-show_table vapaeetokens tlos.$token sellorders
-show_table vapaeetokens $token.tlos sellorders
+show_table vapaeetokens 4 sellorders
+show_table vapaeetokens 5 sellorders
 
 # if [ "$NET" == "" ]; then
 #     show_balance bob
@@ -66,12 +66,13 @@ show_table vapaeetokens $token.tlos sellorders
 # show_balance viterbotelos
 
 show_table vapaeetokens vapaeetokens depusers
-show_table vapaeetokens vapaeetokens ordertables
+show_table vapaeetokens vapaeetokens ordersummary
 show_table vapaeetokens vapaeetokens earnings
+show_table vapaeetokens vapaeetokens markets
 # show_table vapaeetokens vapaeetokens events
-show_table vapaeetokens $token.tlos history
-show_table vapaeetokens $token.tlos tablesummary
-show_table vapaeetokens $token.tlos blockhistory
+show_table vapaeetokens 4 history
+show_table vapaeetokens 4 tablesummary
+show_table vapaeetokens 4 blockhistory
 # show_table vapaeetokens vapaeetokens events
 
 

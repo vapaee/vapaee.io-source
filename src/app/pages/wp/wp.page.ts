@@ -4,7 +4,7 @@ import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VapaeeDEX } from 'projects/vapaee/dex/src';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscriber } from 'rxjs';
-import { SmartContract, VapaeeScatter } from '@vapaee/scatter';
+import { SmartContract, VapaeeScatter } from 'projects/vapaee/scatter/src';
 import { Feedback } from '@vapaee/feedback';
 
 @Component({

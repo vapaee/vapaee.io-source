@@ -90,7 +90,7 @@ export class VpePanelMarketsCardDeckComponent implements OnChanges {
 
     goToTradeMarket(market:Market) {
         
-        this.tradeMarket.next(market.scope);
+        this.tradeMarket.next(market.table);
     }
 
 }

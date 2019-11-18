@@ -111,19 +111,19 @@ CONTRACT vapaeetokens : public eosio::contract {
 
     public:
         // EXCHANGE-ACTOINS  ------------------------------------------------------------------------------------------------------
-        ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name owner, string title, string website, string brief, string banner, string logo, string logolg, bool tradeable) {
+        ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name owner, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.addtoken()\n");
             vapaee::token::exchange e;
             e.action_add_token(contract, symbol, precision, owner);
-            e.action_update_token_info(symbol, title, website, brief, banner, logo, logolg, tradeable);
+            e.action_update_token_info(symbol, title, website, brief, banner, icon, iconlg, tradeable);
         };
         
-        ACTION updatetoken (const symbol_code & sym_code, string title, string website, string brief, string banner, string logo, string logolg, bool tradeable) {
+        ACTION updatetoken (const symbol_code & sym_code, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.updatetoken()\n");
             vapaee::token::exchange e;
-            e.action_update_token_info(sym_code, title, website, brief, banner, logo, logolg, tradeable);
+            e.action_update_token_info(sym_code, title, website, brief, banner, icon, iconlg, tradeable);
         };
 
         ACTION tokenadmin (const symbol_code & sym_code, name admin) {
@@ -163,15 +163,11 @@ CONTRACT vapaeetokens : public eosio::contract {
         };
 
         // "bob", "buy", "5.0000 CNT", "0.2000 TLOS", "1.0000 TLOS"
-        ACTION order(name owner, name type, const asset & total, const asset & price
-// new_version        , uint64_t ui
-            ) {
+        ACTION order(name owner, name type, const asset & total, const asset & price, uint64_t ui) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.order()\n");
             vapaee::token::exchange e;
-            e.action_order(owner, type, total, price
-// new_version            , ui
-            );
+            e.action_order(owner, type, total, price, ui);
         };
 
         ACTION withdraw(name owner, const asset & quantity) {

@@ -1,6 +1,6 @@
 <div *ngIf="app.device.portrait">
     <div class="margin-top">
-        <vpe-panel-token-selector [tokens]="tokens" [current]="commodity" (tokenChange)="scopeChange($event.scope)"></vpe-panel-token-selector>
+        <vpe-panel-token-selector [tokens]="tokens" [current]="commodity" (tokenChange)="tableChange($event.table)"></vpe-panel-token-selector>
     </div>
     
     
@@ -8,7 +8,7 @@
 
     <div class="col-12 margin-top text-center">
         <!--INVERSE -->
-        <!-- span class="btn btn-info" (click)="switchTokens()">Switch to {{dex.inverseScope(scope)}}</span -->
+        <!-- span class="btn btn-info" (click)="switchTokens()">Switch to {{dex.inversetable(table)}}</span -->
     </div>
 
 
@@ -20,11 +20,11 @@
         <span class="text-sm">{{local.string.NotLogged}} </span>
     </div>
 
-    <vpe-panel-order-editor [hidden]="!dex.logged" #orderform_min [deposits]="deposits" [commodity]="commodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="dex.logged"></vpe-panel-order-editor>
+    <vpe-panel-order-editor [hidden]="!dex.logged" #orderform_min [deposits]="deposits" [commodity]="commodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="dex.logged" [clientid]="clientid"></vpe-panel-order-editor>
 
     <vpe-panel-orders [expanded]='false' (onClickRow)="onClickRow($event)" (onClickPrice)="onClickPrice($event)" [headers]="headers" [orders]="orders"></vpe-panel-orders>
 
-    <vpe-panel-history [expanded]='true' [scope]="commodity ? commodity.scope : ''" [history]="history"></vpe-panel-history>
+    <vpe-panel-history [expanded]='true' [table]="commodity ? commodity.table : ''" [history]="history"></vpe-panel-history>
 </div>
 
 
@@ -37,14 +37,14 @@
                 <div class="col-sm-4 col-md-3 col-padding-right text-center">
                     <!--INVERSE -->
                     <span class="btn btn-primary btn-sm margin-top-sm switch-tokens-btn" (click)="switchTokens()">
-                        <i class="material-icons" style="font-size: 20px; margin-top: -2px;" [hidden]="dex.isCanonical(scope)">autorenew</i>
-                        <i class="material-icons" style="font-size: 20px; margin-top: -2px;" [hidden]="!dex.isCanonical(scope)">cached</i>                        
+                        <i class="material-icons" style="font-size: 20px; margin-top: -2px;" [hidden]="dex.isCanonical(table)">autorenew</i>
+                        <i class="material-icons" style="font-size: 20px; margin-top: -2px;" [hidden]="!dex.isCanonical(table)">cached</i>                        
                         {{local.string.invert | titlecase}}
                     </span>                    
                 </div>
                 <div class="col-sm-5 col-md-6 col-padding-left col-padding-right">
                     <span class="text-xl">
-                        <img style="height:40px; width: 40px; margin-top:-6px" [src]="commodity ? commodity.logolg : '#'">
+                        <img style="height:40px; width: 40px; margin-top:-6px" [src]="commodity ? commodity.iconlg : '#'">
                         <span> {{commodity ? commodity.title : local.string.loading}} </span>
                         <small class="text-muted currency-title"> / <span> {{currency ? currency.symbol : local.string.loading}} </span> </small>
                     </span>
@@ -73,13 +73,13 @@
         </div>
         <div class="col-sm-8 col-md-9 col-padding-left">
             <vpe-panel-chart [data]="chartData"></vpe-panel-chart>
-            <vpe-panel-order-editor [hidden]="!dex.logged" #orderform_full [deposits]="deposits" [commodity]="commodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="dex.logged"></vpe-panel-order-editor>
+            <vpe-panel-order-editor [hidden]="!dex.logged" #orderform_full [deposits]="deposits" [commodity]="commodity" [currency]="currency" [buyorders]="buyorders" [sellorders]="sellorders" [owner]="dex.logged" [clientid]="clientid"></vpe-panel-order-editor>
             <div class="row">
                 <div class="col-sm-8 col-md-9 col-padding-right">
                     <vpe-panel-orders (onClickRow)="onClickRow($event)" (onClickPrice)="onClickPrice($event)" [headers]="headers" [orders]="orders"></vpe-panel-orders>
                 </div>
                 <div class="col-sm-4 col-md-3 col-padding-left">
-                    <vpe-panel-history [scope]="scope" [history]="history"></vpe-panel-history>
+                    <vpe-panel-history [table]="table" [history]="history"></vpe-panel-history>
                 </div>
             </div>
         </div>

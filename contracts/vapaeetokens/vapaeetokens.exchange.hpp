@@ -27,6 +27,16 @@ namespace vapaee {
         inline name get_code() const { return _code; }
 
 
+        string create_error_id1(const char * text, const uint64_t id) {
+            string result = string(text) + " [" + std::to_string((unsigned long) id ) + "]";
+            return result;
+        }
+
+        string create_error_symcode1(const char * text, const symbol_code & sym1) {
+            string result = string(text) + " [" + sym1.to_string() + "]";
+            return result;
+        }
+
         string create_error_symcode2(const char * text, const symbol_code & sym1, const symbol_code & sym2) {
             string result = string(text) + " [" + sym1.to_string() + "], [" + sym2.to_string()+"]";
             return result;
@@ -208,7 +218,7 @@ namespace vapaee {
             } else {
                 depositstable.modify(*itr, same_payer , [&](auto& a){
                     eosio_assert(a.amount.symbol == amount.symbol,
-                        create_error_asset2(ERROR_AAD_1, a.amount, amount).c_str());                    
+                        create_error_asset2(ERROR_AAD_1, a.amount, amount).c_str()); 
                     a.amount += amount;
                 });
             }
@@ -266,19 +276,6 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::aux_add_earnings() ...\n");
         }        
 
-        void aux_load_lock(uint64_t id, locks_table & lock) {
-            locks lockstable(get_self(), get_self().value);
-            auto itr = lockstable.find(id);
-            eosio_assert(itr != lockstable.end(), "no lock with this id was found");
-            lock.id = itr->id;
-            lock.owner = itr->owner;
-            lock.amount = itr->amount;
-            lock.expire = itr->expire;
-            lock.concept = itr->concept;
-            lock.foreign = itr->foreign;
-            lock.scope = itr->scope;
-        }
-
         asset aux_which_one_is_tlos(const asset & amount_a, const asset & amount_b) {
             asset tlos;
             if (amount_a.symbol.code().to_string() == string("TLOS")) {
@@ -303,84 +300,6 @@ namespace vapaee {
             PRINT(" deposits.size(): ", depos.size(), "\n");
             PRINT("vapaee::token::exchange::aux_clone_user_deposits() ...\n");
         }
-        /* 
-        void aux_calculate_total_fee(name owner, const asset & amount_a, const asset & amount_b, asset & total_fee, asset & tlos, vector<asset> & depos) {
-            PRINT("vapaee::token::exchange::aux_calculate_total_fee()\n");
-            // PRINT(" owner: ", owner.to_string(), "\n");
-            // PRINT(" amount_a: ", amount_a.to_string(), "\n");
-            // PRINT(" amount_b: ", amount_b.to_string(), "\n");
-
-            feeconfig feetable(get_self(), get_self().value);
-            tlos = aux_which_one_is_tlos(amount_a, amount_b);
-
-            auto itr = feetable.begin();
-            bool success = false;
-            int i=0;
-            // PRINT("  tlos: ", tlos.to_string(), "\n");
-            if (tlos.amount > 0) {
-                for (itr = feetable.begin(); itr != feetable.end(); itr++) {
-                    asset deposit;
-                    bool found = false;
-                    for (i=0; i<depos.size(); i++) {
-                        // PRINT("    candidato: ", depos[i].to_string(), "\n");
-                        if (depos[i].symbol.code().raw() == itr->fee.symbol.code().raw()) {
-                            deposit = depos[i];
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        // PRINT("    no tiene: ", itr->fee.to_string(), "  probamos con otro...\n");
-                        continue;
-                    }
-                    // PRINT("- fee: ", itr->fee.to_string(), "\n");
-                    // PRINT("  deposit: ", deposit.to_string(), "\n");
-                    total_fee = itr->fee;
-                    total_fee.amount = tlos.amount * ((double)itr->fee.amount / (double)pow(10.0, itr->fee.symbol.precision()));
-                    // PRINT("  total_fee: ", total_fee.to_string(), "\n");
-                    if (deposit > total_fee) {
-                        // user has enough fee-token to pay the fee -> we lock them up
-                        depos[i] -= total_fee;
-                        success = true;
-                        // PRINT("  success !! \n");
-                        break;
-                    }
-                }
-            } else {
-                // no fees because no tlos involved
-                success = true;
-            }
-
-            eosio_assert(success, "user don't have enough deposists to pay the order fee");
-
-            PRINT(" ",owner.to_string(), " -> fee: ", total_fee.to_string(), "(",  amount_a.to_string(),", ", amount_b.to_string(), "\n");
-            PRINT("vapaee::token::exchange::aux_calculate_total_fee() ...\n");
-        }
-        
-        void aux_try_to_unlock(name ram_payer) {
-            PRINT("vapaee::token::exchange::aux_try_to_unlock()\n");
-            PRINT(" ram_payer: ", ram_payer.to_string(), "\n");
-
-            int max = 5;           
-            uint64_t now = current_time();
-            PRINT(" now: ", std::to_string((unsigned long long) now), "\n");
-
-            locks lockstable(get_self(), get_self().value);
-            auto index = lockstable.template get_index<name("expire")>();
-            auto itr = index.lower_bound(now);
-
-            for (int count = max; itr != index.end() && count > 0; count--, itr = index.lower_bound(now)) {
-                PRINT("  -- itr->expire: ", std::to_string((unsigned long long) itr->expire), "\n");
-                if (itr->expire < now) {
-                    aux_cancel_lock(itr->id, itr->owner, ram_payer);
-                } else {
-                    break;
-                }
-            }
-
-            PRINT("vapaee::token::exchange::aux_try_to_unlock() ...\n");
-        }
-        */
 
         void aux_earn_micro_change(name owner, symbol orig, symbol extended, name ram_payer) {
             PRINT("vapaee::token::exchange::aux_earn_micro_change()\n");
@@ -776,24 +695,22 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::aux_register_event() ...\n");
         }
 
-        void aux_generate_order(name owner, name type, asset total, asset price, name ram_payer
-// new_version        , uint64_t ui
-            ) {
+        void aux_generate_order(name owner, name type, asset total, asset price, name ram_payer, uint64_t ui) {
             PRINT("vapaee::token::exchange::aux_generate_order()\n");
             PRINT(" owner: ", owner.to_string(), "\n");
             PRINT(" type: ", type.to_string(), "\n");
             PRINT(" total: ", total.to_string(), "\n");
             PRINT(" price: ", price.to_string(), "\n");
-// new_version            PRINT(" ui: ", std::to_string((long unsigned) ui), "\n");
+            PRINT(" ui: ", std::to_string((long unsigned) ui), "\n");
             
             require_auth(owner);         
 
             // create scope for the orders table
-            name scope_buy = aux_get_scope_for_tokens(total.symbol.code(), price.symbol.code());
-            name scope_sell = aux_get_scope_for_tokens(price.symbol.code(), total.symbol.code());            
+            uint64_t market_buy = aux_get_market_id(total.symbol.code(), price.symbol.code());
+            uint64_t market_sell = aux_get_market_id(price.symbol.code(), total.symbol.code());
 
-            PRINT(" scope_buy: ", scope_buy.to_string(), "\n");
-            PRINT(" scope_sell: ", scope_sell.to_string(), "\n");
+            PRINT(" market_buy: ", std::to_string((long unsigned) market_buy), "\n");
+            PRINT(" market_sell: ", std::to_string((long unsigned) market_sell), "\n");
             
             asset inverse = vapaee::utils::inverse(price, total.symbol);
             asset payment = vapaee::utils::payment(total, price);
@@ -810,13 +727,9 @@ namespace vapaee {
             //     price, total, inverse, payment).c_str()); 
 
             if (type == name("sell")) {
-                aux_generate_sell_order(false, owner, scope_sell, scope_buy, total, payment, price, inverse, ram_payer
-// new_version                , ui
-                );
+                aux_generate_sell_order(false, owner, market_sell, market_buy, total, payment, price, inverse, ram_payer, ui);
             } else if (type == name("buy")) {
-                aux_generate_sell_order(true, owner, scope_buy, scope_sell, payment, total, inverse, price, ram_payer
-// new_version                , ui
-                );
+                aux_generate_sell_order(true, owner, market_buy, market_sell, payment, total, inverse, price, ram_payer, ui);
             } else {
                 eosio_assert(false, (string("type must be 'sell' or 'buy' in lower case, got: ") + type.to_string()).c_str());
             }
@@ -824,33 +737,35 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::aux_generate_order() ...\n");
         }
 
-        void aux_generate_sell_order(bool inverted, name owner, name scope_buy, name scope_sell, asset total, asset payment, asset price, asset inverse, name ram_payer
-// new_version        , uint64_t ui
-        ) {
+        void aux_generate_sell_order(bool inverted, name owner, uint64_t market_buy, uint64_t market_sell, asset total, asset payment, asset price, asset inverse, name ram_payer, uint64_t ui) {
             PRINT("vapaee::token::exchange::aux_generate_sell_order()\n");
             PRINT(" inverted: ", std::to_string(inverted), "\n");
             PRINT(" owner: ", owner.to_string(), "\n");
-            PRINT(" scope_buy: ", scope_buy.to_string(), "\n");
-            PRINT(" scope_sell: ", scope_sell.to_string(), "\n");
+            PRINT(" market_buy: ", std::to_string((long unsigned) market_buy), "\n");
+            PRINT(" market_sell: ", std::to_string((long unsigned) market_sell), "\n");
             PRINT(" total: ", total.to_string(), "\n");        // total: 1.00000000 TLOS
             PRINT(" payment: ", payment.to_string(), "\n");    // payment: 2.50000000 CNT
             PRINT(" price: ", price.to_string(), "\n");        // price: 2.50000000 CNT
             PRINT(" inverse: ", inverse.to_string(), "\n");    // inverse: 0.40000000 TLOS
             PRINT(" ram_payer: ", ram_payer.to_string(), "\n");
-// new_version            PRINT(" ui: ", std::to_string((long unsigned) ui), "\n");
+            PRINT(" ui: ", std::to_string((long unsigned) ui), "\n");
+            
 
             double buyer_fee_percentage = 0.001;
             double seller_fee_percentage = 0.002;
             
-            sellorders buytable(get_self(), scope_buy.value);
-            sellorders selltable(get_self(), scope_sell.value);
+            sellorders buytable(get_self(), market_buy);
+            sellorders selltable(get_self(), market_sell);
 
             ordersummary o_summary(get_self(), get_self().value);
             symbol_code A = total.symbol.code();
             symbol_code B = payment.symbol.code();
-            name can_scope = aux_get_canonical_scope_for_symbols(A, B);
-            auto orders_ptr = o_summary.find(can_scope.value);
-            bool reverse_scope = can_scope != scope_sell;
+            
+            uint64_t can_market = aux_get_canonical_market(A, B);
+            uint64_t inv_market = aux_get_inverted_market(A, B);
+            uint64_t market = aux_get_market_id(A, B);
+            auto orders_ptr = o_summary.find(can_market);
+            bool reverse_scope = market != can_market;
 
             // sellorders selltable(get_self(), scope.value);
             auto buy_index = buytable.template get_index<name("price")>();
@@ -868,19 +783,19 @@ namespace vapaee {
             sell_order_table order;
             name buy_fees_receiver;
             name sell_fees_receiver;
-          
+
+
 
             
             vector<asset> deposits;
             aux_put_deposits_on_user_ram(owner, payment);
             aux_clone_user_deposits(owner, deposits);
 
-            locks lockstable(get_self(), get_self().value);
             tokens tokenstable(get_self(), get_self().value);
             auto atk_itr = tokenstable.find(total.symbol.code().raw());
             auto ptk_itr = tokenstable.find(price.symbol.code().raw());
-            eosio_assert(atk_itr != tokenstable.end(), (string("Token ") + total.symbol.code().to_string() + " not registered registered").c_str());
-            eosio_assert(ptk_itr != tokenstable.end(), (string("Token ") + price.symbol.code().to_string() + " not registered registered").c_str());
+            eosio_assert(atk_itr != tokenstable.end(), (string("Token ") + total.symbol.code().to_string() + " not registered").c_str());
+            eosio_assert(ptk_itr != tokenstable.end(), (string("Token ") + price.symbol.code().to_string() + " not registered").c_str());
             // eosio_assert(atk_itr->precision == total.symbol.precision(), aux_error_1(total, atk_itr->precision).c_str());
             // eosio_assert(ptk_itr->precision == price.symbol.precision(), aux_error_1(price, ptk_itr->precision).c_str());
             eosio_assert(price.symbol != total.symbol, (string("price token symbol ") + price.symbol.code().to_string() + " MUST be different from total").c_str());
@@ -913,7 +828,7 @@ namespace vapaee {
                         // // this code is useful to hot-debugging
                         // eosio_assert(owner.value != name("viterbotelos").value,
                         //     create_error_asset4("DEBUG IN PROGRESS. PLEASE WAIT",
-                        //     current_payment, b_ptr->inverse, remaining, b_ptr->total).c_str());                          
+                        //     current_payment, b_ptr->inverse, remaining, b_ptr->total).c_str());       
 
                         buytable.modify(*b_ptr, aux_get_modify_payer(ram_payer), [&](auto& a){
                             double percent = (double)remaining.amount / (double)a.total.amount;
@@ -936,7 +851,7 @@ namespace vapaee {
                             if (!reverse_scope) {
                                 // we are consuming part of a buy-order so we decrement the demand
                                 eosio_assert(a.demand.total.symbol == current_payment.symbol,
-                                    create_error_asset2(ERROR_AGSO_5, a.demand.total, current_payment).c_str());                                
+                                    create_error_asset2(ERROR_AGSO_5, a.demand.total, current_payment).c_str());             
                                 a.demand.total -= current_payment;
                             } else {
                                 // we are consuming part of a sell-order so we decrement the supply
@@ -956,9 +871,9 @@ namespace vapaee {
                         PRINT("    payment (2): ", current_payment.to_string(),"\n");
 
                         // register order in user personal order registry
-                        userorders buyerorders(get_self(), buyer.value);                        
-                        auto buyer_itr = buyerorders.find(scope_buy.value);
-                        eosio_assert(buyer_itr != buyerorders.end(), "ERROR: cómo que no existe? No fue registrado antes? buyer? scope_buy?");
+                        userorders buyerorders(get_self(), buyer.value);     
+                        auto buyer_itr = buyerorders.find(market_buy);
+                        eosio_assert(buyer_itr != buyerorders.end(), "ERROR: cómo que no existe? No fue registrado antes? buyer? market_buy?");
                         eosio_assert(orders_ptr != o_summary.end(), "table MUST exist but it does not");
 
                         // take the order out of the buyer personal order registry
@@ -968,7 +883,7 @@ namespace vapaee {
                             a.ids = newlist;
                         });
                         // if there's no orders left, erase the entire table entry
-                        buyer_itr = buyerorders.find(scope_buy.value);
+                        buyer_itr = buyerorders.find(market_buy);
                         if (buyer_itr != buyerorders.end() && buyer_itr->ids.size() == 0) {
                             buyerorders.erase(*buyer_itr);
                         }
@@ -1075,11 +990,7 @@ namespace vapaee {
             if (remaining.amount > 0 && remaining_payment.amount > 0) {
                 PRINT("-- final remaining: ", remaining.to_string(), " --\n");
                 // insert sell order
-                uint64_t id = selltable.available_primary_key();
-                //uint64_t next_lock = lockstable.available_primary_key();
-                //PRINT("  next_lock: ", std::to_string((unsigned long long) next_lock), "\n");
-                // inverse = vapaee::utils::inverse(price, amount.symbol);
-                // payment.amount = (int64_t)((double)(remaining.amount * price.amount) / (double)total_unit);
+                
                 payment.amount = remaining_payment.amount;
 
                 // transfer payment deposits to contract
@@ -1099,6 +1010,8 @@ namespace vapaee {
 
                 // create order entry
                 // inverse = vapaee::utils::inverse(price, remaining.symbol);
+                uint64_t id = selltable.available_primary_key();
+                PRINT("   selltable.emplace() id:", std::to_string((unsigned long) id),"\n"); 
                 selltable.emplace( ram_payer, [&]( auto& a ) {
                     a.id = id;
                     a.owner = owner;
@@ -1106,14 +1019,15 @@ namespace vapaee {
                     a.inverse = inverse;
                     a.total = payment;
                     a.selling = remaining;
-                    // a.ui = ui;
+                    a.ui = ui;
                 });
 
                 // register new order in the orders table
                 if (orders_ptr == o_summary.end()) {
                     o_summary.emplace( ram_payer, [&]( auto& a ) {
-                        a.table = can_scope;
                         if (!reverse_scope) {
+                            PRINT("   o_summary.emplace() can_market:", std::to_string((unsigned long)can_market),"\n"); 
+                            a.market = can_market;
                             a.sell = remaining.symbol.code();
                             a.pay = payment.symbol.code();            
                             a.supply.orders = 1;
@@ -1121,13 +1035,15 @@ namespace vapaee {
                             a.demand.orders = 0;
                             a.demand.total = asset(0, payment.symbol);
                         } else {
+                            PRINT("   o_summary.emplace() can_market:", std::to_string((unsigned long)can_market)," INVERSED\n"); 
+                            a.market = can_market;
                             a.sell = payment.symbol.code();
                             a.pay = remaining.symbol.code();
                             a.supply.orders = 0;
                             a.supply.total = asset(0, payment.symbol);
                             a.demand.orders = 1;
                             a.demand.total = remaining;
-                        }
+                        }                       
                     });
                 } else {
                     o_summary.modify(*orders_ptr, ram_payer, [&](auto & a){
@@ -1143,10 +1059,12 @@ namespace vapaee {
 
                 // register order in user personal order registry
                 userorders userorders_table(get_self(), owner.value);
-                auto user_itr = userorders_table.find(scope_sell.value);
+                auto user_itr = userorders_table.find(market_sell);
                 if (user_itr == userorders_table.end()) {
+                    PRINT("   userorders_table.emplace id:", std::to_string((unsigned long)market_sell),"\n"); 
                     userorders_table.emplace( ram_payer, [&]( auto& a ) {
-                        a.table = scope_sell;
+                        a.table = aux_get_table_from_market(market_sell).to_string();
+                        a.market = market_sell;
                         a.ids.push_back(id);
                     });
                 } else {
@@ -1171,20 +1089,16 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::action_convert_deposits_to_earnings() ...\n");
         }
 
-        void action_order(name owner, name type, const asset & total, const asset & price
-// new_version        , uint64_t ui
-            ) {
+        void action_order(name owner, name type, const asset & total, const asset & price, uint64_t ui) {
             PRINT("vapaee::token::exchange::action_order()\n");
             PRINT(" owner: ", owner.to_string(), "\n");
             PRINT(" type: ", type.to_string(), "\n");      
             PRINT(" total: ", total.to_string(), "\n");      
             PRINT(" price: ", price.to_string(), "\n");      
-// new_version            PRINT(" ui: ", std::to_string((long unsigned) ui), "\n");
+            PRINT(" ui: ", std::to_string((long unsigned) ui), "\n");
             require_auth(owner);
 
-            aux_generate_order(owner, type, total, price, owner
-// new_version            , ui
-            );
+            aux_generate_order(owner, type, total, price, owner, ui);
 
             PRINT("vapaee::token::exchange::action_order() ...\n");      
         }
@@ -1204,7 +1118,7 @@ namespace vapaee {
             // send tokens
             tokens tokenstable(get_self(), get_self().value);
             auto ptk_itr = tokenstable.find(quantity.symbol.code().raw());
-            eosio_assert(ptk_itr != tokenstable.end(), (string("Token ") + quantity.symbol.code().to_string() + " not registered registered").c_str());
+            eosio_assert(ptk_itr != tokenstable.end(), (string("Token ") + quantity.symbol.code().to_string() + " not registered").c_str());
 
             action(
                 permission_level{get_self(),name("active")},
@@ -1221,14 +1135,14 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::action_withdraw() ...\n");
         }
         
-        void action_add_token(name contract, const symbol_code & sym_code, uint8_t precision, name owner) {
+        void action_add_token(name contract, const symbol_code & sym_code, uint8_t precision, name admin) {
             PRINT("vapaee::token::exchange::action_add_token()\n");
             PRINT(" contract: ", contract.to_string(), "\n");
             PRINT(" sym_code: ", sym_code.to_string(), "\n");
             PRINT(" precision: ", std::to_string((unsigned) precision), "\n");
-            PRINT(" owner: ", owner.to_string(), "\n");
+            PRINT(" admin: ", admin.to_string(), "\n");
 
-            require_auth(owner);
+            require_auth(admin);
 
             stats statstable( contract, sym_code.raw() );
             auto token_itr = statstable.find( sym_code.raw() );
@@ -1240,48 +1154,50 @@ namespace vapaee {
             tokens tokenstable(get_self(), get_self().value);
             auto itr = tokenstable.find(sym_code.raw());
             eosio_assert(itr == tokenstable.end(), "Token already registered");
-            tokenstable.emplace( owner, [&]( auto& a ){
+            tokenstable.emplace( admin, [&]( auto& a ){
                 a.contract  = contract;
                 a.symbol    = sym_code;
                 a.precision = precision;
-                a.owner     = owner;
+                a.admin     = admin;
                 a.title     = "";
                 a.website   = "";
                 a.brief     = "";
                 a.banner    = "";
-                a.logo      = "";
-                a.logolg    = "";
+                a.icon      = "";
+                a.iconlg    = "";
                 a.tradeable = false;
-                a.banned    = false;
                 a.data      = 0;
             });
+
+
+
             PRINT("vapaee::token::exchange::action_add_token() ...\n");
         }
 
-        void action_update_token_info(const symbol_code & sym_code, string title, string website, string brief, string banner, string logo, string logolg, bool tradeable) {
+        void action_update_token_info(const symbol_code & sym_code, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {
             PRINT("vapaee::token::exchange::action_update_token_info()\n");
             PRINT(" sym_code: ", sym_code.to_string(), "\n");
             PRINT(" title: ", title.c_str(), "\n");
             PRINT(" website: ", website.c_str(), "\n");
             PRINT(" brief: ", brief.c_str(), "\n");
             PRINT(" banner: ", banner.c_str(), "\n");
-            PRINT(" logo: ", logo.c_str(), "\n");
-            PRINT(" logolg: ", logolg.c_str(), "\n");
+            PRINT(" icon: ", icon.c_str(), "\n");
+            PRINT(" iconlg: ", iconlg.c_str(), "\n");
             PRINT(" tradeable: ", std::to_string(tradeable), "\n");
 
             tokens tokenstable(get_self(), get_self().value);
             auto itr = tokenstable.find(sym_code.raw());
             eosio_assert(itr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
-            name owner = itr->owner;
-            eosio_assert(has_auth(get_self()) || has_auth(owner), "only admin or token's owner can modify the token main info");
+            name admin = itr->admin;
+            eosio_assert(has_auth(get_self()) || has_auth(admin), "only admin or token's admin can modify the token main info");
 
             tokenstable.modify( *itr, same_payer, [&]( auto& a ){
                 a.title     = title;
                 a.website   = website;
                 a.brief     = brief;
                 a.banner    = banner;
-                a.logo      = logo;
-                a.logolg    = logolg;
+                a.icon      = icon;
+                a.iconlg    = iconlg;
                 a.tradeable = tradeable;
             });
 
@@ -1299,13 +1215,13 @@ namespace vapaee {
             eosio_assert(itr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
 
             eosio_assert( is_account( newadmin ), "newadmin account does not exist");
-            eosio_assert(has_auth(get_self()) || has_auth(itr->owner), "only DAO or token's admin can change token admin");
+            eosio_assert(has_auth(get_self()) || has_auth(itr->admin), "only DAO or token's admin can change token admin");
 
             tokenstable.modify( *itr, same_payer, [&]( auto& a ){
-                a.owner = newadmin;
+                a.admin = newadmin;
             });
 
-            PRINT("vapaee::token::exchange::action_set_token_owner() ...\n");
+            PRINT("vapaee::token::exchange::action_set_token_admin() ...\n");
         }
         
 
@@ -1339,9 +1255,9 @@ namespace vapaee {
             tokens tokenstable(get_self(), get_self().value);
             auto tkitr = tokenstable.find(sym_code.raw());
             eosio_assert(tkitr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
-            name owner = tkitr->owner;
-            eosio_assert(has_auth(get_self()) || has_auth(owner), "only admin or token's owner can modify the token data");
-            name ram_payer = owner;
+            name admin = tkitr->admin;
+            eosio_assert(has_auth(get_self()) || has_auth(admin), "only admin or token's admin can modify the token data");
+            name ram_payer = admin;
             if (has_auth(get_self())) {
                 ram_payer = get_self();
             }
@@ -1406,9 +1322,9 @@ namespace vapaee {
             tokens tokenstable(get_self(), get_self().value);
             auto tkitr = tokenstable.find(sym_code.raw());
             eosio_assert(tkitr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
-            name owner = tkitr->owner;
-            eosio_assert(has_auth(get_self()) || has_auth(owner), "only admin or token's owner can modify the token data");
-            name ram_payer = owner;
+            name admin = tkitr->admin;
+            eosio_assert(has_auth(get_self()) || has_auth(admin), "only admin or token's admin can modify the token data");
+            name ram_payer = admin;
             if (has_auth(get_self())) {
                 ram_payer = get_self();
             }
@@ -1588,38 +1504,39 @@ namespace vapaee {
             require_auth(owner);
 
             // create scope for the orders table
-            name scope_buy = aux_get_scope_for_tokens(token_a, token_p);
-            name scope_sell = aux_get_scope_for_tokens(token_p, token_a);
-            name scope_canonical = aux_get_canonical_scope_for_symbols(token_a, token_p);
+            uint64_t buy_market = aux_get_market_id(token_a, token_p);
+            uint64_t sell_market = aux_get_market_id(token_p, token_a);
+            uint64_t can_market = aux_get_canonical_market(token_a, token_p);
 
             if (type == name("sell")) {
-                aux_cancel_sell_order(owner, scope_canonical, scope_buy, orders);
+                aux_cancel_sell_order(owner, can_market, buy_market, orders);
             }
 
             if (type == name("buy")) {
-                aux_cancel_sell_order(owner, scope_canonical, scope_sell, orders);
+                aux_cancel_sell_order(owner, can_market, sell_market, orders);
             }
 
             PRINT("vapaee::token::exchange::action_cancel() ...\n");
         }
 
-        void aux_cancel_sell_order(name owner, name canonical, name scope, const std::vector<uint64_t> & orders) {
+        void aux_cancel_sell_order(name owner, uint64_t can_market, uint64_t market, const std::vector<uint64_t> & orders) {
             // viterbotelos, acorn.telosd, acorn.telosd, [1]
             PRINT("vapaee::token::exchange::aux_cancel_sell_order()\n");
             PRINT(" owner: ", owner.to_string(), "\n");
-            PRINT(" canonical: ", canonical.to_string(), "\n");
-            PRINT(" scope: ", scope.to_string(), "\n");
+            PRINT(" can_market: ", std::to_string((unsigned long) can_market), "\n");
+            PRINT(" market: ", std::to_string((unsigned long) market), "\n");
             PRINT(" orders.size(): ", orders.size(), "\n");
 
-            sellorders selltable(get_self(), scope.value);
+            sellorders selltable(get_self(), market);
             asset return_amount;
+            name table = aux_get_table_from_market(market);
             
             ordersummary o_summary(get_self(), get_self().value);
-            auto orders_ptr = o_summary.find(canonical.value);
-            bool reverse_scope = canonical != scope;
+            auto orders_ptr = o_summary.find(can_market);
+            bool reverse_scope = can_market != market;
 
             // Register event
-            aux_register_event(owner, name("cancel.order"), scope.to_string() + "|" + std::to_string(orders.size()));
+            aux_register_event(owner, name("cancel.order"), table.to_string() + "|" + std::to_string(orders.size()));
 
             for (int i=0; i<orders.size(); i++) {
                 uint64_t order_id = orders[i];
@@ -1632,7 +1549,7 @@ namespace vapaee {
 
                 // ake out the order from the user personal order registry
                 userorders buyerorders(get_self(), owner.value);
-                auto buyer_itr = buyerorders.find(scope.value);
+                auto buyer_itr = buyerorders.find(market);
                 
                 eosio_assert(buyer_itr != buyerorders.end(), "ERROR: cómo que no existe? No fue registrado antes?");
                 // take the order out of the buyer personal order registry
@@ -1642,7 +1559,7 @@ namespace vapaee {
                     a.ids = newlist;
                 });
                 // if there's no orders left, erase the entire table entry
-                buyer_itr = buyerorders.find(scope.value);
+                buyer_itr = buyerorders.find(market);
                 if (buyer_itr != buyerorders.end() && buyer_itr->ids.size() == 0) {
                     buyerorders.erase(*buyer_itr);
                 }
@@ -1678,35 +1595,145 @@ namespace vapaee {
             }
 
             userorders buyerorders(get_self(), owner.value);
-            auto buyer_itr = buyerorders.find(scope.value);
+            auto buyer_itr = buyerorders.find(market);
             if (buyer_itr != buyerorders.end() && buyer_itr->ids.size() == 0) {
                 buyerorders.erase(*buyer_itr);
             }
         }
 
 
-        uint64_t aux_get_market_id(const symbol_code& commodity, const symbol_code& currency) {
-            PRINT("vapaee::token::exchange::aux_get_market_id()\n");
+        /* uint64_t aux_get_makert_from_table(name table) {
+            PRINT("vapaee::token::exchange::aux_get_makert_from_table()\n");
             uint64_t market = 0;
-            name scope = aux_get_scope_for_tokens(commodity, currency);
-            markets table(get_self(), get_self().value);
-            auto index = table.template get_index<name("name")>();
+            markets mktable(get_self(), get_self().value);
+            auto index = mktable.template get_index<name("name")>();
             
-
-            for (auto itr = index.lower_bound(scope.value); itr != index.end(); itr++) {
+            for (auto itr = index.lower_bound(table.value); itr != index.end(); itr++) {
                 PRINT("  -- itr->name: ", itr->name.to_string(), "\n");
-                if (itr->name == scope) {
+                if (itr->name == table) {
                     if (itr->name) {
-                        if (itr->comodity == commodity && itr->comodity == currency) {
-                            market = itr->id;
-                            break;
-                        }
+                        market = itr->id;
+                        break;
+                        // if (itr->commodity == commodity && itr->commodity == currency) {
+                        //     market = itr->id;
+                        //     break;
+                        // }
                     }
                 } else {
-                    eosio_assert(false,
-                        create_error_symcode2(ERROR_AGMI_1, commodity, currency).c_str());                    
+                    eosio_assert(false, "ERROR!!!"); 
                 }
             }
+
+            PRINT("vapaee::token::exchange::aux_get_makert_from_table()...\n");
+            return market;
+        } */
+
+        uint64_t aux_get_canonical_market(const symbol_code & A, const symbol_code & B) {
+            name scope_a = aux_get_canonical_scope_for_symbols(A, B);
+            name scope_b = aux_get_scope_for_tokens(A, B);
+            if (scope_a == scope_b) return aux_get_market_id(A, B);
+            if (scope_a != scope_b) return aux_get_market_id(B, A);
+            return 0;
+        }
+
+        uint64_t aux_get_inverted_market(const symbol_code & A, const symbol_code & B) {
+            name scope_a = aux_get_canonical_scope_for_symbols(A, B);
+            name scope_b = aux_get_scope_for_tokens(A, B);
+            if (scope_a != scope_b) return aux_get_market_id(A, B);
+            if (scope_a == scope_b) return aux_get_market_id(B, A);
+            return 0;
+        }
+
+        name aux_get_table_from_market(uint64_t market_id) {
+            PRINT("vapaee::token::exchange::aux_get_table_from_market()\n");
+            PRINT(" market_id: ", std::to_string((unsigned long) market_id), "\n");
+            markets mktable(get_self(), get_self().value);
+            auto market = mktable.get(market_id,  create_error_id1(ERROR_AGTFM_1, market_id).c_str());
+            PRINT("vapaee::token::exchange::aux_get_table_from_market()...\n");
+            return market.name;
+        }
+
+        bool aux_is_it_allowed_to_cerate_this_market(const symbol_code & A, const symbol_code & B) {
+            PRINT("vapaee::token::exchange::aux_is_it_allowed_to_cerate_this_market()\n");
+            PRINT(" A: ", A.to_string(), "\n");
+            PRINT(" B: ", B.to_string(), "\n");
+
+            tokens tokenstable(get_self(), get_self().value);
+            auto atk_itr = tokenstable.find(A.raw());
+            auto btk_itr = tokenstable.find(B.raw());
+            
+            eosio_assert(atk_itr != tokenstable.end(), create_error_symcode1(ERROR_AIIATCTM_1, A).c_str());
+            eosio_assert(btk_itr != tokenstable.end(), create_error_symcode1(ERROR_AIIATCTM_2, B).c_str());
+            eosio_assert(atk_itr != btk_itr,           create_error_symcode1(ERROR_AIIATCTM_3, A).c_str());
+
+            bool allowed = false;
+            if (atk_itr->currency) {
+                allowed = true;
+            }
+            if (btk_itr->currency) {
+                allowed = true;
+            }
+            if (atk_itr->group > 0 && atk_itr->group == btk_itr->group) {
+                allowed = true;
+            }
+
+            PRINT("vapaee::token::exchange::aux_is_it_allowed_to_cerate_this_market()...\n");
+            return allowed;
+        }
+
+        uint64_t aux_get_market_id(const symbol_code& A, const symbol_code& B) {
+            PRINT("vapaee::token::exchange::aux_get_market_id()\n");
+            PRINT(" A: ", A.to_string(), "\n");
+            PRINT(" B: ", B.to_string(), "\n");
+            uint64_t market = 0;
+            markets mktable(get_self(), get_self().value);
+            auto index = mktable.template get_index<name("name")>();
+            
+
+            name scope_canonical = aux_get_canonical_scope_for_symbols(A, B);
+            name scope_b = aux_get_scope_for_tokens(A, B);
+            
+            for (auto itr = index.lower_bound(scope_b.value); itr != index.end(); itr++) {
+                if (itr->name == scope_b) {
+                    if (itr->commodity == A && itr->currency == B) {
+                        return itr->id;
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            // Is it allowed to create this market?
+            if (!aux_is_it_allowed_to_cerate_this_market(A,B)) {
+                eosio_assert(false, create_error_symcode2(ERROR_AGMI_1, A,B).c_str());
+            }
+            
+
+           
+            symbol_code commodity = A;
+            symbol_code currency = B;
+            uint64_t id = mktable.available_primary_key();
+            market = id;
+            if (scope_canonical != scope_b) {
+                commodity = B;
+                currency = A;
+                market++;
+            }
+            PRINT("  mktable.emplace() id\n", std::to_string((unsigned) id), scope_canonical.to_string(), "\n");
+            mktable.emplace(get_self(), [&](auto & a){
+                a.id = id;
+                a.name = scope_canonical;
+                a.commodity = commodity;
+                a.currency = currency;
+            });
+            name scope_inv = aux_get_scope_for_tokens(currency, commodity);
+            PRINT("  mktable.emplace() id+1\n", std::to_string((unsigned) id+1), scope_canonical.to_string(), "\n");
+            mktable.emplace(get_self(), [&](auto & a){
+                a.id = id+1;
+                a.name = scope_inv;
+                a.commodity = currency;
+                a.currency = commodity;
+            });
 
             PRINT("vapaee::token::exchange::aux_get_market_id()...\n");
             return market;
@@ -1720,768 +1747,8 @@ namespace vapaee {
             uint64_t market_inv = 0;
             name scope;
             name scope_inv;
-            
-            
-
-            // copy from old structure to newone
-            ordersummary o_summary(get_self(), get_self().value);
-            ordersum2 o_sum(get_self(), get_self().value);
-            for (auto ptr = o_summary.begin(); ptr != o_summary.end(); ptr++) {
-
-                market = aux_get_market_id(ptr->sell, ptr->pay);
-                market_inv = aux_get_market_id(ptr->pay, ptr->sell);
-                scope = aux_get_scope_for_tokens(ptr->sell, ptr->pay);
-                scope_inv = aux_get_scope_for_tokens(ptr->pay, ptr->sell);
-
-                
-                history h_table(get_self(), ptr->table.value);
-                history2 h2_table(get_self(), ptr->table.value);
-                for (auto ptr_h = h_table.begin(); ptr_h != h_table.end(); ptr_h++) {
-
-                    h2_table.emplace(get_self(), [&]( auto& a ) {
-                        a.id = ptr_h->id;
-                        a.date = ptr_h->date;
-                        a.buyer = ptr_h->buyer;
-                        a.seller = ptr_h->seller;
-                        a.price = ptr_h->price;
-                        a.inverse = ptr_h->inverse;
-                        a.amount = ptr_h->amount;
-                        a.payment = ptr_h->payment;
-                        a.buyfee = ptr_h->buyfee;
-                        a.sellfee = ptr_h->sellfee;
-                        a.isbuy = ptr_h->isbuy;
-                    });
-
-                    h_table.erase(*ptr_h);
-
-                    if (++count>num) return;
-
-                }
-
-                // new ordersummary
-                o_sum.emplace(get_self(), [&]( auto& a ) {
-                    a.market = market;
-                    a.demand.orders = ptr->demand.orders;
-                    a.supply.orders = ptr->supply.orders;
-                    a.demand.total = ptr->demand.total;
-                    a.supply.total = ptr->supply.total;
-                    a.supply.ascurrency = 0;
-                    a.demand.ascurrency = ptr->deals;
-                    a.sell = ptr->sell;
-                    a.pay = ptr->pay;
-                    a.deals = ptr->deals;
-                    a.blocks = ptr->blocks;
-                });
-
-                // borro el viejo
-                o_summary.erase(*ptr);
-
-                if (++count>num) return;
-            }
 
 
-
-            // modificar history
-            // history table2(get_self(), name("tlosdac.tlos").value);
-            // auto ptr2 = table2.find(8);
-            // table2.modify(*ptr2, same_payer, [&](auto & a){
-            //     a.sellfee.amount = 200000000;
-            //     a.amount.amount = 100000000000;
-            // });
-
-
-
-            // cancelar ordenes de copmpra
-            // std::vector<uint64_t> vec;
-            // vec.push_back(2);
-            // aux_cancel_sell_order(name("heydqnjzgene"), name("acorn.telosd"), name("acorn.telosd"), vec);
-            // vec.pop_back(); 
-            // 
-            // vec.push_back(0);
-            // vec.push_back(1);
-            // vec.push_back(2);
-            // vec.push_back(3);
-            // vec.push_back(4);
-            // vec.push_back(5);
-            // vec.push_back(6);
-            // vec.push_back(7);
-            // aux_cancel_sell_order(name("ghtdghvfkzfo"), name("telosd.tlos"), name("tlos.telosd"), vec);
-            // vec.pop_back(); 
-            // vec.pop_back(); 
-            // vec.pop_back(); 
-            // vec.pop_back(); 
-            // vec.pop_back(); 
-            // vec.pop_back(); 
-            // vec.pop_back(); 
-            // vec.pop_back(); 
-            // vec.push_back(8);
-            // aux_cancel_sell_order(name("b1"), name("telosd.tlos"), name("tlos.telosd"), vec);
-            // vec.pop_back(); 
-            // 
-
-            // restore ordersummary
-            // ordersummary o_summary(get_self(), get_self().value);
-            // o_summary.emplace(get_self(), [&]( auto& a ) {
-            //     a.table = name("acorn.telosd");
-            //     a.demand.orders = 0;
-            //     a.supply.orders = 3;
-            //     a.demand.total = asset(0, symbol(symbol_code("TELOSD"), 8));;
-            //     a.supply.total = asset(11332755301, symbol(symbol_code("ACORN"), 8));;
-            //     a.supply.ascurrency = 0;
-            //     a.demand.ascurrency = 0;
-            //     a.sell = symbol_code("ACORN");
-            //     a.pay = symbol_code("TELOSD");
-            //     a.deals = 0;
-            //     a.blocks = 0;
-            // });
-
-
-            // stats statstable(get_self(), symbol_code("CNT").raw());
-            // statstable.emplace(get_self(), [&](auto & a){
-            //     a.supply = asset(497731940988, symbol(symbol_code("CNT"), 4));
-            //     a.max_supply = asset(5000000000000, symbol(symbol_code("CNT"), 4));
-            //     a.issuer = name("vapaeetokens");                
-            // });
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // // Modificar orden de venta
-            // sellorders table0(get_self(), name("tlosdac.tlos").value);
-            // auto ptr = table0.find(14);
-            // table0.modify(*ptr, same_payer, [&](auto & a){
-            //      a.selling.amount = 2612800000000;
-            // });
-
-            // modificar depósitos
-            // deposits table5(get_self(), name("viterbotelos").value);
-            // auto ptr0 = table5.find(symbol_code("TLOSDAC").raw());
-            // eosio_assert(ptr0 != table5.end(), "Le erraste, no existe la entrada");
-            // table5.modify(*ptr0, same_payer, [&](auto & a){
-            //     a.amount.amount = 110698909424;
-            // });
-
-            // modificar earnings
-            // earnings table1(get_self(), get_self().value);
-            // auto eptr_1 = table1.find(symbol_code("TLOSDAC").raw());
-            // table1.modify(*eptr_1, same_payer, [&](auto & a){
-            //     a.quantity.amount = 211120000;
-            // });
-
-            // modificar history
-            // history table2(get_self(), name("tlosdac.tlos").value);
-            // auto ptr2 = table2.find(8);
-            // table2.modify(*ptr2, same_payer, [&](auto & a){
-            //     a.sellfee.amount = 200000000;
-            //     a.amount.amount = 100000000000;
-            // });
-
-            
-            // Borrar token
-            // tokens tokens_table(get_self(), get_self().value);
-            // auto token_ptr = tokens_table.find(symbol_code("EXAMPLE").raw());
-            // tokens_table.erase(token_ptr);
-            // stats statstable( _self, symbol_code("EXAMPLE").raw() );
-            // auto existing = statstable.find( symbol_code("EXAMPLE").raw() );
-            // statstable.erase(*existing);
-
-            // Borrar token de ordersummary
-            // ordersummary o_summary(get_self(), get_self().value);
-            // auto acorntelosd_ptr = o_summary.find(name("acorn.telosd").value);
-            // o_summary.erase(acorntelosd_ptr);
-            // auto carbonsumm_ptr = o_summary.find(name("ezar.telosd").value);
-            // o_summary.erase(carbonsumm_ptr);
-
-            // for (auto ptr = table0.begin(); ptr != table0.end(); ptr = table0.begin()) {
-            //     table0.erase(*ptr);
-            //     if (count++ > num) break;
-            // }
-
-
-            // // Borrar ordertables
-            // ordertables table(get_self(), get_self().value);
-            // for (auto ptr = table.begin(); ptr != table.end(); ptr = table.begin()) {
-            //     table.erase(*ptr);
-            //     // if (count++ > num) break;
-            // }
-
-            // Update ordertables
-            // ordertables table1(get_self(), get_self().value);
-            // auto ptr = table1.find(name("edna.tlos").value);
-            // table1.modify(*ptr, same_payer, [&](auto & a){
-            //     a.blocks = 3;
-            //     a.deals = 4;
-            // });
-
-            // // Borrar ordersummary
-            // ordersummary o_summary(get_self(), get_self().value);
-            // for (auto ptr = o_summary.begin(); ptr != o_summary.end(); ptr = o_summary.begin()) {
-            //     o_summary.erase(*ptr);
-            // }
-
-            
-            /*
-            // Adding ordertables table entries
-            ordertables table(get_self(), get_self().value);
-            table.emplace(get_self(), [&](auto & a){
-                a.table = name("tlos.tlosdac");
-                a.sell = symbol_code("TLOS");
-                a.pay = symbol_code("TLOSDAC");
-                a.total = asset(16521967110, symbol(a.sell, 8));
-                a.orders = 5;
-                a.deals = 0;
-                a.blocks = 0;
-            });
-            table.emplace(get_self(), [&](auto & a){
-                a.table = name("tlosdac.tlos");
-                a.sell = symbol_code("TLOSDAC");
-                a.pay = symbol_code("TLOS");
-                a.total = asset(499844711889, symbol(a.sell, 8));
-                a.orders = 9;
-                a.deals = 20;
-                a.blocks = 16;
-            });
-            */
-            
-            
-            // ordersum o_sum(get_self(), get_self().value);
-            // ordersummary o_summary(get_self(), get_self().value);
-            // for (auto ptr = o_sum.begin(); ptr != o_sum.end(); ptr = o_sum.begin()) {
-            //     o_summary.emplace(get_self(), [&]( auto& a ) {
-            //         a.table = ptr->table;
-            //         a.demand.orders = ptr->demand.orders;
-            //         a.supply.orders = ptr->supply.orders;
-            //         a.demand.total = ptr->demand.total;
-            //         a.supply.total = ptr->supply.total;
-            //         a.supply.ascurrency = ptr->supply.ascurrency;
-            //         a.demand.ascurrency = ptr->demand.ascurrency;
-            //         a.sell = ptr->sell;
-            //         a.pay = ptr->pay;
-            //         a.deals = ptr->deals;
-            //         a.blocks = ptr->blocks;
-            //     });
-            //     o_sum.erase(*ptr);
-            // }
-
-            // Modify some token fixed property
-            // tokens tokens_table(get_self(), get_self().value);
-            // auto carbon_ptr = tokens_table.find(symbol_code("CNT").raw());
-            // tokens_table.modify(*carbon_ptr, get_self(), [&]( auto& a ) {
-            //     a.owner = name("viterbotelos");
-            // });
-            
-            // // copy from old structure to newone
-            // symbol_code telos = symbol_code("TLOS");
-            // symbol_code carbon = symbol_code("TLOSD");
-            // oldtokens  oldtokens_table (get_self(), get_self().value);
-            // tokens tokens_table(get_self(), get_self().value);
-            // for (auto ptr = oldtokens_table.begin(); ptr != oldtokens_table.end(); ptr = oldtokens_table.begin()) {
-            //     bool currency = false;
-            //     if (telos == ptr->symbol) currency = true;
-            //     if (carbon == ptr->symbol) currency = true;
-            //     tokens_table.emplace(get_self(), [&]( auto& a ) {
-            //         a.symbol     = ptr->symbol;
-            //         a.precision  = ptr->precision;
-            //         a.contract   = ptr->contract;
-            //         a.owner      = ptr->owner;
-            //         a.title      = ptr->title;
-            //         a.website    = ptr->website;
-            //         a.brief      = ptr->brief;
-            //         a.banner     = ptr->banner;
-            //         a.logo       = ptr->logo;
-            //         a.logolg     = ptr->logolg;
-            //         a.date       = ptr->date;
-            //         a.tradeable  = ptr->tradeable;
-            //         a.banned     = ptr->banned;
-            //         a.currency   = currency;
-            //         a.data       = ptr->data;
-            //     });
-            // 
-            //     oldtokens_table.erase(ptr);
-            // }
-            
-            // // copy from current token structure to old
-            // oldtokens  oldtokens_table (get_self(), get_self().value);
-            // tokens tokens_table(get_self(), get_self().value);
-            // for (auto ptr = tokens_table.begin(); ptr != tokens_table.end(); ptr = tokens_table.begin()) {
-            //     oldtokens_table.emplace(get_self(), [&]( auto& a ) {
-            //         a.symbol     = ptr->symbol;
-            //         a.precision  = ptr->precision;
-            //         a.contract   = ptr->contract;
-            //         a.owner      = ptr->owner;
-            //         a.title      = ptr->title;
-            //         a.website    = ptr->website;
-            //         a.brief      = ptr->brief;
-            //         a.banner     = ptr->banner;
-            //         a.logo       = ptr->logo;
-            //         a.logolg     = ptr->logolg;
-            //         a.date       = ptr->date;
-            //         a.tradeable  = ptr->tradeable;
-            //         a.banned     = ptr->banned;
-            //         a.data       = ptr->data;
-            //     });
-            // 
-            //     tokens_table.erase(ptr);
-            // }
-
-            /*
-            // copy from old structure to newone
-            ordersummary o_summary(get_self(), get_self().value);
-            ordersum o_sum(get_self(), get_self().value);
-            for (auto ptr = o_summary.begin(); ptr != o_summary.end(); ptr++) {
-                o_sum.emplace(get_self(), [&]( auto& a ) {
-                    a.table = ptr->table;
-                    a.demand.orders = ptr->demand.orders;
-                    a.supply.orders = ptr->supply.orders;
-                    a.demand.total = ptr->demand.total;
-                    a.supply.total = ptr->supply.total;
-                    a.supply.ascurrency = 0;
-                    a.demand.ascurrency = ptr->deals;
-                    a.sell = ptr->sell;
-                    a.pay = ptr->pay;
-                    a.deals = ptr->deals;
-                    a.blocks = ptr->blocks;
-                });
-            }
-            */
-            
-            /*
-            ordersummary o_summary(get_self(), get_self().value);
-            ordertables table(get_self(), get_self().value);
-            for (auto ptr = table.begin(); ptr != table.end(); ptr++) {
-                PRINT(" ------------------ \n");
-                
-                            
-                name scope = ptr->table;
-                name can_scope = aux_get_canonical_scope_for_symbols(ptr->pay, ptr->sell);
-                bool reverse_scope = can_scope != scope;
-
-                auto orders_itr = o_summary.find(can_scope.value);
-                if (orders_itr == o_summary.end()) {
-                    o_summary.emplace(get_self(), [&]( auto& a ) {
-                        a.table = can_scope;
-                        a.demand.orders = 0;
-                        a.supply.orders = 0; 
-                        if (!reverse_scope) {
-                            a.sell = ptr->sell;
-                            a.pay = ptr->pay;
-                            a.supply.total = asset(0, symbol(a.sell, 8));
-                            a.demand.total = asset(0, symbol(a.pay, 8));
-                        } else {
-                            a.sell = ptr->pay;
-                            a.pay = ptr->sell;
-                            a.supply.total = asset(0, symbol(a.sell, 8));
-                            a.demand.total = asset(0, symbol(a.pay, 8));
-                        }
-                    });
-                    orders_itr = o_summary.find(can_scope.value);
-                }
-
-                PRINT("          scope: ", scope.to_string(), "\n");
-                PRINT("      can_scope: ", can_scope.to_string(), "\n");
-                PRINT("     ptr->total: ", ptr->total.to_string(), "\n");
-
-                o_summary.modify(*orders_itr, get_self(), [&]( auto& a ) {                    
-                    if (!reverse_scope) {
-                        PRINT(" a.supply.total: ", a.supply.total.to_string(), "\n");
-                        a.supply.total += ptr->total;
-                        a.supply.orders += ptr->orders;
-                        a.deals = ptr->deals; 
-                        a.blocks = ptr->blocks;
-                    } else {
-                        PRINT(" a.demand.total: ", a.demand.total.to_string(), "\n");
-                        a.demand.total += ptr->total;
-                        a.demand.orders += ptr->orders;
-                    }
-                });
-
-            }
-            */
-            
-
-            // Delete fake tokens balance
-            // auto sym = quantity.symbol;
-            // stats statstable( _self, sym.code().raw() );
-            // auto existing = statstable.find( sym.code().raw() );
-            // eosio_assert( existing != statstable.end(), "token with symbol does not exist" );
-            // const auto& st = *existing;
-            // eosio_assert( quantity.is_valid(), "invalid quantity" );
-            // eosio_assert( quantity.amount > 0, "must retire positive quantity" );
-            // eosio_assert( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
-            // statstable.modify( st, same_payer, [&]( auto& s ) {
-            //     s.supply -= quantity;
-            // });
-            // accounts acnts( _self, account.value );
-            // auto it = acnts.find( quantity.symbol.code().raw() );
-            // eosio_assert( it != acnts.end(), "Balance row already deleted or never existed. Action won't have any effect." );
-            // acnts.erase( it );
-
-
-            // Borrar earnings
-            // earnings table1(get_self(), get_self().value);
-            // auto eptr_1 = table1.find(symbol_code("AAA").raw());
-            // auto eptr_2 = table1.find(symbol_code("BBB").raw());
-            // auto eptr_3 = table1.find(symbol_code("CCC").raw());
-            // auto eptr_4 = table1.find(symbol_code("DDD").raw());
-            // auto eptr_5 = table1.find(symbol_code("EEE").raw());
-            // auto eptr_6 = table1.find(symbol_code("FFF").raw());
-            // if (eptr_1 != table1.end()) table1.erase(*eptr_1);
-            // if (eptr_2 != table1.end()) table1.erase(*eptr_2);
-            // if (eptr_3 != table1.end()) table1.erase(*eptr_3);
-            // if (eptr_4 != table1.end()) table1.erase(*eptr_4);
-            // if (eptr_5 != table1.end()) table1.erase(*eptr_5);
-            // if (eptr_6 != table1.end()) table1.erase(*eptr_6);            
-
-            
-            // recorro las tablas de historial y actualizo un dato
-            // history table2(get_self(), account.value);
-            // for (auto ptr = table2.begin(); ptr != table2.end(); ptr++) {
-            //     table2.modify(*ptr, get_self(), [&](auto & a){
-            //         a.inverse = vapaee::utils::inverse(ptr->price, quantity.symbol);
-            //     });
-            // }            
-            // blockhistory table4(get_self(), account.value);
-            // for (auto ptr = table4.begin(); ptr != table4.end(); ptr++) {
-            //     table4.modify(*ptr, get_self(), [&](auto & a){
-            //         a.inverse = vapaee::utils::inverse(ptr->price, quantity.symbol);
-            //         a.amount = vapaee::utils::amount(ptr->price, ptr->volume, quantity.symbol);
-            //     });
-            // }
-            // tablesummary table6(get_self(), account.value);
-            // for (auto ptr = table6.begin(); ptr != table6.end(); ptr++) {
-            //     table6.modify(*ptr, get_self(), [&](auto & a){
-            //         a.inverse = vapaee::utils::inverse(ptr->price, quantity.symbol);
-            //         a.amount = vapaee::utils::amount(ptr->price, ptr->volume, quantity.symbol);
-            //     });
-            // }
-            
-            
- 
-            // Borrar history
-            // history table2(get_self(), account.value);
-            // for (auto ptr = table2.begin(); ptr != table2.end(); ptr = table2.begin()) {
-            //     table2.erase(*ptr);
-            //     if (count++ > num) break;
-            // }
-             
-            // Borrar blocks
-            // blockhistory table3(get_self(), account.value);
-            // for (auto ptr = table3.begin(); ptr != table3.end(); ptr = table3.begin()) {
-            //     table3.erase(*ptr);
-            //     if (count++ > num) break;
-            // }
-            
-            // Borrar blocks
-            // tablesummary table4(get_self(), account.value);
-            // for (auto ptr = table4.begin(); ptr != table4.end(); ptr = table4.begin()) {
-            //     table4.erase(*ptr);
-            //     if (count++ > num) break;
-            // }
-
-            // Borrar deposits
-            // deposits table5(get_self(), account.value);
-            // for (auto ptr = table5.begin(); ptr != table5.end(); ptr = table5.begin()) {
-            //     table5.erase(*ptr);
-            //     if (count++ > num) break;
-            // }
-
-            // Borrar earnings
-            // earnings table6(get_self(), get_self().value);
-            // for (auto ptr = table6.begin(); ptr != table6.end(); ptr = table6.begin()) {
-            //     table6.erase(*ptr);
-            //     if (count++ > num) break;
-            // }
-
-            // Borrar token
-            // tokens tokenstable(get_self(), get_self().value);
-            // auto itr1 = tokenstable.find(symbol_code("CNT").raw()); 
-            // if (itr1 != tokenstable.end()) tokenstable.erase(*itr1);
-
-            // // --
-            // accounts accountstable2(get_self(), name("viterbo4test").value);
-            // auto itr2 = accountstable2.begin();
-            // if (itr2 != accountstable2.end()) accountstable2.erase(*itr2);
-            // // --
-            // accounts accountstabl3(get_self(), name("vapaeetokens").value);
-            // auto itr3 = accountstabl3.begin();
-            // if (itr3 != accountstabl3.end()) accountstabl3.erase(*itr3);
-            // // --
-            // deposits depositstable(get_self(), name("viterbo4test").value);
-            // auto itr4 = depositstable.find(symbol_code("CNT").raw()); 
-            // depositstable.erase(*itr4);
-            // // --
-            // stats statstable(get_self(), symbol_code("CNT").raw()); 
-            // auto itr5 = statstable.begin();
-            // if (itr5 != statstable.end()) statstable.erase(*itr5);
-            // // --
-            // ordersummary ordersummarytable(get_self(), get_self().value);
-            // auto itr6 = ordersummarytable.find(name("cnt.tlos").value); 
-            // if (itr6 != ordersummarytable.end()) ordersummarytable.erase(*itr6);
-            
-            // Borrar de a un token
-            // stats statstable(get_self(), quantity.symbol.code().raw()); 
-            // auto itr3 = statstable.begin();
-            // statstable.erase(*itr3);
-
-
-
-//             // poblando la tabla Markets
-//             markets markets_table(get_self(), get_self().value);
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("acorn.tlos");
-//                 a.comodity = symbol_code("ACORN");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.acorn");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("ACORN");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("acorn.tlosd");
-//                 a.comodity = symbol_code("ACORN");
-//                 a.currency = symbol_code("TLOSD");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlosd.acorn");
-//                 a.comodity = symbol_code("TLOSD");
-//                 a.currency = symbol_code("ACORN");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("cnt.tlos");
-//                 a.comodity = symbol_code("CNT");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.cnt");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("CNT");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("edna.tlos");
-//                 a.comodity = symbol_code("EDNA");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.edna");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("EDNA");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("ezar.tlos");
-//                 a.comodity = symbol_code("EZAR");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.ezar");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("EZAR");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("heart.tlos");
-//                 a.comodity = symbol_code("HEART");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.heart");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("HEART");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("lol.tlos");
-//                 a.comodity = symbol_code("LOL");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.lol");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("LOL");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("olive.tlos");
-//                 a.comodity = symbol_code("OLIVE");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.olive");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("OLIVE");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("people.tlos");
-//                 a.comodity = symbol_code("PEOPLE");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.people");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("PEOPLE");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("qbe.tlos");
-//                 a.comodity = symbol_code("QBE");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.qbe");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("QBE");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("qbe.tlosd");
-//                 a.comodity = symbol_code("QBE");
-//                 a.currency = symbol_code("TLOSD");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlosd.qbe");
-//                 a.comodity = symbol_code("TLOSD");
-//                 a.currency = symbol_code("QBE");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("robo.tlos");
-//                 a.comodity = symbol_code("ROBO");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.robo");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("ROBO");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("sqrl.tlos");
-//                 a.comodity = symbol_code("SQRL");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.sqrl");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("SQRL");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("teach.tlos");
-//                 a.comodity = symbol_code("TEACH");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.teach");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("TEACH");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlosd.tlos");
-//                 a.comodity = symbol_code("TLOSD");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.tlosd");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("TLOSD");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlosdac.tlos");
-//                 a.comodity = symbol_code("TLOSDAC");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.tlosdac");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("TLOSDAC");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("yang.tlos");
-//                 a.comodity = symbol_code("TELOSD");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.yang");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("TELOSD");
-//             });
-// 
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("ynt.tlos");
-//                 a.comodity = symbol_code("YNT");
-//                 a.currency = symbol_code("TLOS");
-//             });
-//             markets_table.emplace(get_self(), [&]( auto& a ) {
-//                 a.id = market++;
-//                 a.name = name("tlos.ynt");
-//                 a.comodity = symbol_code("TLOS");
-//                 a.currency = symbol_code("YNT");
-//             });
-
-            // for (auto ptr = table6.begin(); ptr != table6.end(); ptr = table6.begin()) {
-            //     table6.erase(*ptr);
-            //     if (count++ > num) break;
-            // }
-
-            // ordertables orderstables(get_self(), get_self().value);
-            // auto orders_itr = orderstables.find(account.value);
-            // 
-            // orderstables.modify(*orders_itr, same_payer, [&](auto & a){
-            //     a.blocks = num;
-            // });
 
             
             PRINT("vapaee::token::exchange::action_poblate_user_orders_table() ...\n");

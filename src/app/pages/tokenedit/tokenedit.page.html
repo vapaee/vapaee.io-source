@@ -62,7 +62,7 @@
                         </div>                        
                         <span class="text-lg" *ngIf="!editable">Token: {{thetoken?.symbol}}</span> 
                         <span class="text-lg" *ngIf="editable">
-                            <img style="height:20px; width: 20px; margin-top:-3px" [src]="editing?.logo">
+                            <img style="height:20px; width: 20px; margin-top:-3px" [src]="editing?.icon">
                             <span class="card-title">
                                 {{editing?.title}}
                             </span>                            
@@ -249,25 +249,25 @@
                         </div>
                     </div>
 
-                    <!-- logo -->
+                    <!-- icon -->
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label nowrap">{{local.string.icon|titlecase}}:</label>
-                        <div [ngClass]="{'col-sm-9': !editing.logo, 'col-sm-8': editing.logo}">
-                            <input class="form-control col-form-label" placeholder="token icon URL" [(ngModel)]="editing.logo" (ngModelChange)="onTokenInfoChange($event)">
+                        <div [ngClass]="{'col-sm-9': !editing.icon, 'col-sm-8': editing.icon}">
+                            <input class="form-control col-form-label" placeholder="token icon URL" [(ngModel)]="editing.icon" (ngModelChange)="onTokenInfoChange($event)">
                         </div>
-                        <div *ngIf="editing.logo" class="col-sm-1">
-                            <img class="expand" [src]="editing.logo">
+                        <div *ngIf="editing.icon" class="col-sm-1">
+                            <img class="expand" [src]="editing.icon">
                         </div>
                     </div>
 
-                    <!-- logolg -->
+                    <!-- iconlg -->
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label nowrap">{{local.string.bigicon|titlecase}}:</label>
-                        <div [ngClass]="{'col-sm-9': !editing.logolg, 'col-sm-7': editing.logolg}">
-                            <input class="form-control col-form-label" placeholder="token larger icon URL" [(ngModel)]="editing.logolg" (ngModelChange)="onTokenInfoChange($event)">
+                        <div [ngClass]="{'col-sm-9': !editing.iconlg, 'col-sm-7': editing.iconlg}">
+                            <input class="form-control col-form-label" placeholder="token larger icon URL" [(ngModel)]="editing.iconlg" (ngModelChange)="onTokenInfoChange($event)">
                         </div>
-                        <div *ngIf="editing.logolg" class="col-sm-2">
-                            <img class="expand" [src]="editing.logolg">
+                        <div *ngIf="editing.iconlg" class="col-sm-2">
+                            <img class="expand" [src]="editing.iconlg">
                         </div>
                     </div>
 

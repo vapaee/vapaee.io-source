@@ -15,8 +15,15 @@ export interface MarketMap {
     [key:string]: Market;
 }
 
-export interface Market {
-    scope: string;
+export interface MarketDeclaration {
+    id: number,
+    table: string;
+    name?: string;
+    commodity: TokenDEX|string,
+    currency: TokenDEX|string,
+}
+
+export interface Market extends MarketDeclaration {
     commodity: TokenDEX,
     currency: TokenDEX,
     deals: number;
@@ -38,7 +45,8 @@ export interface Market {
 
 
 export interface MarketSummary {
-    scope:string,
+    market:number,
+    table:string,
     price:AssetDEX,
     inverse:AssetDEX,
     price_24h_ago:AssetDEX,
@@ -124,6 +132,7 @@ export interface UserOrdersMap {
 }
 
 export interface UserOrders {
+    market: string;
     table: string;
     ids: number[];
     orders?:Order[];

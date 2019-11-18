@@ -1,6 +1,7 @@
 #include "./tables/tokens.hpp"
 #include "./tables/tokendata.hpp"
 #include "./tables/tokenevents.hpp"
+#include "./tables/tokengroup.hpp"
 #include "./tables/sellorders.hpp"
 #include "./tables/locks.hpp"
 #include "./tables/deposits.hpp"

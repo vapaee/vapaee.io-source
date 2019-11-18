@@ -7,7 +7,7 @@
         TABLE markets_table {
             uint64_t id;
             name name;     // xxx.zzz (do not asume it is unique)
-            symbol_code comodity;
+            symbol_code commodity;
             symbol_code currency;
             uint64_t primary_key() const { return id; }
             uint64_t by_name_key() const { return name.value; }

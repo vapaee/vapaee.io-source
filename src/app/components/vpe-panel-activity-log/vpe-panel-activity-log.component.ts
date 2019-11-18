@@ -16,7 +16,7 @@ import { EventLog } from 'projects/vapaee/dex/src';
 export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestroy {
 
     @Output() gotoAccount: EventEmitter<string> = new EventEmitter();
-    @Output() gotoScope: EventEmitter<string> = new EventEmitter();
+    @Output() gotoTable: EventEmitter<string> = new EventEmitter();
     @Input() lines: number;
     @Input() public hideheader: boolean;
     @Input() public margintop: boolean;
@@ -85,11 +85,11 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
         this.local.onLocalChange.subscribe(this.onLocalChangeSubscriber);
     }
 
-    getCanonicalScope(scope) {
-        var parts:string[] = scope.split(".");
-        if (parts[1] == "tlos") return scope;
+    getCanonicalTable(table) {
+        var parts:string[] = table.split(".");
+        if (parts[1] == "tlos") return table;
         if (parts[0] == "tlos") return parts[1] + "." + parts[0];
-        if (parts[0] < parts[1]) return scope;
+        if (parts[0] < parts[1]) return table;
         return parts[1] + "." + parts[0];
     }
 
@@ -98,9 +98,9 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
         return data.ordertype;
     }
 
-    getOrderScope(e:EventLog) {
+    getOrderTable(e:EventLog) {
         var data:StringMap = this.extractEventData(e);
-        return data.scope;
+        return data.table;
     }
 
     extractEventData(e:EventLog) {
@@ -134,13 +134,13 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
                     // user: kate
                     // compra: cnt.tlos|kate|alice|10.00000000 CNT|4.00000000 TLOS|0.40000000 TLOS
                     // venta:  cnt.tlos|alice|kate|10.00000000 CNT|2.90000000 TLOS|0.29000000 TLOS
-                    data.scope = parts[0];
+                    data.table = parts[0];
                     data.buyer = parts[1];
                     data.seller = parts[2];
                     data.amount = parts[3];
                     data.payment = parts[4];
                     data.price = parts[5];
-                    if (data.scope == this.dex.canonicalScope(data.scope)) {
+                    if (data.table == this.dex.canonicalTable(data.table)) {
                         data.ordertype = (e.user == data.seller) ? "sell" : "buy";
                     } else {
                         data.ordertype = (e.user != data.seller) ? "sell" : "buy";
@@ -149,20 +149,20 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
                 case "cancel.order":
                     // cancel sell order: cnt.tlos|1
                     // cancel buy order: tlos.cnt|1
-                    data.scope = parts[0];
-                    data.canonical = this.getCanonicalScope(data.scope);
+                    data.table = parts[0];
+                    data.canonical = this.getCanonicalTable(data.table);
                     data.commodity = data.canonical.split(".")[0].toUpperCase();
                     data.currency = data.canonical.split(".")[1].toUpperCase();
                     data.quantity = parts[1];
 
                     if (data.quantity == "1") {
-                        if (data.scope == data.canonical) {
+                        if (data.table == data.canonical) {
                             data.ordertype = this.local.string.sellorder;
                         } else {
                             data.ordertype = this.local.string.buyorder;
                         }
                     } else {
-                        if (data.scope == data.canonical) {
+                        if (data.table == data.canonical) {
                             data.ordertype = this.local.string.sellorders;
                         } else {
                             data.ordertype = this.local.string.buyorders;
@@ -223,8 +223,8 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
         this.gotoAccount.next(name);
     }
 
-    clickOnScope(scope:string) {
-        this.gotoScope.next(scope)
+    clickOnTable(table:string) {
+        this.gotoTable.next(table)
     }
 
     psYReachEnd() {

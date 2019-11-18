@@ -155,9 +155,8 @@ export class AppComponent {
         
         this.dex.onTokensReady.subscribe((tokens:TokenDEX[]) => {
             var tokenPrices:PriceMap = {}
-            if (!this.dex.hasScopes()) return;
             for (var i in tokens) {
-                var market:Market = this.dex.market(tokens[i].scope);
+                var market:Market = this.dex.market(tokens[i].table);
                 if (market) {
                     tokenPrices[tokens[i].symbol] = {
                         price: market.summary ? market.summary.price.toNumber() : 0,

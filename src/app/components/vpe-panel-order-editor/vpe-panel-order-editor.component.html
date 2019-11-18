@@ -4,13 +4,13 @@
     <div class="row" *ngIf="portrait">
         <div class="col-6 text-right nowrap">
             <span class="cursor-pointer" (click)="sellAll()">
-                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_commodity.token.logo ? deposits_commodity.token.logo : '#'">
+                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_commodity.token.icon ? deposits_commodity.token.icon : '#'">
                 <span [ngClass]="{'text-danger': !can_sell && wants=='sell'}"> {{deposits_commodity.toString()}} </span>
             </span>
         </div>
         <div class="col-6 text-right nowrap">
             <span class="cursor-pointer" (click)="buyAll()">
-                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_currency.token.logo ? deposits_currency.token.logo : '#'">
+                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_currency.token.icon ? deposits_currency.token.icon : '#'">
                 <span [ngClass]="{'text-danger': !can_buy && wants=='buy'}"> {{deposits_currency.toString()}} </span>
             </span>
         </div>
@@ -56,17 +56,17 @@
         <div class="col-12 margin-top text-right">
             <div class="row">
                 <div class="col text-right nowrap" [hidden]="wants=='buy'">
-                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_amount.token.logo ? get_amount.token.logo : '#'">
+                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_amount.token.icon ? get_amount.token.icon : '#'">
                     <span [ngClass]="{'text-danger': !can_sell}"> {{get_amount.str}} </span>
                     &nbsp; <i style="vertical-align: bottom;" class="material-icons"> trending_flat </i> &nbsp;
-                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_payment.token.logo ? get_payment.token.logo : '#'">
+                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_payment.token.icon ? get_payment.token.icon : '#'">
                     {{get_payment.str}}
                 </div>
                 <div class="col text-right nowrap" [hidden]="wants=='sell'">
-                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_payment.token.logo ? get_payment.token.logo : '#'">
+                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_payment.token.icon ? get_payment.token.icon : '#'">
                     <span [ngClass]="{'text-danger': !can_buy}"> {{get_payment.str}} </span>
                     &nbsp; <i style="vertical-align: bottom;" class="material-icons"> trending_flat </i> &nbsp;
-                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_amount.token.logo ? get_amount.token.logo : '#'">
+                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_amount.token.icon ? get_amount.token.icon : '#'">
                     {{get_amount.str}}
                 </div>                        
             </div>
@@ -91,7 +91,7 @@
             </div>
             <div class="text-right" [hidden]="!(wants=='buy' && !can_buy)">
                 <label> {{local.string.needtodep}} &nbsp; </label>
-                <img style="height:16px; width: 16px; margin-top:-2px" [src]="money?.token?.logo || '#'">
+                <img style="height:16px; width: 16px; margin-top:-2px" [src]="money?.token?.icon || '#'">
                 <label> &nbsp; {{money?.token?.symbol}}</label>
             </div>
 
@@ -104,7 +104,7 @@
             </div>
             <div class="text-right" [hidden]="!(wants=='sell' && !can_sell)">
                 <label> {{local.string.needtodep}} &nbsp; </label>
-                <img style="height:16px; width: 16px; margin-top:-2px" [src]="amount?.token?.logo || '#'">
+                <img style="height:16px; width: 16px; margin-top:-2px" [src]="amount?.token?.icon || '#'">
                 <label> &nbsp; {{amount?.token?.symbol}}</label>
             </div>                 
 
@@ -221,7 +221,7 @@
                         </div>
                         <div class="col text-right nowrap col-padding-right">
                             <span class="cursor-pointer" (click)="sellAll()">
-                                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_commodity.token.logo ? deposits_commodity.token.logo : '#'">
+                                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_commodity.token.icon ? deposits_commodity.token.icon : '#'">
                                 <span [ngClass]="{'text-danger': !can_sell && wants=='sell'}"> {{deposits_commodity.toString()}} </span>
                             </span>
                         </div>
@@ -229,7 +229,7 @@
                 </div>
                 <div class="col-sm-4 text-right nowrap">
                     <span class="cursor-pointer" (click)="buyAll()">
-                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_currency.token.logo ? deposits_currency.token.logo : '#'">
+                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_currency.token.icon ? deposits_currency.token.icon : '#'">
                         <span [ngClass]="{'text-danger': !can_buy && wants=='buy'}"> {{deposits_currency.toString()}} </span>
                     </span>
                 </div>
@@ -262,7 +262,7 @@
                     </div>
                     <div class="text-right text-xs" [hidden]="!(wants=='buy' && !can_buy)">
                         <label> {{local.string.needtodep}} &nbsp; </label>
-                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="money?.token?.logo || '#'">
+                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="money?.token?.icon || '#'">
                         <label> &nbsp; {{money?.token?.symbol}}</label>
                     </div>
     
@@ -275,7 +275,7 @@
                     </div>
                     <div class="text-right text-xs" [hidden]="!(wants=='sell' && !can_sell)">
                         <label> {{local.string.needtodep}} &nbsp; </label>
-                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="amount?.token?.logo || '#'">
+                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="amount?.token?.icon || '#'">
                         <label> &nbsp; {{amount?.token?.symbol}}</label>
                     </div>                 
 
@@ -297,17 +297,17 @@
                 <div class="col-sm-8 text-right">
                     <div class="row">
                         <div class="col text-right nowrap" [hidden]="wants=='buy'">
-                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_amount.token.logo ? get_amount.token.logo : '#'">
+                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_amount.token.icon ? get_amount.token.icon : '#'">
                             <span [ngClass]="{'text-danger': !can_sell}"> {{get_amount.str}} </span>
                             &nbsp; <i style="vertical-align: bottom;" class="material-icons"> trending_flat </i> &nbsp;
-                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_payment.token.logo ? get_payment.token.logo : '#'">
+                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_payment.token.icon ? get_payment.token.icon : '#'">
                             {{get_payment.str}}
                         </div>
                         <div class="col text-right nowrap" [hidden]="wants=='sell'">
-                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_payment.token.logo ? get_payment.token.logo : '#'">
+                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_payment.token.icon ? get_payment.token.icon : '#'">
                             <span [ngClass]="{'text-danger': !can_buy}"> {{get_payment.str}} </span>
                             &nbsp; <i style="vertical-align: bottom;" class="material-icons"> trending_flat </i> &nbsp;
-                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_amount.token.logo ? get_amount.token.logo : '#'">
+                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_amount.token.icon ? get_amount.token.icon : '#'">
                             {{get_amount.str}}
                         </div>                        
                     </div>

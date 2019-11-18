@@ -6,8 +6,8 @@ import { DatePipe } from '@angular/common';
 import { TokenDEX, TokenData, TokenEvent } from './token-dex.class';
 import { AssetDEX } from './asset-dex.class';
 import { Feedback } from '@vapaee/feedback';
-import { VapaeeScatter, Account, AccountData, SmartContract, TableResult, TableParams, Asset } from '@vapaee/scatter';
-import { MarketMap, UserOrdersMap, MarketSummary, EventLog, Market, HistoryTx, TokenOrders, Order, UserOrders, OrderRow, HistoryBlock, DEXdata } from './types-dex';
+import { VapaeeScatter, Account, AccountData, SmartContract, TableResult, TableParams, Asset } from 'projects/vapaee/scatter/src';
+import { MarketMap, UserOrdersMap, MarketSummary, EventLog, Market, HistoryTx, TokenOrders, Order, UserOrders, OrderRow, HistoryBlock, DEXdata, MarketDeclaration } from './types-dex';
 
 
 @Injectable({
@@ -109,7 +109,10 @@ export class VapaeeDEX {
         this.feed = new Feedback();
         this.scatter.onLogggedStateChange.subscribe(this.onLoggedChange.bind(this));
         this.updateLogState();
-        this.updateTokens().then(data => {
+        this.updateTokens().then(_ => {
+            return this.updateMarkets();
+        })
+        .then(data => {
             this.zero_telos = new AssetDEX("0.0000 TLOS", this);
             console.log("VapaeeDEX.setTokensLoaded()");
             for (let i in this.tokens) {
@@ -148,6 +151,17 @@ export class VapaeeDEX {
         });
     }
 
+    updateMarkets() {
+        var markets = []
+        return this.fetchMarkets().then(data => {
+            this._markets = {};
+            for (let i in data.markets) {
+                let table = this.getTableFor(data.markets[i].commodity, data.markets[i].currency);
+                this._markets[table] = this.auxAssertTable(table, data.markets[i].id);
+            }
+        });        
+    }
+
     updateTokens() {
         return this.fetchTokens().then(data => {
             this.tokens = [];
@@ -176,8 +190,8 @@ export class VapaeeDEX {
             precision:4,
             contract:"eosio.token"
         });
-        token.logo = icon;
-        token.logolg = icon;
+        token.icon = icon;
+        token.iconlg = icon;
         token.website = website;
         token.tradeable = true;
         token.stat = {
@@ -306,7 +320,6 @@ export class VapaeeDEX {
             this.current = this.default;
             this.current.name = profile;
             
-            // this.scopes = {};
             this.balances = [];
             this.userorders = {};
             this.inorders = [];
@@ -357,7 +370,7 @@ export class VapaeeDEX {
     }
 
     // Actions --------------------------------------------------------------
-    createOrder(type:string, amount:AssetDEX, price:AssetDEX) {
+    createOrder(type:string, amount:AssetDEX, price:AssetDEX, ui:number) {
         // "alice", "buy", "2.50000000 CNT", "0.40000000 TLOS"
         // name owner, name type, const asset & total, const asset & price
         this.feed.setLoading("order-"+type, true);
@@ -365,7 +378,8 @@ export class VapaeeDEX {
             owner:  this.scatter.account.name,
             type: type,
             total: amount.toString(8),
-            price: price.toString(8)
+            price: price.toString(8),
+            ui: ui
         }).then(async result => {
             this.updateTrade(amount.token, price.token);
             this.feed.setLoading("order-"+type, false);
@@ -462,8 +476,8 @@ export class VapaeeDEX {
             website: token.website,
             brief: token.brief,
             banner: token.banner,
-            logo: token.logo,
-            logolg: token.logolg,
+            logo: token.icon,
+            iconlg: token.iconlg,
             tradeable: token.tradeable ? 1 : 0,
         }).then(async result => {
             await this.updateTokens();
@@ -487,8 +501,8 @@ export class VapaeeDEX {
             website: token.website,
             brief: token.brief,
             banner: token.banner,
-            logo: token.logo,
-            logolg: token.logolg,
+            icon: token.icon,
+            iconlg: token.iconlg,
             tradeable: token.tradeable,
         }).then(async result => {
             this.feed.setLoading(feedid, false);
@@ -585,9 +599,9 @@ export class VapaeeDEX {
                 contract: "nocontract",
                 title: offchain.title,
                 website: "",
-                logo:"",
-                logolg: "",
-                scope: "",
+                icon:"",
+                iconlg: "",
+                table: "",
                 stat: null,
                 tradeable: false,
                 offchain: true
@@ -597,38 +611,30 @@ export class VapaeeDEX {
 
 
     // --------------------------------------------------------------
-    // Scopes / Tables 
-    public hasScopes() {
-        return !!this._markets;
-    }
+    // Tables / markets
 
-    public market(scope:string): Market {
-        if (this._markets[scope]) return this._markets[scope];        // ---> direct
-        let reverse = this.inverseScope(scope);
+    public market(table:string): Market {
+        if (this._markets[table]) return this._markets[table];        // ---> direct
+        let reverse = this.inverseTable(table);
         if (this._reverse[reverse]) return this._reverse[reverse];    // ---> reverse
         if (!this._markets[reverse]) return null;                     // ---> table does not exist (or has not been loaded yet)
-        return this.reverse(scope);
+        return this.reverse(table);
     }
 
-    public table(scope:string): Market {
-        //console.error("table("+scope+") DEPRECATED");
-        return this.market(scope);
-    }    
-
-    private reverse(scope:string): Market {
-        let canonical = this.canonicalScope(scope);
-        let reverse_scope = this.inverseScope(canonical);
-        console.assert(canonical != reverse_scope, "ERROR: ", canonical, reverse_scope);
-        let reverse_table:Market = this._reverse[reverse_scope];
-        if (!reverse_table && this._markets[canonical]) {
-            this._reverse[reverse_scope] = this.createReverseTableFor(reverse_scope);
+    private reverse(table:string): Market {
+        let canonical = this.canonicalTable(table);
+        let reverse_table = this.inverseTable(canonical);
+        console.assert(canonical != reverse_table, "ERROR: ", canonical, reverse_table);
+        let reverse_market:Market = this._reverse[reverse_table];
+        if (!reverse_market && this._markets[canonical]) {
+            this._reverse[reverse_table] = this.createReverseTableFor(reverse_table);
         }
-        return this._reverse[reverse_scope];
+        return this._reverse[reverse_table];
     }
 
     public marketFor(commodity:TokenDEX, currency:TokenDEX): Market {
-        let scope = this.getScopeFor(commodity, currency);
-        return this.table(scope);
+        let table = this.getTableFor(commodity, currency);
+        return this.market(table);
     }
 
     public tableFor(commodity:TokenDEX, currency:TokenDEX): Market {
@@ -636,27 +642,28 @@ export class VapaeeDEX {
         return this.marketFor(commodity, currency);
     }
 
-    public createReverseTableFor(scope:string): Market {
-        let canonical = this.canonicalScope(scope);
-        let reverse_scope = this.inverseScope(canonical);
-        let table:Market = this._markets[canonical];
+    public createReverseTableFor(table:string): Market {
+        let canonical = this.canonicalTable(table);
+        let reverse_table = this.inverseTable(canonical);
+        let market:Market = this._markets[canonical];
+        let market_inv = market.id + 1;
 
         let inverse_history:HistoryTx[] = [];
 
-        for (let i in table.history) {
+        for (let i in market.history) {
             let hTx:HistoryTx = {
-                id: table.history[i].id,
+                id: market.history[i].id,
                 str: "",
-                price: table.history[i].inverse.clone(),
-                inverse: table.history[i].price.clone(),
-                amount: table.history[i].payment.clone(),
-                payment: table.history[i].amount.clone(),
-                buyer: table.history[i].seller,
-                seller: table.history[i].buyer,
-                buyfee: table.history[i].sellfee.clone(),
-                sellfee: table.history[i].buyfee.clone(),
-                date: table.history[i].date,
-                isbuy: !table.history[i].isbuy,
+                price: market.history[i].inverse.clone(),
+                inverse: market.history[i].price.clone(),
+                amount: market.history[i].payment.clone(),
+                payment: market.history[i].amount.clone(),
+                buyer: market.history[i].seller,
+                seller: market.history[i].buyer,
+                buyfee: market.history[i].sellfee.clone(),
+                sellfee: market.history[i].buyfee.clone(),
+                date: market.history[i].date,
+                isbuy: !market.history[i].isbuy,
             };
             hTx.str = hTx.price.str + " " + hTx.amount.str;
             inverse_history.push(hTx);
@@ -671,8 +678,8 @@ export class VapaeeDEX {
             let row_orders:Order[];
             let row_order:Order;
 
-            for (let i in table.orders[type]) {
-                let row = table.orders[type][i];
+            for (let i in market.orders[type]) {
+                let row = market.orders[type][i];
 
                 row_orders = [];
                 for (let j=0; j<row.orders.length; j++) {
@@ -705,26 +712,27 @@ export class VapaeeDEX {
         }
 
         let reverse:Market = {
-            scope: reverse_scope,
-            commodity: table.currency,
-            currency: table.commodity,
-            block: table.block,
-            blocklist: table.reverseblocks,
-            reverseblocks: table.blocklist,
-            blocklevels: table.reverselevels,
-            reverselevels: table.blocklevels,
-            blocks: table.blocks,
-            deals: table.deals,
-            direct: table.inverse,
-            inverse: table.direct,
+            id: market_inv,
+            table: reverse_table,
+            commodity: market.currency,
+            currency: market.commodity,
+            block: market.block,
+            blocklist: market.reverseblocks,
+            reverseblocks: market.blocklist,
+            blocklevels: market.reverselevels,
+            reverselevels: market.blocklevels,
+            blocks: market.blocks,
+            deals: market.deals,
+            direct: market.inverse,
+            inverse: market.direct,
             header: {
                 sell: {
-                    total:table.header.buy.total.clone(),
-                    orders:table.header.buy.orders
+                    total:market.header.buy.total.clone(),
+                    orders:market.header.buy.orders
                 },
                 buy: {
-                    total:table.header.sell.total.clone(),
-                    orders:table.header.sell.orders
+                    total:market.header.sell.total.clone(),
+                    orders:market.header.sell.orders
                 }
             },
             history: inverse_history,
@@ -733,63 +741,83 @@ export class VapaeeDEX {
                 buy: inverse_orders.sell   // <<-- esto funciona así como está?
             },
             summary: {
-                scope: this.inverseScope(table.summary.scope),
-                price: table.summary.inverse,
-                price_24h_ago: table.summary.inverse_24h_ago,
-                inverse: table.summary.price,
-                inverse_24h_ago: table.summary.price_24h_ago,
-                max_inverse: table.summary.max_price,
-                max_price: table.summary.max_inverse,
-                min_inverse: table.summary.min_price,
-                min_price: table.summary.min_inverse,
-                records: table.summary.records,
-                volume: table.summary.amount,
-                amount: table.summary.volume,
-                percent: table.summary.ipercent,
-                ipercent: table.summary.percent,
-                percent_str: table.summary.ipercent_str,
-                ipercent_str: table.summary.percent_str,
+                market: market_inv,
+                table: this.inverseTable(market.summary.table),
+                price: market.summary.inverse,
+                price_24h_ago: market.summary.inverse_24h_ago,
+                inverse: market.summary.price,
+                inverse_24h_ago: market.summary.price_24h_ago,
+                max_inverse: market.summary.max_price,
+                max_price: market.summary.max_inverse,
+                min_inverse: market.summary.min_price,
+                min_price: market.summary.min_inverse,
+                records: market.summary.records,
+                volume: market.summary.amount,
+                amount: market.summary.volume,
+                percent: market.summary.ipercent,
+                ipercent: market.summary.percent,
+                percent_str: market.summary.ipercent_str,
+                ipercent_str: market.summary.percent_str,
             },
-            tx: table.tx
+            tx: market.tx
         }
         return reverse;
     }
 
-    public getScopeFor(commodity:TokenDEX, currency:TokenDEX) {
+    public getTableFor(commodity:TokenDEX|string, currency:TokenDEX|string) {
+        // console.log("DEX.getTableFor()", arguments);
         if (!commodity || !currency) return "";
-        return commodity.symbol.toLowerCase() + "." + currency.symbol.toLowerCase();
+        if (typeof commodity == "string") {
+            let result = (<string>commodity).toLowerCase() + "." + (<string>currency).toLowerCase();
+            // console.log("DEX.getTableFor() -> ", result);
+            return result;
+        }
+        if (commodity instanceof TokenDEX) {
+            let result = (<TokenDEX>commodity).symbol.toLowerCase() + "." + (<TokenDEX>currency).symbol.toLowerCase();
+            // console.log("DEX.getTableFor() -> ", result);
+            return result;
+        }
+        console.error("DEX.getTableFor() -> ", null);
+        return "";
     }
 
-    public inverseScope(scope:string) {
-        if (!scope) return scope;
-        console.assert(typeof scope =="string", "ERROR: string scope expected, got ", typeof scope, scope);
-        let parts = scope.split(".");
-        console.assert(parts.length == 2, "ERROR: scope format expected is xxx.yyy, got: ", typeof scope, scope);
+    public inverseTable(table:string) {
+        if (!table) return table;
+        console.assert(typeof table =="string", "ERROR: string table expected, got ", typeof table, table);
+        let parts = table.split(".");
+        console.assert(parts.length == 2, "ERROR: table format expected is xxx.yyy, got: ", typeof table, table);
         let inverse = parts[1] + "." + parts[0];
         return inverse;
     }
 
-    public canonicalScope(scope:string) {
-        if (!scope) return scope;
-        console.assert(typeof scope =="string", "ERROR: string scope expected, got ", typeof scope, scope);
-        let parts = scope.split(".");
-        console.assert(parts.length == 2, "ERROR: scope format expected is xxx.yyy, got: ", typeof scope, scope);
+    public canonicalTable(table:string) {
+        // console.log("VapaeeDEX.canonicalTable("+table+")");
+        console.assert(!!table, "ERROR: table es null");
+        if (!table) return table;
+        console.assert(typeof table =="string", "ERROR: string table expected, got ", typeof table, table);
+        let parts = table.split(".");
+        console.assert(parts.length == 2, "ERROR: table format expected is xxx.yyy, got: ", typeof table, table);
         let inverse = parts[1] + "." + parts[0];
         if (parts[1] == "tlos") {
-            return scope;
+            // console.log("VapaeeDEX.canonicalTable("+table+") -> " + table);
+            return table;
         }
         if (parts[0] == "tlos") {
+            // console.log("VapaeeDEX.canonicalTable("+table+") -> " + inverse);
             return inverse;
         }
         if (parts[0] < parts[1]) {
-            return scope;
+            // console.log("VapaeeDEX.canonicalTable("+table+") -> " + table);
+            return table;
         } else {
+            // console.log("VapaeeDEX.canonicalTable("+table+") -> " + inverse);
             return inverse;
         }
     }
 
-    public isCanonical(scope:string) {
-        return this.canonicalScope(scope) == scope;
+    public isCanonical(table:string) {
+        if (!table) return true;
+        return this.canonicalTable(table) == table;
     }
 
     
@@ -892,7 +920,8 @@ export class VapaeeDEX {
                 if (gotit) {
                     continue;
                 }
-                let res:TableResult = await this.fetchOrders({scope:table, limit:1, lower_bound:id.toString()});
+                let market = this._markets[table].id + "";
+                let res:TableResult = await this.fetchOrders({scope:market, limit:1, lower_bound:id.toString()});
 
                 result = result.concat(res.rows);
             }
@@ -916,9 +945,11 @@ export class VapaeeDEX {
             let map: UserOrdersMap = {};
             for (let i=0; i<list.length; i++) {
                 let ids = list[i].ids;
+                let market = list[i].market;
                 let table = list[i].table;
                 let orders = await this.getThisSellOrders(table, ids);
                 map[table] = {
+                    market: market,
                     table: table,
                     orders: this.auxProcessRowsToOrders(orders),
                     ids:ids
@@ -1024,9 +1055,9 @@ export class VapaeeDEX {
     }
     
 
-    private getBlockHistoryTotalPagesFor(scope:string, pagesize: number) {
+    private getBlockHistoryTotalPagesFor(table:string, pagesize: number) {
         if (!this._markets) return 0;
-        let market = this.market(scope);
+        let market = this.market(table);
         if (!market) return 0;
         let total = market.blocks;
         let mod = total % pagesize;
@@ -1039,9 +1070,9 @@ export class VapaeeDEX {
         return pages;
     }
 
-    private getHistoryTotalPagesFor(scope:string, pagesize: number) {
+    private getHistoryTotalPagesFor(table:string, pagesize: number) {
         if (!this._markets) return 0;
-        let market = this.market(scope);
+        let market = this.market(table);
         if (!market) return 0;
         let total = market.deals;
         let mod = total % pagesize;
@@ -1073,35 +1104,35 @@ export class VapaeeDEX {
     }
 
     async getTransactionHistory(commodity:TokenDEX, currency:TokenDEX, page:number = -1, pagesize:number = -1, force:boolean = false): Promise<any> {
-        let scope:string = this.canonicalScope(this.getScopeFor(commodity, currency));
+        let table:string = this.canonicalTable(this.getTableFor(commodity, currency));
         let aux = null;
         let result = null;
-        this.feed.setLoading("history."+scope, true);
+        this.feed.setLoading("history."+table, true);
         aux = this.waitOrderSummary.then(async _ => {
             if (pagesize == -1) {
                 pagesize = 10;                
             }
             if (page == -1) {
-                let pages = this.getHistoryTotalPagesFor(scope, pagesize);
+                let pages = this.getHistoryTotalPagesFor(table, pagesize);
                 page = pages-3;
                 if (page < 0) page = 0;
             }
 
             return Promise.all([
-                this.fetchHistory(scope, page+0, pagesize),
-                this.fetchHistory(scope, page+1, pagesize),
-                this.fetchHistory(scope, page+2, pagesize)
+                this.fetchHistory(table, page+0, pagesize),
+                this.fetchHistory(table, page+1, pagesize),
+                this.fetchHistory(table, page+2, pagesize)
             ]).then(_ => {
-                this.feed.setLoading("history."+scope, false);
-                return this.market(scope).history;
+                this.feed.setLoading("history."+table, false);
+                return this.market(table).history;
             }).catch(e => {
-                this.feed.setLoading("history."+scope, false);
+                this.feed.setLoading("history."+table, false);
                 throw e;
             });
         });
 
-        if (this.market(scope) && !force) {
-            result = this.market(scope).history;
+        if (this.market(table) && !force) {
+            result = this.market(table).history;
         } else {
             result = aux;
         }
@@ -1125,10 +1156,10 @@ export class VapaeeDEX {
         // let diff:number;
         // let sec:number;
 
-        let scope:string = this.canonicalScope(this.getScopeFor(commodity, currency));
+        let table:string = this.canonicalTable(this.getTableFor(commodity, currency));
         let aux = null;
         let result = null;
-        this.feed.setLoading("block-history."+scope, true);
+        this.feed.setLoading("block-history."+table, true);
 
         aux = this.waitOrderSummary.then(async _ => {
             let fetchBlockHistoryStart:Date = new Date();
@@ -1137,13 +1168,13 @@ export class VapaeeDEX {
                 pagesize = 10;
             }
             if (page == -1) {
-                pages = this.getBlockHistoryTotalPagesFor(scope, pagesize);
+                pages = this.getBlockHistoryTotalPagesFor(table, pagesize);
                 page = pages-3;
                 if (page < 0) page = 0;
             }
             let promises = [];
             for (let i=0; i<=pages; i++) {
-                let promise = this.fetchBlockHistory(scope, i, pagesize);
+                let promise = this.fetchBlockHistory(table, i, pagesize);
                 promises.push(promise);
             }
 
@@ -1155,8 +1186,8 @@ export class VapaeeDEX {
                 // console.log("** VapaeeDEX.getBlockHistory() fetchBlockHistoryTime sec: ", sec, "(",diff,")");
 
 
-                this.feed.setLoading("block-history."+scope, false);
-                let market: Market = this.market(scope);
+                this.feed.setLoading("block-history."+table, false);
+                let market: Market = this.market(table);
                 market.blocklist = [];
                 market.reverseblocks = [];
                 let now = new Date();
@@ -1320,13 +1351,13 @@ export class VapaeeDEX {
 
                 return market.block;
             }).catch(e => {
-                this.feed.setLoading("block-history."+scope, false);
+                this.feed.setLoading("block-history."+table, false);
                 throw e;
             });
         });
 
-        if (this.market(scope) && !force) {
-            result = this.market(scope).block;
+        if (this.market(table) && !force) {
+            result = this.market(table).block;
         } else {
             result = aux;
         }
@@ -1337,24 +1368,25 @@ export class VapaeeDEX {
     }
 
     async getSellOrders(commodity:TokenDEX, currency:TokenDEX, force:boolean = false): Promise<any> {
-        let scope:string = this.getScopeFor(commodity, currency);
-        let canonical:string = this.canonicalScope(scope);
-        let reverse:string = this.inverseScope(canonical);
+        let table:string = this.getTableFor(commodity, currency);
+        let canonical:string = this.canonicalTable(table);
+        let reverse:string = this.inverseTable(canonical);
         let aux = null;
         let result = null;
         this.feed.setLoading("sellorders", true);
         aux = this.waitTokensLoaded.then(async _ => {
-            let orders = await this.fetchOrders({scope:canonical, limit:100, index_position: "2", key_type: "i64"});
-            this._markets[canonical] = this.auxAssertScope(canonical);
-            // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("-------------");
-            // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("Sell crudo:", orders);
+            let market = this._markets[canonical].id + "";
+            let orders = await this.fetchOrders({scope:market, limit:100, index_position: "2", key_type: "i64"});
+            this._markets[canonical] = this.auxAssertTable(canonical);
+            // if(table=="vpe.tlos" || table=="cnt.tlos")console.log("-------------");
+            // if(table=="vpe.tlos" || table=="cnt.tlos")console.log("Sell crudo:", orders);
             let sell: Order[] = this.auxProcessRowsToOrders(orders.rows);
             sell.sort(function(a:Order, b:Order) {
                 if(a.price.amount.isLessThan(b.price.amount)) return -11;
                 if(a.price.amount.isGreaterThan(b.price.amount)) return 1;
                 return 0;
             });
-            // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("sorted:", sell);
+            // if(table=="vpe.tlos" || table=="cnt.tlos")console.log("sorted:", sell);
             // grouping together orders with the same price.
             let list: OrderRow[] = [];
             let row: OrderRow;
@@ -1400,8 +1432,8 @@ export class VapaeeDEX {
             }
 
             this._markets[canonical].orders.sell = list;
-            // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("Sell final:", this.scopes[scope].orders.sell);
-            // if(scope=="vpe.tlos" || scope=="cnt.tlos")console.log("-------------");
+            // if(table=="vpe.tlos" || table=="cnt.tlos")console.log("Sell final:", this.tables[table].orders.sell);
+            // if(table=="vpe.tlos" || table=="cnt.tlos")console.log("-------------");
 
             this.feed.setLoading("sellorders", false);            
             return this._markets[canonical].orders.sell;
@@ -1416,17 +1448,18 @@ export class VapaeeDEX {
     }
     
     async getBuyOrders(commodity:TokenDEX, currency:TokenDEX, force:boolean = false): Promise<any> {
-        let scope:string = this.getScopeFor(commodity, currency);
-        let canonical:string = this.canonicalScope(scope);
-        let reverse:string = this.inverseScope(canonical);
+        let table:string = this.getTableFor(commodity, currency);
+        let canonical:string = this.canonicalTable(table);
+        let reverse:string = this.inverseTable(canonical);
 
 
         let aux = null;
         let result = null;
         this.feed.setLoading("buyorders", true);
         aux = this.waitTokensLoaded.then(async _ => {
-            let orders = await await this.fetchOrders({scope:reverse, limit:50, index_position: "2", key_type: "i64"});
-            this._markets[canonical] = this.auxAssertScope(canonical);
+            let market = this._markets[reverse].id + "";
+            let orders = await await this.fetchOrders({scope:market, limit:50, index_position: "2", key_type: "i64"});
+            this._markets[canonical] = this.auxAssertTable(canonical);
             // console.log("-------------");
             // console.log("Buy crudo:", orders);            
             let buy: Order[] = this.auxProcessRowsToOrders(orders.rows);
@@ -1483,7 +1516,7 @@ export class VapaeeDEX {
             }
 
             this._markets[canonical].orders.buy = list;
-            // console.log("Buy final:", this.scopes[scope].orders.buy);
+            // console.log("Buy final:", this.tables[table].orders.buy);
             // console.log("-------------");
             this.feed.setLoading("buyorders", false);
             return this._markets[canonical].orders.buy;
@@ -1499,13 +1532,14 @@ export class VapaeeDEX {
     
     async getOrderSummary(): Promise<any> {
         console.log("VapaeeDEX.getOrderSummary()");
-        let tables = await this.fetchOrderSummary();
+        let tables = await this.fetchAllOrderSummary();
 
         for (let i in tables.rows) {
-            let scope:string = tables.rows[i].table;
-            let canonical = this.canonicalScope(scope);
-            console.assert(scope == canonical, "ERROR: scope is not canonical", scope, [i, tables]);
-            this._markets[canonical] = this.auxAssertScope(canonical);
+            let market_id:number = parseInt(tables.rows[i].market);
+            let market = this.getMarketById(market_id);
+            let canonical = this.canonicalTable(market.table);
+            console.assert(market.table == canonical, "ERROR: table is not canonical", market.table, [i, tables]);
+            this._markets[canonical] = this.auxAssertTable(canonical);
 
             // console.log(i, tables.rows[i]);
 
@@ -1522,15 +1556,25 @@ export class VapaeeDEX {
         this.setOrderSummary();
     }
 
+    getMarketById(market:number) {
+        for (let i in this._markets) {
+            if (this._markets[i].id == market) {
+                return this._markets[i];
+            }
+        }
+        console.error("ERROR: getMarketById() ", market);
+        return null;
+    }
+
     async getMarketSummary(token_a:TokenDEX, token_b:TokenDEX, force:boolean = false): Promise<MarketSummary> {
         console.log("VapaeeDEX.getOrderSummary()", token_a?token_a.symbol:'null', token_b?token_b.symbol:'null', force);
         console.assert(!!token_a, "ERROR: token_a is null");
         console.assert(!!token_b, "ERROR: token_b is null");
-        let scope:string = this.getScopeFor(token_a, token_b);
-        let canonical:string = this.canonicalScope(scope);
-        let inverse:string = this.inverseScope(canonical);
+        let table:string = this.getTableFor(token_a, token_b);
+        let canonical:string = this.canonicalTable(table);
+        let inverse:string = this.inverseTable(canonical);
 
-        let commodity = this.auxGetcommodityToken(canonical); 
+        let commodity = this.auxGetCommodityToken(canonical); 
         let currency = this.auxGetCurrencyToken(canonical);
 
         let ZERO_commodity = "0.00000000 " + commodity.symbol;
@@ -1542,12 +1586,13 @@ export class VapaeeDEX {
         let result:MarketSummary = null;
         aux = this.waitTokensLoaded.then(async _ => {
             let summary = await this.fetchSummary(canonical);
-            //if(canonical=="telosd.tlos")console.log(scope, "---------------------------------------------------");
+            //if(canonical=="telosd.tlos")console.log(table, "---------------------------------------------------");
             //if(canonical=="telosd.tlos")console.log("Summary crudo:", summary.rows);
 
-            this._markets[canonical] = this.auxAssertScope(canonical);
+            this._markets[canonical] = this.auxAssertTable(canonical);
             this._markets[canonical].summary = {
-                scope: canonical,
+                market: this._markets[canonical].id,
+                table: canonical,
                 price: new AssetDEX(new BigNumber(0), currency),
                 price_24h_ago: new AssetDEX(new BigNumber(0), currency),
                 inverse: new AssetDEX(new BigNumber(0), commodity),
@@ -1581,8 +1626,8 @@ export class VapaeeDEX {
                         price = summary.rows[i].price;
                         inverse = summary.rows[i].inverse;
 
-                        // price = (scope == canonical) ? summary.rows[i].price : summary.rows[i].inverse;
-                        // inverse = (scope == canonical) ? summary.rows[i].inverse : summary.rows[i].price;
+                        // price = (table == canonical) ? summary.rows[i].price : summary.rows[i].inverse;
+                        // inverse = (table == canonical) ? summary.rows[i].inverse : summary.rows[i].price;
                         //if(canonical=="telosd.tlos")console.log("hh:", hh, "last_hh:", last_hh, "price:", price);
                     }    
                 }
@@ -1776,12 +1821,12 @@ export class VapaeeDEX {
             let total = new AssetDEX(rows[i].total, this);
             let order:Order;
 
-            let scope = this.getScopeFor(price.token, inverse.token);
-            let canonical = this.canonicalScope(scope);
-            let reverse_scope = this.inverseScope(canonical);
+            let table = this.getTableFor(price.token, inverse.token);
+            let canonical = this.canonicalTable(table);
+            let reverse_table = this.inverseTable(canonical);
             
 
-            if (reverse_scope == scope) {
+            if (reverse_table == table) {
                 order = {
                     id: rows[i].id,
                     price: price,
@@ -1837,36 +1882,41 @@ export class VapaeeDEX {
         return hours[hh];
     }
 
-    private auxGetCurrencyToken(scope: string) {
-        console.assert(!!scope, "ERROR: invalid scope: '"+ scope +"'");
-        console.assert(scope.split(".").length == 2, "ERROR: invalid scope: '"+ scope +"'");
-        let currency_sym = scope.split(".")[1].toUpperCase();
+    private auxGetCurrencyToken(table: string) {
+        console.assert(!!table, "ERROR: invalid table: '"+ table +"'");
+        console.assert(table.split(".").length == 2, "ERROR: invalid table: '"+ table +"'");
+        let currency_sym = table.split(".")[1].toUpperCase();
         let currency = this.getTokenNow(currency_sym);
         if (!currency) {
-            console.log("auxGetCurrencyToken()", scope, currency_sym, "currency null");
+            console.log("auxGetCurrencyToken()", table, currency_sym, "currency null");
         } 
         return currency;
     }
 
-    private auxGetcommodityToken(scope: string) {
-        console.assert(!!scope, "ERROR: invalid scope: '"+ scope +"'");
-        console.assert(scope.split(".").length == 2, "ERROR: invalid scope: '"+ scope +"'");
-        let commodity_sym = scope.split(".")[0].toUpperCase();
+    private auxGetCommodityToken(table: string) {
+        console.assert(!!table, "ERROR: invalid table: '"+ table +"'");
+        console.assert(table.split(".").length == 2, "ERROR: invalid table: '"+ table +"'");
+        let commodity_sym = table.split(".")[0].toUpperCase();
         let commodity = this.getTokenNow(commodity_sym);
         if (!commodity) {
-            console.log("auxGetcommodityToken()", scope, commodity_sym, "commodity null");
+            console.log("auxGetCommodityToken()", table, commodity_sym, "commodity null");
         } 
         return commodity;        
     }
 
-    private auxAssertScope(scope:string): Market {
-        let commodity = this.auxGetcommodityToken(scope);
-        let currency = this.auxGetCurrencyToken(scope);
+    private auxAssertTable(table:string, market:number = -1): Market {
+        let commodity = this.auxGetCommodityToken(table);
+        let currency = this.auxGetCurrencyToken(table);
         let aux_asset_com = new AssetDEX(0, commodity);
         let aux_asset_cur = new AssetDEX(0, currency);
 
+        if (market == -1) {
+            market = this._markets[table].id;
+        }
+
         let market_summary:MarketSummary = {
-            scope: scope,
+            market: market,
+            table: table,
             price: aux_asset_cur,
             price_24h_ago: aux_asset_cur,
             inverse: aux_asset_com,
@@ -1884,8 +1934,9 @@ export class VapaeeDEX {
             ipercent_str: "0%",
         }
 
-        return this._markets[scope] || {
-            scope: scope,
+        return this._markets[table] || {
+            id: market,
+            table: table,
             commodity: commodity,
             currency: currency,
             orders: { sell: [], buy: [] },
@@ -1967,17 +2018,16 @@ export class VapaeeDEX {
         });
     }
 
-    private fetchOrderSummary(): Promise<TableResult> {
-        return this.contract.getTable("ordersummary").then(result => {
-            return result;
-        });
-    }
+    private async fetchAllOrderSummary(): Promise<TableResult> {
+        let table = "ordersummary";
+        return this.contract.getTableAll(table);
+    }    
 
-    private fetchBlockHistory(scope:string, page:number = 0, pagesize:number = 25): Promise<TableResult> {
-        let canonical:string = this.canonicalScope(scope);
+    private fetchBlockHistory(table:string, page:number = 0, pagesize:number = 25): Promise<TableResult> {
+        let canonical:string = this.canonicalTable(table);
         let pages = this.getBlockHistoryTotalPagesFor(canonical, pagesize);
         let id = page*pagesize;
-        // console.log("VapaeeDEX.fetchBlockHistory(", scope, ",",page,",",pagesize,"): id:", id, "pages:", pages);
+        // console.log("VapaeeDEX.fetchBlockHistory(", table, ",",page,",",pagesize,"): id:", id, "pages:", pages);
         if (page < pages) {
             if (this._markets && this._markets[canonical] && this._markets[canonical].block["id-" + id]) {
                 let result:TableResult = {more:false,rows:[]};
@@ -1992,17 +2042,18 @@ export class VapaeeDEX {
                 }
                 if (result.rows.length == pagesize) {
                     // we have the complete page in memory
-                    // console.log("VapaeeDEX.fetchHistory(", scope, ",",page,",",pagesize,"): result:", result.rows.map(({ id }) => id));
+                    // console.log("VapaeeDEX.fetchHistory(", table, ",",page,",",pagesize,"): result:", result.rows.map(({ id }) => id));
                     return Promise.resolve(result);
                 }                
             }
         }
 
-        return this.contract.getTable("blockhistory", {scope:canonical, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
+        let market = this._markets[canonical].id + "";
+        return this.contract.getTable("blockhistory", {scope:market, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
             // console.log("block History crudo:", result);
-            this._markets[canonical] = this.auxAssertScope(canonical);
+            this._markets[canonical] = this.auxAssertTable(canonical);
             this._markets[canonical].block = this._markets[canonical].block || {}; 
-            // console.log("this._markets[scope].block:", this._markets[scope].block);
+            // console.log("this._markets[table].block:", this._markets[table].block);
             for (let i=0; i < result.rows.length; i++) {
                 let block:HistoryBlock = {
                     id: result.rows[i].id,
@@ -2020,17 +2071,17 @@ export class VapaeeDEX {
                 block.str = JSON.stringify([block.max.str, block.entrance.str, block.price.str, block.min.str]);
                 this._markets[canonical].block["id-" + block.id] = block;
             }   
-            // console.log("block History final:", this._markets[scope].block);
+            // console.log("block History final:", this._markets[table].block);
             // console.log("-------------");
             return result;
         });
     }    
 
-    private fetchHistory(scope:string, page:number = 0, pagesize:number = 25): Promise<TableResult> {
-        let canonical:string = this.canonicalScope(scope);
+    private fetchHistory(table:string, page:number = 0, pagesize:number = 25): Promise<TableResult> {
+        let canonical:string = this.canonicalTable(table);
         let pages = this.getHistoryTotalPagesFor(canonical, pagesize);
         let id = page*pagesize;
-        // console.log("VapaeeDEX.fetchHistory(", scope, ",",page,",",pagesize,"): id:", id, "pages:", pages);
+        // console.log("VapaeeDEX.fetchHistory(", table, ",",page,",",pagesize,"): id:", id, "pages:", pages);
         if (page < pages) {
             if (this._markets && this._markets[canonical] && this._markets[canonical].tx["id-" + id]) {
                 let result:TableResult = {more:false,rows:[]};
@@ -2045,20 +2096,19 @@ export class VapaeeDEX {
                 }
                 if (result.rows.length == pagesize) {
                     // we have the complete page in memory
-                    // console.log("VapaeeDEX.fetchHistory(", scope, ",",page,",",pagesize,"): result:", result.rows.map(({ id }) => id));
+                    // console.log("VapaeeDEX.fetchHistory(", table, ",",page,",",pagesize,"): result:", result.rows.map(({ id }) => id));
                     return Promise.resolve(result);
                 }                
             }
         }
 
-        return this.contract.getTable("history", {scope:scope, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
+        let market = this._markets[table].id + "";
+        return this.contract.getTable("history", {scope:market, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
             // console.log("History crudo:", result);
             
-            this._markets[canonical] = this.auxAssertScope(canonical);
+            this._markets[canonical] = this.auxAssertTable(canonical);
             this._markets[canonical].history = [];
             this._markets[canonical].tx = this._markets[canonical].tx || {}; 
-
-            // console.log("this.scopes[scope].tx:", this.scopes[scope].tx);
 
             for (let i=0; i < result.rows.length; i++) {
                 let transaction:HistoryTx = {
@@ -2145,9 +2195,12 @@ export class VapaeeDEX {
         });
     }
     
-    private fetchSummary(scope): Promise<TableResult> {
-        return this.contract.getTable("tablesummary", {scope:scope}).then(result => {
-            return result;
+    private fetchSummary(table): Promise<TableResult> {
+        return this.waitTokensLoaded.then(_ => {
+            let market = this._markets[table].id + "";
+            return this.contract.getTable("tablesummary", {scope:market}).then(result => {
+                return result;
+            });    
         });
     }
 
@@ -2251,15 +2304,15 @@ export class VapaeeDEX {
                 let quantity:AssetDEX = new AssetDEX(0, token);
                 token.markets = [];
 
-                for (let scope in this._markets) {
-                    if (scope.indexOf(".") == -1) continue;
-                    let table:Market = this._markets[scope];
+                for (let table in this._markets) {
+                    if (table.indexOf(".") == -1) continue;
+                    let market:Market = this._markets[table];
 
-                    if (table.currency.symbol == token.symbol) {
-                        table = this.market(this.inverseScope(scope));
+                    if (market.currency.symbol == token.symbol) {
+                        market = this.market(this.inverseTable(table));
                     }
 
-                    if (table.commodity.symbol == token.symbol) {
+                    if (market.commodity.symbol == token.symbol) {
                         token.markets.push(table);
                     }
                 }
@@ -2473,7 +2526,7 @@ export class VapaeeDEX {
     }
 
     private fetchTokens(extended: boolean = true) {
-        console.log("Vapaee.fetchTokens()");
+        console.log("VapaeeDEX.fetchTokens()");
 
         return this.fetchAllTokens().then(result => {
             let data = {
@@ -2481,35 +2534,47 @@ export class VapaeeDEX {
             }
 
             for (let i in data.tokens) {
-                data.tokens[i].scope = data.tokens[i].symbol.toLowerCase() + ".tlos";
+                data.tokens[i].table = data.tokens[i].symbol.toLowerCase() + ".tlos";
             }
 
-            console.log("Vapaee.fetchTokens() -->", data.tokens);
+            console.log("VapaeeDEX.fetchTokens() -->", data.tokens);
+            return data;
+        });
+    }
+
+    private fetchMarkets(extended: boolean = true) {
+        console.log("VapaeeDEX.fetchMarkets()");
+
+        return this.fetchAllMarkets().then(result => {
+            let data = {
+                markets: <MarketDeclaration[]>result.rows
+            }
+            /*
+            for (let i in data.markets) {
+                data.markets[i].table = data.markets[i].commodity.toLowerCase() + "." + data.markets[i].currency.symbol.toLowerCase();
+            }
+            */
+           // console.error("----------------");
+           // console.log(data.markets, result.rows);
+           // console.error("----------------");
+           for (let i in data.markets) {
+                // console.log(i, "-", data.markets[i]);
+                data.markets[i].table = (<string>data.markets[i].commodity).toLowerCase() + "." + (<string>data.markets[i].currency).toLowerCase();
+            }
+
+            console.log("VapaeeDEX.fetchMarkets() -->", data.markets);
             return data;
         });
     }
 
     private async fetchAllTokens(): Promise<TableResult> {
         let table = "tokens";
-        let rows = [];
-        let params: TableParams = { limit: 200 }
-        let result:TableResult = { more:true, rows: [] };
-        
-        while(result.more) {
-            if (result.rows.length > 0) {
-                let symbol = result.rows[result.rows.length-1].symbol;
-                params.lower_bound = symbol;
-                rows.splice(rows.length-1, 1);
-            }
-            result = await this.contract.getTable(table, params);
-            rows = rows.concat(result.rows);
-        }
+        return this.contract.getTableAll(table);
+    }
 
-        return {
-            more: false,
-            rows: rows
-        };
-
+    private async fetchAllMarkets(): Promise<TableResult> {
+        let table = "markets";
+        return this.contract.getTableAll(table);
     }
 
     private resortTokens() {
@@ -2547,12 +2612,12 @@ export class VapaeeDEX {
             this.topmarkets = [];
             let inverse: string;
             let market:Market;
-            for (let scope in this._markets) {
-                market = this._markets[scope];
+            for (let table in this._markets) {
+                market = this._markets[table];
                 if (market.direct >= market.inverse) {
                     this.topmarkets.push(market);
                 } else {
-                    inverse = this.inverseScope(scope);
+                    inverse = this.inverseTable(table);
                     market = this.market(inverse);
                     this.topmarkets.push(market);
                 }

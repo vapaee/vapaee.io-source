@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { Feedback } from 'projects/vapaee/feedback/src';
 import { DropdownService } from 'src/app/services/dropdown.service';
-import { Asset } from '@vapaee/scatter';
+import { Asset } from 'projects/vapaee/scatter/src';
 
 declare const twttr: any;
 
@@ -109,8 +109,8 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         this.renderTweets(1000);
     }
 
-    tradeMarket(scope:string) {
-        this.app.navigate('/exchange/trade/'+scope);
+    tradeMarket(table:string) {
+        this.app.navigate('/exchange/trade/'+table);
     }
 
     setAction(act:string) {
@@ -186,10 +186,10 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         return null;
     }
 
-    get lglogo() {
+    get lgicon() {
         if (!this.token) return "";
-        if (this.token.logolg) return this.token.logolg;
-        if (this.token.logo) return this.token.logo;
+        if (this.token.icon) return this.token.icon;
+        if (this.token.icon) return this.token.icon;
         return "/assets/logos/no-icon.png";
     }
     
@@ -198,7 +198,7 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         if (this.dex.logged) {
             if (!this.editing) {
                 if (this.token) {
-                    if (this.token.owner == this.dex.logged) {
+                    if (this.token.admin == this.dex.logged) {
                         // console.log("TokenPage.hide_edit_btn() -> false");
                         return false;
                     }
@@ -240,8 +240,8 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
             this.showerrors = true;
             return;
         }
-        this.token.logo = this.token.logo || "/assets/logos/no-icon.png";
-        this.token.logolg = this.token.logolg || "/assets/logos/no-icon.png";
+        this.token.icon = this.token.icon || "/assets/logos/no-icon.png";
+        this.token.iconlg = this.token.iconlg || "/assets/logos/no-icon.png";
         this.token.banner = this.token.banner || "";
         this.token.website = this.token.website || "";
         this.dex.updatetoken(this.token).then(_ => {
@@ -259,7 +259,7 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
             this.newadmin = false;
             this.feed.setLoading("new-admin", false);
             this.renderEntries();
-            this.token.owner = this.adminname;
+            this.token.admin = this.adminname;
         }).catch(e => {
             console.error(e);
             this.feed.setLoading("new-admin", false);

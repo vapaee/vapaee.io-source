@@ -13,7 +13,7 @@ import { HistoryTx } from 'projects/vapaee/dex/src';
 export class VpePanelHistoryComponent implements OnChanges {
 
     @Input() public history: HistoryTx[];
-    @Input() public scope: string;
+    @Input() public table: string;
     @Input() public hideheader: boolean;
     @Input() public margintop: boolean;
     @Input() public expanded: boolean;

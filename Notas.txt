@@ -58,7 +58,7 @@ telosmain get table vapaeetokens ynt.tlos history -l 500
 + crear tabla markets
   + id
   + name       // este es el antiguo scope pero truncado. No se puede asumir que es único
-  + comodity
+  + commodity
   + currency
 + crear tabla bannedtokens  
   + id
@@ -72,9 +72,14 @@ telosmain get table vapaeetokens ynt.tlos history -l 500
   + banner: string
   + currency: symbol_code
 + crear un duplicado de las 7 tablas de forma que estén arregladas
-- hacer un análisis offchain de el contenido de las tablas afectadas:
-  - enumerar los scopes por cada tabla
-  - almacenar una copia de los datos por seguridad (por si la cago)
++ hacer un análisis offchain de el contenido de las tablas afectadas:
+  + enumerar los scopes por cada tabla
+  + almacenar una copia de los datos por seguridad (por si la cago)
++ escribir en el hotfix una rutina que borre los datos de las tablas afectadas y los pase a las nuevas.
+  + debe insertar en la tabla de markets todos los mercados y sus reversos
+  + en la nueva tabla tokengroup debería haber un group inicial con id 0 que sea global
+--- > DEPLOY & HOTFIX < ---
+
 - reescribir el código usando las nuevas tablas
   - recorrer el código y donde se use una tabla vieja afectada, reemplazarla por la nueva y adaptar el código si es necesario
   - action nueva: alta de UI
@@ -82,10 +87,6 @@ telosmain get table vapaeetokens ynt.tlos history -l 500
   - reescribir aux_generate_sell_order:
     - incluir el UI como destinatario
     - crear las dos entradas en la tabla markets (el canónico y el inverso)
-- escribir en el hotfix una rutina que borre los datos de las tablas afectadas y los pase a las nuevas.
-  - debe insertar en la tabla de markets todos los mercados y sus reversos
-  - en la nueva tabla tokengroup debería haber un group inicial con id 0 que sea global
---- > DEPLOY & HOTFIX < ---
 - reescribir las tablas viejas copiando la estructura de las nuevas
 - escribir en el hotfix una rutina que borre los datos de las tablas nuevas y los pase a las viejas arregladas.
 - renombrar en el código, toda referencia a las tablas nuevas y pasarlo a las viejas arregladas

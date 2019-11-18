@@ -21,7 +21,15 @@
 #define ERROR_AEMC_2 "ERR-AEMC-02: internal and external symbols don't match in code: "
 
 // aux_get_market_id
-#define ERROR_AGMI_1 "ERR-AGMI-01: market not found for commodity/currency pair: "
+#define ERROR_AGMI_1 "ERR-AGMI-01: This market is not allowed because none of them are currencies and they are not in the same token group: "
+
+// aux_is_it_allowed_to_cerate_this_market
+#define ERROR_AIIATCTM_1 "ERR-AIIATCTM-01: This token is not registered: "
+#define ERROR_AIIATCTM_2 "ERR-AIIATCTM-02: This token is not registered: "
+#define ERROR_AIIATCTM_3 "ERR-AIIATCTM-03: Can't create market. Both tokens are the same: "
+
+// aux_get_table_from_market
+#define ERROR_AGTFM_1 "ERR-AGTFM-01: not market found: "
 
 // aux_add_deposits
 #define ERROR_AAD_1 "ERR-AAD-01: symbol mismatch: "

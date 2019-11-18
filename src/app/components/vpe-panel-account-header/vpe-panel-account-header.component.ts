@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, Output, OnInit, OnDestroy } from '@angular/core';
 import { VapaeeDEX, DEXdata } from 'projects/vapaee/dex/src';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { Account, VapaeeScatter, Asset } from '@vapaee/scatter';
+import { Account, VapaeeScatter, Asset } from 'projects/vapaee/scatter/src';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 import { REXdata, VapaeeREX } from '@vapaee/rex';
 import { Subscriber } from 'rxjs';

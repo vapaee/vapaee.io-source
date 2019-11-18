@@ -107,20 +107,20 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
         });
     }
 
-    summary(_scope) {
-        var scope = this.dex.table(_scope);
+    summary(_table) {
+        var table = this.dex.market(_table);
         var _summary = Object.assign({
             percent: 0,
             percent_str: "0%",
             price: this.dex.zero_telos.clone(),
             records: [],
             volume: this.dex.zero_telos.clone()
-        }, scope ? scope.summary : {});
+        }, table ? table.summary : {});
         return _summary;
     }
 
-    clickOnMarket(scope:string) {
-        this.selectMarket.next(scope);
+    clickOnMarket(table:string) {
+        this.selectMarket.next(table);
     }
     
 

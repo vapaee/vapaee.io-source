@@ -2,7 +2,7 @@ import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService, AnalyticsService } from 'src/app/services/common/common.services';
 
-import { VapaeeScatter, NetworkMap, SmartContract } from '@vapaee/scatter';
+import { VapaeeScatter, NetworkMap, SmartContract } from 'projects/vapaee/scatter/src';
 import { VapaeeDEX } from 'projects/vapaee/dex/src';
 import { VapaeeStyle } from '@vapaee/style';
 
@@ -44,7 +44,7 @@ export class RootPage implements OnInit {
             this.scatter.setEndpoints(endpoints);
 
             var network = "telos-testnet";
-            // network = "telos";
+            network = "telos";
             // network = "local";
             if (window.location.hostname == "vapaee.io") {
                 network = "telos";
@@ -104,7 +104,7 @@ export class RootPage implements OnInit {
         var contract = this.scatter.getSmartContract("eosio.trail");
         var proposalID = "17";
         console.log("findOutIfUserVotedUs(",account,")");
-        return contract.getTable("votereceipts", {scope:account || this.dex.current.name, limit:1, lower_bound:proposalID}).then(result => {
+        return contract.getTable("votereceipts", {table:account || this.dex.current.name, limit:1, lower_bound:proposalID}).then(result => {
             this.user_voted_us = account == "guest";
             if (result.rows.length > 0) {
                 console.assert(result.rows[0].ballot_id == proposalID, result.rows[0].ballot_id, typeof result.rows[0].ballot_id, proposalID, typeof proposalID);

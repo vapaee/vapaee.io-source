@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SmartContract, VapaeeScatter, Account, Asset } from '@vapaee/scatter';
+import { SmartContract, VapaeeScatter, Account, Asset } from 'projects/vapaee/scatter/src';
 import { Feedback } from '@vapaee/feedback';
 
 

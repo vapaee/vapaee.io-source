@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { VapaeeDEX, AssetDEX } from 'projects/vapaee/dex/src';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { Account } from '@vapaee/scatter';
+import { Account } from 'projects/vapaee/scatter/src';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 
 

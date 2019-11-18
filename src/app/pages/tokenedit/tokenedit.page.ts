@@ -83,7 +83,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     editToken(tkn:TokenDEX) {
-        this.app.setGlobal("edit-token", this.editing.owner == this.dex.logged);
+        this.app.setGlobal("edit-token", this.editing.admin == this.dex.logged);
         this.app.navigate("/exchange/token/"+tkn.symbol.toLowerCase());
     }
 
@@ -105,7 +105,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
                     this.editable = true;
                     this.tab = this.TAB.EDIT;
                     this.dex.waitLogged.then(_ => {
-                        if (this.dex.logged == token.owner) {
+                        if (this.dex.logged == token.admin) {
                             
                         } else {
                             this.feed.setError('ownership', 'you are not the owner of this token');
@@ -247,8 +247,8 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
             contract: this.dex.telos.contract,
             currency: this.dex.telos.currency,
             data: this.dex.telos.data,
-            logo: this.dex.telos.logo,
-            logolg: this.dex.telos.logolg,
+            icon: this.dex.telos.icon,
+            iconlg: this.dex.telos.iconlg,
             markets: this.dex.telos.markets,
             owner: this.dex.telos.owner,
             precision: 0,
@@ -297,8 +297,8 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
                     banner: this.editing.banner || "",
                     brief: this.editing.brief || "",
                     contract: this.thetoken.contract,
-                    logo: this.editing.logo || "/assets/logos/no-icon.png",
-                    logolg: this.editing.logolg || "/assets/logos/no-icon.png",
+                    icon: this.editing.icon || "/assets/logos/no-icon.png",
+                    iconlg: this.editing.iconlg || "/assets/logos/no-icon.png",
                     precision: this.thetoken.precision || 0,
                     website: this.editing.website || "",
                     symbol: this.thetoken.symbol,
@@ -318,8 +318,8 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
                     banner: this.editing.banner || "",
                     brief: this.editing.brief || "",
                     contract: this.thetoken.contract,
-                    logo: this.editing.logo || "/assets/logos/no-icon.png",
-                    logolg: this.editing.logolg || "/assets/logos/no-icon.png",
+                    icon: this.editing.icon || "/assets/logos/no-icon.png",
+                    iconlg: this.editing.iconlg || "/assets/logos/no-icon.png",
                     precision: this.thetoken.precision || 0,
                     website: this.editing.website || "",
                     symbol: this.thetoken.symbol,

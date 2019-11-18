@@ -17,13 +17,13 @@
     <div class="row margin-top cursor-pointer market-full active-on-hover"
         [hidden]="hide_maxmin"
         *ngFor="let market of markets"
-        (click)="clickOnMarket(market.scope)"
-        (tap)="clickOnMarket(market.scope)"    
+        (click)="clickOnMarket(market.table)"
+        (tap)="clickOnMarket(market.table)"    
     >
         <div class="nowrap col-2 col-padding-right">
-            <img style="height:24px; width: 24px; margin-top:-2px" [src]="market.commodity.logo">&nbsp;
+            <img style="height:24px; width: 24px; margin-top:-2px" [src]="market.commodity.icon">&nbsp;
             <span class="text-md">{{market.commodity.symbol}}</span>
-            <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('market.token-stat-'+market.commodity.symbol) && !dex.feed.loading('summary.'+dex.canonicalScope(market.scope))"></span>
+            <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('market.token-stat-'+market.commodity.symbol) && !dex.feed.loading('summary.'+dex.canonicalTable(market.table))"></span>
         </div>
         <div class="nowrap col-3 text-bold text-right col-padding-right col-padding-left">
             <div class="row">
@@ -76,13 +76,13 @@
                     class="row cursor-pointer market active-on-hover"
                     *ngFor="let market of markets"
                     [hidden]="!hide_maxmin"
-                    (click)="clickOnMarket(market.scope)"
-                    (tap)="clickOnMarket(market.scope)"    
+                    (click)="clickOnMarket(market.table)"
+                    (tap)="clickOnMarket(market.table)"    
                 >
                     <div class="nowrap col-4 col-padding-right">
-                        <img class="token-icon" [src]="market.commodity.logo">
+                        <img class="token-icon" [src]="market.commodity.icon">
                         <span class="margin-left-xs">{{market.commodity.symbol}}</span>
-                        <span class="spinner-border spinner-border-sm margin-left-xs" [hidden]="!dex.feed.loading('market.token-stat-'+market.commodity.symbol) && !dex.feed.loading('summary.'+dex.canonicalScope(market.scope))"></span>
+                        <span class="spinner-border spinner-border-sm margin-left-xs" [hidden]="!dex.feed.loading('market.token-stat-'+market.commodity.symbol) && !dex.feed.loading('summary.'+dex.canonicalTable(market.table))"></span>
                     </div>
                     <div
                         class="nowrap col-2 text-right col-padding-right col-padding-left"

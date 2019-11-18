@@ -79,16 +79,16 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
         
     }
 
-    summary(_scope) {
-        return this.tokenSummary(_scope);
+    summary(_table) {
+        return this.tokenSummary(_table);
     }
 
-    tokenSummary(_scope) {
-        return this.marketSummary(_scope);
+    tokenSummary(_table) {
+        return this.marketSummary(_table);
     }
 
-    marketSummary(_scope) {
-        var market = this.dex.market(_scope);
+    marketSummary(_table) {
+        var market = this.dex.market(_table);
         var _summary = Object.assign({
             percent: 0,
             percent_str: "0%",

@@ -30,6 +30,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     deposits_commodity: AssetDEX;
     deposits_currency: AssetDEX;
 
+    @Input() public clientid: number;
     @Input() public owner: string;
     @Input() public commodity: TokenDEX;
     @Input() public currency: TokenDEX;
@@ -334,7 +335,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         console.log("BUY");
         this.loading = true;
         this.feed.clearError("form");
-        this.dex.createOrder("buy", this.amount, this.price).then(_ => {
+        this.dex.createOrder("buy", this.amount, this.price, this.clientid).then(_ => {
             // success
             this.loading = false;
         }).catch(e => {
@@ -354,7 +355,7 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         console.log("SELL");
         this.loading = true;
         this.feed.clearError("form");
-        this.dex.createOrder("sell", this.amount, this.price).then(_ => {
+        this.dex.createOrder("sell", this.amount, this.price, this.clientid).then(_ => {
             // success
             this.loading = false;
         }).catch(e => {

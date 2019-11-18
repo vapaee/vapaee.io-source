@@ -29,13 +29,13 @@
                 <div class="row cursor-pointer margin-bottom active-on-hover" 
                     *ngFor="let token of get_tokens | filter:token_filter"
                     [hidden]="token.symbol == 'TLOS'"
-                    (click)="clickOnToken(token.scope)"
-                    (tap)="clickOnToken(token.scope)"
+                    (click)="clickOnToken(token.table)"
+                    (tap)="clickOnToken(token.table)"
                 >
                     <div class="nowrap col-sm-3 col-padding-right">
-                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="token.logo">
+                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="token.icon">
                         {{token.symbol}}
-                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('token-stat-'+token.symbol) && !dex.feed.loading('summary.'+token.scope)"></span>
+                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('token-stat-'+token.symbol) && !dex.feed.loading('summary.'+token.table)"></span>
                     </div>
                     <div class="nowrap col-sm-3 text-right col-padding-right col-padding-left">
                         {{token.summary?.volume.valueToString(volume_digits, true)}}
@@ -58,7 +58,7 @@
                     (tap)="clickOnToken(token)"
                 >
                     <div class="nowrap text-md col-sm-12 margin-top margin-bottom">
-                        <img style="height:20px; width: 20px; margin-top:-2px" [src]="token.logo">
+                        <img style="height:20px; width: 20px; margin-top:-2px" [src]="token.icon">
                         {{token.title}} ({{token.symbol}})
                     </div>
                 </div>

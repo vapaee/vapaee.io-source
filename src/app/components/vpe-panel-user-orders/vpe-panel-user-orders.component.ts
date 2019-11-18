@@ -23,7 +23,7 @@ export class VpePanelUserOrdersComponent implements OnChanges {
     @Output() onClickRow: EventEmitter<{type:string, row:OrderRow}> = new EventEmitter();
     @Output() onClickPrice: EventEmitter<{type:string, row:OrderRow}> = new EventEmitter();
     @Output() onTableSelected: EventEmitter<string> = new EventEmitter();
-    c_loading: {[scope_id:string]:boolean};
+    c_loading: {[table_id:string]:boolean};
     error:string;
     constructor(
         public dex: VapaeeDEX,
@@ -46,8 +46,8 @@ export class VpePanelUserOrdersComponent implements OnChanges {
         });
     }
 
-    selectTable(scope:string) {
-        this.onTableSelected.next(scope);
+    selectTable(table:string) {
+        this.onTableSelected.next(table);
     }
 
     ngOnChanges() {
@@ -68,32 +68,32 @@ export class VpePanelUserOrdersComponent implements OnChanges {
         var result = [];
         var tables = {};
         for (var i in this.userorders) {
-            var scope = this.userorders[i];
-            var table = scope.table;
-            var sell_scope = table;
-            var buy_scope = table.split(".")[1] + "." + table.split(".")[0];
+            var table = this.userorders[i];
+            var table = table.table;
+            var sell_table = table;
+            var buy_table = table.split(".")[1] + "." + table.split(".")[0];
             if (table.split(".")[0] == "tlos") {
-                sell_scope = buy_scope;
-                buy_scope = table;
+                sell_table = buy_table;
+                buy_table = table;
             }
-            table = sell_scope;
+            table = sell_table;
             tables[table] = tables[table] || {
                 table: table,
                 sell: {
-                    scope: sell_scope,
+                    table: sell_table,
                     orders: []
                 },
                 buy: {
-                    scope: buy_scope,
+                    table: buy_table,
                     orders: []
                 }
             };
 
-            if (scope.table == buy_scope) {
-                tables[table].buy.orders = scope.orders;
+            if (table.table == buy_table) {
+                tables[table].buy.orders = table.orders;
             }
-            if (scope.table == sell_scope) {
-                tables[table].sell.orders = scope.orders;
+            if (table.table == sell_table) {
+                tables[table].sell.orders = table.orders;
             }
         }
         for (var t in tables) {
@@ -103,15 +103,15 @@ export class VpePanelUserOrdersComponent implements OnChanges {
         return result;
     }
 
-    getSymbols(scope) {
-        if (scope.split(".")[0] == "tlos")
-        return scope.split(".")[1].toUpperCase();
-        return scope.split(".")[0].toUpperCase();
+    getSymbols(table) {
+        if (table.split(".")[0] == "tlos")
+            return table.split(".")[1].toUpperCase();
+        return table.split(".")[0].toUpperCase();
     }
 
-    cancel(scope, order) {
-        console.log("scope", scope, "order", order);
-        var key = scope + order.id;
+    cancel(table, order) {
+        console.log("table", table, "order", order);
+        var key = table + "-" + order.id;
         
         if (order.deposit.token.symbol != order.telos.token.symbol) {
             this.c_loading[key] = true;

@@ -19,7 +19,7 @@
                 [ngClass]="{'disable':!currency.tradeable, 'btn-success':!newmarket && selected?.symbol == currency.symbol, 'btn-primary':newmarket || selected?.symbol != currency.symbol}"
                 (click)="selectCurrency(currency)"
             >
-                <img style="height:20px; width: 20px; margin-top: -3px;" [src]="currency.logo">
+                <img style="height:20px; width: 20px; margin-top: -3px;" [src]="currency.icon">
                 <span [ngClass]="{'text-muted':!currency.tradeable}"> {{currency.symbol}} </span>
                 <div class="label text-sm nowrap">coming soon</div>
             </span>
@@ -48,7 +48,7 @@
         <div class="card-header vpe-background-card-header text-md-center">
             <span class="text-md">{{local.string.commodity|titlecase}}</span>
             <div class="margin-top-md">
-                <vpe-panel-token-selector [tokens]="comodities" [current]="commodity" [margintop]="true" (tokenChange)="selectCommodity($event)"></vpe-panel-token-selector>
+                <vpe-panel-token-selector [tokens]="commodities" [current]="commodity" [margintop]="true" (tokenChange)="selectCommodity($event)"></vpe-panel-token-selector>
             </div>
             <div class="margin-top-lg">
                 <hr class="line">
@@ -58,7 +58,7 @@
                 <vpe-panel-token-selector [tokens]="dex.currencies" [current]="selected" [margintop]="true" (tokenChange)="selectCurrency($event, true)"></vpe-panel-token-selector>
             </div>
             <div class="margin-top-lg text-center">
-                <a class="btn btn-lg btn-success" routerLink="{{'/exchange/trade/' + dex.getScopeFor(commodity, selected) }}" >
+                <a class="btn btn-lg btn-success" routerLink="{{'/exchange/trade/' + dex.getTableFor(commodity, selected) }}" >
                     <i class="material-icons vertical-align-middle"> insert_chart_outlined </i>
                     {{local.string.trade | titlecase}}
                 </a>

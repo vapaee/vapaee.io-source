@@ -27,6 +27,8 @@ fi
 
 echo "-------- eosio.token (TLOS) ---------"
 cleos set contract eosio.token $PWD -p eosio.token@active
+cleos set contract eosio.token $PWD -p eosio.token@active
+cleos push action eosio.token create '[ "vapaeetokens", "1000000000.0000 TLOS"]' -p eosio.token@active
 cleos push action eosio.token create '[ "vapaeetokens", "1000000000.0000 TLOS"]' -p eosio.token@active
 cleos push action eosio.token issue '["alice", "1000.0000 TLOS", "memo 1000 TLOS"]' -p vapaeetokens@active
 cleos push action eosio.token issue '["alice", "1001.0000 TLOS", "memo 1001 TLOS"]' -p vapaeetokens@active

@@ -46,7 +46,7 @@ export class HomePage implements OnInit, OnDestroy {
         this.app.navigate('/exchange/account/' + name);
     }
 
-    gotoScope(scope:string) {
-        this.app.navigate('/exchange/trade/' + scope);
+    gotoTable(table:string) {
+        this.app.navigate('/exchange/trade/' + table);
     }
 }
