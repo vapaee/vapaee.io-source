@@ -920,6 +920,8 @@ export class VapaeeDEX {
                 if (gotit) {
                     continue;
                 }
+                // If the market does not exist -> return [];
+                if(!this._markets[table]) return [];
                 let market = this._markets[table].id + "";
                 let res:TableResult = await this.fetchOrders({scope:market, limit:1, lower_bound:id.toString()});
 
@@ -1124,7 +1126,7 @@ export class VapaeeDEX {
                 this.fetchHistory(table, page+2, pagesize)
             ]).then(_ => {
                 this.feed.setLoading("history."+table, false);
-                return this.market(table).history;
+                return this.market(table) ? this.market(table).history : [];
             }).catch(e => {
                 this.feed.setLoading("history."+table, false);
                 throw e;
@@ -1132,7 +1134,7 @@ export class VapaeeDEX {
         });
 
         if (this.market(table) && !force) {
-            result = this.market(table).history;
+            result = this.market(table) ? this.market(table).history : [];
         } else {
             result = aux;
         }
@@ -1188,6 +1190,7 @@ export class VapaeeDEX {
 
                 this.feed.setLoading("block-history."+table, false);
                 let market: Market = this.market(table);
+                if (!market) return null;
                 market.blocklist = [];
                 market.reverseblocks = [];
                 let now = new Date();
@@ -1287,7 +1290,8 @@ export class VapaeeDEX {
                 return market;
             }).then(market => {
                 // // elapsed time
-                // let allLevelsStart:Date = new Date();                
+                // let allLevelsStart:Date = new Date();
+                if(!market) return {};                
                 
                 let limit = 256;
                 let levels = [market.blocklist];
@@ -1357,7 +1361,7 @@ export class VapaeeDEX {
         });
 
         if (this.market(table) && !force) {
-            result = this.market(table).block;
+            result = this.market(table) ? this.market(table).block : {};
         } else {
             result = aux;
         }
@@ -1375,6 +1379,11 @@ export class VapaeeDEX {
         let result = null;
         this.feed.setLoading("sellorders", true);
         aux = this.waitTokensLoaded.then(async _ => {
+            // if market does not exist return empty list
+            if(!this._markets[canonical]) {
+                this.feed.setLoading("sellorders", false);
+                return [];
+            }
             let market = this._markets[canonical].id + "";
             let orders = await this.fetchOrders({scope:market, limit:100, index_position: "2", key_type: "i64"});
             this._markets[canonical] = this.auxAssertTable(canonical);
@@ -1457,6 +1466,11 @@ export class VapaeeDEX {
         let result = null;
         this.feed.setLoading("buyorders", true);
         aux = this.waitTokensLoaded.then(async _ => {
+            // if market does not exist return empty list
+            if(!this._markets[reverse]) {
+                this.feed.setLoading("buyorders", false);
+                return [];
+            }
             let market = this._markets[reverse].id + "";
             let orders = await await this.fetchOrders({scope:market, limit:50, index_position: "2", key_type: "i64"});
             this._markets[canonical] = this.auxAssertTable(canonical);
@@ -1911,7 +1925,9 @@ export class VapaeeDEX {
         let aux_asset_cur = new AssetDEX(0, currency);
 
         if (market == -1) {
-            market = this._markets[table].id;
+            if (this._markets[table]) {
+                market = this._markets[table].id;
+            }            
         }
 
         let market_summary:MarketSummary = {
@@ -2048,6 +2064,8 @@ export class VapaeeDEX {
             }
         }
 
+        // if market does not exist return empty list
+        if(!this._markets[canonical]) return Promise.resolve({rows:[],more:false});
         let market = this._markets[canonical].id + "";
         return this.contract.getTable("blockhistory", {scope:market, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
             // console.log("block History crudo:", result);
@@ -2101,7 +2119,8 @@ export class VapaeeDEX {
                 }                
             }
         }
-
+        // If the market does not exist -> return [];
+        if(!this._markets[table]) return Promise.resolve({rows:[],more:false});
         let market = this._markets[table].id + "";
         return this.contract.getTable("history", {scope:market, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
             // console.log("History crudo:", result);
@@ -2197,6 +2216,7 @@ export class VapaeeDEX {
     
     private fetchSummary(table): Promise<TableResult> {
         return this.waitTokensLoaded.then(_ => {
+            if(!this._markets[table]) return Promise.resolve({rows:[], more:false})
             let market = this._markets[table].id + "";
             return this.contract.getTable("tablesummary", {scope:market}).then(result => {
                 return result;
@@ -2619,6 +2639,7 @@ export class VapaeeDEX {
                 } else {
                     inverse = this.inverseTable(table);
                     market = this.market(inverse);
+                    console.assert(!!market, "ERROR: market does not exist for table " + inverse);
                     this.topmarkets.push(market);
                 }
             }

@@ -646,7 +646,7 @@ namespace vapaee {
             ordersummary o_summary(get_self(), get_self().value);
             auto orders_itr = o_summary.find(market);
 
-            eosio_assert(orders_itr != o_summary.end(), (string("Why is this entry missing? market: ") + std::to_string((unsigned long)market)).c_str());
+            eosio_assert(orders_itr != o_summary.end(), (string("Why is this entry missing? ") + scope.to_string() + string(" market: ") + std::to_string((unsigned long)market)).c_str());
             o_summary.modify(*orders_itr, same_payer, [&](auto & a){
                 a.deals = h_id+1;
                 a.blocks = bh_id+1;
