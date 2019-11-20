@@ -16,7 +16,7 @@ export interface MarketMap {
 }
 
 export interface MarketDeclaration {
-    id: number,
+    id: string,
     table: string;
     name?: string;
     commodity: TokenDEX|string,
@@ -45,7 +45,7 @@ export interface Market extends MarketDeclaration {
 
 
 export interface MarketSummary {
-    market:number,
+    market:string,
     table:string,
     price:AssetDEX,
     inverse:AssetDEX,

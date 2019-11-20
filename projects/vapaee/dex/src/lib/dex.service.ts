@@ -152,12 +152,21 @@ export class VapaeeDEX {
     }
 
     updateMarkets() {
+        console.error("VapaeeDEX.updateMarkets()");
         var markets = []
         return this.fetchMarkets().then(data => {
             this._markets = {};
             for (let i in data.markets) {
                 let table = this.getTableFor(data.markets[i].commodity, data.markets[i].currency);
-                this._markets[table] = this.auxAssertTable(table, data.markets[i].id);
+                let canonical = this.canonicalTable(table);
+                let inverse = this.inverseTable(canonical);
+                let market_id = data.markets[i].id;
+                console.log("VapaeeDEX.updateMarkets()", i, market_id, table, canonical);
+                if (canonical == table) {
+                    this._markets[canonical] = this.auxAssertTable(canonical, market_id);
+                } else {
+                    this._reverse[inverse] = this.auxAssertTable(inverse, market_id);
+                }
             }
         });        
     }
@@ -613,6 +622,22 @@ export class VapaeeDEX {
     // --------------------------------------------------------------
     // Tables / markets
 
+
+    getMarketById(market:string) {
+        for (let i in this._markets) {
+            if (this._markets[i].id == market) {
+                return this._markets[i];
+            }
+        }
+        for (let i in this._reverse) {
+            if (this._reverse[i].id == market) {
+                return this._reverse[i];
+            }
+        }
+        console.error("ERROR: getMarketById() ", market);
+        return null;
+    }    
+
     public market(table:string): Market {
         if (this._markets[table]) return this._markets[table];        // ---> direct
         let reverse = this.inverseTable(table);
@@ -921,9 +946,10 @@ export class VapaeeDEX {
                     continue;
                 }
                 // If the market does not exist -> return [];
-                if(!this._markets[table]) return [];
-                let market = this._markets[table].id + "";
-                let res:TableResult = await this.fetchOrders({scope:market, limit:1, lower_bound:id.toString()});
+                let market = this.market(table);
+                if (!market) return [];
+                let market_id = market.id + "";
+                let res:TableResult = await this.fetchOrders({scope:market_id, limit:1, lower_bound:id.toString()});
 
                 result = result.concat(res.rows);
             }
@@ -1055,7 +1081,6 @@ export class VapaeeDEX {
         delete this._dexdata;
         return this.current;
     }
-    
 
     private getBlockHistoryTotalPagesFor(table:string, pagesize: number) {
         if (!this._markets) return 0;
@@ -1380,13 +1405,12 @@ export class VapaeeDEX {
         this.feed.setLoading("sellorders", true);
         aux = this.waitTokensLoaded.then(async _ => {
             // if market does not exist return empty list
-            if(!this._markets[canonical]) {
+            let market = this.market(canonical);
+            if(!market) {
                 this.feed.setLoading("sellorders", false);
                 return [];
             }
-            let market = this._markets[canonical].id + "";
-            let orders = await this.fetchOrders({scope:market, limit:100, index_position: "2", key_type: "i64"});
-            this._markets[canonical] = this.auxAssertTable(canonical);
+            let orders = await this.fetchOrders({scope:market.id, limit:100, index_position: "2", key_type: "i64"});
             // if(table=="vpe.tlos" || table=="cnt.tlos")console.log("-------------");
             // if(table=="vpe.tlos" || table=="cnt.tlos")console.log("Sell crudo:", orders);
             let sell: Order[] = this.auxProcessRowsToOrders(orders.rows);
@@ -1440,16 +1464,16 @@ export class VapaeeDEX {
                 order_row.sum = new AssetDEX(sum, order_row.total.token);
             }
 
-            this._markets[canonical].orders.sell = list;
+            market.orders.sell = list;
             // if(table=="vpe.tlos" || table=="cnt.tlos")console.log("Sell final:", this.tables[table].orders.sell);
             // if(table=="vpe.tlos" || table=="cnt.tlos")console.log("-------------");
 
             this.feed.setLoading("sellorders", false);            
-            return this._markets[canonical].orders.sell;
+            return market.orders.sell;
         });
 
-        if (this._markets[canonical] && !force) {
-            result = this._markets[canonical].orders.sell;
+        if (this.market(canonical) && !force) {
+            result = this.market(canonical).orders.sell;
         } else {
             result = aux;
         }
@@ -1467,13 +1491,12 @@ export class VapaeeDEX {
         this.feed.setLoading("buyorders", true);
         aux = this.waitTokensLoaded.then(async _ => {
             // if market does not exist return empty list
-            if(!this._markets[reverse]) {
-                this.feed.setLoading("buyorders", false);
+            let market = this.market(reverse);
+            if(!market) {
+                this.feed.setLoading("sellorders", false);
                 return [];
             }
-            let market = this._markets[reverse].id + "";
-            let orders = await await this.fetchOrders({scope:market, limit:50, index_position: "2", key_type: "i64"});
-            this._markets[canonical] = this.auxAssertTable(canonical);
+            let orders = await await this.fetchOrders({scope:market.id, limit:50, index_position: "2", key_type: "i64"});
             // console.log("-------------");
             // console.log("Buy crudo:", orders);            
             let buy: Order[] = this.auxProcessRowsToOrders(orders.rows);
@@ -1529,15 +1552,15 @@ export class VapaeeDEX {
                 order_row.sum = new AssetDEX(sum, order_row.total.token);
             }
 
-            this._markets[canonical].orders.buy = list;
+            market.orders.buy = list;
             // console.log("Buy final:", this.tables[table].orders.buy);
             // console.log("-------------");
             this.feed.setLoading("buyorders", false);
-            return this._markets[canonical].orders.buy;
+            return market.orders.buy;
         });
 
-        if (this._markets[canonical] && !force) {
-            result = this._markets[canonical].orders.buy;
+        if (this.market(canonical) && !force) {
+            result = this.market(canonical).orders.buy;
         } else {
             result = aux;
         }
@@ -1549,35 +1572,24 @@ export class VapaeeDEX {
         let tables = await this.fetchAllOrderSummary();
 
         for (let i in tables.rows) {
-            let market_id:number = parseInt(tables.rows[i].market);
+            let market_id:string = tables.rows[i].market;
             let market = this.getMarketById(market_id);
             let canonical = this.canonicalTable(market.table);
             console.assert(market.table == canonical, "ERROR: table is not canonical", market.table, [i, tables]);
-            this._markets[canonical] = this.auxAssertTable(canonical);
-
-            // console.log(i, tables.rows[i]);
-
-            this._markets[canonical].header.sell.total = new AssetDEX(tables.rows[i].supply.total, this);
-            this._markets[canonical].header.sell.orders = tables.rows[i].supply.orders;
-            this._markets[canonical].header.buy.total = new AssetDEX(tables.rows[i].demand.total, this);
-            this._markets[canonical].header.buy.orders = tables.rows[i].demand.orders;
-            this._markets[canonical].deals = tables.rows[i].deals;
-            this._markets[canonical].blocks = tables.rows[i].blocks;
-            this._markets[canonical].direct = tables.rows[i].demand.ascurrency;
-            this._markets[canonical].inverse = tables.rows[i].supply.ascurrency;
+            console.assert(market == this._markets[canonical], "ERROR: wrong market", canonical, market_id, market, [this._markets]);
+            console.assert(!!this._markets[canonical], "ERROR: canonical market not present", canonical, [this._markets]);
+            
+            market.header.sell.total = new AssetDEX(tables.rows[i].supply.total, this);
+            market.header.sell.orders = tables.rows[i].supply.orders;
+            market.header.buy.total = new AssetDEX(tables.rows[i].demand.total, this);
+            market.header.buy.orders = tables.rows[i].demand.orders;
+            market.deals = tables.rows[i].deals;
+            market.blocks = tables.rows[i].blocks;
+            market.direct = tables.rows[i].demand.ascurrency;
+            market.inverse = tables.rows[i].supply.ascurrency;
         }
         
         this.setOrderSummary();
-    }
-
-    getMarketById(market:number) {
-        for (let i in this._markets) {
-            if (this._markets[i].id == market) {
-                return this._markets[i];
-            }
-        }
-        console.error("ERROR: getMarketById() ", market);
-        return null;
     }
 
     async getMarketSummary(token_a:TokenDEX, token_b:TokenDEX, force:boolean = false): Promise<MarketSummary> {
@@ -1603,9 +1615,9 @@ export class VapaeeDEX {
             //if(canonical=="telosd.tlos")console.log(table, "---------------------------------------------------");
             //if(canonical=="telosd.tlos")console.log("Summary crudo:", summary.rows);
 
-            this._markets[canonical] = this.auxAssertTable(canonical);
-            this._markets[canonical].summary = {
-                market: this._markets[canonical].id,
+            let market = this.market(canonical);
+            market.summary = {
+                market: market.id,
                 table: canonical,
                 price: new AssetDEX(new BigNumber(0), currency),
                 price_24h_ago: new AssetDEX(new BigNumber(0), currency),
@@ -1756,30 +1768,30 @@ export class VapaeeDEX {
             //if(canonical=="telosd.tlos")console.log("ratio:", ratio);
             //if(canonical=="telosd.tlos")console.log("volume:", volume.str);
 
-            this._markets[canonical].summary.price = last_price;
-            this._markets[canonical].summary.inverse = last_inverse;
-            this._markets[canonical].summary.price_24h_ago = price_fst || last_price;
-            this._markets[canonical].summary.inverse_24h_ago = inverse_fst;
-            this._markets[canonical].summary.percent_str = (isNaN(percent) ? 0 : percent) + "%";
-            this._markets[canonical].summary.percent = isNaN(percent) ? 0 : percent;
-            this._markets[canonical].summary.ipercent_str = (isNaN(ipercent) ? 0 : ipercent) + "%";
-            this._markets[canonical].summary.ipercent = isNaN(ipercent) ? 0 : ipercent;
-            this._markets[canonical].summary.volume = volume;
-            this._markets[canonical].summary.amount = amount;
-            this._markets[canonical].summary.min_price = min_price;
-            this._markets[canonical].summary.max_price = max_price;
-            this._markets[canonical].summary.min_inverse = min_inverse;
-            this._markets[canonical].summary.max_inverse = max_inverse;
+            market.summary.price = last_price;
+            market.summary.inverse = last_inverse;
+            market.summary.price_24h_ago = price_fst || last_price;
+            market.summary.inverse_24h_ago = inverse_fst;
+            market.summary.percent_str = (isNaN(percent) ? 0 : percent) + "%";
+            market.summary.percent = isNaN(percent) ? 0 : percent;
+            market.summary.ipercent_str = (isNaN(ipercent) ? 0 : ipercent) + "%";
+            market.summary.ipercent = isNaN(ipercent) ? 0 : ipercent;
+            market.summary.volume = volume;
+            market.summary.amount = amount;
+            market.summary.min_price = min_price;
+            market.summary.max_price = max_price;
+            market.summary.min_inverse = min_inverse;
+            market.summary.max_inverse = max_inverse;
 
-            //if(canonical=="telosd.tlos")console.log("Summary final:", this._markets[canonical].summary);
+            //if(canonical=="telosd.tlos")console.log("Summary final:", market.summary);
             //if(canonical=="telosd.tlos")console.log("---------------------------------------------------");
             this.feed.setLoading("summary."+canonical, false);
             this.feed.setLoading("summary."+inverse, false);
-            return this._markets[canonical].summary;
+            return market.summary;
         });
 
-        if (this._markets[canonical] && !force) {
-            result = this._markets[canonical].summary;
+        if (this.market(canonical) && !force) {
+            result = this.market(canonical).summary;
         } else {
             result = await aux;
         }
@@ -1795,16 +1807,17 @@ export class VapaeeDEX {
         return this.waitOrderSummary.then(async _ => {
             let promises = [];
 
-            for (let i in this._markets) {
-                if (i.indexOf(".") == -1) continue;
+            for (let table in this._markets) {
+                if (table.indexOf(".") == -1) continue;
+                let market = this.market(table);
 
-                console.assert(!!this._markets[i].commodity, "ERROR: market has commodity in null");
-                console.assert(!!this._markets[i].currency, "ERROR: market has currency in null");
-                if (!this._markets[i].commodity || !this._markets[i].currency) {
-                    console.error("ERROR: bad formed market", i, this._markets[i]);
+                console.assert(!!market.commodity, "ERROR: market has commodity in null");
+                console.assert(!!market.currency, "ERROR: market has currency in null");
+                if (!market.commodity || !market.currency) {
+                    console.error("ERROR: bad formed market", table, market);
                     continue;
                 }
-                let p = this.getMarketSummary(this._markets[i].commodity, this._markets[i].currency, true);
+                let p = this.getMarketSummary(market.commodity, market.currency, true);
                 promises.push(p);
             }
 
@@ -1918,20 +1931,23 @@ export class VapaeeDEX {
         return commodity;        
     }
 
-    private auxAssertTable(table:string, market:number = -1): Market {
+    private auxAssertTable(table:string, market_id:string = ""): Market {
         let commodity = this.auxGetCommodityToken(table);
         let currency = this.auxGetCurrencyToken(table);
+        let canonical = this.canonicalTable(table);
         let aux_asset_com = new AssetDEX(0, commodity);
         let aux_asset_cur = new AssetDEX(0, currency);
 
-        if (market == -1) {
+        console.assert(canonical == table, "ERROR: auxAssertTable was called with a non-canonical table", table, market_id);
+
+        if (market_id == "") {
             if (this._markets[table]) {
-                market = this._markets[table].id;
-            }            
+                market_id = this._markets[table].id;
+            }
         }
 
         let market_summary:MarketSummary = {
-            market: market,
+            market: market_id,
             table: table,
             price: aux_asset_cur,
             price_24h_ago: aux_asset_cur,
@@ -1951,7 +1967,7 @@ export class VapaeeDEX {
         }
 
         return this._markets[table] || {
-            id: market,
+            id: market_id,
             table: table,
             commodity: commodity,
             currency: currency,
@@ -2044,12 +2060,13 @@ export class VapaeeDEX {
         let pages = this.getBlockHistoryTotalPagesFor(canonical, pagesize);
         let id = page*pagesize;
         // console.log("VapaeeDEX.fetchBlockHistory(", table, ",",page,",",pagesize,"): id:", id, "pages:", pages);
+        let market = this.market(canonical);
         if (page < pages) {
-            if (this._markets && this._markets[canonical] && this._markets[canonical].block["id-" + id]) {
+            if (market && market.block["id-" + id]) {
                 let result:TableResult = {more:false,rows:[]};
                 for (let i=0; i<pagesize; i++) {
                     let id_i = id+i;
-                    let block = this._markets[canonical].block["id-" + id_i];
+                    let block = market.block["id-" + id_i];
                     if (block) {
                         result.rows.push(block);
                     } else {
@@ -2065,13 +2082,13 @@ export class VapaeeDEX {
         }
 
         // if market does not exist return empty list
-        if(!this._markets[canonical]) return Promise.resolve({rows:[],more:false});
-        let market = this._markets[canonical].id + "";
-        return this.contract.getTable("blockhistory", {scope:market, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
+        if(!market) return Promise.resolve({rows:[],more:false});
+        
+        return this.contract.getTable("blockhistory", {scope:market.id, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
             // console.log("block History crudo:", result);
-            this._markets[canonical] = this.auxAssertTable(canonical);
-            this._markets[canonical].block = this._markets[canonical].block || {}; 
-            // console.log("this._markets[table].block:", this._markets[table].block);
+            let market = this.market(canonical);
+            market = this.auxAssertTable(canonical);
+            market.block = market.block || {};
             for (let i=0; i < result.rows.length; i++) {
                 let block:HistoryBlock = {
                     id: result.rows[i].id,
@@ -2087,10 +2104,8 @@ export class VapaeeDEX {
                     date: new Date(result.rows[i].date)
                 }
                 block.str = JSON.stringify([block.max.str, block.entrance.str, block.price.str, block.min.str]);
-                this._markets[canonical].block["id-" + block.id] = block;
+                market.block["id-" + block.id] = block;
             }   
-            // console.log("block History final:", this._markets[table].block);
-            // console.log("-------------");
             return result;
         });
     }    
@@ -2100,12 +2115,13 @@ export class VapaeeDEX {
         let pages = this.getHistoryTotalPagesFor(canonical, pagesize);
         let id = page*pagesize;
         // console.log("VapaeeDEX.fetchHistory(", table, ",",page,",",pagesize,"): id:", id, "pages:", pages);
+        let market = this.market(canonical);
         if (page < pages) {
-            if (this._markets && this._markets[canonical] && this._markets[canonical].tx["id-" + id]) {
+            if (market && market.tx["id-" + id]) {
                 let result:TableResult = {more:false,rows:[]};
                 for (let i=0; i<pagesize; i++) {
                     let id_i = id+i;
-                    let trx = this._markets[canonical].tx["id-" + id_i];
+                    let trx = market.tx["id-" + id_i];
                     if (trx) {
                         result.rows.push(trx);
                     } else {
@@ -2120,14 +2136,14 @@ export class VapaeeDEX {
             }
         }
         // If the market does not exist -> return [];
-        if(!this._markets[table]) return Promise.resolve({rows:[],more:false});
-        let market = this._markets[table].id + "";
-        return this.contract.getTable("history", {scope:market, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
+        if(!market) return Promise.resolve({rows:[],more:false});
+        
+        return this.contract.getTable("history", {scope:market.id, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
             // console.log("History crudo:", result);
+            let market = this.market(canonical);
             
-            this._markets[canonical] = this.auxAssertTable(canonical);
-            this._markets[canonical].history = [];
-            this._markets[canonical].tx = this._markets[canonical].tx || {}; 
+            market.history = [];
+            market.tx = market.tx || {}; 
 
             for (let i=0; i < result.rows.length; i++) {
                 let transaction:HistoryTx = {
@@ -2145,14 +2161,14 @@ export class VapaeeDEX {
                     isbuy: !!result.rows[i].isbuy
                 }
                 transaction.str = transaction.price.str + " " + transaction.amount.str;
-                this._markets[canonical].tx["id-" + transaction.id] = transaction;
+                market.tx["id-" + transaction.id] = transaction;
             }
 
-            for (let j in this._markets[canonical].tx) {
-                this._markets[canonical].history.push(this._markets[canonical].tx[j]);
+            for (let j in market.tx) {
+                market.history.push(market.tx[j]);
             }
 
-            this._markets[canonical].history.sort(function(a:HistoryTx, b:HistoryTx){
+            market.history.sort(function(a:HistoryTx, b:HistoryTx){
                 if(a.date < b.date) return 1;
                 if(a.date > b.date) return -1;
                 if(a.id < b.id) return 1;
@@ -2216,9 +2232,10 @@ export class VapaeeDEX {
     
     private fetchSummary(table): Promise<TableResult> {
         return this.waitTokensLoaded.then(_ => {
-            if(!this._markets[table]) return Promise.resolve({rows:[], more:false})
-            let market = this._markets[table].id + "";
-            return this.contract.getTable("tablesummary", {scope:market}).then(result => {
+            console.assert(this.canonicalTable(table) == table, "ERROR: fetchSummary was called with a non-canonical table");
+            let market = this.market(table);
+            if(!market) return Promise.resolve({rows:[], more:false})
+            return this.contract.getTable("tablesummary", {scope:market.id}).then(result => {
                 return result;
             });    
         });
@@ -2241,7 +2258,6 @@ export class VapaeeDEX {
             return token;
         });
     }
-
 
     private fetchTokenData(token): Promise<TableResult> {
         this.feed.setLoading("token-data-"+token.symbol, true);
@@ -2326,7 +2342,7 @@ export class VapaeeDEX {
 
                 for (let table in this._markets) {
                     if (table.indexOf(".") == -1) continue;
-                    let market:Market = this._markets[table];
+                    let market:Market = this.market(table);
 
                     if (market.currency.symbol == token.symbol) {
                         market = this.market(this.inverseTable(table));

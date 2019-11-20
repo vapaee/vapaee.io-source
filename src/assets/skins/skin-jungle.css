@@ -45,3 +45,7 @@ div.token-description, div.token-markets {
 div.token-markets {
     padding-top: 26px;
 }
+
+div.token-banner.background-holder {
+    background-color: black;
+}

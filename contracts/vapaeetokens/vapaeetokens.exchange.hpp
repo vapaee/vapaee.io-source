@@ -480,8 +480,9 @@ namespace vapaee {
             }
 
             uint64_t market = aux_get_market_id(A, B);
+            uint64_t can_market = aux_get_canonical_market(A, B);
             // register event on history table
-            history table(get_self(), market);
+            history table(get_self(), can_market);
             uint64_t h_id = table.available_primary_key();
             table.emplace(get_self(), [&](auto & a){
                 a.id = h_id;
@@ -513,7 +514,7 @@ namespace vapaee {
 
             // find out last price
             asset last_price = price;
-            tablesummary summary(get_self(), market);
+            tablesummary summary(get_self(), can_market);
             auto ptr = summary.find(name("lastone").value);
             if (ptr != summary.end()) {
                 last_price = ptr->price;
@@ -610,7 +611,7 @@ namespace vapaee {
             }
 
             // save table summary (price & volume/h)
-            blockhistory blocktable(get_self(), market);
+            blockhistory blocktable(get_self(), can_market);
             uint64_t bh_id = blocktable.available_primary_key();
             auto index = blocktable.template get_index<name("hour")>();
             auto bptr = index.find(hour);
@@ -644,9 +645,9 @@ namespace vapaee {
 
             // update deals (history table) & blocks (blockhistory table) count for scope table
             ordersummary o_summary(get_self(), get_self().value);
-            auto orders_itr = o_summary.find(market);
+            auto orders_itr = o_summary.find(can_market);
 
-            eosio_assert(orders_itr != o_summary.end(), (string("Why is this entry missing? ") + scope.to_string() + string(" market: ") + std::to_string((unsigned long)market)).c_str());
+            eosio_assert(orders_itr != o_summary.end(), (string("Why is this entry missing? ") + scope.to_string() + string(" canonical market: ") + std::to_string((unsigned long)can_market)).c_str());
             o_summary.modify(*orders_itr, same_payer, [&](auto & a){
                 a.deals = h_id+1;
                 a.blocks = bh_id+1;

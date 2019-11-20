@@ -68,6 +68,14 @@ cleos push action futboltokens issue '["bob", "1000.0000 FUTBOL", "memo FUTBOL"]
 cleos push action futboltokens issue '["tom", "1000.0000 FUTBOL", "memo FUTBOL"]' -p vapaeetokens@active
 cleos push action futboltokens issue '["kate", "1000.0000 FUTBOL", "memo FUTBOL"]' -p vapaeetokens@active
 
+echo "-------- teloslegends (LEGEND) ---------"
+cleos set contract teloslegends $PWD -p teloslegends@active
+cleos push action teloslegends create '[ "vapaeetokens", "12 LEGEND"]' -p teloslegends@active
+cleos push action teloslegends issue '["alice", "1 LEGEND", "memo LEGEND"]' -p vapaeetokens@active
+cleos push action teloslegends issue '["bob", "1 LEGEND", "memo LEGEND"]' -p vapaeetokens@active
+cleos push action teloslegends issue '["tom", "1 LEGEND", "memo LEGEND"]' -p vapaeetokens@active
+cleos push action teloslegends issue '["kate", "1 LEGEND", "memo LEGEND"]' -p vapaeetokens@active
+
 echo "-------- viitasphere1 (VIITA) ---------"
 cleos set contract viitasphere1 $PWD -p viitasphere1@active
 cleos push action viitasphere1 create '[ "vapaeetokens", "10000000000.0000 VIITA"]' -p viitasphere1@active
@@ -171,6 +179,9 @@ cleos push action vapaeetokens settokendata '["YANG", 0, "add", "twitter", "Offi
 echo "-- register FUTBOL --" 
 cleos push action vapaeetokens addtoken '["futboltokens","FUTBOL",4,"vapaeetokens", "Fútbol Tokens", "http://futboltokens.online/", "Collect the best football trading cards and win prizes", "/assets/uploads/futboltokens-banner.jpg", "/assets/logos/futboltokens.png", "/assets/logos/futboltokens.png",true]' -p vapaeetokens@active
 cleos push action vapaeetokens settokendata '["FUTBOL", 0, "add", "youtube", "Video en español", "https://www.youtube.com/watch?v=4fYHjH5ylnA"]' -p vapaeetokens@active
+
+echo "-- register LEGEND --" 
+cleos push action vapaeetokens addtoken '["teloslegends","LEGEND",0,"vapaeetokens", "Telos Legends", "http://futboltokens.online/", "Collect the best football trading cards and win prizes", "/assets/uploads/legend-banner.png", "/assets/logos/legend.png", "/assets/logos/legend-lg.png",false]' -p vapaeetokens@active
 
 echo "-- register OLIVE --" 
 cleos push action vapaeetokens addtoken '["oliveaccount","OLIVE",4,"vapaeetokens", "OLIVE", "http://democratic.money/olive", "", "", "/assets/logos/olive.png", "/assets/logos/olive-lg.png",true]' -p vapaeetokens@active

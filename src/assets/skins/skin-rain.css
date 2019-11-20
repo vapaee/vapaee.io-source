@@ -36,6 +36,10 @@ div.token-markets {
     padding-top: 26px;
 }
 
+div.token-banner.background-holder {
+    background-color: black;
+}
+
 /* ---- HOME ---- */
 
 div div.jumbotron.vpe-background-jumbotron {

@@ -70,9 +70,9 @@ show_table vapaeetokens vapaeetokens ordersummary
 show_table vapaeetokens vapaeetokens earnings
 show_table vapaeetokens vapaeetokens markets
 # show_table vapaeetokens vapaeetokens events
-show_table vapaeetokens 4 history
-show_table vapaeetokens 4 tablesummary
-show_table vapaeetokens 4 blockhistory
+show_table vapaeetokens 8 history
+show_table vapaeetokens 8 tablesummary
+show_table vapaeetokens 8 blockhistory
 # show_table vapaeetokens vapaeetokens events
 
 

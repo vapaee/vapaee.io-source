@@ -77,3 +77,8 @@ div.title.vpe-background-panel-title {
     color: white;
     background-color: #4d8a9a;
 }
+
+/* Token */
+div.token-banner.background-holder {
+    background-color: black;
+}
