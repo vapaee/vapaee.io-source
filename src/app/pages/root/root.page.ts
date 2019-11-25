@@ -45,7 +45,7 @@ export class RootPage implements OnInit {
 
             var network = "telos-testnet";
             network = "telos";
-            // network = "local";
+            network = "local";
             if (window.location.hostname == "vapaee.io") {
                 network = "telos";
             }

@@ -38,6 +38,11 @@ export class VapaeeStyle {
                 "name": "Sky",
                 "url": "/assets/skins/skin-sky.css"
             },
+            {
+                "id": "skin-football",
+                "name": "football",
+                "url": "/assets/skins/skin-football.css"
+            },
         ];
 
         this.createLinkForStylesheetURL("");
