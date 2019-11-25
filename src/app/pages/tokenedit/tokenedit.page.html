@@ -327,18 +327,18 @@
                         <a class="btn btn-lg btn-success"
                             (click)="editToken(thetoken)"
                         >
-                            <span [hidden]="editing.owner == dex.logged">
+                            <span [hidden]="editing.admin == dex.logged">
                                 <i class="material-icons" [hidden]="loading">remove_red_eye</i> {{local.string.viewtkn|titlecase}}
                             </span>
-                            <span [hidden]="editing.owner != dex.logged">
+                            <span [hidden]="editing.admin != dex.logged">
                                 <i class="material-icons" [hidden]="loading">edit</i> {{local.string.edittkn|titlecase}}
                             </span>
                         </a>
                     </div>
                     <span class="text-md">
                         {{local.string.tknyaregist}}<br>
-                        <span [hidden]="editing.owner != dex.logged">{{local.string.wannaedittkn}}</span>
-                        <span [hidden]="editing.owner == dex.logged">{{local.string.onlyadminedit}}</span>
+                        <span [hidden]="editing.admin != dex.logged">{{local.string.wannaedittkn}}</span>
+                        <span [hidden]="editing.admin == dex.logged">{{local.string.onlyadminedit}}</span>
                     </span>
                 </div>
 

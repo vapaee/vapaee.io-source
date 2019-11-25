@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { VapaeeREX, REXdata } from '@vapaee/rex';
+import { VapaeeREX, REXdata } from 'projects/vapaee/rex/src/public_api';
 
 
 

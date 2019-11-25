@@ -27,7 +27,9 @@ Tablas afectadas (total 7 tablas):
 
 
 
-
+Errores que he recibido:
+- order form
+ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 3050003, "name": "eosio_assert_message_exception", "what": "eosio_assert_message assertion failure", "details": [ { "message": "assertion failure with message: >>>>>> This contract is in MAINTENANCE. Please, try later again. <<<<<<", "file": "wasm_interface.cpp", "line_number": 964, "method": "eosio_assert" }, { "message": "pending console output: ", "file": "apply_context.cpp", "line_number": 113, "method": "exec_one" } ] } }
 
 
 

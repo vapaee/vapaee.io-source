@@ -6,7 +6,7 @@ import { DatePipe } from '@angular/common';
 import { TokenDEX, TokenData, TokenEvent } from './token-dex.class';
 import { AssetDEX } from './asset-dex.class';
 import { Feedback } from '@vapaee/feedback';
-import { VapaeeScatter, Account, AccountData, SmartContract, TableResult, TableParams, Asset } from 'projects/vapaee/scatter/src';
+import { VapaeeScatter, Account, AccountData, SmartContract, TableResult, TableParams, Asset } from '@vapaee/scatter';
 import { MarketMap, UserOrdersMap, MarketSummary, EventLog, Market, HistoryTx, TokenOrders, Order, UserOrders, OrderRow, HistoryBlock, DEXdata, MarketDeclaration } from './types-dex';
 
 
@@ -152,7 +152,7 @@ export class VapaeeDEX {
     }
 
     updateMarkets() {
-        console.error("VapaeeDEX.updateMarkets()");
+        console.log("VapaeeDEX.updateMarkets()");
         var markets = []
         return this.fetchMarkets().then(data => {
             this._markets = {};
@@ -165,7 +165,7 @@ export class VapaeeDEX {
                 if (canonical == table) {
                     this._markets[canonical] = this.auxAssertTable(canonical, market_id);
                 } else {
-                    this._reverse[inverse] = this.auxAssertTable(inverse, market_id);
+                    // this._reverse[inverse] = this.auxAssertTable(inverse, market_id);
                 }
             }
         });        
@@ -1491,12 +1491,13 @@ export class VapaeeDEX {
         this.feed.setLoading("buyorders", true);
         aux = this.waitTokensLoaded.then(async _ => {
             // if market does not exist return empty list
-            let market = this.market(reverse);
+            let market = this.market(canonical);
             if(!market) {
                 this.feed.setLoading("sellorders", false);
                 return [];
             }
-            let orders = await await this.fetchOrders({scope:market.id, limit:50, index_position: "2", key_type: "i64"});
+            let rev_market_id = (parseInt(market.id)+1)+"";
+            let orders = await await this.fetchOrders({scope:rev_market_id, limit:50, index_position: "2", key_type: "i64"});
             // console.log("-------------");
             // console.log("Buy crudo:", orders);            
             let buy: Order[] = this.auxProcessRowsToOrders(orders.rows);
@@ -1552,7 +1553,9 @@ export class VapaeeDEX {
                 order_row.sum = new AssetDEX(sum, order_row.total.token);
             }
 
-            market.orders.buy = list;
+            // market.orders.buy = list;
+            let can_market = this.market(canonical);            
+            can_market.orders.buy = list;
             // console.log("Buy final:", this.tables[table].orders.buy);
             // console.log("-------------");
             this.feed.setLoading("buyorders", false);
@@ -1938,11 +1941,16 @@ export class VapaeeDEX {
         let aux_asset_com = new AssetDEX(0, commodity);
         let aux_asset_cur = new AssetDEX(0, currency);
 
-        console.assert(canonical == table, "ERROR: auxAssertTable was called with a non-canonical table", table, market_id);
+        // console.assert(canonical == table, "ERROR: auxAssertTable was called with a non-canonical table", table, market_id);
 
         if (market_id == "") {
             if (this._markets[table]) {
-                market_id = this._markets[table].id;
+                return this._markets[table];
+                // market_id = this._markets[table].id;
+            }
+            if (this._reverse[table]) {
+                return this._reverse[table];
+                // market_id = this._reverse[table].id;
             }
         }
 
@@ -1966,7 +1974,9 @@ export class VapaeeDEX {
             ipercent_str: "0%",
         }
 
-        return this._markets[table] || {
+        
+
+        let market:Market = {
             id: market_id,
             table: table,
             commodity: commodity,
@@ -1988,7 +1998,9 @@ export class VapaeeDEX {
                 sell: {total:aux_asset_com, orders:0}, 
                 buy: {total:aux_asset_cur, orders:0}
             },
-        };        
+        };
+
+        return market;
     }
 
     private fetchDeposits(account): Promise<TableResult> {
@@ -2235,7 +2247,7 @@ export class VapaeeDEX {
             console.assert(this.canonicalTable(table) == table, "ERROR: fetchSummary was called with a non-canonical table");
             let market = this.market(table);
             if(!market) return Promise.resolve({rows:[], more:false})
-            return this.contract.getTable("tablesummary", {scope:market.id}).then(result => {
+            return this.contract.getTable("tablesummary", {scope:market.id+""}).then(result => {
                 return result;
             });    
         });
@@ -2332,7 +2344,7 @@ export class VapaeeDEX {
             this.waitMarketSummary
         ]).then(_ => {
             // a cada token le asigno un price que sale de verificar su price en el mercado principal XXX/TLOS
-            let token;
+            let token: TokenDEX;
             for (let i in this.tokens) {
                 if (this.tokens[i].offchain) continue; // discard tokens that are not on-chain
                 
@@ -2349,7 +2361,7 @@ export class VapaeeDEX {
                     }
 
                     if (market.commodity.symbol == token.symbol) {
-                        token.markets.push(table);
+                        token.markets.push(market);
                     }
                 }
 

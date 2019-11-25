@@ -2,15 +2,15 @@ import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService, AnalyticsService } from 'src/app/services/common/common.services';
 
-import { VapaeeScatter, NetworkMap, SmartContract } from 'projects/vapaee/scatter/src';
-import { VapaeeDEX } from 'projects/vapaee/dex/src';
+import { VapaeeScatter, NetworkMap, SmartContract } from '@vapaee/scatter';
+import { VapaeeDEX } from '@vapaee/dex';
 import { VapaeeStyle } from '@vapaee/style';
 
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 import { HttpClient } from '@angular/common/http';
 import { DropdownService } from 'src/app/services/dropdown.service';
 import { TimezoneService } from 'src/app/services/timezone.service';
-import { VapaeeREX } from '@vapaee/rex';
+import { VapaeeREX } from 'projects/vapaee/rex/src/public_api';
 
 declare var $:any;
 
@@ -45,7 +45,7 @@ export class RootPage implements OnInit {
 
             var network = "telos-testnet";
             network = "telos";
-            network = "local";
+            // network = "local";
             if (window.location.hostname == "vapaee.io") {
                 network = "telos";
             }

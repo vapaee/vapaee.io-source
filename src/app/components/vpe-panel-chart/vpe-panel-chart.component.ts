@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, ElementRef, Renderer } from '@angular/core';
-import { VapaeeDEX } from 'projects/vapaee/dex/src';
+import { VapaeeDEX } from '@vapaee/dex';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { GoogleChartInterface, GoogleChartComponentInterface } from 'src/app/components/vpe-panel-chart/google-chart-service/google-charts-interfaces';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';

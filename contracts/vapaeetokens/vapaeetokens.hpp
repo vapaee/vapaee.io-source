@@ -111,11 +111,11 @@ CONTRACT vapaeetokens : public eosio::contract {
 
     public:
         // EXCHANGE-ACTOINS  ------------------------------------------------------------------------------------------------------
-        ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name owner, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {
+        ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name admin, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.addtoken()\n");
             vapaee::token::exchange e;
-            e.action_add_token(contract, symbol, precision, owner);
+            e.action_add_token(contract, symbol, precision, admin);
             e.action_update_token_info(symbol, title, website, brief, banner, icon, iconlg, tradeable);
         };
         

@@ -212,6 +212,9 @@ cleos push action vapaeetokens settokendata '["CNT", 0, "add", "youtube", "Demo 
 cleos push action vapaeetokens settokendata '["CNT", 0, "add", "twitter", "The CNT token airdrop", "https://twitter.com/TokensCards/status/1105088865994452993"]' -p vapaeetokens@active
 
 
+
+updatetoken (const symbol_code & sym_code, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {
+
 echo "-- creating BOX token --" 
 cleos push action vapaeetokens create '["vapaeetokens","500000000.0000 BOX"]' -p vapaeetokens@active
 cleos push action vapaeetokens addtoken '["vapaeetokens", "BOX", 4, "vapaeetokens", , "Board Game Box", "https://vapaee.io/bgbox", "", "", "/assets/logos/box.png", "/assets/logos/box-lg.png",true]' -p vapaeetokens@active
@@ -220,7 +223,9 @@ cleos push action vapaeetokens create '["vapaeetokens","1000000.000000 VPE"]' -p
 cleos push action vapaeetokens addtoken '["vapaeetokens", "VPE", 6, "vapaeetokens", , "Vapaée", "https://vapaee.io", "", "", "/assets/logos/vapaee.png", "/assets/logos/vapaee-lg.png",true]' -p vapaeetokens@active
 
 
+# telosmain push action vapaeetokens updatetoken '["YNT", "YNT", "https://sesacash.com", "YNT - Utility token for Sesacash (sesacash.com)", "/assets/uploads/yensesa-logo.svg", "/assets/logos/yensesa-icon-1.svg", "/assets/logos/yensesa-icon-1.svg",true]' -p vapaeetokens@active
 
+# telosmain push action vapaeetokens updatetoken '["LEGEND", "LEGEND", "", "THE LEGENDS OF TELOS ARE COMING!", "/assets/uploads/legend-banner.png", "/assets/logos/legend.png", "/assets/logos/legend-lg.png",false]' -p vapaeetokens@active
 
 
 

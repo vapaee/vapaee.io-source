@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { VapaeeDEX, TokenDEX, TokenData, TokenEvent, AssetDEX } from 'projects/vapaee/dex/src';
+import { VapaeeDEX, TokenDEX, TokenData, TokenEvent, AssetDEX } from '@vapaee/dex';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { Feedback } from 'projects/vapaee/feedback/src';
 import { DropdownService } from 'src/app/services/dropdown.service';
-import { Asset } from 'projects/vapaee/scatter/src';
+import { Asset } from '@vapaee/scatter';
 
 declare const twttr: any;
 
@@ -55,6 +55,7 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
             if (this.token.brief == "") {
                 this.token.brief = null;
             }
+            console.log("TokenPage() token: ", [this.token]);
             this.params.quantity = new AssetDEX(0, this.token);
             this.renderEntries();
         });

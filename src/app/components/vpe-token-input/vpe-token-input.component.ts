@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, Output, OnInit, OnDestroy, HostBinding } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeDEX, AssetDEX } from 'projects/vapaee/dex/src';
+import { VapaeeDEX, AssetDEX } from '@vapaee/dex';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, Device } from '../vpe-components.service';
 import { Subscriber } from 'rxjs';

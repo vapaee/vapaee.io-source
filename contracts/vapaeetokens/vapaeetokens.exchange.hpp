@@ -1150,7 +1150,7 @@ namespace vapaee {
             auto token_itr = statstable.find( sym_code.raw() );
             eosio_assert( token_itr != statstable.end(), "token with symbol not exists" );
             
-            eosio_assert(has_auth(contract) || has_auth(token_itr->issuer), "only token contract or issuer can add this token to DEX" );
+            eosio_assert(has_auth(get_self()) || has_auth(contract) || has_auth(token_itr->issuer), "only token contract or issuer can add this token to DEX" );
 
 
             tokens tokenstable(get_self(), get_self().value);

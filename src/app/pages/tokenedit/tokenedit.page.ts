@@ -5,7 +5,7 @@ import { LocalStringsService } from 'src/app/services/common/common.services';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
-import { ETokenDEX, AssetDEX, TokenDEX, VapaeeDEX } from 'projects/vapaee/dex/src';
+import { ETokenDEX, AssetDEX, TokenDEX, VapaeeDEX } from '@vapaee/dex';
 import { Feedback } from '@vapaee/feedback';
 
 @Component({

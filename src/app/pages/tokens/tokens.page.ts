@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { VapaeeDEX, TokenDEX } from 'projects/vapaee/dex/src';
+import { VapaeeDEX, TokenDEX } from '@vapaee/dex';
 
 
 @Component({

@@ -1,4 +1,4 @@
-import { Token } from 'projects/vapaee/scatter/src';
+import { Token } from '@vapaee/scatter';
 import { AssetDEX } from "./asset-dex.class";
 import { Market } from './types-dex';
 

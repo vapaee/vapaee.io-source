@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SmartContract, VapaeeScatter, Account, Asset } from 'projects/vapaee/scatter/src';
+import { SmartContract, VapaeeScatter, Account, Asset } from '@vapaee/scatter';
 import { Feedback } from '@vapaee/feedback';
 
 
@@ -185,9 +185,11 @@ export class VapaeeREX {
 
 
     async getAccountREXData(account: string) {
+        console.log("VapaeeREX.getAccountREXData()", account);
         this.feed.setLoading("REXData", false);
         delete this.balances[account];
         delete this.deposits[account];
+        console.log("---------- REX (ini) --------------------------");
         return Promise.all([
             this.updatePoolState(),
             this.queryAccountREXBalance(account),
@@ -200,12 +202,12 @@ export class VapaeeREX {
             let balance_ammount = _rexbal.rex_balance.amount.multipliedBy(ratio);
 
 
-            //console.log("------------------------------------");
-            //console.log("balance_ammount: ", balance_ammount);
+            console.log("------------------------------------");
+            console.log("balance_ammount: ", balance_ammount);
 
             let balance: Asset = new Asset(balance_ammount.toString() + " TLOS", 4);
-            //console.log("balance.toString(): ", balance.toString());
-            //console.log("------------------------------------");
+            console.log("balance.toString(): ", balance.toString());
+            console.log("------------------------------------");
 
             let deposits: Asset = _rexfund.balance;
             let profits: Asset = new Asset(balance.amount.minus(_rexbal.vote_stake.amount), balance.token);
@@ -223,6 +225,7 @@ export class VapaeeREX {
                 }
             }
             this.feed.setLoading("REXData", false);
+            console.log("---------- REX (fin) --------------------------");
             return data;
         }).catch(e => {
             console.error("ERROR: ", e);

@@ -5,9 +5,10 @@ import { Subscriber } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 import { VpePanelWalletComponent } from 'src/app/components/vpe-panel-wallet/vpe-panel-wallet.component';
-import { VapaeeDEX, AssetDEX, UserOrdersMap, DEXdata } from 'projects/vapaee/dex/src';
-import { VapaeeREX, REXdata } from '@vapaee/rex';
-import { Account } from 'projects/vapaee/scatter/src';
+import { VapaeeDEX, AssetDEX, UserOrdersMap, DEXdata } from '@vapaee/dex';
+
+import { Account } from '@vapaee/scatter';
+import { VapaeeREX, REXdata } from 'projects/vapaee/rex/src/public_api';
 
 @Component({
     selector: 'account-page',
@@ -72,21 +73,21 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-        console.log("VpeAccountPage.ngOnInit()");
+        console.log("AccountPage.ngOnInit()");
         this.dex.onCurrentAccountChange.subscribe(this.subscriber);
         var name = this.route.snapshot.paramMap.get('name');
         setTimeout(_ => {
             if (!name) {
                 name = "guest";
-                this.onDexCurrentAccountChange(name);
             } else {
                 this.dex.resetCurrentAccount(name);
             };
+            this.onDexCurrentAccountChange(name);
         }, 0);
     }
 
     async onDexCurrentAccountChange(account: string) {
-        // console.log("VaeProfilePage.onDexCurrentAccountChange() ----------------->", account);
+        console.log("AccountPage.onDexCurrentAccountChange() ----------------->", account);
         var url = "/exchange/account/";
         if (account) {
             url += account;
@@ -98,7 +99,7 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
             this.account = this.dex.default;
             url += "guest";
         };
-        // console.log("accountPage.onDexCurrentAccountChange()", [account], " --> ", url);
+        console.log("AccountPage.onDexCurrentAccountChange()", [account], " --> ", url);
         this.app.navigate(url);
     }
 

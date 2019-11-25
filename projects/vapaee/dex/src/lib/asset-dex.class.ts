@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { TokenDEX } from './token-dex.class';
-import { Asset } from 'projects/vapaee/scatter/src';
+import { Asset } from '@vapaee/scatter';
 
 
 export interface IVapaeeDEX {
