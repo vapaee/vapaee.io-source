@@ -213,8 +213,6 @@ cleos push action vapaeetokens settokendata '["CNT", 0, "add", "twitter", "The C
 
 
 
-updatetoken (const symbol_code & sym_code, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {
-
 echo "-- creating BOX token --" 
 cleos push action vapaeetokens create '["vapaeetokens","500000000.0000 BOX"]' -p vapaeetokens@active
 cleos push action vapaeetokens addtoken '["vapaeetokens", "BOX", 4, "vapaeetokens", , "Board Game Box", "https://vapaee.io/bgbox", "", "", "/assets/logos/box.png", "/assets/logos/box-lg.png",true]' -p vapaeetokens@active
