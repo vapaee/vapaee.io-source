@@ -3,30 +3,6 @@ Icons:
 https://iconmonstr.com/
 
 
-Tablas que tienene mal el scope:
-- history
-- tablesummary
-- sellorders
-- blockhistory
-
-Tablas que tienen mal algún campo:
-- ordersummary.table (name) -> (uint64_t) market
-- sellorders (nuevo campo) -> (uint64_t) ui 
-- tokens.owner (name) -> (name) admin
-- userorders.table (name) -> (string) table
-- userorders.market (name) -> (uint64_t) market
-
-Tablas afectadas (total 7 tablas):
-+ ordersummary
-+ history
-+ tablesummary
-+ sellorders
-+ blockhistory
-+ tokens
-+ userorders
-
-
-
 Errores que he recibido:
 - order form
 ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 3050003, "name": "eosio_assert_message_exception", "what": "eosio_assert_message assertion failure", "details": [ { "message": "assertion failure with message: >>>>>> This contract is in MAINTENANCE. Please, try later again. <<<<<<", "file": "wasm_interface.cpp", "line_number": 964, "method": "eosio_assert" }, { "message": "pending console output: ", "file": "apply_context.cpp", "line_number": 113, "method": "exec_one" } ] } }
@@ -34,72 +10,6 @@ ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 30
 ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 3080006, "name": "deadline_exception", "what": "Transaction took too long", "details": [ { "message": "deadline exceeded", "file": "transaction_context.cpp", "line_number": 475, "method": "checktime" } ] } }
 ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 3050003, "name": "eosio_assert_message_exception", "what": "eosio_assert_message assertion failure", "details": [ { "message": "assertion failure with message: cannot swap deposits to self", "file": "wasm_interface.cpp", "line_number": 964, "method": "eosio_assert" } ] } }
 ERROR: { "type": "signature_rejected", "message": "User rejected the signature request", "code": 402, "isError": true }
-
-
-
-telosmain get table vapaeetokens acorn.tlos history -l 500
-telosmain get table vapaeetokens acorn.tlosd history -l 500
-telosmain get table vapaeetokens cnt.tlos history -l 500
-telosmain get table vapaeetokens edna.tlos history -l 500
-telosmain get table vapaeetokens ezar.tlos history -l 500
-telosmain get table vapaeetokens heart.tlos history -l 500
-telosmain get table vapaeetokens lol.tlos history -l 500
-telosmain get table vapaeetokens olive.tlos history -l 500
-telosmain get table vapaeetokens people.tlos history -l 500
-telosmain get table vapaeetokens qbe.tlos history -l 500
-telosmain get table vapaeetokens qbe.tlosd history -l 500
-telosmain get table vapaeetokens robo.tlos history -l 500
-telosmain get table vapaeetokens sqrl.tlos history -l 500
-telosmain get table vapaeetokens teach.tlos history -l 500
-telosmain get table vapaeetokens tlosd.tlos history -l 500
-telosmain get table vapaeetokens tlosdac.tlos history -l 500
-telosmain get table vapaeetokens yang.tlos history -l 500
-telosmain get table vapaeetokens ynt.tlos history -l 500
-
-
-
--- Estrategia --
-+ poner en mantenimiento todo el sistema
-+ crear tabla markets
-  + id
-  + name       // este es el antiguo scope pero truncado. No se puede asumir que es único
-  + commodity
-  + currency
-+ crear tabla bannedtokens  
-  + id
-  + symbol
-  + contract
-+ creat tabla tokengroup
-  + id
-  + title: string
-  + brief: string
-  + website: string
-  + banner: string
-  + currency: symbol_code
-+ crear un duplicado de las 7 tablas de forma que estén arregladas
-+ hacer un análisis offchain de el contenido de las tablas afectadas:
-  + enumerar los scopes por cada tabla
-  + almacenar una copia de los datos por seguridad (por si la cago)
-+ escribir en el hotfix una rutina que borre los datos de las tablas afectadas y los pase a las nuevas.
-  + debe insertar en la tabla de markets todos los mercados y sus reversos
-  + en la nueva tabla tokengroup debería haber un group inicial con id 0 que sea global
---- > DEPLOY & HOTFIX < ---
-
-- reescribir el código usando las nuevas tablas
-  - recorrer el código y donde se use una tabla vieja afectada, reemplazarla por la nueva y adaptar el código si es necesario
-  - action nueva: alta de UI
-  - action nueva: update de UI
-  - reescribir aux_generate_sell_order:
-    - incluir el UI como destinatario
-    - crear las dos entradas en la tabla markets (el canónico y el inverso)
-- reescribir las tablas viejas copiando la estructura de las nuevas
-- escribir en el hotfix una rutina que borre los datos de las tablas nuevas y los pase a las viejas arregladas.
-- renombrar en el código, toda referencia a las tablas nuevas y pasarlo a las viejas arregladas
---- > DEPLOY & HOTFIX < ---
-
-
-
-
 
 
 -- TODO --
