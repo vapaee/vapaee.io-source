@@ -49,6 +49,9 @@ export class RootPage implements OnInit {
             if (window.location.hostname == "vapaee.io") {
                 network = "telos";
             }
+            if (window.location.hostname == "test.vapaee.io") {
+                network = "telos-testnet";
+            }
             if ( this.scatter.network.slug != network || !this.scatter.connected ) {
                 this.scatter.setNetwork(network);
                 this.scatter.connectApp("Vapaée - Telos DEX").catch(err => console.error(err));

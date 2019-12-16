@@ -160,7 +160,7 @@ echo "----- loading tokens ----"
 
 # register tokens
 echo "-- register TLOS --" 
-cleos push action vapaeetokens addtoken '["eosio.token","TLOS",4,"vapaeetokens", "Telos", "https://telosfoundation.io", "", "", "/assets/logos/telos.png", "/assets/logos/telos-lg.png",true]' -p vapaeetokens@active
+cleos push action vapaeetokens addtoken '["eosio.token","TLOS",4,"vapaeetokens","Telos","https://telosfoundation.io","","","/assets/logos/telos.png","/assets/logos/telos-lg.png",true]' -p vapaeetokens@active
 cleos push action vapaeetokens addtoken '["eosio.token","TLOS",4,"vapaeetokens", "Telos", "https://telosfoundation.io", "", "", "/assets/logos/telos.png", "/assets/logos/telos-lg.png",true]' -p vapaeetokens@active
 cleos push action vapaeetokens setcurrency '["TLOS", true]' -p vapaeetokens@active
 echo "-- register VIITA --" 
@@ -211,6 +211,12 @@ cleos push action vapaeetokens settokendata '["CNT", 0, "add", "twitter", "Membe
 cleos push action vapaeetokens settokendata '["CNT", 0, "add", "youtube", "Demo video", "https://www.youtube.com/watch?v=jhL1KyifGEs&list=PLIv5p7BTy5wxqwqs0fGyjtOahoO3YWX0x&index=1"]' -p vapaeetokens@active
 cleos push action vapaeetokens settokendata '["CNT", 0, "add", "twitter", "The CNT token airdrop", "https://twitter.com/TokensCards/status/1105088865994452993"]' -p vapaeetokens@active
 
+telostest push action vapaeetokens create '["vapaeetokens","500000000.0000 CNT"]' -p vapaeetokens@active
+telostest push action vapaeetokens addtoken '["vapaeetokens", "CNT", 4, "vapaeetokens", "Cards & Tokens", "http://cardsandtokens.com", "A platform where you can create themed albums and trading cards to collect and play making money in the process.", "assets/img/cards-and-tokens-1200x400.jpeg", "/assets/logos/cnt.svg", "/assets/logos/cnt-lg.svg",true]' -p vapaeetokens@active
+telostest push action vapaeetokens settokendata '["CNT", 0, "add", "youtube", "Promo video", "https://youtu.be/YSVJgKsSobA"]' -p vapaeetokens@active
+telostest push action vapaeetokens settokendata '["CNT", 0, "add", "twitter", "Membership cards", "https://twitter.com/TokensCards/status/1109668817175748608"]' -p vapaeetokens@active
+telostest push action vapaeetokens settokendata '["CNT", 0, "add", "youtube", "Demo video", "https://www.youtube.com/watch?v=jhL1KyifGEs&list=PLIv5p7BTy5wxqwqs0fGyjtOahoO3YWX0x&index=1"]' -p vapaeetokens@active
+telostest push action vapaeetokens settokendata '["CNT", 0, "add", "twitter", "The CNT token airdrop", "https://twitter.com/TokensCards/status/1105088865994452993"]' -p vapaeetokens@active
 
 
 echo "-- creating BOX token --" 

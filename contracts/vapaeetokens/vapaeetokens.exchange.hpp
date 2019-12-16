@@ -1143,15 +1143,12 @@ namespace vapaee {
             PRINT(" sym_code: ", sym_code.to_string(), "\n");
             PRINT(" precision: ", std::to_string((unsigned) precision), "\n");
             PRINT(" admin: ", admin.to_string(), "\n");
-
-            require_auth(admin);
-
+            
             stats statstable( contract, sym_code.raw() );
             auto token_itr = statstable.find( sym_code.raw() );
             eosio_assert( token_itr != statstable.end(), "token with symbol not exists" );
             
             eosio_assert(has_auth(get_self()) || has_auth(contract) || has_auth(token_itr->issuer), "only token contract or issuer can add this token to DEX" );
-
 
             tokens tokenstable(get_self(), get_self().value);
             auto itr = tokenstable.find(sym_code.raw());
@@ -1170,6 +1167,7 @@ namespace vapaee {
                 a.tradeable = false;
                 a.data      = 0;
             });
+            PRINT(" -> tokenstable.emplace() OK\n");
 
 
 
@@ -1206,7 +1204,6 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::action_update_token_info() ...\n");
         }
         
-
         void action_set_token_admin (const symbol_code & sym_code, name newadmin) {
             PRINT("vapaee::token::exchange::action_set_token_admin()\n");
             PRINT(" sym_code: ", sym_code.to_string(), "\n");
@@ -1226,7 +1223,6 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::action_set_token_admin() ...\n");
         }
         
-
         void action_set_token_as_currency (const symbol_code & sym_code, bool is_currency) {
             PRINT("vapaee::token::exchange::action_set_token_as_currency()\n");
             PRINT(" sym_code: ", sym_code.to_string(), "\n");
@@ -1603,7 +1599,6 @@ namespace vapaee {
             }
         }
 
-
         /* uint64_t aux_get_makert_from_table(name table) {
             PRINT("vapaee::token::exchange::aux_get_makert_from_table()\n");
             uint64_t market = 0;
@@ -1742,7 +1737,7 @@ namespace vapaee {
         }
 
         void action_hotfix(int num, name account, asset quantity) {
-            PRINT("vapaee::token::exchange::action_poblate_user_orders_table()\n");
+            PRINT("vapaee::token::exchange::action_hotfix()\n");
             require_auth(get_self());
             int count = 1;
             uint64_t market = 0;
@@ -1750,10 +1745,62 @@ namespace vapaee {
             name scope;
             name scope_inv;
 
+            // telostest get table vapaeetokens cnt.tlos history
+            // telostest get table vapaeetokens cnt.tlos tablesummary
+            // telostest get table vapaeetokens cnt.tlos blockhistory
 
+            // history historytable(get_self(), name("cnt.tlos").value);
+            // for (auto itr = historytable.begin(); itr != historytable.end(); itr = historytable.begin()) {
+            //     historytable.erase(*itr);
+            // }
+            // PRINT("historytable ERASED\n");
+            // tablesummary tablesummarytable(get_self(), name("cnt.tlos").value);
+            // for (auto itr = tablesummarytable.begin(); itr != tablesummarytable.end(); itr = tablesummarytable.begin()) {
+            //     tablesummarytable.erase(*itr);
+            // }
+            // PRINT("tablesummary ERASED\n");
+            // blockhistory blockhistorytable(get_self(), name("cnt.tlos").value);
+            // for (auto itr = blockhistorytable.begin(); itr != blockhistorytable.end(); itr = blockhistorytable.begin()) {
+            //     blockhistorytable.erase(*itr);
+            // }
+            // PRINT("blockhistory ERASED\n");
+
+            // telostest get table vapaeetokens viterbo4test deposits
+            // telostest get table vapaeetokens gqydoobuhege deposits
+            // telostest get table vapaeetokens acorntkntest deposits
+
+            // deposits viterbodeposits(get_self(), name("viterbo4test").value);
+            // for (auto itr = viterbodeposits.begin(); itr != viterbodeposits.end(); itr = viterbodeposits.begin()) {
+            //     viterbodeposits.erase(*itr);
+            // }
+            // PRINT("deposits for viterbo4test ERASED\n");
+            // deposits gqydoodeposits(get_self(), name("gqydoobuhege").value);
+            // for (auto itr = gqydoodeposits.begin(); itr != gqydoodeposits.end(); itr = gqydoodeposits.begin()) {
+            //     gqydoodeposits.erase(*itr);
+            // }
+            // PRINT("deposits for gqydoobuhege ERASED\n");
+            // deposits acorndeposits(get_self(), name("acorntkntest").value);
+            // for (auto itr = acorndeposits.begin(); itr != acorndeposits.end(); itr = acorndeposits.begin()) {
+            //     acorndeposits.erase(*itr);
+            // }
+            // PRINT("deposits for acorntkntest ERASED\n");
 
             
-            PRINT("vapaee::token::exchange::action_poblate_user_orders_table() ...\n");
+            /*
+            action(
+                permission_level{get_self(),name("active")},
+                name("eosio.token"),
+                name("transfer"),
+                std::make_tuple(
+                    get_self(),
+                    name("viterbo4test"),
+                    asset(1, symbol(symbol_code("TLOS"), 4)),
+                    string("borre todo"))
+                ).send();
+            */
+
+
+            PRINT("vapaee::token::exchange::action_hotfix2() ...\n");
         }
 
         string aux_error_1(const asset & amount, uint8_t precision) {
