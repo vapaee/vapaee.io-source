@@ -1739,15 +1739,22 @@ namespace vapaee {
         void action_hotfix(int num, name account, asset quantity) {
             PRINT("vapaee::token::exchange::action_hotfix()\n");
             require_auth(get_self());
-            int count = 1;
-            uint64_t market = 0;
-            uint64_t market_inv = 0;
-            name scope;
-            name scope_inv;
+            // int count = 1;
+            // uint64_t market = 0;
+            // uint64_t market_inv = 0;
+            // name scope;
+            // name scope_inv;
 
             // telostest get table vapaeetokens cnt.tlos history
             // telostest get table vapaeetokens cnt.tlos tablesummary
             // telostest get table vapaeetokens cnt.tlos blockhistory
+
+            tokens tokenstable(get_self(), get_self().value);
+            for (auto itr = tokenstable.begin(); itr != tokenstable.end(); itr = tokenstable.begin()) {
+                tokenstable.erase(*itr);
+            }
+            PRINT("tokenstable ERASED\n");
+
 
             // history historytable(get_self(), name("cnt.tlos").value);
             // for (auto itr = historytable.begin(); itr != historytable.end(); itr = historytable.begin()) {
@@ -1800,7 +1807,7 @@ namespace vapaee {
             */
 
 
-            PRINT("vapaee::token::exchange::action_hotfix2() ...\n");
+            PRINT("vapaee::token::exchange::action_hotfix() ...\n");
         }
 
         string aux_error_1(const asset & amount, uint8_t precision) {
