@@ -5,12 +5,12 @@ https://iconmonstr.com/
 
 Errores que he recibido:
 - order form
+ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 3050003, "name": "eosio_assert_message_exception", "what": "eosio_assert_message assertion failure", "details": [ { "message": "assertion failure with message: cannot swap deposits to self", "file": "wasm_interface.cpp", "line_number": 964, "method": "eosio_assert" } ] } }
 ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 3050003, "name": "eosio_assert_message_exception", "what": "eosio_assert_message assertion failure", "details": [ { "message": "assertion failure with message: >>>>>> This contract is in MAINTENANCE. Please, try later again. <<<<<<", "file": "wasm_interface.cpp", "line_number": 964, "method": "eosio_assert" }, { "message": "pending console output: ", "file": "apply_context.cpp", "line_number": 113, "method": "exec_one" } ] } }
 ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 3080004, "name": "tx_cpu_usage_exceeded", "what": "Transaction exceeded the current CPU usage limit imposed on the transaction", "details": [ { "message": "transaction was executing for too long", "file": "transaction_context.cpp", "line_number": 488, "method": "checktime" }, { "message": "pending console output: ", "file": "apply_context.cpp", "line_number": 113, "method": "exec_one" } ] } }
 ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 3080006, "name": "deadline_exception", "what": "Transaction took too long", "details": [ { "message": "deadline exceeded", "file": "transaction_context.cpp", "line_number": 475, "method": "checktime" } ] } }
-ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 3050003, "name": "eosio_assert_message_exception", "what": "eosio_assert_message assertion failure", "details": [ { "message": "assertion failure with message: cannot swap deposits to self", "file": "wasm_interface.cpp", "line_number": 964, "method": "eosio_assert" } ] } }
 ERROR: { "type": "signature_rejected", "message": "User rejected the signature request", "code": 402, "isError": true }
-
+ERROR: {"code":500,"message":"Internal Service Error","error":{"code":3050003,"name":"eosio_assert_message_exception","what":"eosio_assert_message assertion failure","details":[{"message":"assertion failure with message: cannot transfer to self","file":"wasm_interface.cpp","line_number":964,"method":"eosio_assert"},{"message":"pending console output: ","file":"apply_context.cpp","line_number":113,"method":"exec_one"}]}}
 
 -- TODO --
 - tener un archivo json que tenga la versión actual de la UI y pedirlo con un ?nochache=random para eitar el caché. Si no coincide con la versión del la UI, debería hacerse un refresh con un ?version=vX.X.X para que se recargue toda la UI
@@ -29,6 +29,8 @@ ERROR: { "type": "signature_rejected", "message": "User rejected the signature r
   - cambiar la tabla de sellorders para incluir ese dato
   - creación de la tabla nueva de UIs (que se llena desde la sección "regitrar UI")
 
+- hacer un componente que maneje los errores de la blockchan de forma amigable.
+- poner ese componete en todas parte suqe haya un error para mostrar
 
 
 
@@ -145,28 +147,6 @@ cleos --url https://telos.eos.barcelona get info
 cleos --url https://api.eos.miami get info
 
 
-
-
-
-
-
-- contract:
-  - cambiar el appname por title
-  - hacer una lista de entradas de links info de la moneda:
-  {
-      id:             // 
-      symbol
-      date timestamp: // fecha del último update
-      name category;  // es una palabra corta que identifica de que tipo de link 
-      string title;   // texto a mostrar
-      string link;    // link al lugar
-  }
-
-- UI: Token Page
-  - si tiene background hay que ahcer un header tipo facebook donde el title no se superponga con el backgroun
-  - si no tiene, solo se muestra el icon del token y el title en grande. El baground es oscuro
-  - al costado (izq) lista de markets donde participa
-  - al centro (der) lista de links 
 
 
 
