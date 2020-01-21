@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { VapaeeDEX, TokenDEX, AssetDEX } from '@vapaee/dex';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
+import { VapaeeDEX, TokenDEX, AssetDEX } from 'projects/vapaee/dex/src';
 
 
 @Component({

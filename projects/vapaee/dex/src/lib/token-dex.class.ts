@@ -1,6 +1,7 @@
-import { Token } from '@vapaee/scatter';
+
 import { AssetDEX } from "./asset-dex.class";
 import { Market } from './types-dex';
+import { Token } from "projects/vapaee/scatter/src";
 
 export interface TokenData {
     id:number,

@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, Output, OnInit, OnDestroy } from '@angular/core';
-import { VapaeeDEX, DEXdata } from '@vapaee/dex';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { Account, VapaeeScatter, Asset } from '@vapaee/scatter';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 import { REXdata, VapaeeREX } from 'projects/vapaee/rex/src/public_api';
 import { Subscriber } from 'rxjs';
+import { DEXdata, VapaeeDEX } from 'projects/vapaee/dex/src';
+import { Asset, VapaeeScatter, Account } from 'projects/vapaee/scatter/src';
 
 
 

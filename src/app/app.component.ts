@@ -2,12 +2,12 @@ import { Component, HostListener, HostBinding } from '@angular/core';
 import { AppService } from './services/common/app.service';
 import { VpeComponentsService, PriceMap } from './components/vpe-components.service';
 import { CoingeckoService } from './services/coingecko.service';
-import { VapaeeDEX, TokenDEX, Market } from '@vapaee/dex';
 import { LocalStringsService, AnalyticsService } from './services/common/common.services';
 import { DropdownService } from './services/dropdown.service';
-import { VapaeeStyle } from '@vapaee/style';
 import { VapaeeScatter, NetworkMap } from 'projects/vapaee/scatter/src';
 import { HttpClient } from '@angular/common/http';
+import { VapaeeDEX, TokenDEX, Market } from 'projects/vapaee/dex/src';
+import { VapaeeStyle } from 'projects/vapaee/style/src/public_api';
 
 @Component({
     selector: 'app-root',
@@ -126,15 +126,17 @@ export class AppComponent {
         public http: HttpClient,
         public analytics: AnalyticsService
     ) {
-        this.app.init("v3.5.2");
-        this.http.get<any>("assets/app.json").toPromise().then((appjson) => {
+        this.app.init("v3.5.3");
+
+        // Check if this is the last version. If not, reload site.
+        this.http.get<any>("assets/app.json?_="+Math.random()).toPromise().then((appjson) => {
             if (this.app.version != appjson.version) {
                 console.error(appjson, "ERROR: version missmatch. Reloading site...");
                 alert("load version " + appjson.version);
                 window.location.href = 
                     window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/?_="+Math.random();
             } else {
-                console.log("****************", appjson, "************");
+                console.log("APP: ", appjson);
             }
         });        
     }

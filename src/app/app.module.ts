@@ -19,8 +19,6 @@ import { CoingeckoService } from './services/coingecko.service';
 import { DropdownService } from './services/dropdown.service';
 
 import { VapaeeComponentsModule } from './components/vpe-components.module';
-import { VapaeeScatterModule } from '@vapaee/scatter';
-import { VapaeeDexModule } from '@vapaee/dex';
 import { VapaeeRexModule } from 'projects/vapaee/rex/src/public_api';
 
 
@@ -40,6 +38,8 @@ import { TimezoneService } from './services/timezone.service';
 import { TokenEditPage } from './pages/tokenedit/tokenedit.page';
 import { FormsModule } from '@angular/forms';
 import { DirectivesModule } from './directives/directives.module';
+import { VapaeeScatterModule } from 'projects/vapaee/scatter/src';
+import { VapaeeDexModule } from 'projects/vapaee/dex/src';
 
 
 

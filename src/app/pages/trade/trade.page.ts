@@ -2,10 +2,9 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { ActivatedRoute } from '@angular/router';
-import { VapaeeDEX, TokenDEX, AssetDEX } from '@vapaee/dex';
+import { VapaeeDEX, TokenDEX, AssetDEX, TokenOrders, Market, OrderRow } from 'projects/vapaee/dex/src';
 import { Subscriber } from 'rxjs';
 import { VpePanelOrderEditorComponent } from 'src/app/components/vpe-panel-order-editor/vpe-panel-order-editor.component';
-import { TokenOrders, Market, OrderRow } from '@vapaee/dex';
 import { VpePanelWalletComponent } from 'src/app/components/vpe-panel-wallet/vpe-panel-wallet.component';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 

@@ -1,16 +1,14 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService, AnalyticsService } from 'src/app/services/common/common.services';
-
-import { VapaeeScatter } from '@vapaee/scatter';
-import { VapaeeDEX } from '@vapaee/dex';
-import { VapaeeStyle } from '@vapaee/style';
-
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 
 import { DropdownService } from 'src/app/services/dropdown.service';
 import { TimezoneService } from 'src/app/services/timezone.service';
 import { VapaeeREX } from 'projects/vapaee/rex/src/public_api';
+import { VapaeeScatter } from 'projects/vapaee/scatter/src';
+import { VapaeeDEX } from 'projects/vapaee/dex/src';
+import { VapaeeStyle } from 'projects/vapaee/style/src/public_api';
 
 declare var $:any;
 

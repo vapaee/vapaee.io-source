@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 // import { EosioTokenMathService } from './eosio.token-math.service';
-import { Feedback } from '@vapaee/feedback';
+
 
 // scatter libraries
 /*/
@@ -20,6 +20,7 @@ import { ScatterUtils } from './utils.class';
 import { Token } from './token.class';
 import { resolve, reject } from 'q';
 import { HttpClient } from '@angular/common/http';
+import { Feedback } from 'projects/vapaee/feedback/src';
 //*/
 
 // declare let ScatterJS:any;
@@ -520,7 +521,7 @@ export class VapaeeScatter {
                 if (n) {
                     if (this._network.name != n.name) {
                         this._network = n;
-                        console.log("Selected Endpoint ------------------------->", this._network.eosconf.host, [this._network]);
+                        console.log("Selected Endpoint: ", this._network.eosconf.host, [this._network]);
                         this.resetIdentity();
                         this.initScatter();
                         this.onNetworkChange.next(this._network);
@@ -658,13 +659,18 @@ export class VapaeeScatter {
         this.setEosjs("eosjs");
         /*/
         // eosjs
-        console.log("ScatterService.initScatter()");
         this.error = "";
         if ((<any>window).ScatterJS) {
             this.ScatterJS = (<any>window).ScatterJS;
             this.ScatterJS.plugins( new ScatterEOS() );
-            this.lib = this.ScatterJS.scatter;  
+            this.lib = this.ScatterJS.scatter;
             (<any>window).ScatterJS = null;
+
+            console.debug("this.lib: ", this.lib);
+            console.log("this.lib: ", this.lib);
+            (<any>this).__ = true;
+        } else {
+            console.error("ERROR: ScatterJS lib not found");
         }
         console.log("EOSJS()",[this.network.eosconf]);
         this.eos = this.lib.eos(this.network.eosconf, Eos, { expireInSeconds:60 });

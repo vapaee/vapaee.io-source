@@ -5,10 +5,9 @@ import { Subscriber } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 import { VpePanelWalletComponent } from 'src/app/components/vpe-panel-wallet/vpe-panel-wallet.component';
-import { VapaeeDEX, AssetDEX, UserOrdersMap, DEXdata } from '@vapaee/dex';
-
-import { Account } from '@vapaee/scatter';
+import { VapaeeDEX, AssetDEX, UserOrdersMap, DEXdata } from 'projects/vapaee/dex/src';
 import { VapaeeREX, REXdata } from 'projects/vapaee/rex/src/public_api';
+import { Account } from 'projects/vapaee/scatter/src';
 
 @Component({
     selector: 'account-page',
@@ -87,7 +86,7 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     async onDexCurrentAccountChange(account: string) {
-        console.log("AccountPage.onDexCurrentAccountChange() ----------------->", account);
+        console.log("AccountPage.onDexCurrentAccountChange()", account);
         var url = "/exchange/account/";
         if (account) {
             url += account;

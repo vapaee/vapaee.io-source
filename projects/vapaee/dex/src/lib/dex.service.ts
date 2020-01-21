@@ -5,9 +5,9 @@ import { CookieService } from 'ngx-cookie-service';
 import { DatePipe } from '@angular/common';
 import { TokenDEX, TokenData, TokenEvent } from './token-dex.class';
 import { AssetDEX } from './asset-dex.class';
-import { Feedback } from '@vapaee/feedback';
-import { VapaeeScatter, Account, AccountData, SmartContract, TableResult, TableParams, Asset } from '@vapaee/scatter';
 import { MarketMap, UserOrdersMap, MarketSummary, EventLog, Market, HistoryTx, TokenOrders, Order, UserOrders, OrderRow, HistoryBlock, DEXdata, MarketDeclaration } from './types-dex';
+import { VapaeeScatter, Account, AccountData, SmartContract, TableResult, TableParams, Asset } from 'projects/vapaee/scatter/src';
+import { Feedback } from 'projects/vapaee/feedback/src';
 
 
 @Injectable({

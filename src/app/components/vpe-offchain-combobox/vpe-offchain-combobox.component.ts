@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService } from '../vpe-components.service';
-import { VapaeeDEX } from '@vapaee/dex';
+import { VapaeeDEX } from 'projects/vapaee/dex/src';
 
 
 
