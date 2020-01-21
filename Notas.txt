@@ -13,7 +13,7 @@ ERROR: { "type": "signature_rejected", "message": "User rejected the signature r
 ERROR: {"code":500,"message":"Internal Service Error","error":{"code":3050003,"name":"eosio_assert_message_exception","what":"eosio_assert_message assertion failure","details":[{"message":"assertion failure with message: cannot transfer to self","file":"wasm_interface.cpp","line_number":964,"method":"eosio_assert"},{"message":"pending console output: ","file":"apply_context.cpp","line_number":113,"method":"exec_one"}]}}
 
 -- TODO --
-- tener un archivo json que tenga la versión actual de la UI y pedirlo con un ?nochache=random para eitar el caché. Si no coincide con la versión del la UI, debería hacerse un refresh con un ?version=vX.X.X para que se recargue toda la UI
++ tener un archivo json que tenga la versión actual de la UI y pedirlo con un ?nochache=random para eitar el caché. Si no coincide con la versión del la UI, debería hacerse un refresh con un ?version=vX.X.X para que se recargue toda la UI
 - pie de página as a component. Así todas las páginas lo pueden incluir fácil
 - Secciones nuevas:
   - regitrar UI: formulario simple donde ponés los datos de la UI

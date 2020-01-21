@@ -3,9 +3,11 @@ import { AppService } from './services/common/app.service';
 import { VpeComponentsService, PriceMap } from './components/vpe-components.service';
 import { CoingeckoService } from './services/coingecko.service';
 import { VapaeeDEX, TokenDEX, Market } from '@vapaee/dex';
-import { LocalStringsService } from './services/common/common.services';
+import { LocalStringsService, AnalyticsService } from './services/common/common.services';
 import { DropdownService } from './services/dropdown.service';
 import { VapaeeStyle } from '@vapaee/style';
+import { VapaeeScatter, NetworkMap } from 'projects/vapaee/scatter/src';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'app-root',
@@ -117,14 +119,51 @@ export class AppComponent {
         public components: VpeComponentsService,
         public coingecko: CoingeckoService,
         public dex: VapaeeDEX,
+        public scatter: VapaeeScatter,
         public local: LocalStringsService,
         public style: VapaeeStyle,
-        public dropdown: DropdownService
+        public dropdown: DropdownService,
+        public http: HttpClient,
+        public analytics: AnalyticsService
     ) {
-        this.app.init("v3.5.0");
+        this.app.init("v3.5.2");
+        this.http.get<any>("assets/app.json").toPromise().then((appjson) => {
+            if (this.app.version != appjson.version) {
+                console.error(appjson, "ERROR: version missmatch. Reloading site...");
+                alert("load version " + appjson.version);
+                window.location.href = 
+                    window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/?_="+Math.random();
+            } else {
+                console.log("****************", appjson, "************");
+            }
+        });        
     }
     
     ngOnInit() {
+
+        this.http.get<NetworkMap>("assets/endpoints.json").toPromise().then((endpoints) => {
+            this.scatter.setEndpoints(endpoints);
+
+            var network = "telos-testnet";
+            // network = "telos";
+            network = "local";
+            if (window.location.hostname == "vapaee.io") {
+                network = "telos";
+            }
+            if (window.location.hostname == "test.vapaee.io") {
+                network = "telos-testnet";
+            }
+            if ( this.scatter.network.slug != network || !this.scatter.connected ) {
+                this.scatter.setNetwork(network);
+                this.scatter.connectApp("Vapaée - Telos DEX").catch(err => console.error(err));
+            }
+    
+        });
+
+        this.dex.onLoggedAccountChange.subscribe(logged => {
+            this.analytics.setUserId(logged ? logged : 0);
+        });
+
         this.app.onWindowResize.subscribe(d => {
             this.components.windowHasResized(d);
         });

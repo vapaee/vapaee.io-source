@@ -1,6 +1,6 @@
 {
   "name": "vapaee.io-source",
-  "version": "v3.5.0",
+  "version": "v3.5.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --poll=2000 -o",
@@ -14,7 +14,8 @@
     "lib-scatter": "ng build @vapaee/scatter --prod",
     "lib-feedback": "ng build @vapaee/feedback --prod",
 
-    "build": "ng build --aot --buildOptimizer --prod",
+    "buildprod": "ng build --aot --buildOptimizer --prod",
+    "build": "ng build",
     "deploy": "npm run libs && ng build --aot --buildOptimizer --prod && npm run cpbasic && npm run copycert && cd /var/www/vapaee.io && npm run save && amazon_server_console",
     "cpbasic": "cp .htaccess /var/www/vapaee.io/.htaccess && cp package.json /var/www/vapaee.io/package.json",
     "copycert": "cp cert/* /var/www/vapaee.io/",

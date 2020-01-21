@@ -1,13 +1,13 @@
-import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService, AnalyticsService } from 'src/app/services/common/common.services';
 
-import { VapaeeScatter, NetworkMap, SmartContract } from '@vapaee/scatter';
+import { VapaeeScatter } from '@vapaee/scatter';
 import { VapaeeDEX } from '@vapaee/dex';
 import { VapaeeStyle } from '@vapaee/style';
 
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
-import { HttpClient } from '@angular/common/http';
+
 import { DropdownService } from 'src/app/services/dropdown.service';
 import { TimezoneService } from 'src/app/services/timezone.service';
 import { VapaeeREX } from 'projects/vapaee/rex/src/public_api';
@@ -23,7 +23,6 @@ export class RootPage implements OnInit {
 
     constructor(
         public app: AppService,
-        private http: HttpClient,
         public local: LocalStringsService,
         public elRef: ElementRef,
         public scatter: VapaeeScatter,
@@ -39,7 +38,7 @@ export class RootPage implements OnInit {
     }
     
     ngOnInit() {
-
+        /*
         this.http.get<NetworkMap>("assets/endpoints.json").toPromise().then((endpoints) => {
             this.scatter.setEndpoints(endpoints);
 
@@ -62,6 +61,7 @@ export class RootPage implements OnInit {
         this.dex.onLoggedAccountChange.subscribe(logged => {
             this.analytics.setUserId(logged ? logged : 0);
         });
+        */
 
         // ----------------------
         // this.CheckWP();
@@ -128,6 +128,10 @@ export class RootPage implements OnInit {
 
 
     // -----------------------------------------------
+    /*
+    // código que utilicé para calcular cuantos sobres se venderían por álbum de FutbolTokens
+
+
     cantidadDeCartas(album: number[]): number {
         let cant = 0;
         for (let i=0; i<album.length; i++) {
@@ -189,6 +193,6 @@ export class RootPage implements OnInit {
             }
         }, 100);
     }
-
+    */
 
 }
