@@ -939,6 +939,7 @@ namespace vapaee {
                     PRINT("     -- transfer ", seller_gains.to_string(), " to ", buyer.to_string(),"\n");
                         
                     // transfer to contract fees on CNT
+                    // at this moment buyer_fee is still in the owner's deposits. So it must be swaped to the contract before earning it
                     action(
                         permission_level{get_self(),name("active")},
                         get_self(),
@@ -957,6 +958,7 @@ namespace vapaee {
                     PRINT("     -- transfer ", buyer_gains.to_string(), " to ", owner.to_string(),"\n");
 
                     // convert deposits to earnings
+                    // Now the contract's deposits includes the buyer_fee, so it can be transformed to ernings
                     action(
                         permission_level{get_self(),name("active")},
                         get_self(),
@@ -965,6 +967,8 @@ namespace vapaee {
                     ).send();
                     PRINT("     -- converting fee ", buyer_fee.to_string(), " to earnings\n");
 
+                    // The seller_fee were already included in the contract's deposits, so no swap was needed.
+                    // It can be earned directly
                     action(
                         permission_level{get_self(),name("active")},
                         get_self(),
@@ -1105,10 +1109,11 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::action_order() ...\n");      
         }
 
-        void action_withdraw(name owner, const asset & quantity) {
+        void action_withdraw(name owner, const asset & quantity, uint64_t ui) {
             PRINT("vapaee::token::exchange::action_withdraw()\n");
             PRINT(" owner: ", owner.to_string(), "\n");
             PRINT(" quantity: ", quantity.to_string(), "\n");
+            PRINT(" ui: ", std::to_string((long unsigned) ui), "\n");
 
             // substract or remove deposit entry
             require_auth(owner);

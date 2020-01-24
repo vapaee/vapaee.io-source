@@ -28,6 +28,7 @@ ERROR: {"code":500,"message":"Internal Service Error","error":{"code":3050003,"n
   - cambiar la action order
   - cambiar la tabla de sellorders para incluir ese dato
   - creación de la tabla nueva de UIs (que se llena desde la sección "regitrar UI")
+  - Modificar el action_withdraw para que cuando se haga un redondeo, las sobras vayan a parar a la ui que el usuario está usando
 - mejoras generales  
   - hacer un componente que maneje los errores de la blockchan de forma amigable.
   - poner ese componete en todas parte suqe haya un error para mostrar
