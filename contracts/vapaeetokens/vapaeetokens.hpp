@@ -111,6 +111,24 @@ CONTRACT vapaeetokens : public eosio::contract {
 
     public:
         // EXCHANGE-ACTOINS  ------------------------------------------------------------------------------------------------------
+        /*
+        // hay que hacer dos funciones (create y update, similares a los del token) para administrar los UI
+        
+        ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name admin, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {
+            MAINTENANCE();
+            PRINT("\nACTION vapaeetokens.addtoken()\n");
+            vapaee::token::exchange e;
+            e.action_add_token(contract, symbol, precision, admin);
+            e.action_update_token_info(symbol, title, website, brief, banner, icon, iconlg, tradeable);
+        };
+        
+        ACTION updatetoken (const symbol_code & sym_code, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {
+            MAINTENANCE();
+            PRINT("\nACTION vapaeetokens.updatetoken()\n");
+            vapaee::token::exchange e;
+            e.action_update_token_info(sym_code, title, website, brief, banner, icon, iconlg, tradeable);
+        };
+        */
         ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name admin, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.addtoken()\n");
@@ -213,10 +231,10 @@ CONTRACT vapaeetokens : public eosio::contract {
         }
         
 
-        ACTION deps2earn(const asset & quantity) {
+        ACTION deps2earn(const uint64_t ui, const asset & quantity) {
             PRINT("\nACTION vapaeetokens.deps2earn()\n");
             vapaee::token::exchange e;
-            e.action_convert_deposits_to_earnings(quantity);
+            e.action_convert_deposits_to_earnings(ui, quantity);
         };
         
         /*

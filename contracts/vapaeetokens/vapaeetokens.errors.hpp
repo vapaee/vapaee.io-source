@@ -9,7 +9,7 @@
 #define ERROR_AGSO_6 "ERR-AGSO-06: symbol mismatch: "
 #define ERROR_AGSO_7 "ERR-AGSO-07: symbol mismatch: "
 #define ERROR_AGSO_8 "ERR-AGSO-08: symbol mismatch: "
-#define ERROR_AGSO_9 "ERR-AGSO-09: symbol mismatch: "
+
 
 // aux_substract_deposits
 #define ERROR_ASD_1 "ERR-ASD-01: user has no deposits for this symbol to subtract from: "
