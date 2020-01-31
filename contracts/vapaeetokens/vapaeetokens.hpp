@@ -111,24 +111,23 @@ CONTRACT vapaeetokens : public eosio::contract {
 
     public:
         // EXCHANGE-ACTOINS  ------------------------------------------------------------------------------------------------------
-        /*
-        // hay que hacer dos funciones (create y update, similares a los del token) para administrar los UI
         
-        ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name admin, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {
+        
+        
+        ACTION addui (name contract, name admin, string title, string website, string brief, string banner, string thumbnail) {
             MAINTENANCE();
-            PRINT("\nACTION vapaeetokens.addtoken()\n");
+            PRINT("\nACTION vapaeetokens.addui()\n");
             vapaee::token::exchange e;
-            e.action_add_token(contract, symbol, precision, admin);
-            e.action_update_token_info(symbol, title, website, brief, banner, icon, iconlg, tradeable);
+            e.action_add_ui(contract, admin, title, website, brief, banner, thumbnail);
         };
         
-        ACTION updatetoken (const symbol_code & sym_code, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {
+        ACTION updateui (uint64_t ui, name contract, name admin, string title, string website, string brief, string banner, string thumbnail) {
             MAINTENANCE();
-            PRINT("\nACTION vapaeetokens.updatetoken()\n");
+            PRINT("\nACTION vapaeetokens.updateui()\n");
             vapaee::token::exchange e;
-            e.action_update_token_info(sym_code, title, website, brief, banner, icon, iconlg, tradeable);
+            e.action_update_ui(ui, contract, admin, title, website, brief, banner, thumbnail);
         };
-        */
+        
         ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name admin, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.addtoken()\n");

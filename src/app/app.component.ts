@@ -147,8 +147,8 @@ export class AppComponent {
             this.scatter.setEndpoints(endpoints);
 
             var network = "telos-testnet";
-            // network = "telos";
-            network = "local";
+            network = "telos";
+            // network = "local";
             if (window.location.hostname == "vapaee.io") {
                 network = "telos";
             }

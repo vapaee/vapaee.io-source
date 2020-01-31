@@ -1486,6 +1486,34 @@ namespace vapaee {
 
             PRINT("vapaee::token::exchange::action_withdraw() ...\n");
         }
+
+        void action_add_ui(name contract, name admin, string title, string website, string brief, string banner, string thumbnail) {
+            PRINT("vapaee::token::exchange::action_add_ui()\n");
+            PRINT(" contract: ", contract.to_string(), "\n");
+            PRINT(" admin: ", admin.to_string(), "\n");
+            PRINT(" title: ", title.c_str(), "\n");
+            PRINT(" website: ", website.c_str(), "\n");
+            PRINT(" brief: ", brief.c_str(), "\n");
+            PRINT(" banner: ", banner.c_str(), "\n");
+            PRINT(" thumbnail: ", thumbnail.c_str(), "\n");
+
+            PRINT("vapaee::token::exchange::action_add_ui() ...\n");
+        }
+
+        void action_update_ui(uint64_t ui, name contract, name admin, string title, string website, string brief, string banner, string thumbnail) {
+            PRINT("vapaee::token::exchange::action_add_ui()\n");
+            PRINT(" ui: ", std::to_string((unsigned) ui), "\n");
+            PRINT(" contract: ", contract.to_string(), "\n");
+            PRINT(" admin: ", admin.to_string(), "\n");
+            PRINT(" title: ", title.c_str(), "\n");
+            PRINT(" website: ", website.c_str(), "\n");
+            PRINT(" brief: ", brief.c_str(), "\n");
+            PRINT(" banner: ", banner.c_str(), "\n");
+            PRINT(" thumbnail: ", thumbnail.c_str(), "\n");
+
+            PRINT("vapaee::token::exchange::action_update_ui() ...\n");
+        }
+
         
         void action_add_token(name contract, const symbol_code & sym_code, uint8_t precision, name admin) {
             PRINT("vapaee::token::exchange::action_add_token()\n");

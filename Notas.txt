@@ -3,6 +3,31 @@ Icons:
 https://iconmonstr.com/
 
 
+Alta de token:
+cleos --url https://api.eos.miami push action vapaeetokens addtoken '["vapaeetokens","NFD",4,"viterbotelos", "No Foun Dation", "https://t.me/ferrdo_id", "No foundation sharing without being known Giving without praise is just a name that is known money is not everything good work will have a lot of money Good luck.", "https://i.ibb.co/ncN64xP/Baner.png", "https://i.ibb.co/jDs5sdF/Icon-40.png", "https://i.ibb.co/hZc39W0/CC-20200131-181658.png",true]' -p viterbotelos@active
+
+
+
+
+banner: "https://i.ibb.co/ncN64xP/Baner.png"
+brief: "No foundation sharing without being known Giving without praise is just a name that is known money is not everything good work will have a lot of money Good luck."
+contract: "vapaeetokens"
+iconlg: "https://i.ibb.co/hZc39W0/CC-20200131-181658.png"
+logo: "https://i.ibb.co/jDs5sdF/Icon-40.png"
+owner: "viterbotelos"
+precision: 4
+symbol: "NFD"
+title: "No Foun Dation"
+tradeable: 1
+website: "https://t.me/ferrdo_id"
+
+
+
+
+
+
+
+
 Errores que he recibido:
 - order form
 ERROR: { "code": 500, "message": "Internal Service Error", "error": { "code": 3050003, "name": "eosio_assert_message_exception", "what": "eosio_assert_message assertion failure", "details": [ { "message": "assertion failure with message: cannot swap deposits to self", "file": "wasm_interface.cpp", "line_number": 964, "method": "eosio_assert" } ] } }
