@@ -114,18 +114,18 @@ CONTRACT vapaeetokens : public eosio::contract {
         
         
         
-        ACTION addui (name contract, name admin, string title, string website, string brief, string banner, string thumbnail) {
+        ACTION addui (name admin, name receiver, string params, string title, string website, string brief, string banner, string thumbnail) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.addui()\n");
             vapaee::token::exchange e;
-            e.action_add_ui(contract, admin, title, website, brief, banner, thumbnail);
+            e.action_add_ui(admin, receiver, params, title, website, brief, banner, thumbnail);
         };
         
-        ACTION updateui (uint64_t ui, name contract, name admin, string title, string website, string brief, string banner, string thumbnail) {
+        ACTION updateui (uint64_t ui, name admin, name receiver, string params, string title, string website, string brief, string banner, string thumbnail) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.updateui()\n");
             vapaee::token::exchange e;
-            e.action_update_ui(ui, contract, admin, title, website, brief, banner, thumbnail);
+            e.action_update_ui(ui, admin, receiver, params, title, website, brief, banner, thumbnail);
         };
         
         ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name admin, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {

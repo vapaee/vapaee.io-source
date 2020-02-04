@@ -4,11 +4,11 @@ https://iconmonstr.com/
 
 --- TODO FEBRERO ---
 - Cumple fausto
-- sisterna
+- Cisterna
 - cálculo del gasto mínimo por mes
 - cuanto debo ahorrar?
 - Patreon - hacerme una cuenta
-- Fitness - armar initerarios
+- Fitness - armar itinerarios
 - deberes Fausto
 - DEX
 - Bicicleta
@@ -34,7 +34,7 @@ ERROR: {"code":500,"message":"Internal Service Error","error":{"code":3050003,"n
 - contrato:
   + deps2earn: tiene que recibir el id del UI que se está ganando esa guita, sacar la account que le corresponde y hacer a transferencia.
   - aux_transfer_earnings_to_ui: Hay que sacar de la tabla de ui cual es el account y mandarle la quantity
-  - table interfaces: hay que hacer dos funciones (create y update, similares a los del token) para administrar los UI
+  + table interfaces: hay que hacer dos funciones (create y update, similares a los del token) para administrar los UI
   - hay que checkear que haya quedado bien el order (probar con maker_fee = 0 a ver si funca bien).  
 - pie de página as a component. Así todas las páginas lo pueden incluir fácil
 - Secciones nuevas:

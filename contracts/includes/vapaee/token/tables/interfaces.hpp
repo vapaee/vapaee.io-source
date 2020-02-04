@@ -6,13 +6,15 @@
         // scope: contract
         TABLE interfaces_table {
             uint64_t id;
+            name admin;    // whoever register or manage this UI
             name receiver; // where to send earnings from fees
-            name admin;    // whoever register this UI
+            string params; // text to add in all transfers' memos (like an internal id when you deposit in an exchange)
             string title;
             string website;
             string brief;
-            string banner;
-            string bigbanner;
+            string banner;    // big wide image
+            string thumbnail; // small image
+            string state;  // this is for future use. We can ban, suspend, promote, reward, or whatever concept we (as a DAO) want to apply to each ui.
             time_point_sec date;
             uint64_t primary_key() const { return id; }
             uint64_t by_receiver_key() const { return receiver.value; }

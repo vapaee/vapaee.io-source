@@ -33,3 +33,17 @@
 
 // aux_add_deposits
 #define ERROR_AAD_1 "ERR-AAD-01: symbol mismatch: "
+
+// action_add_ui
+#define ERROR_AAU_1 "ERR-AAU-01: receiver account does not exist: "
+#define ERROR_AAU_2 "ERR-AAU-02: admin account does not exist: "
+#define ERROR_AAU_3 "ERR-AAU-03: admin signature needed: "
+
+// action_update_ui
+#define ERROR_AUU_1 "ERR-AUU-01: receiver account does not exist: "
+#define ERROR_AUU_2 "ERR-AUU-02: admin account does not exist: "
+#define ERROR_AUU_3 "ERR-AUU-03: admin signature needed: "
+#define ERROR_AUU_4 "ERR-AUU-04: interface not found with this id: "
+
+// action_update_ui
+#define ERROR_ATETU_1 "ERR-ATETU-01: interface not found with this id: "
