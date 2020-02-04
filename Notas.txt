@@ -2,26 +2,18 @@
 Icons:
 https://iconmonstr.com/
 
-
-Alta de token:
-cleos --url https://api.eos.miami push action vapaeetokens addtoken '["vapaeetokens","NFD",4,"viterbotelos", "No Foun Dation", "https://t.me/ferrdo_id", "No foundation sharing without being known Giving without praise is just a name that is known money is not everything good work will have a lot of money Good luck.", "https://i.ibb.co/ncN64xP/Baner.png", "https://i.ibb.co/jDs5sdF/Icon-40.png", "https://i.ibb.co/hZc39W0/CC-20200131-181658.png",true]' -p viterbotelos@active
-
-
-
-
-banner: "https://i.ibb.co/ncN64xP/Baner.png"
-brief: "No foundation sharing without being known Giving without praise is just a name that is known money is not everything good work will have a lot of money Good luck."
-contract: "vapaeetokens"
-iconlg: "https://i.ibb.co/hZc39W0/CC-20200131-181658.png"
-logo: "https://i.ibb.co/jDs5sdF/Icon-40.png"
-owner: "viterbotelos"
-precision: 4
-symbol: "NFD"
-title: "No Foun Dation"
-tradeable: 1
-website: "https://t.me/ferrdo_id"
-
-
+--- TODO FEBRERO ---
+- Cumple fausto
+- sisterna
+- cálculo del gasto mínimo por mes
+- cuanto debo ahorrar?
+- Patreon - hacerme una cuenta
+- Fitness - armar initerarios
+- deberes Fausto
+- DEX
+- Bicicleta
+- limpieza - Oscar
+- tableta Fausto
 
 
 

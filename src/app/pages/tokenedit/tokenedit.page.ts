@@ -122,7 +122,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
     get tokenNotOwn(): boolean {
         // ------------------------------------------
         // console.error("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");    
-        return false;
+        // if(2<3) return false;
         // ------------------------------------------
         if (this.editable) return false;
         if (!this.thetoken) return false;
