@@ -2,18 +2,7 @@
 Icons:
 https://iconmonstr.com/
 
---- TODO FEBRERO ---
-- Cumple fausto
-- Cisterna
-- cálculo del gasto mínimo por mes
-- cuanto debo ahorrar?
-- Patreon - hacerme una cuenta
-- Fitness - armar itinerarios
-- deberes Fausto
-- DEX
-- Bicicleta
-- limpieza - Oscar
-- tableta Fausto
+
 
 
 

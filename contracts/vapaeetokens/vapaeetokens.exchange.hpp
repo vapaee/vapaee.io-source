@@ -722,7 +722,7 @@ namespace vapaee {
             PRINT(" price: ", price.to_string(), "\n");
             PRINT(" ui: ", std::to_string((long unsigned) ui), "\n");
             
-            require_auth(owner);         
+            require_auth(owner);
 
             // create scope for the orders table
             uint64_t market_buy = aux_get_market_id(total.symbol.code(), price.symbol.code());
@@ -739,11 +739,9 @@ namespace vapaee {
 
             aux_register_event(owner, name(type.to_string() + ".order"), total.to_string() + "|" + price.to_string() );
 
+            // Check user interface is valid and registered
+            aux_assert_ui_is_valid(ui);
 
-            // // this code is useful to hot-debugging
-            // eosio_assert(owner.value != name("viterbotelos").value,
-            //     create_error_asset4("DEBUG IN PROGRESS. PLEASE WAIT",
-            //     price, total, inverse, payment).c_str()); 
 
             if (type == name("sell")) {
                 aux_generate_sell_order(false, owner, market_sell, market_buy, total, payment, price, inverse, ram_payer, ui);
@@ -754,6 +752,19 @@ namespace vapaee {
             }
             
             PRINT("vapaee::token::exchange::aux_generate_order() ...\n");
+        }
+
+        void aux_assert_ui_is_valid(uint64_t ui) {
+            PRINT("vapaee::token::exchange::aux_assert_ui_is_valid()\n");
+            PRINT(" ui: ", std::to_string((long unsigned) ui), "\n");
+
+            interfaces uitable(get_self(), get_self().value);
+            auto ptr = uitable.find(ui);
+            eosio_assert(ptr != uitable.end(), create_error_id1(ERROR_ACUE_1, ui).c_str());
+
+print("aux_assert_ui_is_valid\n");
+
+            PRINT("vapaee::token::exchange::aux_assert_ui_is_valid() ...\n");
         }
 
         void aux_generate_sell_order(bool inverted, name owner, uint64_t market_buy, uint64_t market_sell, asset total, asset payment, asset price, asset inverse, name ram_payer, uint64_t sell_ui) {
@@ -1101,8 +1112,6 @@ namespace vapaee {
             PRINT("vapaee::token::exchange::action_convert_deposits_to_earnings()\n");
             PRINT(" ui: ", std::to_string((long unsigned) ui), "\n");
             PRINT(" quantity: ", quantity.to_string(), "\n");
-            
-            
             require_auth(get_self());
 
             aux_convert_deposits_to_earnings(ui, quantity);
@@ -1226,11 +1235,11 @@ namespace vapaee {
             }
 
             // check tuple existance
-            interfaces uitable(get_self(), get_self().value);
-            auto ptr = uitable.find(ui);
-            eosio_assert(ptr != uitable.end(), create_error_id1(ERROR_AUU_4, ui).c_str());
+            aux_assert_ui_is_valid(ui);
             
             // update table
+            interfaces uitable(get_self(), get_self().value);
+            auto ptr = uitable.find(ui);
             uitable.modify( *ptr, rampayer, [&](auto & a){
                 a.admin     = admin;
                 a.receiver  = receiver;

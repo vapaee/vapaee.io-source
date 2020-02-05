@@ -188,3 +188,5 @@ Resulta que no puedo cargar con RAM al usuario, si registro ese evento lo tengo 
 - Si quieres que el compilador te auto cree el abi debes hacer coincidir el nombre de la clase con el wasm en la linea de compilación
     eosio-cpp -o xxxxxxxxxx.wasm token.cpp --abigen
     para crear el xxxxxxxxxx.abi
+- Creaste una nueva action, escribiste el código y compila genial. Sin emabrgo al ejecutar cleos push action no reacciona!!
+  Lo que sucede es que no declaraste la nueva action en el abi. Para eso tenés que incluirla en el EOSIO_DISPATCH macro de EOS    

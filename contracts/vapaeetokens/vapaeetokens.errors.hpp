@@ -43,7 +43,9 @@
 #define ERROR_AUU_1 "ERR-AUU-01: receiver account does not exist: "
 #define ERROR_AUU_2 "ERR-AUU-02: admin account does not exist: "
 #define ERROR_AUU_3 "ERR-AUU-03: admin signature needed: "
-#define ERROR_AUU_4 "ERR-AUU-04: interface not found with this id: "
+
+// aux_check_ui_exists
+#define ERROR_ACUE_1 "ERR-ACUE-01: interface not found with this id: "
 
 // action_update_ui
 #define ERROR_ATETU_1 "ERR-ATETU-01: interface not found with this id: "
