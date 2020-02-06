@@ -1,10 +1,10 @@
 #pragma once
 
-#include <eosiolib/eosio.hpp>
-#include <eosiolib/symbol.hpp>
-#include <eosiolib/asset.hpp>
-#include <eosiolib/print.hpp>
-#include <eosiolib/singleton.hpp>
+#include <eosiolib/contracts/eosio/eosio.hpp>
+#include <eosiolib/core/eosio/symbol.hpp>
+#include <eosiolib/core/eosio/asset.hpp>
+#include <eosiolib/core/eosio/print.hpp>
+#include <eosiolib/contracts/eosio/transaction.hpp>
 
 using namespace eosio;
 using namespace std;

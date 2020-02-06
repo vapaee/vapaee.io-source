@@ -106,7 +106,7 @@
                 if (++count>num) return;
             }
             
-            eosio_assert(false, "FIN");
+            check(false, "FIN");
 
 
 
@@ -294,7 +294,7 @@
             //     if (++count>num) return;
             // }
             // 
-            // // eosio_assert(false, "FIN");
+            // // check(false, "FIN");
 
 
 
@@ -382,7 +382,7 @@
             // modificar depósitos
             // deposits table5(get_self(), name("viterbotelos").value);
             // auto ptr0 = table5.find(symbol_code("TLOSDAC").raw());
-            // eosio_assert(ptr0 != table5.end(), "Le erraste, no existe la entrada");
+            // check(ptr0 != table5.end(), "Le erraste, no existe la entrada");
             // table5.modify(*ptr0, same_payer, [&](auto & a){
             //     a.amount.amount = 110698909424;
             // });
@@ -629,17 +629,17 @@
             // auto sym = quantity.symbol;
             // stats statstable( _self, sym.code().raw() );
             // auto existing = statstable.find( sym.code().raw() );
-            // eosio_assert( existing != statstable.end(), "token with symbol does not exist" );
+            // check( existing != statstable.end(), "token with symbol does not exist" );
             // const auto& st = *existing;
-            // eosio_assert( quantity.is_valid(), "invalid quantity" );
-            // eosio_assert( quantity.amount > 0, "must retire positive quantity" );
-            // eosio_assert( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
+            // check( quantity.is_valid(), "invalid quantity" );
+            // check( quantity.amount > 0, "must retire positive quantity" );
+            // check( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
             // statstable.modify( st, same_payer, [&]( auto& s ) {
             //     s.supply -= quantity;
             // });
             // accounts acnts( _self, account.value );
             // auto it = acnts.find( quantity.symbol.code().raw() );
-            // eosio_assert( it != acnts.end(), "Balance row already deleted or never existed. Action won't have any effect." );
+            // check( it != acnts.end(), "Balance row already deleted or never existed. Action won't have any effect." );
             // acnts.erase( it );
 
 

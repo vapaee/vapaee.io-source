@@ -21,17 +21,17 @@ namespace vapaee {
             PRINT(" quantity: ", quantity.to_string(), "\n");
             PRINT(" to: ", to.to_string(), "\n");
             PRINT(" concept: ", concept.to_string(), "\n");
-            PRINT(" current_time(): ", std::to_string((unsigned long long) current_time() ), "\n");
+            
 
             require_auth(owner);
-            eosio_assert( is_account( to ), "to account does not exist");
+            check( is_account( to ), "to account does not exist");
 
             // entry on stakes table
             uint64_t id = aux_create_stake_entry(owner, quantity, to, concept);            
 
             tokens tokens_table(get_self(), get_self().value);
             auto tkn = tokens_table.find(quantity.symbol.code().raw());
-            eosio_assert(tkn != tokens_table.end(), "token not registered");            
+            check(tkn != tokens_table.end(), "token not registered");            
 
             // transfer that quantity to _self
             action(
@@ -50,7 +50,7 @@ namespace vapaee {
             PRINT(" quantity: ", quantity.to_string(), "\n");
             PRINT(" from: ", from.to_string(), "\n");
             PRINT(" concept: ", concept.to_string(), "\n");
-            PRINT(" current_time(): ", std::to_string((unsigned long long) current_time() ), "\n");
+            
 
             require_auth(owner);
 
@@ -74,7 +74,7 @@ namespace vapaee {
                     "' does not have " +quantity.symbol.code().to_string() +
                     " tokens staked for '" + from.to_string() +
                     "' in concept of " + concept.to_string();
-                eosio_assert(false, error1.c_str() );
+                check(false, error1.c_str() );
             }
 
 
@@ -82,7 +82,7 @@ namespace vapaee {
             if (stakes_itr->quantity.amount < quantity.amount) {
                 string error2 = string("owner '") + owner.to_string() + 
                     "' has not enough " + quantity.symbol.code().to_string() + " tokens staked for '" + from.to_string() + "'";
-                eosio_assert(false, error2.c_str() );
+                check(false, error2.c_str() );
             }
 
             // we calculate de expire time
@@ -95,7 +95,7 @@ namespace vapaee {
             unstakes_table.emplace( owner, [&]( auto& a ){
                 a.id = id;
                 a.quantity = quantity;
-                a.expire = current_time() + expires;
+                a.expire = ((uint64_t)current_time_point().time_since_epoch().count()) + expires;
             });
 
             transaction out{};
@@ -118,9 +118,9 @@ namespace vapaee {
                 // If it have less quantity, we have to subtract it from the existing entry
                 PRINT(" stakes.modify() ", std::to_string((unsigned long long) stakes_itr->id), " - ", quantity.to_string(),"\n");
                 stakes_table.modify( *stakes_itr, same_payer, [&]( auto& a ) {
-                    eosio_assert(a.quantity.amount > quantity.amount, "a.quantity.amount < quantity.amount");
+                    check(a.quantity.amount > quantity.amount, "a.quantity.amount < quantity.amount");
                     a.quantity.amount -= quantity.amount;
-                    a.last = current_time();
+                    a.last = current_time_point().time_since_epoch().count();
                 });
             }            
 
@@ -133,15 +133,14 @@ namespace vapaee {
             PRINT(" unstake_id: ", std::to_string((unsigned long long) unstake_id), "\n");
             PRINT(" to: ", to.to_string(), "\n");
             PRINT(" concept: ", concept.to_string(), "\n");
-            PRINT(" current_time(): ", std::to_string((unsigned long long) current_time() ), "\n");
 
             require_auth(owner);
-            eosio_assert( is_account( to ), "to account does not exist");
+            check( is_account( to ), "to account does not exist");
 
             // remove the unstake entry
             unstakes unstakes_table( get_self(), owner.value );
             auto unstake_itr = unstakes_table.find(unstake_id);
-            eosio_assert(unstake_itr != unstakes_table.end(), "unstake_id does not represent a valid unstakes entry");
+            check(unstake_itr != unstakes_table.end(), "unstake_id does not represent a valid unstakes entry");
             asset quantity = unstake_itr->quantity;
             unstakes_table.erase(unstake_itr);
 
@@ -154,11 +153,11 @@ namespace vapaee {
         void action_unstakeback (name owner) {
             PRINT("vapaee::token::stake::action_unstakeback()\n");
             PRINT(" owner: ", owner.to_string(), "\n");
-            PRINT(" current_time(): ", std::to_string((unsigned long long) current_time() ), "\n");
+
             tokens tokens_table(get_self(), get_self().value);
             unstakes table( get_self(), owner.value );
             auto index = table.template get_index<"expire"_n>();
-            uint64_t now = current_time();
+            uint64_t now = uint64_t(current_time_point().time_since_epoch().count());
 
             int counter = 5;
             for (auto itr = index.begin(); itr != index.end(); itr = index.begin()) {
@@ -173,7 +172,7 @@ namespace vapaee {
                     table.erase(*itr);
 
                     auto tkn = tokens_table.find(quantity.symbol.code().raw());
-                    eosio_assert(tkn != tokens_table.end(), "token not registered");
+                    check(tkn != tokens_table.end(), "token not registered");
 
                     // return fouds to the owner
                     action(
@@ -196,7 +195,7 @@ namespace vapaee {
             PRINT(" max_time: ", std::to_string((unsigned long long) max_time), "\n");
             PRINT(" auto_stake: ", std::to_string((unsigned long long) auto_stake), "\n");
 
-            eosio_assert(max_time >= min_time, "max_time MUST be grather or equals to min_time");
+            check(max_time >= min_time, "max_time MUST be grather or equals to min_time");
             require_auth(owner);
 
             config table( get_self(), owner.value );
@@ -241,7 +240,7 @@ namespace vapaee {
                         create = false;
                         stakes_table.modify( *stakes_itr, same_payer, [&]( auto& a ) {
                             a.quantity.amount += quantity.amount;
-                            a.last = current_time();
+                            a.last = current_time_point().time_since_epoch().count();
                             id = a.id;
                         });
                     }
@@ -254,7 +253,7 @@ namespace vapaee {
                     a.to = to;
                     a.concept = concept;
                     a.quantity = quantity;
-                    a.since = current_time();
+                    a.since = current_time_point().time_since_epoch().count();
                     a.last = a.since;
                 });
             }

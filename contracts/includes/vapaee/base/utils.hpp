@@ -164,7 +164,7 @@ namespace vapaee {
 
             // Find space in order to split amount and symbol
             auto space_pos = s.find(' ');
-            eosio_assert(space_pos != string::npos, "Asset's amount and symbol should be separated with space");
+            check(space_pos != string::npos, "Asset's amount and symbol should be separated with space");
             std::string substring = s.substr(space_pos + 1);
             std::string symbol_str = vapaee::utils::trim(substring);
             std::string amount_str = s.substr(0, space_pos);
@@ -172,7 +172,7 @@ namespace vapaee {
             // Ensure that if decimal point is used (.), decimal fraction is specified
             auto dot_pos = amount_str.find('.');
             if (dot_pos != string::npos) {
-                eosio_assert(dot_pos != amount_str.size() - 1, "Missing decimal fraction after decimal point");
+                check(dot_pos != amount_str.size() - 1, "Missing decimal fraction after decimal point");
             }
 
             // Parse symbol

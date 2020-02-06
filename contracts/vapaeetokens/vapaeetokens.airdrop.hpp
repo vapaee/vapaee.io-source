@@ -30,13 +30,13 @@ namespace vapaee {
             // check token existance
             stats statstable( _self, sym_code.raw() );
             auto existing = statstable.find( sym_code.raw() );
-            eosio_assert( existing != statstable.end(), "token with symbol does not exist, create token before issue" );
+            check( existing != statstable.end(), "token with symbol does not exist, create token before issue" );
             const auto& st = *existing;
             require_auth( st.issuer );
 
             source table( _self, sym_code.raw() );
             auto it = table.begin();
-            eosio_assert(it == table.end(), "source table is not empty");
+            check(it == table.end(), "source table is not empty");
 
             table.emplace( st.issuer, [&]( auto& a ){
                 a.contract = contract;
@@ -57,7 +57,7 @@ namespace vapaee {
             require_auth( _self );
             source table( _self, sym_code.raw() );
             auto it = table.begin();
-            eosio_assert(it != table.end(), "source table is empty");
+            check(it != table.end(), "source table is empty");
 
             table.erase(it);
             PRINT("vapaee::token::airdrop::action_nosnapshot() ...\n");
@@ -80,11 +80,11 @@ namespace vapaee {
             // get airdrop amount
             source table( _self, sym_code_raw );
             auto srcit = table.begin();
-            eosio_assert(srcit != table.end(), "SOURCE table is EMPTY. execute action setsnapshot before.");
+            check(srcit != table.end(), "SOURCE table is EMPTY. execute action setsnapshot before.");
 
             snapshots snaptable( srcit->contract, srcit->scope );
             auto snapit = snaptable.find(owner.value);
-            eosio_assert(snapit != snaptable.end(), "SNAPSHOTS table does not have an entry for owner");
+            check(snapit != snaptable.end(), "SNAPSHOTS table does not have an entry for owner");
             int64_t amount = snapit->amount;
             int64_t cap = srcit->cap;
             int64_t min = srcit->min;
@@ -96,7 +96,7 @@ namespace vapaee {
             if (cap > 0) if (amount > cap) {
                 amount = cap;
             }    
-            eosio_assert(amount >= min, (owner.to_string() + " account does NOT reach the minimun amount of " + asset(min, symbol).to_string()).c_str());
+            check(amount >= min, (owner.to_string() + " account does NOT reach the minimun amount of " + asset(min, symbol).to_string()).c_str());
             
             // apply ratio
             uint64_t unit = pow(10.0, symbol.precision());
@@ -114,7 +114,7 @@ namespace vapaee {
             // check if already claimed
             claimed claimedtable( _self, owner.value );
             auto it = claimedtable.find( sym_code_raw );
-            eosio_assert(it == claimedtable.end(), "You already claimed this token airdrop");
+            check(it == claimedtable.end(), "You already claimed this token airdrop");
 
             // set calimed as true
             claimedtable.emplace(ram_payer, [&]( auto& a ){

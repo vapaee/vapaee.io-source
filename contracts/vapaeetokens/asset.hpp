@@ -1,8 +1,8 @@
 #pragma once
-#include <eosiolib/serialize.hpp>
-#include <eosiolib/print.hpp>
-#include <eosiolib/system.h>
-#include <eosiolib/symbol.hpp>
+#include <eosiolib/contracts/eosio/system.hpp>
+#include <eosiolib/core/eosio/serialize.hpp>
+#include <eosiolib/core/eosio/print.hpp>
+#include <eosiolib/core/eosio/symbol.hpp>
 #include <tuple>
 #include <limits>
 
@@ -63,8 +63,8 @@ namespace eosio {
       asset( int64_t a, class symbol s )
       :amount(a),symbol{s}
       {
-         eosio_assert( is_amount_within_range(), "magnitude of asset amount must be less than 2^62" );
-         eosio_assert( symbol.is_valid(),        "invalid symbol name" );
+         check( is_amount_within_range(), "magnitude of asset amount must be less than 2^62" );
+         check( symbol.is_valid(),        "invalid symbol name" );
       }
 
       /**
@@ -93,7 +93,7 @@ namespace eosio {
        */
       void set_amount( int64_t a ) {
          amount = a;
-         eosio_assert( is_amount_within_range(), "magnitude of asset amount must be less than 2^62" );
+         check( is_amount_within_range(), "magnitude of asset amount must be less than 2^62" );
       }
 
       /**
@@ -117,10 +117,10 @@ namespace eosio {
        * @post The amount of this asset is subtracted by the amount of asset a
        */
       asset& operator-=( const asset& a ) {
-         eosio_assert( a.symbol == symbol, "attempt to subtract asset with different symbol" );
+         check( a.symbol == symbol, "attempt to subtract asset with different symbol" );
          amount -= a.amount;
-         eosio_assert( -max_amount <= amount, "subtraction underflow" );
-         eosio_assert( amount <= max_amount,  "subtraction overflow" );
+         check( -max_amount <= amount, "subtraction underflow" );
+         check( amount <= max_amount,  "subtraction overflow" );
          return *this;
       }
 
@@ -133,10 +133,10 @@ namespace eosio {
        * @post The amount of this asset is added with the amount of asset a
        */
       asset& operator+=( const asset& a ) {
-         eosio_assert( a.symbol == symbol, "attempt to add asset with different symbol" );
+         check( a.symbol == symbol, "attempt to add asset with different symbol" );
          amount += a.amount;
-         eosio_assert( -max_amount <= amount, "addition underflow" );
-         eosio_assert( amount <= max_amount,  "addition overflow" );
+         check( -max_amount <= amount, "addition underflow" );
+         check( amount <= max_amount,  "addition overflow" );
          return *this;
       }
 
@@ -178,8 +178,8 @@ namespace eosio {
        */
       asset& operator*=( int64_t a ) {
          int128_t tmp = (int128_t)amount * (int128_t)a;
-         eosio_assert( tmp <= max_amount, "multiplication overflow" );
-         eosio_assert( tmp >= -max_amount, "multiplication underflow" );
+         check( tmp <= max_amount, "multiplication overflow" );
+         check( tmp >= -max_amount, "multiplication underflow" );
          amount = (int64_t)tmp;
          return *this;
       }
@@ -222,8 +222,8 @@ namespace eosio {
        * @post The amount of this asset is divided by a
        */
       asset& operator/=( int64_t a ) {
-         eosio_assert( a != 0, "divide by zero" );
-         eosio_assert( !(amount == std::numeric_limits<int64_t>::min() && a == -1), "signed division overflow" );
+         check( a != 0, "divide by zero" );
+         check( !(amount == std::numeric_limits<int64_t>::min() && a == -1), "signed division overflow" );
          amount /= a;
          return *this;
       }
@@ -252,7 +252,7 @@ namespace eosio {
        * @pre Both asset must have the same symbol
        */
       friend int64_t operator/( const asset& a, const asset& b ) {
-         eosio_assert( b.amount != 0, "divide by zero" );
+         check( b.amount != 0, "divide by zero" );
          if (a.symbol != b.symbol) throw_comparison_error(__LINE__,a,b);
          return a.amount / b.amount;
       }
@@ -397,7 +397,7 @@ namespace eosio {
 
    void throw_comparison_error(int line, const asset& a, const asset& b ) {
       std::string error = std::string("comparison of assets with different symbols is not allowed - line:") + std::to_string(line) + " [" + a.to_string() + "], [" + b.to_string() + "]";
-      eosio_assert( a.symbol == b.symbol, error.c_str() );
+      check( a.symbol == b.symbol, error.c_str() );
    }
 
   /**
@@ -477,7 +477,7 @@ namespace eosio {
        * @pre The owner of both extended asset need to be the same
        */
       friend extended_asset operator - ( const extended_asset& a, const extended_asset& b ) {
-         eosio_assert( a.contract == b.contract, "type mismatch" );
+         check( a.contract == b.contract, "type mismatch" );
          return {a.quantity - b.quantity, a.contract};
       }
 
@@ -491,27 +491,27 @@ namespace eosio {
        * @pre The owner of both extended asset need to be the same
        */
       friend extended_asset operator + ( const extended_asset& a, const extended_asset& b ) {
-         eosio_assert( a.contract == b.contract, "type mismatch" );
+         check( a.contract == b.contract, "type mismatch" );
          return {a.quantity + b.quantity, a.contract};
       }
 
       /// Addition operator.
       friend extended_asset& operator+=( extended_asset& a, const extended_asset& b ) {
-         eosio_assert( a.contract == b.contract, "type mismatch" );
+         check( a.contract == b.contract, "type mismatch" );
          a.quantity += b.quantity;
          return a;
       }
 
       /// Subtraction operator.
       friend extended_asset& operator-=( extended_asset& a, const extended_asset& b ) {
-         eosio_assert( a.contract == b.contract, "type mismatch" );
+         check( a.contract == b.contract, "type mismatch" );
          a.quantity -= b.quantity;
          return a;
       }
 
       /// Less than operator
       friend bool operator<( const extended_asset& a, const extended_asset& b ) {
-         eosio_assert( a.contract == b.contract, "type mismatch" );
+         check( a.contract == b.contract, "type mismatch" );
          return a.quantity < b.quantity;
       }
 
@@ -528,13 +528,13 @@ namespace eosio {
 
       /// Comparison operator
       friend bool operator<=( const extended_asset& a, const extended_asset& b ) {
-         eosio_assert( a.contract == b.contract, "type mismatch" );
+         check( a.contract == b.contract, "type mismatch" );
          return a.quantity <= b.quantity;
       }
 
       /// Comparison operator
       friend bool operator>=( const extended_asset& a, const extended_asset& b ) {
-         eosio_assert( a.contract == b.contract, "type mismatch" );
+         check( a.contract == b.contract, "type mismatch" );
          return a.quantity >= b.quantity;
       }
 

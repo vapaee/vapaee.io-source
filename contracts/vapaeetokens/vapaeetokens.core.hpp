@@ -25,13 +25,13 @@ namespace vapaee {
             require_auth( owner );
 
             auto sym = maximum_supply.symbol;
-            eosio_assert( sym.is_valid(), "invalid symbol name" );
-            eosio_assert( maximum_supply.is_valid(), "invalid supply");
-            eosio_assert( maximum_supply.amount > 0, "max-supply must be positive");
+            check( sym.is_valid(), "invalid symbol name" );
+            check( maximum_supply.is_valid(), "invalid supply");
+            check( maximum_supply.amount > 0, "max-supply must be positive");
 
             stats statstable( _self, sym.code().raw() );
             auto existing = statstable.find( sym.code().raw() );
-            eosio_assert( existing == statstable.end(), "token with symbol already exists" );
+            check( existing == statstable.end(), "token with symbol already exists" );
 
             statstable.emplace( owner, [&]( auto& s ) {
                 s.supply.symbol = maximum_supply.symbol;
@@ -49,13 +49,13 @@ namespace vapaee {
 
             stats statstable( _self, sym_code.raw() );
             auto token_itr = statstable.find( sym_code.raw() );
-            eosio_assert( token_itr != statstable.end(), "token with symbol not exists" );
+            check( token_itr != statstable.end(), "token with symbol not exists" );
 
             require_auth ( token_itr->issuer );
 
             issuers issuerstable(get_self(), sym_code.raw() );
             auto issuer_itr = issuerstable.find( app.value );
-            eosio_assert( issuer_itr == issuerstable.end(), "issuer already registered" );
+            check( issuer_itr == issuerstable.end(), "issuer already registered" );
             issuerstable.emplace( ram_payer, [&]( auto& a ){
                 a.issuer = app;
             });
@@ -69,13 +69,13 @@ namespace vapaee {
 
             stats statstable( _self, sym_code.raw() );
             auto token_itr = statstable.find( sym_code.raw() );
-            eosio_assert( token_itr != statstable.end(), "token with symbol not exists" );
+            check( token_itr != statstable.end(), "token with symbol not exists" );
 
             require_auth ( token_itr->issuer );
 
             issuers issuerstable(get_self(), sym_code.raw() );
             auto issuer_itr = issuerstable.find( app.value );
-            eosio_assert( issuer_itr != issuerstable.end(), "issuer is not registered" );
+            check( issuer_itr != issuerstable.end(), "issuer is not registered" );
             issuerstable.erase( *issuer_itr );
 
             PRINT("vapaee::token::core::action_remove_token_issuer() ...\n");
@@ -89,13 +89,13 @@ namespace vapaee {
 
             // check on symbol
             auto sym = quantity.symbol;
-            eosio_assert( sym.is_valid(), "invalid symbol name" );
-            eosio_assert( memo.size() <= 256, "memo has more than 256 bytes" );
+            check( sym.is_valid(), "invalid symbol name" );
+            check( memo.size() <= 256, "memo has more than 256 bytes" );
 
             // check token existance
             stats statstable( _self, sym.code().raw() );
             auto existing = statstable.find( sym.code().raw() );
-            eosio_assert( existing != statstable.end(), "token with symbol does not exist, create token before issue" );
+            check( existing != statstable.end(), "token with symbol does not exist, create token before issue" );
             const auto& st = *existing;
 
             // getting currency's acosiated app contract account
@@ -130,11 +130,11 @@ namespace vapaee {
             }
 
             
-            eosio_assert( quantity.is_valid(), "invalid quantity" );
-            eosio_assert( quantity.amount > 0, "must issue positive quantity" );
+            check( quantity.is_valid(), "invalid quantity" );
+            check( quantity.amount > 0, "must issue positive quantity" );
 
-            eosio_assert( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
-            eosio_assert( quantity.amount <= st.max_supply.amount - st.supply.amount, "quantity exceeds available supply");
+            check( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
+            check( quantity.amount <= st.max_supply.amount - st.supply.amount, "quantity exceeds available supply");
             
             // update current supply
             statstable.modify( st, same_payer, [&]( auto& s ) {
@@ -162,19 +162,19 @@ namespace vapaee {
             PRINT(" memo: ", memo.c_str(), "\n");
 
             auto sym = quantity.symbol;
-            eosio_assert( sym.is_valid(), "invalid symbol name" );
-            eosio_assert( memo.size() <= 256, "memo has more than 256 bytes" );
+            check( sym.is_valid(), "invalid symbol name" );
+            check( memo.size() <= 256, "memo has more than 256 bytes" );
 
             stats statstable( _self, sym.code().raw() );
             auto existing = statstable.find( sym.code().raw() );
-            eosio_assert( existing != statstable.end(), "token with symbol does not exist" );
+            check( existing != statstable.end(), "token with symbol does not exist" );
             const auto& st = *existing;
 
             require_auth( owner );
-            eosio_assert( quantity.is_valid(), "invalid quantity" );
-            eosio_assert( quantity.amount > 0, "must retire positive quantity" );
+            check( quantity.is_valid(), "invalid quantity" );
+            check( quantity.amount > 0, "must retire positive quantity" );
 
-            eosio_assert( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
+            check( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
 
             statstable.modify( st, same_payer, [&]( auto& s ) {
                 s.supply -= quantity;
@@ -191,9 +191,9 @@ namespace vapaee {
             PRINT(" quantity: ", quantity.to_string(), "\n");
             PRINT(" memo: ", memo.c_str(), "\n");
 
-            eosio_assert( from != to, "cannot transfer to self" );
+            check( from != to, "cannot transfer to self" );
 
-            eosio_assert( is_account( to ), "to account does not exist");
+            check( is_account( to ), "to account does not exist");
             auto sym = quantity.symbol.code();
             stats statstable( _self, sym.raw() );
             const auto& st = statstable.get( sym.raw() );
@@ -201,10 +201,10 @@ namespace vapaee {
             require_recipient( from );
             require_recipient( to );
 
-            eosio_assert( quantity.is_valid(), "invalid quantity" );
-            eosio_assert( quantity.amount > 0, "must transfer positive quantity" );
-            eosio_assert( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
-            eosio_assert( memo.size() <= 256, "memo has more than 256 bytes" );
+            check( quantity.is_valid(), "invalid quantity" );
+            check( quantity.amount > 0, "must transfer positive quantity" );
+            check( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
+            check( memo.size() <= 256, "memo has more than 256 bytes" );
 
             auto ram_payer = has_auth( to ) ? to : from;
 
@@ -222,7 +222,7 @@ namespace vapaee {
             accounts from_acnts( _self, owner.value );
 
             const auto& from = from_acnts.get( value.symbol.code().raw(), "no balance object found" );
-            eosio_assert( from.balance.amount >= value.amount, "overdrawn balance" );
+            check( from.balance.amount >= value.amount, "overdrawn balance" );
 
             int64_t amount;
             from_acnts.modify( from, owner, [&]( auto& a ) {
@@ -273,7 +273,7 @@ namespace vapaee {
 
             stats statstable( _self, sym_code_raw );
             const auto& st = statstable.get( sym_code_raw, "symbol does not exist" );
-            eosio_assert( st.supply.symbol == symbol, "symbol precision mismatch" );
+            check( st.supply.symbol == symbol, "symbol precision mismatch" );
 
             accounts acnts( _self, owner.value );
             auto it = acnts.find( sym_code_raw );
@@ -295,8 +295,8 @@ namespace vapaee {
             }
             accounts acnts( _self, owner.value );
             auto it = acnts.find( symbol.code().raw() );
-            eosio_assert( it != acnts.end(), "Balance row already deleted or never existed. Action won't have any effect." );
-            eosio_assert( it->balance.amount == 0, "Cannot close because the balance is not zero." );
+            check( it != acnts.end(), "Balance row already deleted or never existed. Action won't have any effect." );
+            check( it->balance.amount == 0, "Cannot close because the balance is not zero." );
             acnts.erase( it );
             PRINT("vapaee::token::core::action_close() ...\n");
         }        

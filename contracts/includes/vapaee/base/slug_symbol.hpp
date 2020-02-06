@@ -4,10 +4,13 @@
  */
 #pragma once
 
-#include <eosiolib/system.h>
-#include <eosiolib/print.h>
-#include <eosiolib/name.hpp>
-#include <eosiolib/serialize.hpp>
+#include <eosiolib/contracts/eosio/system.hpp>
+#include <eosiolib/core/eosio/serialize.hpp>
+#include <eosiolib/core/eosio/print.hpp>
+#include <eosiolib/core/eosio/name.hpp>
+#include <eosiolib/core/eosio/symbol.hpp>
+#include <eosiolib/core/eosio/check.hpp>
+
 #include <tuple>
 #include <limits>
 #include <string_view>
@@ -45,7 +48,7 @@ namespace vapaee {
       constexpr explicit slug_symbol_code( std::string_view str )
       :value(str)
       {
-         eosio_assert( str.size() <= 50, "string is too long to be a valid slug_symbol" );
+         check( str.size() <= 50, "string is too long to be a valid slug_symbol" );
       } 
 
       /**
@@ -161,7 +164,7 @@ namespace vapaee {
        */
       void print( bool show_precision = true )const {
          string str = code().to_string();
-         prints_l( str.c_str(), str.length() );
+         printl( str.c_str(), str.length() );
       }
 
       /**
@@ -222,8 +225,8 @@ namespace vapaee {
        */
       void print( bool show_precision = true )const {
          slug_symbol.print( show_precision );
-         prints("@");
-         printn( contract.value );
+         eosio::print("@");
+         eosio::print( contract.value );
       }
 
       /**

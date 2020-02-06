@@ -1,10 +1,12 @@
 #pragma once
-#include <eosiolib/eosio.hpp>
-#include <eosiolib/symbol.hpp>
-#include <eosiolib/asset.hpp>
-#include <eosiolib/print.hpp>
-#include <eosiolib/transaction.hpp>
-#include <eosiolib/singleton.hpp>
+#include <eosiolib/contracts/eosio/eosio.hpp>
+#include <eosiolib/core/eosio/symbol.hpp>
+#include <eosiolib/core/eosio/asset.hpp>
+#include <eosiolib/core/eosio/print.hpp>
+#include <eosiolib/contracts/eosio/transaction.hpp>
+#include <eosiolib/core/eosio/check.hpp>
+
+// #include <eosiolib/singleton.hpp>
 
 // defining namespaces 
 using namespace eosio;
@@ -32,8 +34,10 @@ using namespace utils;
 #include <vapaee/base/slug_symbol.hpp>
 #include <vapaee/base/utils.hpp>
 
+// #define current_time current_time_point
+
 /*
-#define MAINTENANCE(...) eosio_assert(has_auth(_self), ">>>>>> This contract is in MAINTENANCE. Please, try later again. <<<<<<");
+#define MAINTENANCE(...) check(has_auth(_self), ">>>>>> This contract is in MAINTENANCE. Please, try later again. <<<<<<");
 /*/
 #define MAINTENANCE(...)
 //*/

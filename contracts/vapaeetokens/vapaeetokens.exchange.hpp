@@ -156,17 +156,17 @@ namespace vapaee {
 
             deposits depositstable(get_self(), owner.value);
             auto itr = depositstable.find(amount.symbol.code().raw());
-            eosio_assert(itr != depositstable.end(),
+            check(itr != depositstable.end(),
                         create_error_asset1(ERROR_ASD_1, amount).c_str());
 
-            eosio_assert(itr->amount.symbol == amount.symbol,
+            check(itr->amount.symbol == amount.symbol,
                 create_error_asset2(ERROR_ASD_2, itr->amount, amount).c_str());
             if (itr->amount == amount) {
                 PRINT("  itr->amount == amount: ",  amount.to_string(), "\n");
                 depositstable.erase(itr);
             } else {
                 PRINT("  itr->amount > amount: ", itr->amount.to_string(), " > ", amount.to_string(),  "\n");
-                eosio_assert(itr->amount > amount,
+                check(itr->amount > amount,
                         create_error_asset2(ERROR_ASD_3, amount, itr->amount).c_str());
                 
                 depositstable.modify(*itr, same_payer, [&](auto& a){
@@ -191,14 +191,14 @@ namespace vapaee {
 
             tokens tokenstable(get_self(), get_self().value);
             auto tk_itr = tokenstable.find(amount.symbol.code().raw());
-            eosio_assert(tk_itr != tokenstable.end(), "The token is not registered");
-            eosio_assert(tk_itr->tradeable, "The token is not setted as tradeable. Contact the token's responsible admin.");
+            check(tk_itr != tokenstable.end(), "The token is not registered");
+            check(tk_itr->tradeable, "The token is not setted as tradeable. Contact the token's responsible admin.");
 
             depusers depuserstable(get_self(), get_self().value);
             auto user_itr = depuserstable.find(owner.value);
             if (user_itr == depuserstable.end()) {
                 PRINT(" -> depuserstable.emplace() : \n");
-                // eosio_assert(has_auth(ram_payer), "ERROR: attempt to allocate RAM without authorization for depusers table");
+                // check(has_auth(ram_payer), "ERROR: attempt to allocate RAM without authorization for depusers table");
                 depuserstable.emplace( ram_payer, [&]( auto& a ){
                     a.account = owner;
                 });
@@ -216,13 +216,13 @@ namespace vapaee {
             auto itr = depositstable.find(amount.symbol.code().raw());
             if (itr == depositstable.end()) {
                 
-                // eosio_assert(has_auth(ram_payer), "ERROR: attempt to allocate RAM without authorization for deposits table");
+                // check(has_auth(ram_payer), "ERROR: attempt to allocate RAM without authorization for deposits table");
                 depositstable.emplace( ram_payer, [&]( auto& a ){
                     a.amount = amount;
                 });
             } else {
                 depositstable.modify(*itr, same_payer , [&](auto& a){
-                    eosio_assert(a.amount.symbol == amount.symbol,
+                    check(a.amount.symbol == amount.symbol,
                         create_error_asset2(ERROR_AAD_1, a.amount, amount).c_str()); 
                     a.amount += amount;
                 });
@@ -271,7 +271,7 @@ namespace vapaee {
             // get interface receiver account and params
             interfaces uitable(get_self(), get_self().value);
             auto ptr = uitable.find(ui);
-            eosio_assert(ptr != uitable.end(), create_error_id1(ERROR_ATETU_1, ui).c_str());
+            check(ptr != uitable.end(), create_error_id1(ERROR_ATETU_1, ui).c_str());
             name receiver = ptr->receiver;
             string memo = ptr->params;
 
@@ -328,10 +328,10 @@ namespace vapaee {
             auto itr = depositstable.find(extended.code().raw());
             
             if (itr == depositstable.end()) return;
-            // eosio_assert(itr != depositstable.end(),
+            // check(itr != depositstable.end(),
             //             create_error_symbol1(ERROR_AEMC_1, extended).c_str());
             
-            eosio_assert(orig.code().raw() == extended.code().raw(),
+            check(orig.code().raw() == extended.code().raw(),
                         create_error_symbol2(ERROR_AEMC_2, orig, extended).c_str());
 
             asset lowest_real_value = asset(1, orig);
@@ -427,7 +427,7 @@ namespace vapaee {
                 case 23: return name("h.twentythree");
             }
             PRINT("    aux_create_label_for_hour(hh): ERROR:", std::to_string(hh), "\n");
-            eosio_assert(false, "ERROR: bad hour: ");
+            check(false, "ERROR: bad hour: ");
             return name("error");
         }
 
@@ -443,7 +443,7 @@ namespace vapaee {
             PRINT(" buyfee: ", buyfee.to_string(), "\n");   // 0.00000047 TLOS
             PRINT(" sellfee: ", sellfee.to_string(), "\n"); // 0.00200000 EDNA
     
-            time_point_sec date = time_point_sec(now());
+            time_point_sec date = time_point_sec(current_time_point().sec_since_epoch());
             name tmp_name;
             asset tmp_asset;
             asset tmp_pay;
@@ -538,8 +538,7 @@ namespace vapaee {
             }
 
             // calculate hour and label
-            uint64_t ahora = current_time();
-            uint64_t sec = ahora / 1000000;
+            uint64_t sec = current_time_point().sec_since_epoch();
             uint64_t hour = sec / 3600;
             int  hora = hour % 24;
             name label = aux_create_label_for_hour(hora);
@@ -573,7 +572,7 @@ namespace vapaee {
                         if (price < a.min) a.min = price;
                     });
                 } else {
-                    eosio_assert(ptr->hour < hour, "ERROR: inconsistency in hour property");
+                    check(ptr->hour < hour, "ERROR: inconsistency in hour property");
                     summary.modify(*ptr, get_self(), [&](auto & a){
                         a.price = price;
                         a.inverse = inverse;
@@ -664,7 +663,7 @@ namespace vapaee {
             ordersummary o_summary(get_self(), get_self().value);
             auto orders_itr = o_summary.find(can_market);
 
-            eosio_assert(orders_itr != o_summary.end(), (string("Why is this entry missing? ") + scope.to_string() + string(" canonical market: ") + std::to_string((unsigned long)can_market)).c_str());
+            check(orders_itr != o_summary.end(), (string("Why is this entry missing? ") + scope.to_string() + string(" canonical market: ") + std::to_string((unsigned long)can_market)).c_str());
             o_summary.modify(*orders_itr, same_payer, [&](auto & a){
                 a.deals = h_id+1;
                 a.blocks = bh_id+1;
@@ -684,7 +683,7 @@ namespace vapaee {
             PRINT(" user: ", user.to_string(), "\n");
             PRINT(" event: ", event.to_string(), "\n");
             PRINT(" params: ", params.c_str(), "\n");
-            time_point_sec date = time_point_sec(now());
+            time_point_sec date = time_point_sec(current_time_point().sec_since_epoch());
             
             events table(get_self(), get_self().value);
             auto header = table.begin();
@@ -748,7 +747,7 @@ namespace vapaee {
             } else if (type == name("buy")) {
                 aux_generate_sell_order(true, owner, market_buy, market_sell, payment, total, inverse, price, ram_payer, ui);
             } else {
-                eosio_assert(false, (string("type must be 'sell' or 'buy' in lower case, got: ") + type.to_string()).c_str());
+                check(false, (string("type must be 'sell' or 'buy' in lower case, got: ") + type.to_string()).c_str());
             }
             
             PRINT("vapaee::token::exchange::aux_generate_order() ...\n");
@@ -760,7 +759,7 @@ namespace vapaee {
 
             interfaces uitable(get_self(), get_self().value);
             auto ptr = uitable.find(ui);
-            eosio_assert(ptr != uitable.end(), create_error_id1(ERROR_ACUE_1, ui).c_str());
+            check(ptr != uitable.end(), create_error_id1(ERROR_ACUE_1, ui).c_str());
 
 print("aux_assert_ui_is_valid\n");
 
@@ -818,18 +817,18 @@ print("aux_assert_ui_is_valid\n");
             tokens tokenstable(get_self(), get_self().value);
             auto atk_itr = tokenstable.find(total.symbol.code().raw());
             auto ptk_itr = tokenstable.find(price.symbol.code().raw());
-            eosio_assert(atk_itr != tokenstable.end(), (string("Token ") + total.symbol.code().to_string() + " not registered").c_str());
-            eosio_assert(ptk_itr != tokenstable.end(), (string("Token ") + price.symbol.code().to_string() + " not registered").c_str());
-            // eosio_assert(atk_itr->precision == total.symbol.precision(), aux_error_1(total, atk_itr->precision).c_str());
-            // eosio_assert(ptk_itr->precision == price.symbol.precision(), aux_error_1(price, ptk_itr->precision).c_str());
-            eosio_assert(price.symbol != total.symbol, (string("price token symbol ") + price.symbol.code().to_string() + " MUST be different from total").c_str());
+            check(atk_itr != tokenstable.end(), (string("Token ") + total.symbol.code().to_string() + " not registered").c_str());
+            check(ptk_itr != tokenstable.end(), (string("Token ") + price.symbol.code().to_string() + " not registered").c_str());
+            // check(atk_itr->precision == total.symbol.precision(), aux_error_1(total, atk_itr->precision).c_str());
+            // check(ptk_itr->precision == price.symbol.precision(), aux_error_1(price, ptk_itr->precision).c_str());
+            check(price.symbol != total.symbol, (string("price token symbol ") + price.symbol.code().to_string() + " MUST be different from total").c_str());
  
             uint64_t total_unit = pow(10.0, total.symbol.precision());
             uint64_t price_unit = pow(10.0, price.symbol.precision());
 
             // iterate over a list or buy order from the maximun price down
             for (auto b_ptr = buy_index.begin(); b_ptr != buy_index.end(); b_ptr = buy_index.begin()) {
-                eosio_assert(b_ptr->price.symbol == inverse.symbol,
+                check(b_ptr->price.symbol == inverse.symbol,
                     create_error_asset2(ERROR_AGSO_1, b_ptr->price, inverse).c_str());
                 PRINT(" compare: (price<=inverse) ??  - (", b_ptr->price.to_string(), " <= ", inverse.to_string(), ") ??? \n");
                 if (b_ptr->price.amount <= inverse.amount) {
@@ -844,7 +843,7 @@ print("aux_assert_ui_is_valid\n");
                     PRINT("      current_price: ", current_price.to_string() ,"\n");
                     PRINT("       b_ptr->total: ", b_ptr->total.to_string(), " > remaining: ", remaining.to_string()," ?\n");
  
-                    eosio_assert(b_ptr->total.symbol == remaining.symbol,
+                    check(b_ptr->total.symbol == remaining.symbol,
                         create_error_asset2(ERROR_AGSO_2, b_ptr->total, remaining).c_str());
 
                     if (b_ptr->total > remaining) { // CNT
@@ -853,15 +852,15 @@ print("aux_assert_ui_is_valid\n");
                         current_payment.amount = vapaee::utils::multiply(remaining, b_ptr->inverse);
 
                         // // this code is useful to hot-debugging
-                        // eosio_assert(owner.value != name("viterbotelos").value,
+                        // check(owner.value != name("viterbotelos").value,
                         //     create_error_asset4("DEBUG IN PROGRESS. PLEASE WAIT",
                         //     current_payment, b_ptr->inverse, remaining, b_ptr->total).c_str());       
 
                         buytable.modify(*b_ptr, aux_get_modify_payer(ram_payer), [&](auto& a){
                             // double percent = (double)remaining.amount / (double)a.total.amount;
-                            eosio_assert(a.total.symbol == remaining.symbol,
+                            check(a.total.symbol == remaining.symbol,
                                 create_error_asset2(ERROR_AGSO_3, a.total, remaining).c_str());
-                            eosio_assert(a.selling.symbol == current_payment.symbol,
+                            check(a.selling.symbol == current_payment.symbol,
                                 create_error_asset2(ERROR_AGSO_4, a.selling, current_payment).c_str());
                             a.total   -= remaining;          // CNT
                             a.selling -= current_payment;    // TLOS
@@ -869,19 +868,19 @@ print("aux_assert_ui_is_valid\n");
                         PRINT("    payment (1): ", current_payment.to_string(),"\n");
 
                         // decrese the total in registry for this incompleted order
-                        eosio_assert(orders_ptr != o_summary.end(), "table MUST exist but it does not");
+                        check(orders_ptr != o_summary.end(), "table MUST exist but it does not");
                         o_summary.modify(*orders_ptr, ram_payer, [&](auto & a){
                             PRINT("        a.total:  ", a.demand.total.to_string(),"\n");
                             PRINT("        payment:  ", current_payment.to_string(),"\n");
                             
                             if (!reverse_scope) {
                                 // we are consuming part of a buy-order so we decrement the demand
-                                eosio_assert(a.demand.total.symbol == current_payment.symbol,
+                                check(a.demand.total.symbol == current_payment.symbol,
                                     create_error_asset2(ERROR_AGSO_5, a.demand.total, current_payment).c_str());             
                                 a.demand.total -= current_payment;
                             } else {
                                 // we are consuming part of a sell-order so we decrement the supply
-                                eosio_assert(a.supply.total.symbol == current_payment.symbol,
+                                check(a.supply.total.symbol == current_payment.symbol,
                                     create_error_asset2(ERROR_AGSO_5, a.supply.total, current_payment).c_str());
                                 a.supply.total -= current_payment;
                             }
@@ -898,8 +897,8 @@ print("aux_assert_ui_is_valid\n");
                         // register order in user personal order registry
                         userorders makerorders(get_self(), maker.value);     
                         auto maker_itr = makerorders.find(market_buy);
-                        eosio_assert(maker_itr != makerorders.end(), "ERROR: cómo que no existe? No fue registrado antes? maker? market_buy?");
-                        eosio_assert(orders_ptr != o_summary.end(), "table MUST exist but it does not");
+                        check(maker_itr != makerorders.end(), "ERROR: cómo que no existe? No fue registrado antes? maker? market_buy?");
+                        check(orders_ptr != o_summary.end(), "table MUST exist but it does not");
 
                         // take the order out of the maker personal order registry
                         makerorders.modify(*maker_itr, ram_payer, [&](auto & a){
@@ -917,7 +916,7 @@ print("aux_assert_ui_is_valid\n");
                             // we are consuming a buy-order so we decrement the demand
                             o_summary.modify(*orders_ptr, ram_payer, [&](auto & a){
                                 a.demand.orders--;
-                                eosio_assert(a.demand.total.symbol == current_payment.symbol,
+                                check(a.demand.total.symbol == current_payment.symbol,
                                     create_error_asset2(ERROR_AGSO_6, a.demand.total, current_payment).c_str());
                                 a.demand.total -= current_payment;
                             });
@@ -925,7 +924,7 @@ print("aux_assert_ui_is_valid\n");
                             // we are consuming a sell-order so we decrement the supply
                             o_summary.modify(*orders_ptr, ram_payer, [&](auto & a){
                                 a.supply.orders--;
-                                eosio_assert(a.supply.total.symbol == current_payment.symbol,
+                                check(a.supply.total.symbol == current_payment.symbol,
                                     create_error_asset2(ERROR_AGSO_6, a.supply.total, current_payment).c_str());
                                 a.supply.total -= current_payment;
                             });
@@ -933,9 +932,9 @@ print("aux_assert_ui_is_valid\n");
 
                     }
 
-                    eosio_assert(remaining.symbol == current_total.symbol,
+                    check(remaining.symbol == current_total.symbol,
                         create_error_asset2(ERROR_AGSO_7, remaining, current_total).c_str());
-                    eosio_assert(remaining_payment.symbol == current_payment.symbol,
+                    check(remaining_payment.symbol == current_payment.symbol,
                         create_error_asset2(ERROR_AGSO_8, remaining_payment, current_payment).c_str());
 
                     remaining -= current_total;
@@ -1148,7 +1147,7 @@ print("aux_assert_ui_is_valid\n");
             // send tokens
             tokens tokenstable(get_self(), get_self().value);
             auto ptk_itr = tokenstable.find(quantity.symbol.code().raw());
-            eosio_assert(ptk_itr != tokenstable.end(), (string("Token ") + quantity.symbol.code().to_string() + " not registered").c_str());
+            check(ptk_itr != tokenstable.end(), (string("Token ") + quantity.symbol.code().to_string() + " not registered").c_str());
 
             action(
                 permission_level{get_self(),name("active")},
@@ -1177,15 +1176,15 @@ print("aux_assert_ui_is_valid\n");
             PRINT(" thumbnail: ", thumbnail.c_str(), "\n");
 
             // receiver and admin must exist
-            eosio_assert( is_account( receiver ), create_error_name1(ERROR_AAU_1, receiver).c_str());
-            eosio_assert( is_account( admin ), create_error_name1(ERROR_AAU_2, admin).c_str());
+            check( is_account( receiver ), create_error_name1(ERROR_AAU_1, receiver).c_str());
+            check( is_account( admin ), create_error_name1(ERROR_AAU_2, admin).c_str());
 
             // signature and ram payer
             name rampayer = admin;
             if (has_auth(get_self())) {
                 rampayer = get_self();
             } else {
-                eosio_assert(has_auth(admin), create_error_name1(ERROR_AAU_3, admin).c_str());
+                check(has_auth(admin), create_error_name1(ERROR_AAU_3, admin).c_str());
             }
 
             interfaces uitable(get_self(), get_self().value);
@@ -1202,7 +1201,7 @@ print("aux_assert_ui_is_valid\n");
                 a.banner    = banner;
                 a.thumbnail = thumbnail;
                 a.state     = "";
-                a.date      = time_point_sec(now());
+                a.date      = time_point_sec(current_time_point().sec_since_epoch());
             });
 
             PRINT(" -> emplace: ", receiver.to_string(), " with id ", std::to_string((unsigned) ui), "\n");
@@ -1223,15 +1222,15 @@ print("aux_assert_ui_is_valid\n");
             PRINT(" thumbnail: ", thumbnail.c_str(), "\n");
 
             // receiver and admin must exist
-            eosio_assert( is_account( receiver ), create_error_name1(ERROR_AUU_1, receiver).c_str());
-            eosio_assert( is_account( admin ), create_error_name1(ERROR_AUU_2, admin).c_str());
+            check( is_account( receiver ), create_error_name1(ERROR_AUU_1, receiver).c_str());
+            check( is_account( admin ), create_error_name1(ERROR_AUU_2, admin).c_str());
 
             // signature and ram payer
             name rampayer = admin;
             if (has_auth(get_self())) {
                 rampayer = same_payer;
             } else {
-                eosio_assert(has_auth(admin), create_error_name1(ERROR_AUU_3, admin).c_str());
+                check(has_auth(admin), create_error_name1(ERROR_AUU_3, admin).c_str());
             }
 
             // check tuple existance
@@ -1249,7 +1248,7 @@ print("aux_assert_ui_is_valid\n");
                 a.brief     = brief;
                 a.banner    = banner;
                 a.thumbnail = thumbnail;
-                a.date      = time_point_sec(now());
+                a.date      = time_point_sec(current_time_point().sec_since_epoch());
             });
 
             PRINT(" -> modify: ", receiver.to_string(), " with id ", std::to_string((unsigned) ui), "\n");
@@ -1267,13 +1266,13 @@ print("aux_assert_ui_is_valid\n");
             
             stats statstable( contract, sym_code.raw() );
             auto token_itr = statstable.find( sym_code.raw() );
-            eosio_assert( token_itr != statstable.end(), "token with symbol not exists" );
+            check( token_itr != statstable.end(), "token with symbol not exists" );
             
-            eosio_assert(has_auth(get_self()) || has_auth(contract) || has_auth(token_itr->issuer), "only token contract or issuer can add this token to DEX" );
+            check(has_auth(get_self()) || has_auth(contract) || has_auth(token_itr->issuer), "only token contract or issuer can add this token to DEX" );
 
             tokens tokenstable(get_self(), get_self().value);
             auto itr = tokenstable.find(sym_code.raw());
-            eosio_assert(itr == tokenstable.end(), "Token already registered");
+            check(itr == tokenstable.end(), "Token already registered");
             tokenstable.emplace( admin, [&]( auto& a ){
                 a.contract  = contract;
                 a.symbol    = sym_code;
@@ -1308,9 +1307,9 @@ print("aux_assert_ui_is_valid\n");
 
             tokens tokenstable(get_self(), get_self().value);
             auto itr = tokenstable.find(sym_code.raw());
-            eosio_assert(itr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
+            check(itr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
             name admin = itr->admin;
-            eosio_assert(has_auth(get_self()) || has_auth(admin), "only admin or token's admin can modify the token main info");
+            check(has_auth(get_self()) || has_auth(admin), "only admin or token's admin can modify the token main info");
 
             tokenstable.modify( *itr, same_payer, [&]( auto& a ){
                 a.title     = title;
@@ -1332,10 +1331,10 @@ print("aux_assert_ui_is_valid\n");
 
             tokens tokenstable(get_self(), get_self().value);
             auto itr = tokenstable.find(sym_code.raw());
-            eosio_assert(itr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
+            check(itr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
 
-            eosio_assert( is_account( newadmin ), "newadmin account does not exist");
-            eosio_assert(has_auth(get_self()) || has_auth(itr->admin), "only DAO or token's admin can change token admin");
+            check( is_account( newadmin ), "newadmin account does not exist");
+            check(has_auth(get_self()) || has_auth(itr->admin), "only DAO or token's admin can change token admin");
 
             tokenstable.modify( *itr, same_payer, [&]( auto& a ){
                 a.admin = newadmin;
@@ -1351,9 +1350,9 @@ print("aux_assert_ui_is_valid\n");
 
             tokens tokenstable(get_self(), get_self().value);
             auto itr = tokenstable.find(sym_code.raw());
-            eosio_assert(itr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
+            check(itr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
             
-            eosio_assert(has_auth(get_self()), "only admin can modify the token.currency status");
+            check(has_auth(get_self()), "only admin can modify the token.currency status");
 
             tokenstable.modify( *itr, same_payer, [&]( auto& a ){
                 a.currency = is_currency;
@@ -1373,9 +1372,9 @@ print("aux_assert_ui_is_valid\n");
 
             tokens tokenstable(get_self(), get_self().value);
             auto tkitr = tokenstable.find(sym_code.raw());
-            eosio_assert(tkitr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
+            check(tkitr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
             name admin = tkitr->admin;
-            eosio_assert(has_auth(get_self()) || has_auth(admin), "only admin or token's admin can modify the token data");
+            check(has_auth(get_self()) || has_auth(admin), "only admin or token's admin can modify the token data");
             name ram_payer = admin;
             if (has_auth(get_self())) {
                 ram_payer = get_self();
@@ -1391,25 +1390,25 @@ print("aux_assert_ui_is_valid\n");
                     a.category  = category;
                     a.text      = text;
                     a.link      = link;
-                    a.date      = time_point_sec(now());
+                    a.date      = time_point_sec(current_time_point().sec_since_epoch());
                 });
                 tokenstable.modify(*tkitr, same_payer, [&]( auto& a){
                     a.data++;
                 });
             } else {
-                eosio_assert(itr != tokendatatable.end(), "No action can be performed on entry with this id because it does not exist");
+                check(itr != tokendatatable.end(), "No action can be performed on entry with this id because it does not exist");
                 if (action == name("remove")) {
                     tokendatatable.erase(*itr);
                     tokenstable.modify(*tkitr, same_payer, [&]( auto& a){
                         a.data--;
-                        eosio_assert(a.data >= 0, "Data inconsistency");
+                        check(a.data >= 0, "Data inconsistency");
                     });
                 } else {
                     tokendatatable.modify(*itr, same_payer, [&](auto& a){
                         a.category  = category;
                         a.text      = text;
                         a.link      = link;
-                        a.date      = time_point_sec(now());
+                        a.date      = time_point_sec(current_time_point().sec_since_epoch());
                     });
                 }
             }
@@ -1435,14 +1434,14 @@ print("aux_assert_ui_is_valid\n");
 
             if (!event_ok) {
                 string error = string("'") + event.to_string() + "' is not a valid event ('withdraw', 'deposit', 'swapdeposit', 'order', 'cancel', 'deal')";
-                eosio_assert(event_ok, error.c_str());
+                check(event_ok, error.c_str());
             }
             
             tokens tokenstable(get_self(), get_self().value);
             auto tkitr = tokenstable.find(sym_code.raw());
-            eosio_assert(tkitr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
+            check(tkitr != tokenstable.end(), "Token not registered. You must register it first calling addtoken action");
             name admin = tkitr->admin;
-            eosio_assert(has_auth(get_self()) || has_auth(admin), "only admin or token's admin can modify the token data");
+            check(has_auth(get_self()) || has_auth(admin), "only admin or token's admin can modify the token data");
             name ram_payer = admin;
             if (has_auth(get_self())) {
                 ram_payer = get_self();
@@ -1453,13 +1452,13 @@ print("aux_assert_ui_is_valid\n");
             tokenevents tokeneventstable(get_self(), sym_code.raw());
             auto itr = tokeneventstable.find(event.value);
             if (action == name("add")) {
-                eosio_assert(itr == tokeneventstable.end(), "The event is already registered. User action 'modify' instead of 'add'");
+                check(itr == tokeneventstable.end(), "The event is already registered. User action 'modify' instead of 'add'");
                 tokeneventstable.emplace( ram_payer, [&]( auto& a ){
                     a.event     = event;
                     a.receptor  = receptor;
                 });
             } else {
-                eosio_assert(itr != tokeneventstable.end(), "No action can be performed on entry with this id because it does not exist");
+                check(itr != tokeneventstable.end(), "No action can be performed on entry with this id because it does not exist");
                 if (action == name("remove")) {
                     tokeneventstable.erase(*itr);
                 } else {
@@ -1480,14 +1479,14 @@ print("aux_assert_ui_is_valid\n");
             PRINT(" trigger_event: ", std::to_string(trigger_event), "\n");
             PRINT(" memo: ", memo.c_str(), "\n");
             
-            eosio_assert( from != to, "cannot swap deposits to self" );
+            check( from != to, "cannot swap deposits to self" );
 
             // if is not an internal inline action then the user "from" must have beed signed this transaction
             if ( !has_auth( get_self() )) {
                 require_auth( from );
             }
             
-            eosio_assert( is_account( to ), "to account does not exist");
+            check( is_account( to ), "to account does not exist");
             auto sym = quantity.symbol.code();
             tokens tokenstable(get_self(), get_self().value);
             const auto& st = tokenstable.get( sym.raw() );
@@ -1495,10 +1494,10 @@ print("aux_assert_ui_is_valid\n");
             require_recipient( from );
             require_recipient( to );
 
-            eosio_assert( quantity.is_valid(), "invalid quantity" );
-            eosio_assert( quantity.amount > 0, "must transfer positive quantity" );
-            eosio_assert( quantity.symbol.precision() == internal_precision, "symbol precision mismatch" );
-            eosio_assert( memo.size() <= 256, "memo has more than 256 bytes" );
+            check( quantity.is_valid(), "invalid quantity" );
+            check( quantity.amount > 0, "must transfer positive quantity" );
+            check( quantity.symbol.precision() == internal_precision, "symbol precision mismatch" );
+            check( memo.size() <= 256, "memo has more than 256 bytes" );
             
             name ram_payer;
             if ( has_auth( to ) ) {
@@ -1564,7 +1563,7 @@ print("aux_assert_ui_is_valid\n");
                     receiver = name(strings[1]);
                 }
                 PRINT(" receiver: ", receiver.to_string(), "\n");
-                eosio_assert(is_account(receiver), "receiver is not a valid account");
+                check(is_account(receiver), "receiver is not a valid account");
                 PRINT(" ram_payer: ", ram_payer.to_string(), "\n");
                 _quantity = aux_extend_asset(quantity);
                 PRINT(" _quantity extended: ", _quantity.to_string(), "\n");
@@ -1660,8 +1659,8 @@ print("aux_assert_ui_is_valid\n");
             for (int i=0; i<orders.size(); i++) {
                 uint64_t order_id = orders[i];
                 auto itr = selltable.find(order_id);
-                eosio_assert(itr != selltable.end(), "buy order not found");
-                eosio_assert(itr->owner == owner, "attemp to delete someone elses buy order");
+                check(itr != selltable.end(), "buy order not found");
+                check(itr->owner == owner, "attemp to delete someone elses buy order");
                 return_amount = itr->selling;
                 PRINT("  return_amount: ", return_amount.to_string(), "\n");
                 selltable.erase(*itr);
@@ -1670,7 +1669,7 @@ print("aux_assert_ui_is_valid\n");
                 userorders buyerorders(get_self(), owner.value);
                 auto buyer_itr = buyerorders.find(market);
                 
-                eosio_assert(buyer_itr != buyerorders.end(), "ERROR: cómo que no existe? No fue registrado antes?");
+                check(buyer_itr != buyerorders.end(), "ERROR: cómo que no existe? No fue registrado antes?");
                 // take the order out of the buyer personal order registry
                 buyerorders.modify(*buyer_itr, same_payer, [&](auto & a){
                     std::vector<uint64_t> newlist;
@@ -1684,12 +1683,12 @@ print("aux_assert_ui_is_valid\n");
                 }
 
                 // take out the registry for this canceled order
-                eosio_assert(orders_ptr != o_summary.end(), "ordertable does not exist for that scope");
+                check(orders_ptr != o_summary.end(), "ordertable does not exist for that scope");
                 if (!reverse_scope) {
                     // we are canceling a sell-order so we decrement the supply
                     o_summary.modify(*orders_ptr, same_payer, [&](auto & a){
                         a.supply.orders--;
-                        eosio_assert(a.supply.total.symbol == return_amount.symbol,
+                        check(a.supply.total.symbol == return_amount.symbol,
                             create_error_asset2(ERROR_AGSO_6, a.supply.total, return_amount).c_str());
                         a.supply.total -= return_amount;
                     });
@@ -1697,7 +1696,7 @@ print("aux_assert_ui_is_valid\n");
                     // we are consuming a sell-order so we decrement the demand
                     o_summary.modify(*orders_ptr, same_payer, [&](auto & a){
                         a.demand.orders--;
-                        eosio_assert(a.demand.total.symbol == return_amount.symbol,
+                        check(a.demand.total.symbol == return_amount.symbol,
                             create_error_asset2(ERROR_AGSO_6, a.demand.total, return_amount).c_str());
                         a.demand.total -= return_amount;
                     });
@@ -1738,7 +1737,7 @@ print("aux_assert_ui_is_valid\n");
                         // }
                     }
                 } else {
-                    eosio_assert(false, "ERROR!!!"); 
+                    check(false, "ERROR!!!"); 
                 }
             }
 
@@ -1780,9 +1779,9 @@ print("aux_assert_ui_is_valid\n");
             auto atk_itr = tokenstable.find(A.raw());
             auto btk_itr = tokenstable.find(B.raw());
             
-            eosio_assert(atk_itr != tokenstable.end(), create_error_symcode1(ERROR_AIIATCTM_1, A).c_str());
-            eosio_assert(btk_itr != tokenstable.end(), create_error_symcode1(ERROR_AIIATCTM_2, B).c_str());
-            eosio_assert(atk_itr != btk_itr,           create_error_symcode1(ERROR_AIIATCTM_3, A).c_str());
+            check(atk_itr != tokenstable.end(), create_error_symcode1(ERROR_AIIATCTM_1, A).c_str());
+            check(btk_itr != tokenstable.end(), create_error_symcode1(ERROR_AIIATCTM_2, B).c_str());
+            check(atk_itr != btk_itr,           create_error_symcode1(ERROR_AIIATCTM_3, A).c_str());
 
             bool allowed = false;
             if (atk_itr->currency) {
@@ -1823,7 +1822,7 @@ print("aux_assert_ui_is_valid\n");
 
             // Is it allowed to create this market?
             if (!aux_is_it_allowed_to_cerate_this_market(A,B)) {
-                eosio_assert(false, create_error_symcode2(ERROR_AGMI_1, A,B).c_str());
+                check(false, create_error_symcode2(ERROR_AGMI_1, A,B).c_str());
             }
             
 

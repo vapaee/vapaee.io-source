@@ -10,4 +10,8 @@
 
 ./3_load_tokens.sh
 
-./4_test_exchange.sh
+./4_register_interfaces.sh
+
+./5_deposits.sh
+
+./6_orders.sh

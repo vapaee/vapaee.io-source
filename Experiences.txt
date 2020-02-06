@@ -68,7 +68,7 @@ Resulta que no puedo cargar con RAM al usuario, si registro ese evento lo tengo 
       }
 - el datatype time no se debe usar para representar el tiempo. Hay dos variantes que se pueden usar:
   time_point_sec y time_point. El segundo soporta milisegundos y el primero sólo segundos
-  time_point_sec date = time_point_sec(now());
+  time_point_sec date = time_point_sec(now()); // now() --> current_time_point().sec_since_epoch()
 - FC Exception encountered while processing chain.push_transaction
   Cuando tenés que mandar un mensaje de un contrato a otro te va a pasar de tener problemas con los permisos.
   Para eso necesitás crearle un tipo de permiso nuevo al contrato (eosio.code) además de los que ya trae (owner y active).
@@ -190,3 +190,7 @@ Resulta que no puedo cargar con RAM al usuario, si registro ese evento lo tengo 
     para crear el xxxxxxxxxx.abi
 - Creaste una nueva action, escribiste el código y compila genial. Sin emabrgo al ejecutar cleos push action no reacciona!!
   Lo que sucede es que no declaraste la nueva action en el abi. Para eso tenés que incluirla en el EOSIO_DISPATCH macro de EOS    
+- migrando de CDT 1.4.x a 1.6.x me encontré con que:
+  current_time() ---> current_time_point().time_since_epoch().count();
+  now() ------------> current_time_point().sec_since_epoch();
+  get_code() -------> get_first_receiver();

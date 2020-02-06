@@ -14,9 +14,9 @@ using namespace eosio;
 #include "vapaeetokens.errors.hpp"
 #include "vapaeetokens.dispatcher.hpp"
 #include "vapaeetokens.core.hpp"
-#include "vapaeetokens.airdrop.hpp"
-#include "vapaeetokens.exchange.hpp"
-#include "vapaeetokens.stake.hpp"
+//#include "vapaeetokens.airdrop.hpp"
+//#include "vapaeetokens.exchange.hpp"
+//#include "vapaeetokens.stake.hpp"
 
 namespace vapaee {
 
@@ -27,7 +27,7 @@ CONTRACT vapaeetokens : public eosio::contract {
 
     public:
        // TOKEN-ACTOINS ------------------------------------------------------------------------------------------------------
-
+        
         using contract::contract;
         ACTION create( name issuer, asset maximum_supply) {
             MAINTENANCE();
@@ -35,6 +35,7 @@ CONTRACT vapaeetokens : public eosio::contract {
             vapaee::token::core c;
             c.action_create_token(issuer, maximum_supply);
         };
+        /*
 
         ACTION addissuer( name app, const symbol_code& symbol, name ram_payer ) {
             MAINTENANCE();
@@ -84,11 +85,11 @@ CONTRACT vapaeetokens : public eosio::contract {
             vapaee::token::core c;
             c.action_close(owner, symbol);
         };
-
+        */
 
     public:
         // AIRDROP-ACTOINS  ------------------------------------------------------------------------------------------------------
-        
+        /*
         ACTION setsnapshot (name contract, uint64_t scope, const symbol_code& sym_code, int64_t cap, int64_t min, int64_t ratio, int64_t base, const std::string & memo) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.setsnapshot()\n");
@@ -96,24 +97,16 @@ CONTRACT vapaeetokens : public eosio::contract {
             a.action_setsnapshot(contract, scope, sym_code, cap, min, ratio, base, memo);
         };
 
-        /*ACTION nosnapshot (const symbol_code& symbolcode) {
-            PRINT("\nACTION vapaeetokens.nosnapshot()\n");
-            vapaee::token::airdrop a; 
-            a.action_nosnapshot(symbolcode);
-        };*/
-
         ACTION claim (name owner, const symbol_code & symbolcode, name ram_payer) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.claim()\n");
             vapaee::token::airdrop a;
             a.action_claim(owner, symbolcode, ram_payer);
         };
-
+        */
     public:
+        /*
         // EXCHANGE-ACTOINS  ------------------------------------------------------------------------------------------------------
-        
-        
-        
         ACTION addui (name admin, name receiver, string params, string title, string website, string brief, string banner, string thumbnail) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.addui()\n");
@@ -223,7 +216,7 @@ CONTRACT vapaeetokens : public eosio::contract {
             }
 
             if (order_str == string("deposit")) {
-                vapaee::token::exchange e(get_code());
+                vapaee::token::exchange e(get_first_receiver());
                 MAINTENANCE();
                 e.handler_transfer(from, to, quantity, memo);                
             }
@@ -235,16 +228,7 @@ CONTRACT vapaeetokens : public eosio::contract {
             vapaee::token::exchange e;
             e.action_convert_deposits_to_earnings(ui, quantity);
         };
-        
-        /*
-        ACTION dotick (name caller) {
-            PRINT("\nACTION vapaeetokens.dotick()\n");
-            require_auth( caller );
-            vapaee::token::exchange e;
-            e.aux_try_to_unlock(caller);
-        };
-        */
-        
+                
         // debugin ----------
         AUX_DEBUG_ACTIONS (
 
@@ -255,11 +239,13 @@ CONTRACT vapaeetokens : public eosio::contract {
             };
 
         )
-
+        */
+    
 
 
     public:
         // STAKE-ACTOINS  ------------------------------------------------------------------------------------------------------
+        /*
         ACTION stake (name owner, const asset & quantity, name to, name concept) {
             PRINT("\nACTION vapaeetokens.stake()\n");
             vapaee::token::stake s;
@@ -289,6 +275,7 @@ CONTRACT vapaeetokens : public eosio::contract {
             vapaee::token::stake s;
             s.action_unstaketime(owner, sym_code, min_time, max_time, auto_stake);
         };
+        */
 
 };
 

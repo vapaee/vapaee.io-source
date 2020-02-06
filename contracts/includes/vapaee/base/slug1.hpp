@@ -1,5 +1,5 @@
 #pragma once
-#include <eosiolib/eosio.hpp>
+#include <eosiolib/contracts/eosio/eosio.hpp>
 #include <string>
 using namespace std;
 using namespace eosio;
@@ -96,7 +96,7 @@ namespace vapaee {
             else if( c >= 'a' && c <= 'z' )
                 return (c - 'a') + 6;
             else
-                eosio_assert( false, (string("") + "character '" + c + "' is not in allowed character set for slug_symbol").c_str() );
+                check( false, (string("") + "character '" + c + "' is not in allowed character set for slug_symbol").c_str() );
             return 0; // control flow will never reach here; just added to suppress warning
         }       
 
@@ -105,7 +105,7 @@ namespace vapaee {
             if (v == 1) return '-';
             if (v < 6) return v + '0' - 1;
             if (v < 32) return v + 'a' - 6;
-            eosio_assert( false, (string("") + "value '" + v + "' is out of range for slug_symbol. ").c_str() );
+            check( false, (string("") + "value '" + v + "' is out of range for slug_symbol. ").c_str() );
             return '?';
         }       
      

@@ -39,15 +39,15 @@ echo "cleos $NET set contract vapaeetokens $PWD -p vapaeetokens@active"
 cleos $NET set contract vapaeetokens $PWD -p vapaeetokens@active
 
 
-EVENTHANDLER_HOME=$HOME/contracts/eventhandler
-if [ "$NET" == "" ]; then
-    echo "-------- eventhandler ---------"
-    cd $EVENTHANDLER_HOME
-    pwd
-    if [[ eventhandler.hpp -nt eventhandler.wasm || 
-        $force == true ]]; then
-        eosio-cpp -o eventhandler.wasm eventhandler.cpp --abigen -I ../includes
-    fi
-    echo "cleos $NET set contract eventhandler $PWD -p eventhandler@active"
-    cleos $NET set contract eventhandler $PWD -p eventhandler@active
-fi
+# EVENTHANDLER_HOME=$HOME/contracts/eventhandler
+# if [ "$NET" == "" ]; then
+#     echo "-------- eventhandler ---------"
+#     cd $EVENTHANDLER_HOME
+#     pwd
+#     if [[ eventhandler.hpp -nt eventhandler.wasm || 
+#         $force == true ]]; then
+#         eosio-cpp -o eventhandler.wasm eventhandler.cpp --abigen -I ../includes
+#     fi
+#     echo "cleos $NET set contract eventhandler $PWD -p eventhandler@active"
+#     cleos $NET set contract eventhandler $PWD -p eventhandler@active
+# fi

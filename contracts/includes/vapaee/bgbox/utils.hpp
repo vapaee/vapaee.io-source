@@ -13,7 +13,7 @@ namespace vapaee {
         static name get_author_owner(uint64_t author_id) {
             authors authors_table(_self, _self.value);
             auto itr = authors_table.find(author_id);
-            eosio_assert(itr != authors_table.end(), (string("ERR_GAO1: Author id does NOT exist: ") + std::to_string((int) author_id)).c_str()  );
+            check(itr != authors_table.end(), (string("ERR_GAO1: Author id does NOT exist: ") + std::to_string((int) author_id)).c_str()  );
             return itr->owner;
         }
 
@@ -27,7 +27,7 @@ namespace vapaee {
             }
             // ------------------------------
             auto itr = authors_table.find(author_id);
-            eosio_assert(itr != authors_table.end(), (string("ERR_GAN1: Author id does NOT exist: ") + std::to_string((int) author_id)).c_str()  );
+            check(itr != authors_table.end(), (string("ERR_GAN1: Author id does NOT exist: ") + std::to_string((int) author_id)).c_str()  );
             return itr->slugid;
         }
 
@@ -43,7 +43,7 @@ namespace vapaee {
         char int_to_hexa(int n) const {
             if (n >= 0 && n <= 9) return '0' + n;
             if (n >= 10 && n <= 15) return 'A' + (n-10);
-            eosio_assert( false, (string("") + "ERROR converting '" + n + "' to hexa. ").c_str() );
+            check( false, (string("") + "ERROR converting '" + n + "' to hexa. ").c_str() );
             return 'x';
         }
 

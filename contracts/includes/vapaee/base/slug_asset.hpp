@@ -1,8 +1,10 @@
 #pragma once
-#include <eosiolib/serialize.hpp>
-#include <eosiolib/print.hpp>
-#include <eosiolib/system.h>
-//#include <eosiolib/symbol.hpp>
+#include <eosiolib/contracts/eosio/system.hpp>
+#include <eosiolib/core/eosio/serialize.hpp>
+#include <eosiolib/core/eosio/print.hpp>
+#include <eosiolib/core/eosio/symbol.hpp>
+#include <eosiolib/core/eosio/check.hpp>
+
 #include <tuple>
 #include <limits>
 
@@ -64,8 +66,8 @@ namespace vapaee {
       slug_asset( int64_t a, class slug_symbol s )
       :amount(a),symbol{s}
       {
-         eosio_assert( is_amount_within_range(), "magnitude of slug_asset amount must be less than 2^62" );
-         eosio_assert( symbol.is_valid(),        "invalid symbol name" );
+         check( is_amount_within_range(), "magnitude of slug_asset amount must be less than 2^62" );
+         check( symbol.is_valid(),        "invalid symbol name" );
       }
 
       /**
@@ -94,7 +96,7 @@ namespace vapaee {
        */
       void set_amount( int64_t a ) {
          amount = a;
-         eosio_assert( is_amount_within_range(), "magnitude of slug_asset amount must be less than 2^62" );
+         check( is_amount_within_range(), "magnitude of slug_asset amount must be less than 2^62" );
       }
 
       /**
@@ -118,10 +120,10 @@ namespace vapaee {
        * @post The amount of this slug_asset is subtracted by the amount of slug_asset a
        */
       slug_asset& operator-=( const slug_asset& a ) {
-         eosio_assert( a.symbol == symbol, "attempt to subtract slug_asset with different symbol" );
+         check( a.symbol == symbol, "attempt to subtract slug_asset with different symbol" );
          amount -= a.amount;
-         eosio_assert( -max_amount <= amount, "subtraction underflow" );
-         eosio_assert( amount <= max_amount,  "subtraction overflow" );
+         check( -max_amount <= amount, "subtraction underflow" );
+         check( amount <= max_amount,  "subtraction overflow" );
          return *this;
       }
 
@@ -134,10 +136,10 @@ namespace vapaee {
        * @post The amount of this slug_asset is added with the amount of slug_asset a
        */
       slug_asset& operator+=( const slug_asset& a ) {
-         eosio_assert( a.symbol == symbol, "attempt to add slug_asset with different symbol" );
+         check( a.symbol == symbol, "attempt to add slug_asset with different symbol" );
          amount += a.amount;
-         eosio_assert( -max_amount <= amount, "addition underflow" );
-         eosio_assert( amount <= max_amount,  "addition overflow" );
+         check( -max_amount <= amount, "addition underflow" );
+         check( amount <= max_amount,  "addition overflow" );
          return *this;
       }
 
@@ -179,8 +181,8 @@ namespace vapaee {
        */
       slug_asset& operator*=( int64_t a ) {
          int128_t tmp = (int128_t)amount * (int128_t)a;
-         eosio_assert( tmp <= max_amount, "multiplication overflow" );
-         eosio_assert( tmp >= -max_amount, "multiplication underflow" );
+         check( tmp <= max_amount, "multiplication overflow" );
+         check( tmp >= -max_amount, "multiplication underflow" );
          amount = (int64_t)tmp;
          return *this;
       }
@@ -223,8 +225,8 @@ namespace vapaee {
        * @post The amount of this slug_asset is divided by a
        */
       slug_asset& operator/=( int64_t a ) {
-         eosio_assert( a != 0, "divide by zero" );
-         eosio_assert( !(amount == std::numeric_limits<int64_t>::min() && a == -1), "signed division overflow" );
+         check( a != 0, "divide by zero" );
+         check( !(amount == std::numeric_limits<int64_t>::min() && a == -1), "signed division overflow" );
          amount /= a;
          return *this;
       }
@@ -253,8 +255,8 @@ namespace vapaee {
        * @pre Both slug_asset must have the same symbol
        */
       friend int64_t operator/( const slug_asset& a, const slug_asset& b ) {
-         eosio_assert( b.amount != 0, "divide by zero" );
-         eosio_assert( a.symbol == b.symbol, "comparison of slug_assets with different symbols is not allowed" );
+         check( b.amount != 0, "divide by zero" );
+         check( a.symbol == b.symbol, "comparison of slug_assets with different symbols is not allowed" );
          return a.amount / b.amount;
       }
 
@@ -269,7 +271,7 @@ namespace vapaee {
        * @pre Both slug_asset must have the same symbol
        */
       friend bool operator==( const slug_asset& a, const slug_asset& b ) {
-         eosio_assert( a.symbol == b.symbol, "comparison of slug_assets with different symbols is not allowed" );
+         check( a.symbol == b.symbol, "comparison of slug_assets with different symbols is not allowed" );
          return a.amount == b.amount;
       }
 
@@ -298,7 +300,7 @@ namespace vapaee {
        * @pre Both slug_asset must have the same symbol
        */
       friend bool operator<( const slug_asset& a, const slug_asset& b ) {
-         eosio_assert( a.symbol == b.symbol, "comparison of slug_assets with different symbols is not allowed" );
+         check( a.symbol == b.symbol, "comparison of slug_assets with different symbols is not allowed" );
          return a.amount < b.amount;
       }
 
@@ -313,7 +315,7 @@ namespace vapaee {
        * @pre Both slug_asset must have the same symbol
        */
       friend bool operator<=( const slug_asset& a, const slug_asset& b ) {
-         eosio_assert( a.symbol == b.symbol, "comparison of slug_assets with different symbols is not allowed" );
+         check( a.symbol == b.symbol, "comparison of slug_assets with different symbols is not allowed" );
          return a.amount <= b.amount;
       }
 
@@ -328,7 +330,7 @@ namespace vapaee {
        * @pre Both slug_asset must have the same symbol
        */
       friend bool operator>( const slug_asset& a, const slug_asset& b ) {
-         eosio_assert( a.symbol == b.symbol, "comparison of slug_assets with different symbols is not allowed" );
+         check( a.symbol == b.symbol, "comparison of slug_assets with different symbols is not allowed" );
          return a.amount > b.amount;
       }
 
@@ -343,7 +345,7 @@ namespace vapaee {
        * @pre Both slug_asset must have the same symbol
        */
       friend bool operator>=( const slug_asset& a, const slug_asset& b ) {
-         eosio_assert( a.symbol == b.symbol, "comparison of slug_assets with different symbols is not allowed" );
+         check( a.symbol == b.symbol, "comparison of slug_assets with different symbols is not allowed" );
          return a.amount >= b.amount;
       }
 
@@ -451,8 +453,8 @@ namespace vapaee {
        */
       void print()const {
          quantity.print();
-         prints("@");
-         printn(contract.value);
+         eosio::print("@");
+         eosio::print(contract.value);
       }
 
        /**
@@ -475,7 +477,7 @@ namespace vapaee {
        * @pre The owner of both extended slug_asset need to be the same
        */
       friend extended_slug_asset operator - ( const extended_slug_asset& a, const extended_slug_asset& b ) {
-         eosio_assert( a.contract == b.contract, "type mismatch" );
+         check( a.contract == b.contract, "type mismatch" );
          return {a.quantity - b.quantity, a.contract};
       }
 
@@ -489,27 +491,27 @@ namespace vapaee {
        * @pre The owner of both extended slug_asset need to be the same
        */
       friend extended_slug_asset operator + ( const extended_slug_asset& a, const extended_slug_asset& b ) {
-         eosio_assert( a.contract == b.contract, "type mismatch" );
+         check( a.contract == b.contract, "type mismatch" );
          return {a.quantity + b.quantity, a.contract};
       }
 
       /// Addition operator.
       friend extended_slug_asset& operator+=( extended_slug_asset& a, const extended_slug_asset& b ) {
-         eosio_assert( a.contract == b.contract, "type mismatch" );
+         check( a.contract == b.contract, "type mismatch" );
          a.quantity += b.quantity;
          return a;
       }
 
       /// Subtraction operator.
       friend extended_slug_asset& operator-=( extended_slug_asset& a, const extended_slug_asset& b ) {
-         eosio_assert( a.contract == b.contract, "type mismatch" );
+         check( a.contract == b.contract, "type mismatch" );
          a.quantity -= b.quantity;
          return a;
       }
 
       /// Less than operator
       friend bool operator<( const extended_slug_asset& a, const extended_slug_asset& b ) {
-         eosio_assert( a.contract == b.contract, "type mismatch" );
+         check( a.contract == b.contract, "type mismatch" );
          return a.quantity < b.quantity;
       }
 
@@ -526,13 +528,13 @@ namespace vapaee {
 
       /// Comparison operator
       friend bool operator<=( const extended_slug_asset& a, const extended_slug_asset& b ) {
-         eosio_assert( a.contract == b.contract, "type mismatch" );
+         check( a.contract == b.contract, "type mismatch" );
          return a.quantity <= b.quantity;
       }
 
       /// Comparison operator
       friend bool operator>=( const extended_slug_asset& a, const extended_slug_asset& b ) {
-         eosio_assert( a.contract == b.contract, "type mismatch" );
+         check( a.contract == b.contract, "type mismatch" );
          return a.quantity >= b.quantity;
       }
 
