@@ -100,6 +100,7 @@ export class VapaeeREX {
     async updatePoolState() {
         this.feed.setLoading("REXpool", true);
         var result = await this.contract.getTable("rexpool");
+        console.log("VapaeeREX.updatePoolState() rexpool:", result);
         console.assert(result.rows.length == 1, "ERROR: contract is returning more than one pool state");
         var _pool = result.rows[0];
         this.pool.loan_num = _pool.loan_num;
@@ -121,6 +122,7 @@ export class VapaeeREX {
             upper_bound: encodedName.toString(), 
             limit: 1
         }).then(result => {
+            console.log("VapaeeREX.queryAccountREXBalance() rexbal:", result);
             let _row = result.rows[0];
             let _rexbal:REXbalance = {
                 version: 0,
@@ -160,6 +162,7 @@ export class VapaeeREX {
             upper_bound: encodedName.toString(), 
             limit: 1
         }).then(result => {
+            console.log("VapaeeREX.queryAccountREXDeposits() rexfund:", result);
             let _row = result.rows[0];
             let _rexfund:REXdeposits = {
                 version: 0,

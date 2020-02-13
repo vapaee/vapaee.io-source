@@ -39,8 +39,8 @@ cd script
   - [x] Deposits and order funds should be reflected in user account page
   - [ ] DAO. Telos DEX should be subject to modifications through the Trail 2.0 system
     - [ ] Set a global list of variables and change contract behavior to adjust to those variables:
-      - [ ] banning a token: the token will not allowed te be traded!! should not be listed either (this is up to the UI)
-      - [ ] delisting token: is not allowed te be traded!! but is not banned, can be shown (this is up to the UI)
+      - [ ] banning a token: the token will be complete banned from the DEX. Can't be relisting unless restored by voting.
+      - [ ] delisting token: is not allowed te be traded!! but is not banned, can be shown (this is up to the UI). This can be undone by voting.
       - [ ] maker fees: apply percent to taker money and give to the account of the UI maker is using
       - [ ] taker fees: apply percent to maker money and give to the account of the UI taker is using
       - [ ] set token as currency: allow people to create markets with this token as currency
