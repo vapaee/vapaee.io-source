@@ -47,7 +47,7 @@
     "fast-csv": "^2.4.1",
     "fstream": "^1.0.12",
     "jdenticon": "^2.1.0",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "ng-sidebar": "^8.0.0",
     "ng2-google-charts": "^4.0.0",
     "ng2-search-filter": "^0.4.7",
