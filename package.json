@@ -1,19 +1,16 @@
 {
   "name": "vapaee.io-source",
-  "version": "v3.5.3",
+  "version": "v3.6.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --poll=2000 -o",
     "serve": "ng serve --poll=2000 -o",
-
     "libs": "npm run lib-feedback && npm run lib-style && npm run lib-scatter && npm run lib-rex && npm run lib-dex",
-
     "lib-rex": "ng build @vapaee/rex --prod",
     "lib-dex": "ng build @vapaee/dex --prod",
     "lib-style": "ng build @vapaee/style --prod",
     "lib-scatter": "ng build @vapaee/scatter --prod",
     "lib-feedback": "ng build @vapaee/feedback --prod",
-
     "buildprod": "ng build --aot --buildOptimizer --prod",
     "build": "ng build",
     "deploy": "npm run libs && ng build --aot --buildOptimizer --prod && npm run cpbasic && npm run copycert && cd /var/www/vapaee.io && npm run save && amazon_server_console",

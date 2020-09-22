@@ -114,7 +114,7 @@ export class VapaeeDEX {
         })
         .then(data => {
             this.zero_telos = new AssetDEX("0.0000 TLOS", this);
-            console.log("VapaeeDEX.setTokensLoaded()");
+            console.log("-- VapaeeDEX.setTokensLoaded() --");
             for (let i in this.tokens) {
                 console.log(this.tokens[i].contract, " - ", this.tokens[i].symbol,",",this.tokens[i].precision);
             }
@@ -157,6 +157,12 @@ export class VapaeeDEX {
         return this.fetchMarkets().then(data => {
             this._markets = {};
             for (let i in data.markets) {
+                // HARDCODED (ini) -------------------------------------                
+                if (data.markets[i].commodity == "EDNA") continue;
+                if (data.markets[i].commodity == "TLOSD") continue;
+                if (data.markets[i].currency == "TLOSD") continue;
+                // HARDCODED (end) ------------------------------------- 
+
                 let table = this.getTableFor(data.markets[i].commodity, data.markets[i].currency);
                 let canonical = this.canonicalTable(table);
                 let inverse = this.inverseTable(canonical);
@@ -172,12 +178,19 @@ export class VapaeeDEX {
     }
 
     updateTokens() {
+        console.log("VapaeeDEX.updateTokens()");
         return this.fetchTokens().then(data => {
             this.tokens = [];
             this.currencies = [ ];
             for (let i in data.tokens) {
                 let tdata = data.tokens[i];
                 let token = new TokenDEX(tdata);
+
+                // HARDCODED (ini) -------------------------------------
+                if (token.symbol == "EDNA") continue;
+                if (token.symbol == "TLOSD") continue;
+                // HARDCODED (end) -------------------------------------
+
                 this.tokens.push(token);
                 if (token.symbol == "TLOS") {
                     this.telos = token;
@@ -578,8 +591,7 @@ export class VapaeeDEX {
             this.feed.setError(feedid, typeof e == "string" ? e : JSON.stringify(e,null,4));
             throw e;
         });
-    }    
-
+    }
 
     createtoken(asset:AssetDEX) {
         let feedid = "createtoken";
@@ -901,6 +913,9 @@ export class VapaeeDEX {
             if (account) {
                 let result = await this.fetchDeposits(account);
                 for (let i in result.rows) {
+                // HARDCODED (ini) -------------------------------------
+                if (result.rows[i].amount.indexOf(" EDNA") != -1) continue;
+                // HARDCODED (end) -------------------------------------
                     deposits.push(new AssetDEX(result.rows[i].amount, this));
                 }
             }
@@ -1575,6 +1590,11 @@ export class VapaeeDEX {
         let tables = await this.fetchAllOrderSummary();
 
         for (let i in tables.rows) {
+            // HARDCODED (ini) -------------------------------------
+            if (tables.rows[i].sell == "EDNA") continue;
+            if (tables.rows[i].sell == "TLOSD") continue;
+            if (tables.rows[i].pay == "TLOSD") continue;
+            // HARDCODED (end) -------------------------------------            
             let market_id:string = tables.rows[i].market;
             let market = this.getMarketById(market_id);
             let canonical = this.canonicalTable(market.table);
@@ -1813,7 +1833,6 @@ export class VapaeeDEX {
             for (let table in this._markets) {
                 if (table.indexOf(".") == -1) continue;
                 let market = this.market(table);
-
                 console.assert(!!market.commodity, "ERROR: market has commodity in null");
                 console.assert(!!market.currency, "ERROR: market has currency in null");
                 if (!market.commodity || !market.currency) {
@@ -2045,8 +2064,8 @@ export class VapaeeDEX {
         let _balances = [];
         for (let i in result.rows) {
             let _balance = new AssetDEX(result.rows[i].balance, this);
-            if (_balance.token) {
-                console.log("adding balance: ", result.rows[i].balance, "(" + contract + ")");
+            if (_balance.token && _balance.token.symbol != "AUX") {
+                console.log("adding balance: ", result.rows[i].balance, "(" + contract + ")", [_balance.token]);
                 _balances.push(_balance);
             } else {
                 console.warn("Token found but not registered on contract", contract, result.rows[i].balance);
