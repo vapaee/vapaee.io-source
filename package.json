@@ -13,7 +13,7 @@
     "lib-feedback": "ng build @vapaee/feedback --prod",
     "buildprod": "ng build --aot --buildOptimizer --prod",
     "build": "ng build",
-    "deploy": "npm run libs && ng build --aot --buildOptimizer --prod && npm run cpbasic && npm run copycert && cd /var/www/vapaee.io && npm run save && amazon_server_console",
+    "deploy": "npm run libs && npm run deploynow",
     "deploynow": "ng build --aot --buildOptimizer --prod && npm run cpbasic && npm run copycert && cd /var/www/vapaee.io && npm run save && amazon_server_console",
     "cpbasic": "cp .htaccess /var/www/vapaee.io/.htaccess",
     "copycert": "cp cert/* /var/www/vapaee.io/",
