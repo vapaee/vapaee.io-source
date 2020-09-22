@@ -20,7 +20,7 @@ import { ScatterUtils } from './utils.class';
 import { Token } from './token.class';
 import { resolve, reject } from 'q';
 import { HttpClient } from '@angular/common/http';
-import { Feedback } from 'projects/vapaee/feedback/src';
+import { Feedback } from 'projects/vapaee/feedback/src/lib/feedback.service';
 //*/
 
 // declare let ScatterJS:any;

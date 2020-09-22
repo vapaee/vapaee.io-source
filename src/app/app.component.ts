@@ -126,7 +126,7 @@ export class AppComponent {
         public http: HttpClient,
         public analytics: AnalyticsService
     ) {
-        this.app.init("v3.5.3");
+        this.app.init("v3.6.0");
 
         // Check if this is the last version. If not, reload site.
         this.http.get<any>("assets/app.json?_="+Math.random()).toPromise().then((appjson) => {

@@ -1,7 +1,7 @@
 <IfModule mod_rewrite.c>
     Options -MultiViews +SymLinksIfOwnerMatch
 
-    # http://stackoverflow.com/a/35815809/2274525
+    # https://stackoverflow.com/a/35815809/2274525
     RewriteEngine on
     
     # si la uri no tiene el prefijo /www (esto es para evitar ciclos infinitos)
