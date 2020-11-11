@@ -126,13 +126,13 @@ export class AppComponent {
         public http: HttpClient,
         public analytics: AnalyticsService
     ) {
-        this.app.init("v3.6.1");
+        this.app.init("v3.6.4");
 
         // Check if this is the last version. If not, reload site.
         this.http.get<any>("assets/app.json?_="+Math.random()).toPromise().then((appjson) => {
             if (this.app.version != appjson.version) {
                 console.error(appjson, "ERROR: version missmatch. Reloading site...");
-                alert("load version " + appjson.version);
+                // alert("load version " + appjson.version);
                 window.location.href = 
                     window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/?_="+Math.random();
             } else {

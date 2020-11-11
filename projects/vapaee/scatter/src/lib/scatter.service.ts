@@ -711,36 +711,40 @@ export class VapaeeScatter {
             if (this._connected) return; // <---- avoids a loop
             this.waitEosjs.then(() => {
                 console.log("ScatterService.waitEosjs() eos OK");
-                this.lib.connect(this.appTitle, connectionOptions).then(connected => {
-                    // si está logueado this.lib.identity se carga sólo y ya está disponible
-                    console.log("ScatterService.lib.connect()", connected);
-                    this._connected = connected;
-                    if(!connected) {
-                        this.feed.setError("connect", "ERROR: can not connect to Scatter. Is it up and running?");
-                        console.error(this.feed.error("connect"));
-                        reject(this.feed.error("connect"));
+                setTimeout(() => {
+                    this.lib.connect(this.appTitle, connectionOptions).then(connected => {
+                        // si está logueado this.lib.identity se carga sólo y ya está disponible
+                        console.log("ScatterService.lib.connect()", connected);
+                        this._connected = connected;
+                        if(!connected) {
+                            this.feed.setError("connect", "ERROR: can not connect to Scatter. Is it up and running?");
+                            console.error(this.feed.error("connect"));
+                            reject(this.feed.error("connect"));
+                            this.feed.setLoading("connect", false);
+                            this.retryConnectingApp();
+                            return false;
+                        }
+                        // Get a proxy reference to eosjs which you can use to sign transactions with a user's Scatter.
+                        console.log("ScatterService.setConnected()");
+                        this.setConnected("connected");
                         this.feed.setLoading("connect", false);
-                        this.retryConnectingApp();
-                        return false;
-                    }
-                    // Get a proxy reference to eosjs which you can use to sign transactions with a user's Scatter.
-                    console.log("ScatterService.setConnected()");
-                    this.setConnected("connected");
-                    this.feed.setLoading("connect", false);
-                    if (this.logged) {
-                        this.login().then(() => {
+                        if (this.logged) {
+                            setTimeout(() => {
+                                this.login().then(() => {
+                                    console.log("ScatterService.setReady()");
+                                    this.setReady("ready");
+                                }).catch(reject);
+                            }, 600);
+                        } else {
                             console.log("ScatterService.setReady()");
                             this.setReady("ready");
-                        }).catch(reject);
-                    } else {
-                        console.log("ScatterService.setReady()");
-                        this.setReady("ready");
-                    }
-                }).catch(e => {
-                    console.error(e);
-                    this.feed.setLoading("connect", false);
-                    throw e;
-                });    
+                        }
+                    }).catch(e => {
+                        console.error(e);
+                        this.feed.setLoading("connect", false);
+                        throw e;
+                    });
+                }, 2500);
             });    
         });
         return promise;

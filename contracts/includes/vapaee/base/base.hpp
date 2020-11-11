@@ -1,10 +1,13 @@
 #pragma once
-#include <eosiolib/contracts/eosio/eosio.hpp>
-#include <eosiolib/core/eosio/symbol.hpp>
-#include <eosiolib/core/eosio/asset.hpp>
-#include <eosiolib/core/eosio/print.hpp>
-#include <eosiolib/contracts/eosio/transaction.hpp>
-#include <eosiolib/core/eosio/check.hpp>
+#include <eosio/eosio.hpp>
+#include <eosio/system.hpp>
+#include <eosio/symbol.hpp>
+#include <eosio/asset.hpp>
+#include <eosio/singleton.hpp>
+#include <eosio/print.hpp>
+
+#include <ctype.h>
+#include <stdlib.h>
 
 // #include <eosiolib/singleton.hpp>
 
@@ -43,7 +46,7 @@ using namespace utils;
 //*/
 
 
-//*
+/*
 #define PRINT(...) print(__VA_ARGS__)
 #define AUX_DEBUG_ACTIONS(...) __VA_ARGS__
 /*/

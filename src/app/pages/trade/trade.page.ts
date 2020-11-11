@@ -229,7 +229,7 @@ export class TradePage implements OnInit, OnDestroy {
 
     onWalletConfirmWithdraw(amount: AssetDEX, wallet: VpePanelWalletComponent) {
         this.loading = true;
-        this.dex.withdraw(amount).then(_ => {
+        this.dex.withdraw(amount, this.clientid).then(_ => {
             this.loading = false;
             wallet.closeInputs();
         }).catch(e => {

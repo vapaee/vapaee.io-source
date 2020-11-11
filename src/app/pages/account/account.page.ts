@@ -22,6 +22,7 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
     error: string;
     account: Account;
     rexdata: REXdata;
+    clientid: number;
    
     constructor(
         public app: AppService,
@@ -34,6 +35,7 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
         this.subscriber = new Subscriber<string>(this.onDexCurrentAccountChange.bind(this));
         this.current_mode = true;
         this.rexdata = this.rex.default;
+        this.clientid = 0;
     }
 
 
@@ -123,7 +125,8 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
 
     onWalletConfirmWithdraw(amount: AssetDEX, wallet: VpePanelWalletComponent) {
         this.loading = true;
-        this.dex.withdraw(amount).then(_ => {
+        
+        this.dex.withdraw(amount, this.clientid).then(_ => {
             this.loading = false;
             wallet.closeInputs();
         }).catch(e => {

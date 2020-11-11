@@ -15,7 +15,7 @@ using namespace eosio;
 #include "vapaeetokens.dispatcher.hpp"
 #include "vapaeetokens.core.hpp"
 //#include "vapaeetokens.airdrop.hpp"
-//#include "vapaeetokens.exchange.hpp"
+#include "vapaeetokens.exchange.hpp"
 //#include "vapaeetokens.stake.hpp"
 
 namespace vapaee {
@@ -35,7 +35,6 @@ CONTRACT vapaeetokens : public eosio::contract {
             vapaee::token::core c;
             c.action_create_token(issuer, maximum_supply);
         };
-        /*
 
         ACTION addissuer( name app, const symbol_code& symbol, name ram_payer ) {
             MAINTENANCE();
@@ -85,7 +84,7 @@ CONTRACT vapaeetokens : public eosio::contract {
             vapaee::token::core c;
             c.action_close(owner, symbol);
         };
-        */
+        
 
     public:
         // AIRDROP-ACTOINS  ------------------------------------------------------------------------------------------------------
@@ -105,7 +104,7 @@ CONTRACT vapaeetokens : public eosio::contract {
         };
         */
     public:
-        /*
+        
         // EXCHANGE-ACTOINS  ------------------------------------------------------------------------------------------------------
         ACTION addui (name admin, name receiver, string params, string title, string website, string brief, string banner, string thumbnail) {
             MAINTENANCE();
@@ -215,10 +214,14 @@ CONTRACT vapaeetokens : public eosio::contract {
                 }
             }
 
+            // if (order_str == string("skip")) {
+            //     return;
+            // }
+
             if (order_str == string("deposit")) {
-                vapaee::token::exchange e(get_first_receiver());
+                vapaee::token::exchange e;
                 MAINTENANCE();
-                e.handler_transfer(from, to, quantity, memo);                
+                e.handler_transfer(from, to, quantity, memo, get_first_receiver());
             }
         }
         
@@ -232,14 +235,14 @@ CONTRACT vapaeetokens : public eosio::contract {
         // debugin ----------
         AUX_DEBUG_ACTIONS (
 
-            ACTION hotfix (int max, name scope, asset q) {
+            ACTION hotfix () {
                 PRINT("\nACTION vapaeetokens.hotfix()\n");
                 vapaee::token::exchange e;
-                e.action_hotfix(max, scope, q);
+                e.action_hotfix();
             };
 
         )
-        */
+        
     
 
 

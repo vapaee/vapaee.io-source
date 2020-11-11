@@ -1,5 +1,5 @@
 #pragma once
-#include <eosiolib/contracts/eosio/eosio.hpp>
+
 #include <string>
 using namespace std;
 using namespace eosio;

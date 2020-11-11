@@ -462,13 +462,14 @@ export class VapaeeDEX {
         });
     }    
 
-    withdraw(quantity:AssetDEX) {
+    withdraw(quantity:AssetDEX, ui:number) {
         this.feed.setError("withdraw", null);
         this.feed.setLoading("withdraw", true);
         this.feed.setLoading("withdraw-"+quantity.token.symbol.toLowerCase(), true);   
         return this.contract.excecute("withdraw", {
             owner:  this.scatter.account.name,
-            quantity: quantity.toString()
+            quantity: quantity.toString(),
+            ui: ui
         }).then(async result => {
             this.feed.setLoading("withdraw", false);
             this.feed.setLoading("withdraw-"+quantity.token.symbol.toLowerCase(), false);

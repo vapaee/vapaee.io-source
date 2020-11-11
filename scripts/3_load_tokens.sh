@@ -259,3 +259,11 @@ cleos push action vapaeetokens issue '["kate", "100.000000 VPE", "memo VPE"]' -p
 
 
 
+#------------------ FAKE ---------------------
+echo "-------- faketelos (TLOS) ---------"
+cleos set contract faketelos $PWD -p faketelos@active
+cleos push action faketelos create '[ "vapaeetokens", "461168601842738.0000 TLOS"]' -p faketelos@active
+cleos push action faketelos issue '["alice", "1000.0000 TLOS", "memo TLOS"]' -p vapaeetokens@active
+cleos push action faketelos issue '["bob", "1000.0000 TLOS", "memo TLOS"]' -p vapaeetokens@active
+cleos push action faketelos issue '["tom", "1000.0000 TLOS", "memo TLOS"]' -p vapaeetokens@active
+cleos push action faketelos issue '["kate", "1000.0000 TLOS", "memo TLOS"]' -p vapaeetokens@active

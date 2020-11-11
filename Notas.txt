@@ -1,7 +1,33 @@
+withdraw deposits: 255000.0000 GEM
+withdraw deposits: 8900.0000 QBE +
+withdraw deposits: 4140.0000 TLOS +
+withdraw deposits: 9900.0000 TEACH +
+withdraw deposits: 3627.0000 DRIC +
+withdraw deposits: 200000.0000 PEOPLE +
+
+
+This is the list of token losses. The only one the I don't have enough (by far) is GEM. To buy them from newdex will cost arround 5K TLOS.
+
+255000.0000 GEM
+8900.0000 QBE (got)
+4140.0000 TLOS (got)
+9900.0000 TEACH (got)
+3627.0000 DRIC (got)
+200000.0000 PEOPLE (got)
+
+In total will be arround 12K TLOS total losses. I will cover that and publish about it when it's done.
+
+
+
+ixirizceiakj
+yzppz2xkok1l
 
 Icons:
 https://iconmonstr.com/
 
+
+
+telosmain push action vapaeetokens addui '["viterbotelos", "vapaee", "fees from Vapaée DEX", "Vapaée Telos DEX", "https://vapaee.io", "Vapaée is a company dedicated to the development of digital platforms on Telos network.", "/assets/img/Logo.png", "/assets/img/Logo.png"]' -p viterbotelos@active
 
 
 wget --no-check-certificate https://github.com/EOSIO/eos/releases/download/v2.0.1/eosio_2.0.1-1-ubuntu-16.04_amd64.deb

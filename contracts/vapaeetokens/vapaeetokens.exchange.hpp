@@ -279,13 +279,15 @@ namespace vapaee {
             tokens tokenstable(get_self(), get_self().value);
             auto tk_ptr = tokenstable.find(quantity.symbol.code().raw());
 
+            asset amount = aux_get_real_asset(quantity);
+
             action(
                 permission_level{get_self(),name("active")},
                 tk_ptr->contract,
                 name("transfer"),
-                std::make_tuple(get_self(), receiver, quantity, memo)
+                std::make_tuple(get_self(), receiver, amount, memo)
             ).send();
-            PRINT("   transfer ", quantity.to_string(), " to ", receiver.to_string(),"\n");
+            PRINT("   transfer ", amount.to_string(), " to ", receiver.to_string(),"\n");
 
             // Hay que sacar de la tabla de ui cual es el account y mandarle la quantity
 
@@ -340,15 +342,26 @@ namespace vapaee {
             PRINT("   lowest_extended_value: ", lowest_extended_value.to_string(), "\n");
             PRINT("   itr->amount: ", itr->amount.to_string(), "\n");
             if (itr->amount < lowest_extended_value) {
+
+
+                interfaces uitable(get_self(), get_self().value);
+                auto ptr = uitable.find(ui);
+                check(ptr != uitable.end(), create_error_id1(ERROR_ATETU_1, ui).c_str());
+                name client = ptr->receiver;
+                
+
                 // transfer to contract fees on CNT
                 action(
                     permission_level{get_self(),name("active")},
                     get_self(),
                     name("swapdeposit"),
-                    std::make_tuple(owner, get_self(), itr->amount, true, string(" withdraw micro-change fees: ") + itr->amount.to_string())
+                    std::make_tuple(owner, client, itr->amount, true, string(" withdraw micro-change fees: ") + itr->amount.to_string())
                 ).send();
-
                 PRINT("     -- withdraw micro-change fees: ",  itr->amount.to_string(), " from ", owner.to_string(),"\n");
+                /*
+                //aux_substract_deposits(from, quantity, ram_payer);
+                //aux_add_deposits(to, quantity, ram_payer);
+
                 // convert deposits to earnings
                 action(
                     permission_level{get_self(),name("active")},
@@ -357,6 +370,7 @@ namespace vapaee {
                     std::make_tuple(ui, itr->amount)
                 ).send();
                 PRINT("     -- converting micro-chang fees ", itr->amount.to_string(), " to earnings\n");
+                */
             }
 
             PRINT("vapaee::token::exchange::aux_earn_micro_change() ...\n");
@@ -761,8 +775,6 @@ namespace vapaee {
             auto ptr = uitable.find(ui);
             check(ptr != uitable.end(), create_error_id1(ERROR_ACUE_1, ui).c_str());
 
-print("aux_assert_ui_is_valid\n");
-
             PRINT("vapaee::token::exchange::aux_assert_ui_is_valid() ...\n");
         }
 
@@ -962,13 +974,15 @@ print("aux_assert_ui_is_valid\n");
                         
                     // transfer to contract fees on CNT
                     // at this moment maker_fee is still in the owner's deposits. So it must be swaped to the contract before earning it
-                    action(
-                        permission_level{get_self(),name("active")},
-                        get_self(),
-                        name("swapdeposit"),
-                        std::make_tuple(taker, get_self(), maker_fee, true, string("exchange made for ") + current_total.to_string())
-                    ).send();
-                    PRINT("     -- charge fees ", maker_fee.to_string(), " to ", maker.to_string(),"\n");
+                    if (maker_fee.amount > 0) {
+                        action(
+                            permission_level{get_self(),name("active")},
+                            get_self(),
+                            name("swapdeposit"),
+                            std::make_tuple(taker, get_self(), maker_fee, true, string("exchange made for ") + current_total.to_string())
+                        ).send();
+                        PRINT("     -- charge fees ", maker_fee.to_string(), " to ", maker.to_string(),"\n");
+                    }
                         
                     // transfer TLOS to taker (TLOS the belongs to maker but the contracxts holds them)
                     action(
@@ -981,23 +995,27 @@ print("aux_assert_ui_is_valid\n");
 
                     // convert deposits to earnings
                     // Now the contract's deposits includes the maker_fee, so it can be transformed to ernings
-                    action(
-                        permission_level{get_self(),name("active")},
-                        get_self(),
-                        name("deps2earn"),
-                        std::make_tuple(taker_ui, taker_fee)
-                    ).send();
-                    PRINT("     -- converting fee ", maker_fee.to_string(), " to earnings\n");
+                    if (taker_fee.amount > 0) {
+                        action(
+                            permission_level{get_self(),name("active")},
+                            get_self(),
+                            name("deps2earn"),
+                            std::make_tuple(taker_ui, taker_fee)
+                        ).send();
+                        PRINT("     -- converting fee ", maker_fee.to_string(), " to earnings\n");
+                    }
 
                     // The taker_fee were already included in the contract's deposits, so no swap was needed.
                     // It can be earned directly
-                    action(
-                        permission_level{get_self(),name("active")},
-                        get_self(),
-                        name("deps2earn"),
-                        std::make_tuple(maker_ui, maker_fee)
-                    ).send();
-                    PRINT("     -- converting fee ", taker_fee.to_string(), " to earnings\n");
+                    if (maker_fee.amount > 0) {
+                        action(
+                            permission_level{get_self(),name("active")},
+                            get_self(),
+                            name("deps2earn"),
+                            std::make_tuple(maker_ui, maker_fee)
+                        ).send();
+                        PRINT("     -- converting fee ", taker_fee.to_string(), " to earnings\n");
+                    }
 
                     // saving the transaction in history
                     current_inverse = vapaee::utils::inverse(current_price, current_payment.symbol);
@@ -1523,13 +1541,13 @@ print("aux_assert_ui_is_valid\n");
             PRINT("vapaee::token::exchange::action_swapdeposit() ...\n"); 
         }        
 
-        void handler_transfer(name from, name to, asset quantity, string memo) {
+        void handler_transfer(name from, name to, asset quantity, string memo, name tokencontract) {
             // skipp handling outcoming transfers from this contract to outside
             asset _quantity;
             if (to != get_self()) {
                 print(from.to_string(), " to ", to.to_string(), ": ", quantity.to_string(), " vapaee::token::exchange::handler_transfer() skip...\n");
                 return;
-            }            
+            }
             
             PRINT("vapaee::token::exchange::handler_transfer()\n");
             PRINT(" from: ", from.to_string(), "\n");
@@ -1537,6 +1555,7 @@ print("aux_assert_ui_is_valid\n");
             PRINT(" quantity: ", quantity.to_string(), "\n");
             PRINT(" memo: ", memo.c_str(), "\n");
             PRINT(" code: ", get_code(), "\n");
+            PRINT(" tokencontract: ", tokencontract, "\n");
             
             
             vector<string> strings = {""};
@@ -1565,6 +1584,18 @@ print("aux_assert_ui_is_valid\n");
                 PRINT(" receiver: ", receiver.to_string(), "\n");
                 check(is_account(receiver), "receiver is not a valid account");
                 PRINT(" ram_payer: ", ram_payer.to_string(), "\n");
+
+
+                tokens tokenstable(get_self(), get_self().value);
+                auto tk_itr = tokenstable.find(quantity.symbol.code().raw());
+                check(tk_itr != tokenstable.end(), "The token is not registered");
+                check(tk_itr->tradeable, "The token is not setted as tradeable. Contact the token's responsible admin.");
+                string str = string("Fake token (") +
+                             quantity.symbol.code().to_string() +
+                             ") transfered from '" + tokencontract.to_string() +
+                             "' instead of '" + tk_itr->contract.to_string() + "'";
+                check(tk_itr->contract == tokencontract, str.c_str());
+
                 _quantity = aux_extend_asset(quantity);
                 PRINT(" _quantity extended: ", _quantity.to_string(), "\n");
                 aux_add_deposits(receiver, _quantity, get_self());
@@ -1856,7 +1887,7 @@ print("aux_assert_ui_is_valid\n");
             return market;
         }
 
-        void action_hotfix(int num, name account, asset quantity) {
+        void action_hotfix() {
             PRINT("vapaee::token::exchange::action_hotfix()\n");
             require_auth(get_self());
             // int count = 1;
@@ -1869,11 +1900,11 @@ print("aux_assert_ui_is_valid\n");
             // telostest get table vapaeetokens cnt.tlos tablesummary
             // telostest get table vapaeetokens cnt.tlos blockhistory
 
-            tokens tokenstable(get_self(), get_self().value);
-            for (auto itr = tokenstable.begin(); itr != tokenstable.end(); itr = tokenstable.begin()) {
-                tokenstable.erase(*itr);
+            interfaces interfacestable(get_self(), get_self().value);
+            for (auto itr = interfacestable.begin(); itr != interfacestable.end(); itr = interfacestable.begin()) {
+                interfacestable.erase(*itr);
             }
-            PRINT("tokenstable ERASED\n");
+            PRINT("interfacestable ERASED\n");
 
 
             // history historytable(get_self(), name("cnt.tlos").value);

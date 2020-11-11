@@ -1,9 +1,5 @@
 #pragma once
-#include <eosiolib/contracts/eosio/system.hpp>
-#include <eosiolib/core/eosio/serialize.hpp>
-#include <eosiolib/core/eosio/print.hpp>
-#include <eosiolib/core/eosio/symbol.hpp>
-#include <eosiolib/core/eosio/check.hpp>
+
 
 #include <tuple>
 #include <limits>
