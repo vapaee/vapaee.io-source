@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { TokenDEX } from './token-dex.class';
-import { Asset } from 'projects/vapaee/scatter/src';
+import { Asset, Token } from '@vapaee/scatter2';
 
 
 
@@ -10,7 +10,6 @@ export interface IVapaeeDEX {
 
 export class AssetDEX extends Asset {
     amount:BigNumber;
-    _token:TokenDEX;
     
     constructor(a: any = null, b: any = null) {
         super(a,b);
@@ -27,16 +26,11 @@ export class AssetDEX extends Asset {
 
     }
 
-    get token(): TokenDEX {
-        if (!this._token) this._token = new TokenDEX();
-        return this._token;
-    }
-
-    clone(): AssetDEX {
+    protected do_clone(): any {
         return new AssetDEX(this.amount, this.token);
     }
 
-    plus(b:AssetDEX) {
+    plus(b:Asset) {
         console.assert(!!b, "ERROR: b is not an Asset", b, this.str);
         console.assert(!!b.token, "ERROR: b has no token", b, this.str);
         console.assert(!!this.token, "ERROR: this has no token", b, this);
@@ -45,7 +39,7 @@ export class AssetDEX extends Asset {
         return new AssetDEX(amount, this.token);
     }
 
-    minus(b:AssetDEX) {
+    minus(b:Asset):Asset {
         console.assert(!!b, "ERROR: b is not an Asset", b, this.str);
         console.assert(!!b.token, "ERROR: b has no token", b, this.str);
         console.assert(!!this.token, "ERROR: this has no token", b, this);
@@ -76,7 +70,7 @@ export class AssetDEX extends Asset {
         return this.valueToString(decimals) + " " + this.token.symbol.toUpperCase();
     }
 
-    inverse(token: TokenDEX): AssetDEX {
+    inverse(token: Token): Asset {
         var result = new BigNumber(1).dividedBy(this.amount);
         var asset =  new AssetDEX(result, token);
         return asset;

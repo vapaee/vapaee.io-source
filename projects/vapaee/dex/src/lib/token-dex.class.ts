@@ -1,7 +1,7 @@
 
 import { AssetDEX } from "./asset-dex.class";
 import { Market } from './types-dex';
-import { Token } from "projects/vapaee/scatter/src";
+import { Token } from "@vapaee/scatter2";
 
 export interface TokenData {
     id:number,
@@ -71,10 +71,14 @@ export class TokenDEX extends Token {
         cp.markets = [];
         cp.events = [];
         cp.stat = Object.assign({}, this.stat);
-        delete cp.summary;
-        delete cp._str;
+        cp.clear();
         cp.toString();
         return cp;
+    }
+
+    clear() {
+        super.clear();
+        delete this.summary;
     }
 
     serialize(): any {
@@ -98,20 +102,15 @@ export class ETokenDEX extends TokenDEX {
         super(obj);
     }
 
-    set symbol(value: string) {
+    setSymbol(value: string) {
         this._symbol = value;
     }
 
-    set precision(value: number) {
+    setPrecision(value: number) {
         this._precision = value;
     }
 
-    set contract(value: string) {
+    setContract(value: string) {
         this._contract = value;
     }
-
-    get symbol() { return this._symbol; }
-    get precision() { return this._precision; }
-    get contract() { return this._contract; }    
-    
 }

@@ -73,7 +73,7 @@ export class Feedback {
         }        
     }
 
-    setLoading(key:string, value:boolean) {
+    setLoading(key:string, value:boolean = true) {
         if (this.scopes[key]) {
             this.scopes[key].loading = value;
         } else {

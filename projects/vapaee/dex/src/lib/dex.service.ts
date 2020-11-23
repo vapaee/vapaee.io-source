@@ -6,8 +6,8 @@ import { DatePipe } from '@angular/common';
 import { TokenDEX, TokenData, TokenEvent } from './token-dex.class';
 import { AssetDEX } from './asset-dex.class';
 import { MarketMap, UserOrdersMap, MarketSummary, EventLog, Market, HistoryTx, TokenOrders, Order, UserOrders, OrderRow, HistoryBlock, DEXdata, MarketDeclaration } from './types-dex';
-import { VapaeeScatter, Account, AccountData, SmartContract, TableResult, TableParams, Asset } from 'projects/vapaee/scatter/src';
-import { Feedback } from 'projects/vapaee/feedback/src';
+import { VapaeeScatter2, Account, AccountData, SmartContract, TableResult, TableParams, Asset, VapaeeScatterConnexion } from '@vapaee/scatter2';
+import { Feedback } from '@vapaee/feedback';
 
 
 @Injectable({
@@ -33,7 +33,7 @@ export class VapaeeDEX {
     public telos: TokenDEX;
     public tokens: TokenDEX[];
     public currencies: TokenDEX[];
-    public contract: SmartContract;
+    
     public feed: Feedback;
     public current: Account;
     public last_logged: string;
@@ -50,9 +50,12 @@ export class VapaeeDEX {
     public onTokensReady:Subject<TokenDEX[]> = new Subject();
     public onTopMarketsReady:Subject<Market[]> = new Subject();
     public onTradeUpdated:Subject<any> = new Subject();
-    vapaeetokens:string = "vapaeetokens";
+    vapaeetokens:SmartContract;
+    telosbookdex:SmartContract;
 
     activityPagesize:number = 10;
+
+    connexion:VapaeeScatterConnexion;
     
     activity:{
         total:number;
@@ -95,7 +98,7 @@ export class VapaeeDEX {
         this.setTokensLoaded = resolve;
     });
     constructor(
-        private scatter: VapaeeScatter,
+        private scatter: VapaeeScatter2,
         private cookies: CookieService,
         private datePipe: DatePipe
     ) {
@@ -104,10 +107,18 @@ export class VapaeeDEX {
         this._reverse = {};
         this.activity = {total:0, events:{}, list:[]};
         this.current = this.default;
-        this.contract_name = this.vapaeetokens;
-        this.contract = this.scatter.getSmartContract(this.contract_name);
         this.feed = new Feedback();
-        this.scatter.onLogggedStateChange.subscribe(this.onLoggedChange.bind(this));
+    }
+    
+
+    async init(appname:string) {
+        console.log("VapaeeDEX.init()");
+        this.connexion = await this.scatter.createConnexion(appname, "telos");
+        
+        this.telosbookdex = this.connexion.getContract("telosbookdex");
+        this.vapaeetokens = this.connexion.getContract("vapaeetokens");
+        
+        this.connexion.onLogggedStateChange.subscribe(this.onLoggedChange.bind(this));
         this.updateLogState();
         this.updateTokens().then(_ => {
             return this.updateMarkets();
@@ -118,15 +129,6 @@ export class VapaeeDEX {
             for (let i in this.tokens) {
                 console.log(this.tokens[i].contract, " - ", this.tokens[i].symbol,",",this.tokens[i].precision);
             }
-
-            // setTimeout(_ => {
-            //     this.meterToken("1000000000.0000","ROBO", "/assets/logos/proxibots-lg.png","https://proxibots.io");
-            //     this.meterToken("10000000.0000","TLOSD", "/assets/logos/carbon.svg","https://www.carbon.money");
-            //     this.meterToken("461168601842738.0000","ACORN", "/assets/logos/acorn-lg.png","http://acorns.fun");
-            //     this.meterToken("1300000000.0000","EDNA", "/assets/logos/edna-lg.png","https://github.com/EDNA-LIFE");
-            //     this.meterToken("2100000000.0000","HEART", "/assets/logos/beautitude-lg.png","https://steemit.com/@steemchurch");
-            //     this.resortTokens();
-            // }, 4000);
 
             this.setTokensLoaded();
             this.getOrderSummary();
@@ -148,7 +150,9 @@ export class VapaeeDEX {
                 this.updateTokensSummary();
                 this.updateTokensMarkets();
             }, 100);
-        });
+        });  
+        
+        // await this.scatter.connexion.telos.login();
     }
 
     updateMarkets() {
@@ -233,30 +237,30 @@ export class VapaeeDEX {
 
     // getters -------------------------------------------------------------
     get default(): Account {
-        return this.scatter.default;
+        return this.connexion.def_account;
     }
 
     get logged() {
-        return this.scatter.logged ?
-            (this.scatter.account ? this.scatter.account.name : this.scatter.default.name) :
+        return this.connexion.logged ?
+            (this.connexion.account ? this.connexion.account.name : this.connexion.def_account.name) :
             null;
     }
 
     get account() {
-        return this.scatter.logged ? 
-        this.scatter.account :
-        this.scatter.default;
+        return this.connexion.logged ? 
+        this.connexion.account :
+        this.connexion.def_account;
     }
 
     get waitLogged() {
-        return this.scatter.waitLogged;
+        return this.connexion.waitLogged;
     }
 
     get dexdata(): DEXdata {
         if (!this._dexdata) {
             let total: AssetDEX;
-            let total_deposits: AssetDEX = new AssetDEX("0.0000 " + this.scatter.symbol, this);
-            let total_inorders: AssetDEX = new AssetDEX("0.0000 " + this.scatter.symbol, this);
+            let total_deposits: AssetDEX = new AssetDEX("0.0000 " + this.connexion.symbol, this);
+            let total_inorders: AssetDEX = new AssetDEX("0.0000 " + this.connexion.symbol, this);
             for (let i in this.deposits) {
                 if (this.scatter.isNative(this.deposits[i])) {
                     total_deposits = total_deposits.plus(this.deposits[i]);
@@ -328,8 +332,8 @@ export class VapaeeDEX {
 
     onLoggedChange() {
         console.log("VapaeeDEX.onLoggedChange()");
-        if (this.scatter.logged) {
-            this.onLogin(this.scatter.account.name);
+        if (this.connexion.logged) {
+            this.onLogin(this.connexion.account.name);
         } else {
             this.onLogout();
         }
@@ -357,12 +361,12 @@ export class VapaeeDEX {
         this.loginState = "no-scatter";
         this.feed.setLoading("log-state", true);
         console.log("VapaeeDEX.updateLogState() ", this.loginState, this.feed.loading("log-state"));
-        this.scatter.waitConnected.then(() => {
+        this.connexion.waitConnected.then(() => {
             this.loginState = "no-logged";
-            // console.log("VapaeeDEX.updateLogState()   ", this.loginState);
-            if (this.scatter.logged) {
+            console.log("VapaeeDEX.updateLogState()   ", this.loginState);
+            if (this.connexion.logged) {
                 this.loginState = "account-ok";
-                // console.log("VapaeeDEX.updateLogState()     ", this.loginState);
+                console.log("VapaeeDEX.updateLogState()     ", this.loginState);
             }
             this.feed.setLoading("log-state", false);
             console.log("VapaeeDEX.updateLogState() ", this.loginState, this.feed.loading("log-state"));
@@ -370,7 +374,7 @@ export class VapaeeDEX {
 
         let timer2;
         let timer1 = setInterval(_ => {
-            if (!this.scatter.feed.loading("connect")) {
+            if (!this.connexion.feed.loading("connecting")) {
                 this.feed.setLoading("log-state", false);
                 clearInterval(timer1);
                 clearInterval(timer2);
@@ -396,14 +400,14 @@ export class VapaeeDEX {
         // "alice", "buy", "2.50000000 CNT", "0.40000000 TLOS"
         // name owner, name type, const asset & total, const asset & price
         this.feed.setLoading("order-"+type, true);
-        return this.contract.excecute("order", {
-            owner:  this.scatter.account.name,
+        return this.telosbookdex.excecute("order", {
+            owner:  this.connexion.account.name,
             type: type,
             total: amount.toString(8),
             price: price.toString(8),
             ui: ui
         }).then(async result => {
-            this.updateTrade(amount.token, price.token);
+            this.updateTrade(<TokenDEX>amount.token, <TokenDEX>price.token);
             this.feed.setLoading("order-"+type, false);
             return result;
         }).catch(e => {
@@ -418,8 +422,8 @@ export class VapaeeDEX {
         // name owner, name type, const asset & total, const asset & price
         this.feed.setLoading("cancel-"+type, true);
         for (let i in orders) { this.feed.setLoading("cancel-"+type+"-"+orders[i], true); }
-        return this.contract.excecute("cancel", {
-            owner:  this.scatter.account.name,
+        return this.telosbookdex.excecute("cancel", {
+            owner:  this.connexion.account.name,
             type: type,
             commodity: commodity.symbol,
             currency: currency.symbol,
@@ -439,12 +443,12 @@ export class VapaeeDEX {
 
     deposit(quantity:AssetDEX) {
         // name owner, name type, const asset & total, const asset & price
-        let contract = this.scatter.getSmartContract(quantity.token.contract);
+        let contract = this.connexion.getContract(quantity.token.contract);
         this.feed.setError("deposit", null);
         this.feed.setLoading("deposit", true);
         this.feed.setLoading("deposit-"+quantity.token.symbol.toLowerCase(), true);
         return contract.excecute("transfer", {
-            from:  this.scatter.account.name,
+            from:  this.connexion.account.name,
             to: this.vapaeetokens,
             quantity: quantity.toString(),
             memo: "deposit"
@@ -466,8 +470,8 @@ export class VapaeeDEX {
         this.feed.setError("withdraw", null);
         this.feed.setLoading("withdraw", true);
         this.feed.setLoading("withdraw-"+quantity.token.symbol.toLowerCase(), true);   
-        return this.contract.excecute("withdraw", {
-            owner:  this.scatter.account.name,
+        return this.telosbookdex.excecute("withdraw", {
+            owner:  this.connexion.account.name,
             quantity: quantity.toString(),
             ui: ui
         }).then(async result => {
@@ -490,7 +494,7 @@ export class VapaeeDEX {
         this.feed.setError(feedid, null);
         this.feed.setLoading(feedid, true);
 
-        return this.contract.excecute("addtoken", {
+        return this.telosbookdex.excecute("addtoken", {
             contract:  token.contract,
             symbol: token.symbol,
             precision: token.precision,
@@ -518,7 +522,7 @@ export class VapaeeDEX {
         this.feed.setError(feedid, null);
         this.feed.setLoading(feedid, true);
         token.website = this.auxFixWebsite(token.website);
-        return this.contract.excecute("updatetoken", {
+        return this.telosbookdex.excecute("updatetoken", {
             sym_code: token.symbol,
             title: token.title,
             website: token.website,
@@ -541,7 +545,7 @@ export class VapaeeDEX {
         let feedid = "tokenadmin";
         this.feed.setError(feedid, null);
         this.feed.setLoading(feedid, true);
-        return this.contract.excecute("tokenadmin", {
+        return this.telosbookdex.excecute("tokenadmin", {
             sym_code: token.symbol,
             admin: newadmin
         }).then(async result => {
@@ -558,7 +562,7 @@ export class VapaeeDEX {
         let feedid = "settokeninfo";
         this.feed.setError(feedid, null);
         this.feed.setLoading(feedid, true);
-        return this.contract.excecute("settokendata", {
+        return this.telosbookdex.excecute("settokendata", {
             symbol: info.symbol, 
             id:info.id,
             action:action,
@@ -579,7 +583,7 @@ export class VapaeeDEX {
         let feedid = "edittkevent";
         this.feed.setError(feedid, null);
         this.feed.setLoading(feedid, true);
-        return this.contract.excecute("edittkevent", {
+        return this.telosbookdex.excecute("edittkevent", {
             symbol:symbol,
             event:evt.event,
             action:action,
@@ -594,11 +598,12 @@ export class VapaeeDEX {
         });
     }
 
+    // TODO: migrate this function outside of @vapaee/dex
     createtoken(asset:AssetDEX) {
         let feedid = "createtoken";
         this.feed.setError(feedid, null);
         this.feed.setLoading(feedid, true);
-        return this.contract.excecute("create", {
+        return this.vapaeetokens.excecute("create", {
             issuer:  this.logged,
             maximum_supply: asset.toString()
         }).then(async result => {
@@ -1128,7 +1133,7 @@ export class VapaeeDEX {
     }
 
     private async getActivityTotalPages(pagesize: number) {
-        return this.contract.getTable("events", {
+        return this.telosbookdex.getTable("events", {
             limit: 1
         }).then(result => {
             if (result.rows.length == 0) return 0;
@@ -1694,10 +1699,10 @@ export class VapaeeDEX {
             let price_asset = new AssetDEX(price, this);
             let inverse_asset = new AssetDEX(inverse, this);
             // if(canonical=="cnt.tlos")console.log("price ", price);
-            let max_price = price_asset.clone();
-            let min_price = price_asset.clone();
-            let max_inverse = inverse_asset.clone();
-            let min_inverse = inverse_asset.clone();
+            let max_price: AssetDEX = price_asset.clone();
+            let min_price: AssetDEX = price_asset.clone();
+            let max_inverse: AssetDEX = inverse_asset.clone();
+            let min_inverse: AssetDEX = inverse_asset.clone();
             let price_fst:AssetDEX = null;
             let inverse_fst:AssetDEX = null;
             for (let i=0; i<24; i++) {
@@ -1871,7 +1876,7 @@ export class VapaeeDEX {
             let total = new AssetDEX(rows[i].total, this);
             let order:Order;
 
-            let table = this.getTableFor(price.token, inverse.token);
+            let table = this.getTableFor(<TokenDEX>price.token, <TokenDEX>inverse.token);
             let canonical = this.canonicalTable(table);
             let reverse_table = this.inverseTable(canonical);
             
@@ -2024,7 +2029,7 @@ export class VapaeeDEX {
     }
 
     private fetchDeposits(account): Promise<TableResult> {
-        return this.contract.getTable("deposits", {scope:account}).then(result => {
+        return this.telosbookdex.getTable("deposits", {scope:account}).then(result => {
             return result;
         });
     }
@@ -2058,7 +2063,7 @@ export class VapaeeDEX {
     private async fetchBalancesOnContract(account:string, contract:string) {
         // console.log("VapaeeDex.fetchBalancesOnContract()", account, contract);
         this.feed.setLoading("balances-"+contract, true);
-        let result = await this.contract.getTable("accounts", {
+        let result = await this.telosbookdex.getTable("accounts", {
             contract:contract,
             scope: account || this.current.name
         });
@@ -2077,14 +2082,14 @@ export class VapaeeDEX {
     }
 
     private fetchOrders(params:TableParams): Promise<TableResult> {
-        return this.contract.getTable("sellorders", params).then(result => {
+        return this.telosbookdex.getTable("sellorders", params).then(result => {
             return result;
         });
     }
 
     private async fetchAllOrderSummary(): Promise<TableResult> {
         let table = "ordersummary";
-        return this.contract.getTableAll(table);
+        return this.telosbookdex.getTableAll(table);
     }    
 
     private fetchBlockHistory(table:string, page:number = 0, pagesize:number = 25): Promise<TableResult> {
@@ -2116,7 +2121,7 @@ export class VapaeeDEX {
         // if market does not exist return empty list
         if(!market) return Promise.resolve({rows:[],more:false});
         
-        return this.contract.getTable("blockhistory", {scope:market.id, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
+        return this.telosbookdex.getTable("blockhistory", {scope:market.id, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
             // console.log("block History crudo:", result);
             let market = this.market(canonical);
             market = this.auxAssertTable(canonical);
@@ -2170,7 +2175,7 @@ export class VapaeeDEX {
         // If the market does not exist -> return [];
         if(!market) return Promise.resolve({rows:[],more:false});
         
-        return this.contract.getTable("history", {scope:market.id, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
+        return this.telosbookdex.getTable("history", {scope:market.id, limit:pagesize, lower_bound:""+(page*pagesize)}).then(result => {
             // console.log("History crudo:", result);
             let market = this.market(canonical);
             
@@ -2231,7 +2236,7 @@ export class VapaeeDEX {
             }                
         }        
 
-        return this.contract.getTable("events", {limit:pagesize, lower_bound:""+id}).then(result => {
+        return this.telosbookdex.getTable("events", {limit:pagesize, lower_bound:""+id}).then(result => {
             // console.log("Activity crudo:", result);
             let list:EventLog[] = [];
 
@@ -2257,7 +2262,7 @@ export class VapaeeDEX {
     }
 
     private fetchUserOrders(user:string): Promise<TableResult> {
-        return this.contract.getTable("userorders", {scope:user, limit:200}).then(result => {
+        return this.telosbookdex.getTable("userorders", {scope:user, limit:200}).then(result => {
             return result;
         });
     }
@@ -2267,7 +2272,7 @@ export class VapaeeDEX {
             console.assert(this.canonicalTable(table) == table, "ERROR: fetchSummary was called with a non-canonical table");
             let market = this.market(table);
             if(!market) return Promise.resolve({rows:[], more:false})
-            return this.contract.getTable("tablesummary", {scope:market.id+""}).then(result => {
+            return this.telosbookdex.getTable("tablesummary", {scope:market.id+""}).then(result => {
                 return result;
             });    
         });
@@ -2275,7 +2280,7 @@ export class VapaeeDEX {
 
     public fetchTokenStats(token): Promise<TableResult> {
         this.feed.setLoading("token-stat-"+token.symbol, true);
-        return this.contract.getTable("stat", {contract:token.contract, scope:token.symbol}).then(result => {
+        return this.telosbookdex.getTable("stat", {contract:token.contract, scope:token.symbol}).then(result => {
             token.stat = result.rows[0];
             this.feed.setLoading("token-stat-"+token.symbol, false);
             return token;
@@ -2284,7 +2289,7 @@ export class VapaeeDEX {
 
     public fetchTokenEvents(token): Promise<TableResult> {
         this.feed.setLoading("token-events-"+token.symbol, true);
-        return this.contract.getTable("tokenevents", {scope:token.symbol}).then(result => {
+        return this.telosbookdex.getTable("tokenevents", {scope:token.symbol}).then(result => {
             token.events = result.rows;
             this.feed.setLoading("token-events-"+token.symbol, false);
             return token;
@@ -2293,7 +2298,7 @@ export class VapaeeDEX {
 
     private fetchTokenData(token): Promise<TableResult> {
         this.feed.setLoading("token-data-"+token.symbol, true);
-        return this.contract.getTable("tokendata", {scope:token.symbol}).then(result => {
+        return this.telosbookdex.getTable("tokendata", {scope:token.symbol}).then(result => {
             token.data = result.rows;
             this.feed.setLoading("token-data-"+token.symbol, false);
             return token;
@@ -2540,7 +2545,7 @@ export class VapaeeDEX {
 
                         // if this market does not mesure the volume in TLOS, then convert quantity to TLOS by multiplied By volume's token price
                         if (volume_i.token.symbol != this.telos.symbol) {
-                            volume_i = new AssetDEX(quantity.amount.multipliedBy(quantity.token.summary.price.amount), this.telos);
+                            volume_i = new AssetDEX(quantity.amount.multipliedBy((<TokenDEX>quantity.token).summary.price.amount), this.telos);
                         }
                         
 
@@ -2637,12 +2642,12 @@ export class VapaeeDEX {
 
     private async fetchAllTokens(): Promise<TableResult> {
         let table = "tokens";
-        return this.contract.getTableAll(table);
+        return this.telosbookdex.getTableAll(table);
     }
 
     private async fetchAllMarkets(): Promise<TableResult> {
         let table = "markets";
-        return this.contract.getTableAll(table);
+        return this.telosbookdex.getTableAll(table);
     }
 
     private resortTokens() {
@@ -2698,10 +2703,10 @@ export class VapaeeDEX {
                 let b_vol = b.summary ? b.summary.volume : new AssetDEX();
 
                 if (a_vol.token != this.telos) {
-                    a_vol = new AssetDEX(a_vol.amount.multipliedBy(a_vol.token.summary.price.amount),this.telos);
+                    a_vol = new AssetDEX(a_vol.amount.multipliedBy((<TokenDEX>a_vol.token).summary.price.amount),this.telos);
                 }
                 if (b_vol.token != this.telos) {
-                    b_vol = new AssetDEX(b_vol.amount.multipliedBy(b_vol.token.summary.price.amount),this.telos);
+                    b_vol = new AssetDEX(b_vol.amount.multipliedBy((<TokenDEX>b_vol.token).summary.price.amount),this.telos);
                 }
 
                 console.assert(b_vol.token == this.telos, "ERROR: volume misscalculated");

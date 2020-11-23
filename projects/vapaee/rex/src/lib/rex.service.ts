@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Asset, SmartContract, VapaeeScatter } from 'projects/vapaee/scatter/src';
-import { Feedback } from 'projects/vapaee/feedback/src';
+import { Asset, SmartContract, VapaeeScatter2, VapaeeScatterConnexion } from '@vapaee/scatter2';
+import { Feedback } from '@vapaee/feedback';
 
 
 export interface REXdata {
@@ -52,39 +52,19 @@ export class VapaeeREX {
     public contract_name: string;
     public feed: Feedback;
     public pool: REXpool;
-    public default: REXdata;
+    
     public balances: {[account:string]:REXbalance};
     public deposits: {[account:string]:REXdeposits};
+
+    connexion:VapaeeScatterConnexion;
     
     constructor(
-        private scatter: VapaeeScatter
+        private scatter: VapaeeScatter2
     ) {
         this.contract_name = "eosio";
-        this.contract = this.scatter.getSmartContract(this.contract_name);
         this.feed = new Feedback();
         this.balances = {};
         this.deposits = {};
-        this.default = {
-            "total": new Asset("0.0000 " + this.scatter.symbol),
-            "deposits": new Asset("0.0000 " + this.scatter.symbol),
-            "balance": new Asset("0.0000 " + this.scatter.symbol),
-            "profits": new Asset("0.0000 " + this.scatter.symbol),
-            "tables": {
-                "rexfund": {
-                    "version": 0,
-                    "owner": this.scatter.username,
-                    "balance": new Asset("0.0000 " + this.scatter.symbol),                  
-                },
-                "rexbal": {
-                    "version": 0,
-                    "owner": this.scatter.username,
-                    "vote_stake": new Asset("0.0000 " + this.scatter.symbol),
-                    "rex_balance": new Asset("0.0000 REX"),
-                    "matured_rex": 0,
-                    "rex_maturities": []
-                }
-            }
-        }
         this.pool = {
             version: 0,
             loan_num:0,
@@ -95,6 +75,43 @@ export class VapaeeREX {
             total_rent: new Asset(),
             total_rex: new Asset()
         };
+    }
+
+    public get default(): REXdata {
+        let sym, user;
+        if (this.contract) {
+            sym = this.connexion.symbol;
+            user = this.connexion.username;
+        } else {
+            sym = "SYS";
+            user = "guest";
+        }
+        return {
+            "total": new Asset("0.0000 " + sym),
+            "deposits": new Asset("0.0000 " + sym),
+            "balance": new Asset("0.0000 " + sym),
+            "profits": new Asset("0.0000 " + sym),
+            "tables": {
+                "rexfund": {
+                    "version": 0,
+                    "owner": user,
+                    "balance": new Asset("0.0000 " + sym),                  
+                },
+                "rexbal": {
+                    "version": 0,
+                    "owner": user,
+                    "vote_stake": new Asset("0.0000 " + sym),
+                    "rex_balance": new Asset("0.0000 REX"),
+                    "matured_rex": 0,
+                    "rex_maturities": []
+                }
+            }
+        };
+    }
+
+    async init() {
+        this.contract = await this.scatter.getContractWrapper(this.contract_name);
+        this.connexion = await this.scatter.getConnexion(null);
     }
 
     async updatePoolState() {
@@ -115,7 +132,7 @@ export class VapaeeREX {
 
     async queryAccountREXBalance(account: string) {
         this.feed.setLoading("REXbalance", true);
-        var encodedName = this.scatter.utils.encodeName(account);
+        var encodedName = this.connexion.utils.encodeName(account);
 
         return this.contract.getTable("rexbal", {
             lower_bound: encodedName.toString(), 
@@ -126,8 +143,8 @@ export class VapaeeREX {
             let _row = result.rows[0];
             let _rexbal:REXbalance = {
                 version: 0,
-                owner: this.scatter.default.name,
-                vote_stake: new Asset("0.0000 " + this.scatter.symbol),
+                owner: this.connexion.def_account.name,
+                vote_stake: new Asset("0.0000 " + this.connexion.symbol),
                 rex_balance: new Asset("0.0000 REX"),
                 matured_rex: 0,
                 rex_maturities: []
@@ -155,7 +172,7 @@ export class VapaeeREX {
 
     async queryAccountREXDeposits(account: string) {
         this.feed.setLoading("REXDeposits", true);
-        var encodedName = this.scatter.utils.encodeName(account);
+        var encodedName = this.connexion.utils.encodeName(account);
 
         return this.contract.getTable("rexfund", {
             lower_bound: encodedName.toString(), 
@@ -166,8 +183,8 @@ export class VapaeeREX {
             let _row = result.rows[0];
             let _rexfund:REXdeposits = {
                 version: 0,
-                owner: this.scatter.default.name,
-                balance: new Asset("0.0000 " + this.scatter.symbol)
+                owner: this.connexion.def_account.name,
+                balance: new Asset("0.0000 " + this.connexion.symbol)
             }            
             if (_row) {
                 _rexfund = {

@@ -65,7 +65,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
         if (tab == this.TAB.CREATE) {
-            this.newtoken.contract = "vapaeetokens";
+            this.newtoken.setContract("vapaeetokens");
             this.discardTheToken();
             this.tab = this.TAB.CREATE; 
         }
@@ -96,7 +96,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
         if (symbol == "new-token") {
             this.tab = this.TAB.CREATE;
         } else {
-            this.newtoken.symbol = symbol.toUpperCase();
+            this.newtoken.setSymbol(symbol.toUpperCase());
             this.dex.waitTokensLoaded.then(_ => {
                 var token = this.dex.getTokenNow(symbol.toUpperCase());
                 if (token) {
@@ -190,7 +190,7 @@ export class TokenEditPage implements OnInit, OnDestroy, AfterViewInit {
                             console.log("TokenEditPage.checkToken() ---------->", this.newtoken.stat);
                             if (this.newtoken.stat) {
                                 let supply = new AssetDEX(this.newtoken.stat.max_supply);
-                                this.newtoken.precision = supply.token.precision || 0;
+                                this.newtoken.setPrecision(supply.token.precision || 0);
                                 this.thetoken = this.newtoken.basecopy();
                                 console.log("supply", this.thetoken);
                                 if (this.tab == this.TAB.CREATE) {

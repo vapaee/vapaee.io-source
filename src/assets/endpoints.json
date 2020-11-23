@@ -36,11 +36,6 @@
         "endpoints":[
         {
             "protocol":"https",
-            "host":"telos.eos.barcelona",
-            "port":443
-        },
-        {
-            "protocol":"https",
             "host":"api.eos.miami",
             "port":443
         },

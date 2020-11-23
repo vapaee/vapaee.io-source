@@ -126,7 +126,7 @@ export class AppComponent {
         public http: HttpClient,
         public analytics: AnalyticsService
     ) {
-        this.app.init("v3.6.4");
+        this.app.init("v3.7.0");
 
         // Check if this is the last version. If not, reload site.
         this.http.get<any>("assets/app.json?_="+Math.random()).toPromise().then((appjson) => {
@@ -141,8 +141,9 @@ export class AppComponent {
         });        
     }
     
-    ngOnInit() {
+    async ngOnInit() {
 
+        /*
         this.http.get<NetworkMap>("assets/endpoints.json").toPromise().then((endpoints) => {
             this.scatter.setEndpoints(endpoints);
 
@@ -161,6 +162,7 @@ export class AppComponent {
             }
     
         });
+        */
 
         this.dex.onLoggedAccountChange.subscribe(logged => {
             this.analytics.setUserId(logged ? logged : 0);
@@ -207,6 +209,9 @@ export class AppComponent {
             }
             this.components.setTokensPrices(tokenPrices);
         });
+
+        await this.scatter.init("assets/endpoints.json");
+        await this.dex.init("Vapaée - Telos DEX");
      
     }
 
