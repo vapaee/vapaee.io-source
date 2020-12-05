@@ -3,7 +3,7 @@ import { EventEmitter } from '@angular/core';
 import { Subscriber } from 'rxjs';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { Market, VapaeeDEX } from 'projects/vapaee/dex/src';
+import { Market, VapaeeDEX } from 'projects/vapaee/dex';
 
 
 

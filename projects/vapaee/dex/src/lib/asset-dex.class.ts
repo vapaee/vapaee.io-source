@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { TokenDEX } from './token-dex.class';
-import { Asset, Token } from '@vapaee/scatter2';
 
+import { Asset, Token } from './extern';
 
 
 export interface IVapaeeDEX {
@@ -28,6 +28,11 @@ export class AssetDEX extends Asset {
 
     protected do_clone(): any {
         return new AssetDEX(this.amount, this.token);
+    }
+
+    get token(): TokenDEX {
+        if (!this._token) this._token = new TokenDEX();
+        return <TokenDEX>this._token;
     }
 
     plus(b:Asset) {

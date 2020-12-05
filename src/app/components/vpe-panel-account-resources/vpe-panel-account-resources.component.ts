@@ -3,8 +3,8 @@ import { EventEmitter } from '@angular/core';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { Account } from 'projects/vapaee/scatter/src';
-import { AssetDEX, VapaeeDEX } from 'projects/vapaee/dex/src';
+import { Account } from 'projects/vapaee/scatter2';
+import { AssetDEX, VapaeeDEX } from 'projects/vapaee/dex';
 
 
 

@@ -5,20 +5,26 @@ import { HttpClient } from '@angular/common/http';
 import ScatterJS from '@scatterjs/core';
 import ScatterEOS from '@scatterjs/eosjs2';
 import {JsonRpc, Api} from 'eosjs';
+
+// scatter2 lib
 import { ScatterUtils } from './utils.class';
-import { Feedback } from '@vapaee/feedback';
 import { Subject } from 'rxjs';
 import { Asset } from './asset.class';
 import { Token } from './token.class';
+import { SmartContract } from './contract.class';
 import { EOSNetworkConnexion } from './eos-connexion.class';
 import { Account, AccountData, EndpointState, Limit, Network, NetworkMap, VapaeeScatterConnexion } from './types-scatter2';
-import { connected } from 'process';
+
+// @vapaee libs 
+import { Feedback } from './extern';
+
 
 export interface VapaeeScatterInterface {
     createConnexion: (appname:string, net_slug:string)=> Promise<VapaeeScatterConnexion>;
     getConnexion: (net_slug:string) => Promise<VapaeeScatterConnexion>;
     getNetwork: (slug: string) => Network;
     resetIdentity: () => Promise<void>;
+    readonly def_account: Account;
 }
 export interface ConnexionMap {
     [key:string]:VapaeeScatterConnexion
@@ -29,7 +35,7 @@ export interface ConnexionMap {
 })
 export class VapaeeScatter2 implements VapaeeScatterInterface /*, VapaeeScatterConnexion */ {
     
-    public appname: string;
+    // public appname: string;
     public connexion: ConnexionMap = {};
     public default_conn: string; // esto debería ser privado
     public onNetworkChange:Subject<Network> = new Subject();
@@ -54,14 +60,40 @@ export class VapaeeScatter2 implements VapaeeScatterInterface /*, VapaeeScatterC
         return this._networks_slugs;
     }
 
+    get def_account(): Account {
+        // default data before loading data
+        // TODO: fill out with better default data.
+        return {
+            name:'guest',
+            data: {
+                total_balance: "",
+                total_balance_asset: new Asset(),
+                total_staked: "",
+                total_staked_asset: new Asset(),
+                cpu_limit: {},
+                net_limit: {},
+                ram_limit: {},
+                refund_request: {},
+                total_resources: {},
+                self_delegated_bandwidth: {}
+            }
+        }
+    }    
+
     getNetwork(slug: string): Network {
         return this._networks[slug];
     }
     
     async init(path:string) {
+        this.subscribeToEvents();
         let endpoints = await this.fetchEndpoints(path);
         this.setEndpoints(endpoints);
     }
+
+    async subscribeToEvents() {
+        let style = 'background: #28a745; color: #FFF';
+        this.waitEndpoints.then(_ => console.log('%cVapaeeScatter2.waitEndpoints', style));
+    }    
 
     private async fetchEndpoints(url:string): Promise<NetworkMap> {
         this.feed.setLoading("endpoints");
@@ -86,9 +118,10 @@ export class VapaeeScatter2 implements VapaeeScatterInterface /*, VapaeeScatterC
         this.setEndpointsReady();
     }
 
-    async createConnexion(appname:string, slug:string): Promise<VapaeeScatterConnexion> {
-        console.log("ScatterService.createConnexion()", [appname, slug]);
-        this.appname = appname;
+    async createConnexion(slug:string): Promise<VapaeeScatterConnexion> {
+        console.log("ScatterService.createConnexion("+slug+")");
+        this.default_conn = this.default_conn || slug;
+        // this.appname = appname;
         this.feed.setLoading("connexion");
         return new Promise<VapaeeScatterConnexion>(async (resolve, reject) => {
             setTimeout(_ => {
@@ -101,9 +134,9 @@ export class VapaeeScatter2 implements VapaeeScatterInterface /*, VapaeeScatterC
             await this.waitEndpoints;
             console.assert(typeof this.connexion[slug] == "object", "ERROR: inconsistency error. Connexion for " + slug + " does not exist");
             await this.connexion[slug].autoSelectEndPoint(slug);
-            await this.connexion[slug].connect(this.appname);
-            resolve(this.connexion[slug]);
+
             this.feed.setLoading("connexion", false);
+            resolve(this.connexion[slug]);
         });
     };
     
@@ -255,9 +288,9 @@ export class VapaeeScatter2 implements VapaeeScatterInterface /*, VapaeeScatterC
         return this.connexion[this.default_conn].executeTransaction(contract, action, data);
     }
 
-    async getContractWrapper(account_name:string): Promise<any> {
-        await this.aux_asserts("getContractWrapper");
-        return this.connexion[this.default_conn].getContractWrapper(account_name);
+    async getContractWrapper(account_name:string): Promise<SmartContract> {
+        await this.aux_asserts("getContract");
+        return Promise.resolve(this.connexion[this.default_conn].getContract(account_name));
     }
     
     // loginTimer;
@@ -277,7 +310,8 @@ export class VapaeeScatter2 implements VapaeeScatterInterface /*, VapaeeScatterC
     }
 
     isNative (thing: Asset | Token): boolean {
-        return <boolean>this.aux_default_call("isNative", [thing]);
+        return this.connexion[this.default_conn].isNative(thing);
+        
     }
 
 }

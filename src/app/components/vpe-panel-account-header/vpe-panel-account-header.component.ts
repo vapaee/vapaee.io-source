@@ -1,10 +1,11 @@
 import { Component, Input, OnChanges, Output, OnInit, OnDestroy } from '@angular/core';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { REXdata, VapaeeREX } from 'projects/vapaee/rex/src/public_api';
 import { Subscriber } from 'rxjs';
-import { DEXdata, VapaeeDEX } from 'projects/vapaee/dex/src';
-import { Asset, VapaeeScatter, Account } from 'projects/vapaee/scatter/src';
+
+import { REXdata, VapaeeREX } from 'projects/vapaee/rex';
+import { DEXdata, VapaeeDEX } from 'projects/vapaee/dex';
+import { Asset, VapaeeScatter2, Account } from 'projects/vapaee/scatter2';
 
 
 
@@ -34,7 +35,7 @@ export class VpePanelAccountHeaderComponent implements OnInit, OnDestroy, OnChan
     constructor(
         public dex: VapaeeDEX,
         public rex: VapaeeREX,
-        public scatter: VapaeeScatter,
+        public scatter: VapaeeScatter2,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
@@ -51,6 +52,8 @@ export class VpePanelAccountHeaderComponent implements OnInit, OnDestroy, OnChan
     get total_balance() {
         if (!this.current.data.total_balance) return "";
         if (!this.total) {
+            this.total = new Asset(this.current.data.total_balance);
+            console.log("total_balance() ------------", typeof this.current.data.total_balance_asset, this.current.data.total_balance_asset);
             if (this.scatter.isNative(this.current.data.total_balance_asset)) {
                 this.total = this.current.data.total_balance_asset;
 
@@ -61,13 +64,24 @@ export class VpePanelAccountHeaderComponent implements OnInit, OnDestroy, OnChan
                 if (this.scatter.isNative(this.dexdata.total)) {
                     this.total = this.total.plus(this.dexdata.total);
                 }    
+            } else {
+                console.error("wtf just happened?", [this.total, this.current.data, this.rexdata.total,this.dexdata.total])
             }
         }
         return this.total;
     }
 
+    get hide_login_spinner() {
+        if (this.scatter.feed.loading('endpoints')) return false;
+        if (this.scatter.feed.loading('connexion')) return false;
+        if (this.dex.feed.loading('log-state')) return false;
+        if (this.dex.feed.loading('login')) return false;
+        if (this.dex.connexion && this.dex.connexion.feed.loading('connecting')) return false;
+        return true;
+    }
+
     async onDexCurrentAccountChange(account: string) {
-        // this.total = null;
+        this.total = null;
     }
 
     ngOnDestroy() {
@@ -87,9 +101,9 @@ export class VpePanelAccountHeaderComponent implements OnInit, OnDestroy, OnChan
     }
 
     print_debug() {
-        console.log([this.rexdata], this.rexdata.total.toString());
-        console.log([this.dexdata], this.dexdata.total.toString());
-        console.log([this.current], this.current.data.total_balance);
+        console.log("rexdata:",[this.rexdata], this.rexdata.total.toString());
+        console.log("dexdata:",[this.dexdata], this.dexdata.total.toString());
+        console.log("current:",[this.current], this.current.data.total_balance);
     }
 
     setCurrency(currency:string) {

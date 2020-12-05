@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges, Output, OnDestroy, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { VapaeeDEX } from 'projects/vapaee/dex/src';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Subscriber, Subject } from 'rxjs';
 import { VpeComponentsService, Device, ResizeEvent } from '../vpe-components.service';
+
+import { VapaeeDEX } from 'projects/vapaee/dex';
 
 @Component({
     selector: 'vpe-panel',

@@ -2,8 +2,9 @@ import { Injectable, ElementRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { TimezoneService } from '../services/timezone.service';
-import { TokenDEX, VapaeeDEX, AssetDEX } from 'projects/vapaee/dex/src';
-import { Asset } from 'projects/vapaee/scatter/src';
+
+import { TokenDEX, VapaeeDEX, AssetDEX } from 'projects/vapaee/dex';
+import { Asset } from 'projects/vapaee/scatter2';
 
 
 

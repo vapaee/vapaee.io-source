@@ -3,9 +3,10 @@ import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscriber } from 'rxjs';
-import { SmartContract, VapaeeScatter } from 'projects/vapaee/scatter/src';
-import { Feedback } from 'projects/vapaee/feedback/src';
-import { VapaeeDEX } from 'projects/vapaee/dex/src';
+
+import { SmartContract, VapaeeScatter2 } from 'projects/vapaee/scatter2';
+import { Feedback } from 'projects/vapaee/feedback';
+import { VapaeeDEX } from 'projects/vapaee/dex';
 
 @Component({
     selector: 'vpe-wp-page',
@@ -25,24 +26,24 @@ export class WPPage implements OnInit, OnDestroy {
     constructor(
         public app: AppService,
         public local: LocalStringsService,
-        public scatter: VapaeeScatter,
+        public scatter: VapaeeScatter2,
         public dex: VapaeeDEX,
         public cookie: CookieService
     ) {
         this.subscriber = new Subscriber<string>(this.onAccountChange.bind(this));
         this.user_dismiss = !!this.cookie.get("user_dismiss");
-        this.contract = this.scatter.getSmartContract("eosio.trail");
         this.feed = new Feedback();
         this.new_version = true;
-        this.onAccountChange(null);
     }
 
     ngOnDestroy() {
         this.subscriber.unsubscribe();
     }
 
-    ngOnInit() {
-         this.dex.onCurrentAccountChange.subscribe(this.subscriber);
+    async ngOnInit() {
+        this.contract = await this.scatter.getContractWrapper("eosio.trail");
+        this.onAccountChange(null);
+        this.dex.onCurrentAccountChange.subscribe(this.subscriber);
     }
 
     resetError() {
@@ -71,7 +72,7 @@ export class WPPage implements OnInit, OnDestroy {
         } else {
             if (this.user_voted_us) return this.feed.setLoading("voting", false);
             wait_registered = this.contract.excecute("regvoter", {
-                voter:  this.scatter.account.name,
+                voter:  this.scatter.connexion.telos.account.name,
                 token_symbol: "4,VOTE"
             }).then(_ => {
                 this.feed.setLoading("regvoter", false);
@@ -91,13 +92,13 @@ export class WPPage implements OnInit, OnDestroy {
         return wait_registered.then(_ => {
             if (this.user_voted_us) return this.feed.setLoading("voting", false);
             return this.contract.excecute("mirrorcast", {
-                voter:  this.scatter.account.name,
+                voter:  this.scatter.connexion.telos.account.name,
                 token_symbol: "4,TLOS"
             }).then(async result => {
                 this.feed.setLoading("mirrorcast", false);
                 if (this.user_voted_us) return this.feed.setLoading("voting", false);
                 return this.contract.excecute("castvote", {
-                    voter:  this.scatter.account.name,
+                    voter:  this.scatter.connexion.telos.account.name,
                     ballot_id: this.proposalID,
                     direction: 1
                 }).then(async result => {
@@ -169,7 +170,7 @@ export class WPPage implements OnInit, OnDestroy {
         this.user_is_registered = false;
         this.feed.setLoading("user-registered", true);
 
-        var encodedName = this.scatter.utils.encodeName(account || this.dex.current.name);
+        var encodedName = this.scatter.connexion.telos.utils.encodeName(account || this.dex.current.name);
         
         return this.contract.getTable("balances", {
             scope:"VOTE",

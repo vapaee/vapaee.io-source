@@ -1,5 +1,5 @@
 /*
- * Public API Surface of style
+ * @vapaee/style 
  */
 
 export * from './lib/style.service';

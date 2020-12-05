@@ -41,7 +41,7 @@ export class Asset {
         }
     }
     
-    get token(): Token {
+    public get token(): Token {
         if (!this._token) this._token = new Token();
         return this._token;
     }

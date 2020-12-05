@@ -7,8 +7,8 @@ fs.readFile(f, 'utf8', function (err,data) {
     return console.log(err);
   }
   var result = data.replace(/node: false/g, 'node: {crypto: true, stream: true}');
-  console.log("'stream not found' PATCH");
   fs.writeFile(f, result, 'utf8', function (err) {
     if (err) return console.log(err);
+    else console.log('\x1b[36mCan\'t resolve \'stream\'\x1b[0m', "->", '\x1b[32mPROBLEM FIXED!\x1b[0m');
   });
 });

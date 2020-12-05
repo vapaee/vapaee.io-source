@@ -1,5 +1,5 @@
 /*
- * Public API Surface of @vapaee/scatter2
+ * @vapaee/scatter2 
  */
 
 export * from './lib/scatter2.service';

@@ -4,10 +4,13 @@ import { VpeComponentsService, PriceMap } from './components/vpe-components.serv
 import { CoingeckoService } from './services/coingecko.service';
 import { LocalStringsService, AnalyticsService } from './services/common/common.services';
 import { DropdownService } from './services/dropdown.service';
-import { VapaeeScatter, NetworkMap } from 'projects/vapaee/scatter/src';
 import { HttpClient } from '@angular/common/http';
-import { VapaeeDEX, TokenDEX, Market } from 'projects/vapaee/dex/src';
-import { VapaeeStyle } from 'projects/vapaee/style/src/public_api';
+
+import { VapaeeDEX, TokenDEX, Market } from 'projects/vapaee/dex';
+import { VapaeeStyle } from 'projects/vapaee/style';
+import { VapaeeScatter2 } from 'projects/vapaee/scatter2';
+import { VapaeeREX } from 'projects/vapaee/rex';
+
 
 @Component({
     selector: 'app-root',
@@ -106,6 +109,7 @@ import { VapaeeStyle } from 'projects/vapaee/style/src/public_api';
 })
 export class AppComponent {
     private _opened: boolean = false;
+    public appname:string = "Vapaée-TelosDEX"
  
     private _toggleSidebar() {
       this._opened = !this._opened;
@@ -119,14 +123,15 @@ export class AppComponent {
         public components: VpeComponentsService,
         public coingecko: CoingeckoService,
         public dex: VapaeeDEX,
-        public scatter: VapaeeScatter,
+        public rex: VapaeeREX,
+        public scatter: VapaeeScatter2,
         public local: LocalStringsService,
         public style: VapaeeStyle,
         public dropdown: DropdownService,
         public http: HttpClient,
         public analytics: AnalyticsService
     ) {
-        this.app.init("v3.7.0");
+        this.app.init("v3.7.0", this.appname);
 
         // Check if this is the last version. If not, reload site.
         this.http.get<any>("assets/app.json?_="+Math.random()).toPromise().then((appjson) => {
@@ -172,29 +177,46 @@ export class AppComponent {
             this.components.windowHasResized(d);
         });
         this.onWindowsResize();
-        
-        this.coingecko.onUpdate.subscribe((p:any) => {
-            this.dex.waitTokensLoaded.then(_ => {
-                var prices:PriceMap = {};
-                for (var curreny in p) {
-                    var price = p[curreny];
-                    var token = this.dex.getTokenNow(curreny.toUpperCase());
-                    if (token) {
-                        prices[curreny] = {
-                            price: price,
-                            token: token
-                        }    
-                    }
-                }
-                this.components.setTelosPrices(prices);    
-            });
-        });
+
+        this.addOffChainToken();
+
+        await this.scatter.init("assets/endpoints.json");
+        await this.dex.init(this.appname, {telosbookdex:"vapaeetokens", vapaeetokens:"vapaeetokens"});
+        await this.rex.init();
+     
+    }
+
+    async addOffChainToken() {
+        await this.dex.waitTokensLoaded;
+        console.log("AppComponent.addOffChainToken()");
 
         this.dex.addOffChainToken(new TokenDEX({ symbol: "USD", title: "US Dollar", precision: 4 }));
         this.dex.addOffChainToken(new TokenDEX({ symbol: "EUR", title: "Euro", precision: 4 }));
         this.dex.addOffChainToken(new TokenDEX({ symbol: "BTC", title: "Bitcoin", precision: 8 }));
         this.dex.addOffChainToken(new TokenDEX({ symbol: "EOS", title: "EOS", precision: 4 }));
-        this.dex.addOffChainToken(new TokenDEX({ symbol: "TLOS", title: "Telos", precision: 4 }));
+        this.dex.addOffChainToken(new TokenDEX({ symbol: "TLOS", title: "Telos", precision: 4 }));        
+        
+        
+        this.coingecko.onUpdate.subscribe((p:any) => {
+
+            console.error("AppComponent.addOffChainToken() this.coingecko.onUpdate");
+
+            var prices:PriceMap = {};
+            for (var curreny in p) {
+                var price = p[curreny];
+                var token = this.dex.getTokenNow(curreny.toUpperCase());
+                if (token) {
+                    prices[curreny] = {
+                        price: price,
+                        token: token
+                    }    
+                } else {
+                    console.error("ERROR token not fount ", curreny.toUpperCase())
+                }
+            }
+            this.components.setTelosPrices(prices);
+        });
+        this.coingecko.update();
         
         this.dex.onTokensReady.subscribe((tokens:TokenDEX[]) => {
             var tokenPrices:PriceMap = {}
@@ -210,9 +232,6 @@ export class AppComponent {
             this.components.setTokensPrices(tokenPrices);
         });
 
-        await this.scatter.init("assets/endpoints.json");
-        await this.dex.init("Vapaée - Telos DEX");
-     
     }
 
 

@@ -1,5 +1,5 @@
 /*
- * Public API Surface of feedback
+ * @vapaee/feedback
  */
 
 export * from './lib/feedback.service';

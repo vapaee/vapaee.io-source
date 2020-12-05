@@ -1,9 +1,11 @@
 import { Subject } from 'rxjs';
-import { Feedback } from '@vapaee/feedback';
 import { Asset } from './asset.class';
 import { SmartContract } from './contract.class';
 import { Token } from './token.class';
 import { ScatterUtils } from './utils.class';
+
+// @vapaee libs 
+import { Feedback } from './extern';
 
 export interface EOS {
     contracts: Function;
@@ -243,27 +245,28 @@ export interface EndpointState {
 }
 
 export interface Limit {
-    percent:number;
+    percent?:number;
     max:number;
     used: number;
-    percentStr:string;
+    percentStr?:string;
 }
 
 export interface VapaeeScatterConnexion {
     feed: Feedback;
     onEndpointChange:Subject<EndpointState>;
     onLogggedStateChange:Subject<boolean>;
-    _account: Account;
+    // _account: Account;
     waitReady: Promise<any>;
     waitLogged: Promise<any>;
     waitConnected: Promise<any>;
-    waitEosjs: Promise<any>;
+    waitRPC: Promise<any>;
     // waitEndpoints: Promise<any>; no porque esto es global y lo debe de llevar el service
 
     utils:ScatterUtils;
     account: Account
     def_account: Account
     symbol: string;
+    appname: string;
 
     // print (debug) -------------------------------------
     print: () => void;
@@ -293,16 +296,17 @@ export interface VapaeeScatterConnexion {
     
 
     // AccountData and Balances ---------------------------------
-    calculateTotalBalance: (account:Account) => Asset;
-    calculateTotalStaked: (account:Account) => Asset;
+    calculateTotalBalance: (account:AccountData) => Asset;
+    calculateTotalStaked: (account:AccountData) => Asset;
 
     calculateResourceLimit(limit:Limit): Limit;
 
     queryAccountData: (name:string) => Promise<AccountData>;
     executeTransaction: (contract:string, action:string, data:any) => Promise<any>;
-    getContractWrapper: (account_name:string) => Promise<any>;
+    getContractWrapper: (account_name:string) => Promise<SmartContract>;
     
     // loginTimer;
+    autologin:() => Promise<any>;
     login:() => Promise<any>;
     logout:() => Promise<any>;
 

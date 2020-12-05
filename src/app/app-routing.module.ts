@@ -11,10 +11,12 @@ import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
 import { MarketsPage } from './pages/markets/markets.page';
 import { TokenPage } from './pages/token/token.page';
 import { TokenEditPage } from './pages/tokenedit/tokenedit.page';
+import { ScatterPage } from './pages/scatter/scatter.page';
 
 //*
 const routes: Routes = [
   { path: '',                            data: { state: "root" }, redirectTo: '/exchange/home', pathMatch: 'full' },
+  { path: 'scatter',                 data: { state: "scatter" }, component: ScatterPage }, // ---------------------------  
   { path: 'exchange',                    data: { state: "root" }, component: RootPage,
     children: [
       { path: '',                        data: { state: "root" }, redirectTo: '/exchange/home', pathMatch: 'full' },

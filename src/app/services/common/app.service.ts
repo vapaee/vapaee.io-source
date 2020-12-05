@@ -35,7 +35,8 @@ export class AppService {
     device: Device = {};
     loading: boolean;
     countdown: number;
-    _verison: string;
+    private _verison: string;
+    private _name:string;
 
     constructor(
         private router: Router, 
@@ -64,6 +65,10 @@ export class AppService {
 
     get version() {
         return this._verison;
+    }
+
+    get name() {
+        return this._name;
     }
 
     isOpera:boolean;
@@ -168,8 +173,9 @@ export class AppService {
         return aux;
     }
 
-    init(version:string) {
+    init(version:string, name:string) {
         this._verison = version;
+        this._name = name;
         this.detectBrowser();
         this.dom.appendComponentToBody(LoadingOverall);
         this.triggerOnInit();

@@ -10,93 +10,95 @@ export interface Feed {
     }[]
 }
 
-export interface FeedMap {
-    [key:string]:Feed
+
+export interface Mark {
+    label:string,
+    sec:number,
+    millisec:number
+}
+
+export interface Chrono {
+    start:Date;
+    marks:Mark[]
+}
+
+export interface BooleanMap {
+    [key:string]:boolean
+};
+
+export interface StringMap {
+    [key:string]:string
+};
+
+export interface ChronoMap {
+    [key:string]:Chrono
 };
 
 export class Feedback {
-    public keys: string[];
-    private scopes: FeedMap;
+    public loadings:BooleanMap;
+    public errors:StringMap;
+    public chrono:ChronoMap;
 
-    constructor() {
-        this.keys = []
-        this.scopes = {};
-    }
-
-    static create(keys:string[] = []) {
-        let feed = new Feedback();
-        feed.keys = keys;
-        return feed;
-    }
-
-    private updateScopes() {
-        for (let i in this.keys) {
-            this.scopes[this.keys[i]] = this.scopes[this.keys[i]] || {}
-        }
-    }
-
-    private addKey(key:string) {
-        this.keys.push(key);
-        this.updateScopes();
-    }
+    constructor() {}
 
     startChrono(key:string) {
-        if (this.scopes[key]) {
-            this.scopes[key].start = new Date();
-            this.scopes[key].marks = [];
-        } else {
-            this.addKey(key);
-            this.startChrono(key);
-        }
+        this.chrono = this.chrono || {};
+        this.chrono[key] = {
+            start: new Date(), marks:[]
+        };
     }
 
     setMarck(key:string, label:string) {
-        if (this.scopes[key]) {
+        this.chrono = this.chrono || {};
+        if (this.chrono[key]) {
             let elapsedTime:Date = new Date();
-            let millisec = elapsedTime.getTime() - this.scopes[key].start.getTime();
+            let millisec = elapsedTime.getTime() - this.chrono[key].start.getTime();
             let sec = millisec / 1000;
-            this.scopes[key].marks.push({ label, sec, millisec });
+            this.chrono[key].marks.push({ label, sec, millisec });
         } else {
-            console.error("ERROR: key not present", key, this.scopes);
+            console.error("ERROR: key not present", key, this.chrono);
         }        
     }
 
     printChrono(key:string, lastMark:boolean = true) {
-        if (this.scopes[key]) {
+        this.chrono = this.chrono || {};
+        if (this.chrono[key]) {
             console.log("Chronometer marks for ", key);
             this.setMarck(key, "total");
-            for (let i in this.scopes[key].marks) {
-                console.log("- ",this.scopes[key].marks[i]);
+            for (let i in this.chrono[key].marks) {
+                console.log("- ",this.chrono[key].marks[i]);
             }
         } else {
-            console.error("ERROR: key not present", key, this.scopes);
+            console.error("ERROR: key not present", key, this.chrono);
         }        
     }
 
     setLoading(key:string, value:boolean = true) {
-        if (this.scopes[key]) {
-            this.scopes[key].loading = value;
+        this.loadings = this.loadings || {};
+        if (value) {
+            this.loadings[key] = value;
         } else {
-            this.addKey(key);
-            this.setLoading(key, value);
-        }
+            /*
+            this.loadings[key] = false;
+            /*/
+            delete this.loadings[key];
+            //*/
+        }        
     }
 
-    loading(key:string) {
-        if (this.scopes[key]) {
-            return this.scopes[key].loading;
-        }
-        return false;
+    loading(key: string) {
+        if (!this.loadings) return false;
+        return !!this.loadings[key];
+    }
+
+    error(key: string) {
+        if (!this.errors) return null;
+        return this.errors[key];
     }
 
     setError(key:string, err: string = "") {
-        if (this.scopes[key]) {
-            this.scopes[key].msg = err;
-            this.scopes[key].msgtype = "error";
-        } else {
-            this.addKey(key);
-            this.setError(key, err);
-        }
+        this.errors = this.errors || {};
+        this.errors[key] = err;
     }
 
     clearError(key:string) {
@@ -104,41 +106,7 @@ export class Feedback {
     }
 
     clearErrors() {
-        for (let key in this.scopes) {
-            if (this.scopes[key].msgtype == "error") {
-                this.clearError(key);
-            }
-        }
+        this.errors = {};
     }
-
-    error(key:string) {
-        if (this.scopes[key]) {
-            return this.scopes[key].msg;
-        }
-        return "";
-    }
-
-    setMessage(key:string, msg: string, msgtype: string) {
-        if (this.scopes[key]) {
-            this.scopes[key].msg = msg;
-            this.scopes[key].msgtype = msgtype;
-        } else {
-            this.addKey(key);
-            this.setMessage(key, msg, msgtype);
-        }
-    }    
-
-    message(key:string) {
-        return this.error(key);
-    }
-
-    msgType(key:string) {
-        if (this.scopes[key]) {
-            return this.scopes[key].msgtype;
-        } else {
-            // console.error("ERROR", key, [this.scopes]);
-        }
-        return "";
-    }
-
+    
 }

@@ -1,32 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Feedback } from '../feedback/feedback.service';
-import { ScatterUtils } from './utils.class';
-import { Asset } from './asset.class';
-import { HttpClient } from '@angular/common/http';
+// import { EosioTokenMathService } from './eosio.token-math.service';
 
-import { Token } from './token.class';
 
 // scatter libraries
-//*/
+/*/
 // eosjs2
 import ScatterJS from '@scatterjs/core';
 import ScatterEOS from '@scatterjs/eosjs2';
+import ScatterLynx from '@scatterjs/lynx';
 import {JsonRpc, Api} from 'eosjs';
-import { SmartContract } from './contract.class';
-// import ScatterLynx from '@scatterjs/lynx';
-
 /*/
 import ScatterJS from 'scatterjs-core';
-// import ScatterEOS from 'scatterjs-plugin-eosjs'
-// import Eos from 'eosjs';
-class ScatterEOS {}
-class Eos {}
+import ScatterEOS from 'scatterjs-plugin-eosjs'
+import Eos from 'eosjs';
 import { Asset } from './asset.class';
 import { SmartContract } from './contract.class';
 import { ScatterUtils } from './utils.class';
+import { Token } from './token.class';
+import { resolve, reject } from 'q';
 import { HttpClient } from '@angular/common/http';
-
+import { Feedback } from 'projects/vapaee/feedback';
 //*/
 
 // declare let ScatterJS:any;
@@ -58,7 +52,7 @@ export interface RPC {
     history_get_controlled_accounts: Function;    
 }
 
-//*
+/*
 // eosjs2
 export interface EOS {
     contracts: Function;
@@ -346,7 +340,7 @@ export interface EndpointState {
 @Injectable({
     providedIn: "root"
 })
-export class VapaeeScatter____OLD {
+export class VapaeeScatter {
     
     private scatterutils = new ScatterUtils();
     public error: string;
@@ -640,7 +634,7 @@ export class VapaeeScatter____OLD {
     // Scatter initialization and AppConnection -----------------
     initScatter() {
         console.log("ScatterService.initScatter()");
-        //*/
+        /*/
         // eosjs2
         this.error = "";
         if ((<any>window).ScatterJS) {
@@ -661,12 +655,6 @@ export class VapaeeScatter____OLD {
         const network = ScatterJS.Network.fromJson(this.network.eosconf);
         this.rpc = new JsonRpc(network.fullhost());
         this.eos = this.lib.eos(network, Api, {rpc:this.rpc});
-
-        for (let name in this.eos) {
-            console.log("this.eos."+name, typeof this.eos[name]);
-        }
-        
-
 
         this.setEosjs("eosjs");
         /*/
@@ -723,36 +711,40 @@ export class VapaeeScatter____OLD {
             if (this._connected) return; // <---- avoids a loop
             this.waitEosjs.then(() => {
                 console.log("ScatterService.waitEosjs() eos OK");
-                this.lib.connect(this.appTitle, connectionOptions).then(connected => {
-                    // si está logueado this.lib.identity se carga sólo y ya está disponible
-                    console.log("ScatterService.lib.connect()", connected);
-                    this._connected = connected;
-                    if(!connected) {
-                        this.feed.setError("connect", "ERROR: can not connect to Scatter. Is it up and running?");
-                        console.error(this.feed.error("connect"));
-                        reject(this.feed.error("connect"));
+                setTimeout(() => {
+                    this.lib.connect(this.appTitle, connectionOptions).then(connected => {
+                        // si está logueado this.lib.identity se carga sólo y ya está disponible
+                        console.log("ScatterService.lib.connect()", connected);
+                        this._connected = connected;
+                        if(!connected) {
+                            this.feed.setError("connect", "ERROR: can not connect to Scatter. Is it up and running?");
+                            console.error(this.feed.error("connect"));
+                            reject(this.feed.error("connect"));
+                            this.feed.setLoading("connect", false);
+                            this.retryConnectingApp();
+                            return false;
+                        }
+                        // Get a proxy reference to eosjs which you can use to sign transactions with a user's Scatter.
+                        console.log("ScatterService.setConnected()");
+                        this.setConnected("connected");
                         this.feed.setLoading("connect", false);
-                        this.retryConnectingApp();
-                        return false;
-                    }
-                    // Get a proxy reference to eosjs which you can use to sign transactions with a user's Scatter.
-                    console.log("ScatterService.setConnected()");
-                    this.setConnected("connected");
-                    this.feed.setLoading("connect", false);
-                    if (this.logged) {
-                        this.login().then(() => {
+                        if (this.logged) {
+                            setTimeout(() => {
+                                this.login().then(() => {
+                                    console.log("ScatterService.setReady()");
+                                    this.setReady("ready");
+                                }).catch(reject);
+                            }, 600);
+                        } else {
                             console.log("ScatterService.setReady()");
                             this.setReady("ready");
-                        }).catch(reject);
-                    } else {
-                        console.log("ScatterService.setReady()");
-                        this.setReady("ready");
-                    }
-                }).catch(e => {
-                    console.error(e);
-                    this.feed.setLoading("connect", false);
-                    throw e;
-                });    
+                        }
+                    }).catch(e => {
+                        console.error(e);
+                        this.feed.setLoading("connect", false);
+                        throw e;
+                    });
+                }, 2500);
             });    
         });
         return promise;
@@ -808,7 +800,7 @@ export class VapaeeScatter____OLD {
             this.waitEosjs.then(() => {
                 // console.log("PASO 2 (eosjs) ------");
                 
-                //*
+                /*
                 // eosjs2
                 this.rpc.get_account(name).
                 /*/
@@ -903,7 +895,7 @@ export class VapaeeScatter____OLD {
         return promise;
     }
 
-    //*
+    /*
     // eosjs2
     async executeTransaction(contract:string, action:string, data:any) {
         return new Promise((resolve, reject) => {
@@ -942,7 +934,7 @@ export class VapaeeScatter____OLD {
             });   
         }); 
     }
-    //*/
+    */
 
 
     /*
@@ -976,19 +968,7 @@ export class VapaeeScatter____OLD {
             this.login().then((a) => {
                 console.log("this.login().then((a) => { -->", a );
                 this.waitReady.then(() => {
-                    //*/
-                    // eosjs2
-                    this.eos.getContract(account_name).then(contract => {
-                        console.log(`-- contract ${account_name} --`);
-                        for (let i in contract) {
-                            if(typeof contract[i] == "function") console.log("contract."+i+"()", [contract[i]]);
-                        }
-                        resolve(contract);
-                    }).catch(error => {
-                        console.error(error);
-                    });
-                    /*/
-                    // eosjs
+                    
                     this.eos.contract(account_name).then(contract => {
                         console.log(`-- contract ${account_name} --`);
                         for (let i in contract) {
@@ -998,7 +978,6 @@ export class VapaeeScatter____OLD {
                     }).catch(error => {
                         console.error(error);
                     });
-                    //*/
                     
                 });
             }).catch((error) => {
@@ -1113,8 +1092,7 @@ export class VapaeeScatter____OLD {
         console.assert(!!limit, "ERROR: limit is null");
         console.assert(!!ktype, "ERROR: ktype is null");
         console.assert(!!ipos, "ERROR: ipos is null");        
-        //*
-        // eosjs2
+        /*
         // console.log("ScatterService.getTableRows()");
         // https://github.com/EOSIO/eosjs-api/blob/master/docs/api.md#eos.getTableRows
         return new Promise<any>((resolve, reject) => {
@@ -1145,7 +1123,6 @@ export class VapaeeScatter____OLD {
             });   
         });
         /*/
-        // eosjs
         // console.log("ScatterService.getTableRows()");
         // https://github.com/EOSIO/eosjs-api/blob/master/docs/api.md#eos.getTableRows
         return new Promise<any>((resolve, reject) => {

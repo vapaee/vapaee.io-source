@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { SimplePriceMap } from '../components/vpe-components.service';
 
 
-
 @Injectable()
 export class CoingeckoService {
 
@@ -31,15 +30,18 @@ export class CoingeckoService {
         setInterval(_ => this.update(), 60 * 1000);
     }
 
-    async update() {
-        var api_endpoint = "https://api.coingecko.com/api/v3";
-        var action = "/simple/price?ids=telos&vs_currencies=";
-        var url = api_endpoint + action + this.currency_list.join(",");
-        this.http.get<{telos:SimplePriceMap}>(url).toPromise().then(result => {
-            this.prices = result.telos;
-            this.prices.tlos = 1;
-            this.onUpdate.next(this.prices);
-        });
+    async update(): Promise<SimplePriceMap> {
+        return new Promise<SimplePriceMap>((resolve, reject) => {
+            var api_endpoint = "https://api.coingecko.com/api/v3";
+            var action = "/simple/price?ids=telos&vs_currencies=";
+            var url = api_endpoint + action + this.currency_list.join(",");
+            this.http.get<{telos:SimplePriceMap}>(url).toPromise().then(result => {
+                this.prices = result.telos;
+                this.prices.tlos = 1;
+                this.onUpdate.next(this.prices);
+                resolve(this.prices);
+            });
+        })        
     }
 
 }

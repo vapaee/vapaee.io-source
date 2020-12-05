@@ -18,10 +18,6 @@ import { LoadingOverall } from './services/common/app.service';
 import { CoingeckoService } from './services/coingecko.service';
 import { DropdownService } from './services/dropdown.service';
 
-import { VapaeeComponentsModule } from './components/vpe-components.module';
-import { VapaeeRexModule } from 'projects/vapaee/rex/src/public_api';
-
-
 import { WPPage } from './pages/wp/wp.page';
 import { RootPage } from './pages/root/root.page';
 import { HomePage } from './pages/home/home.page';
@@ -38,9 +34,12 @@ import { TimezoneService } from './services/timezone.service';
 import { TokenEditPage } from './pages/tokenedit/tokenedit.page';
 import { FormsModule } from '@angular/forms';
 import { DirectivesModule } from './directives/directives.module';
-import { VapaeeScatterModule } from 'projects/vapaee/scatter/src';
-import { VapaeeDexModule } from 'projects/vapaee/dex/src';
-
+// @vapaee libs---------
+import { VapaeeScatter2Module } from 'projects/vapaee/scatter2';
+import { VapaeeDexModule } from 'projects/vapaee/dex';
+import { VapaeeRexModule } from 'projects/vapaee/rex';
+import { VapaeeComponentsModule } from './components/vpe-components.module';
+import { ScatterPage } from './pages/scatter/scatter.page';
 
 
 
@@ -60,6 +59,7 @@ import { VapaeeDexModule } from 'projects/vapaee/dex/src';
         AccountPage,
         NotFoundPage,
         ComingSoonPage,
+        ScatterPage,
         AppComponent,
         LoadingOverall
     ],
@@ -74,7 +74,7 @@ import { VapaeeDexModule } from 'projects/vapaee/dex/src';
         HttpClientJsonpModule,
         CommonServicesModule,
         VapaeeComponentsModule,
-        VapaeeScatterModule,
+        VapaeeScatter2Module,
         VapaeeDexModule,
         VapaeeRexModule,
         ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),

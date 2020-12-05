@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Asset, SmartContract, VapaeeScatter2, VapaeeScatterConnexion } from '@vapaee/scatter2';
-import { Feedback } from '@vapaee/feedback';
+import { Asset, SmartContract, VapaeeScatter2, VapaeeScatterConnexion } from './extern';
+import { Feedback } from './extern';
 
 
 export interface REXdata {
@@ -57,6 +57,11 @@ export class VapaeeREX {
     public deposits: {[account:string]:REXdeposits};
 
     connexion:VapaeeScatterConnexion;
+
+    private setInit: Function;
+    public waitInit: Promise<any> = new Promise((resolve) => {
+        this.setInit = resolve;
+    });
     
     constructor(
         private scatter: VapaeeScatter2
@@ -110,11 +115,21 @@ export class VapaeeREX {
     }
 
     async init() {
+        console.log("--- VapaeeREX.init() ---");
+        this.subscribeToEvents();
         this.contract = await this.scatter.getContractWrapper(this.contract_name);
         this.connexion = await this.scatter.getConnexion(null);
+        this.setInit();
+    }
+
+    async subscribeToEvents() {
+        let style = 'background: #6f4de4; color: #FFF';
+        this.waitInit.then(_ => console.log('%cVapaeeREX.waitInit', style));
     }
 
     async updatePoolState() {
+        console.log("VapaeeREX.updatePoolState()");
+        await this.waitInit;
         this.feed.setLoading("REXpool", true);
         var result = await this.contract.getTable("rexpool");
         console.log("VapaeeREX.updatePoolState() rexpool:", result);
@@ -131,6 +146,8 @@ export class VapaeeREX {
     }
 
     async queryAccountREXBalance(account: string) {
+        console.log("VapaeeREX.queryAccountREXBalance()", account);
+        await this.waitInit;
         this.feed.setLoading("REXbalance", true);
         var encodedName = this.connexion.utils.encodeName(account);
 
@@ -171,6 +188,8 @@ export class VapaeeREX {
 
 
     async queryAccountREXDeposits(account: string) {
+        console.log("VapaeeREX.queryAccountREXDeposits()", account);
+        await this.waitInit;
         this.feed.setLoading("REXDeposits", true);
         var encodedName = this.connexion.utils.encodeName(account);
 
@@ -206,6 +225,7 @@ export class VapaeeREX {
 
     async getAccountREXData(account: string) {
         console.log("VapaeeREX.getAccountREXData()", account);
+        await this.waitInit;
         this.feed.setLoading("REXData", false);
         delete this.balances[account];
         delete this.deposits[account];

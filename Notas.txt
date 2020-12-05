@@ -17,13 +17,33 @@ This is the list of token losses. The only one the I don't have enough (by far) 
 
 In total will be arround 12K TLOS total losses. I will cover that and publish about it when it's done.
 
-
-
 ixirizceiakj
 yzppz2xkok1l
 
 Icons:
 https://iconmonstr.com/
+
+
+
+----- TODO ------
+- verificar que se esté apuntando a producción
+- que levante bien el nuevo scatter2
+- correr la app
+- anotar todos los lugares donde está NOT IMPLEMENTED
+- copiar la implementación vieja a la nueva lib
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

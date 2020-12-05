@@ -5,9 +5,9 @@ import { Subscriber } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { VpeComponentsService } from 'src/app/components/vpe-components.service';
 import { VpePanelWalletComponent } from 'src/app/components/vpe-panel-wallet/vpe-panel-wallet.component';
-import { VapaeeDEX, AssetDEX, UserOrdersMap, DEXdata } from 'projects/vapaee/dex/src';
-import { VapaeeREX, REXdata } from 'projects/vapaee/rex/src/public_api';
-import { Account } from 'projects/vapaee/scatter/src';
+import { VapaeeDEX, AssetDEX, UserOrdersMap, DEXdata } from 'projects/vapaee/dex';
+import { VapaeeREX, REXdata } from 'projects/vapaee/rex';
+import { Account } from 'projects/vapaee/scatter2';
 
 @Component({
     selector: 'account-page',
@@ -81,8 +81,10 @@ export class AccountPage implements OnInit, OnDestroy, AfterViewInit {
             if (!name) {
                 name = "guest";
             } else {
+                console.log("AccountPage.ngOnInit() -> this.dex.resetCurrentAccount('"+name+"');");
                 this.dex.resetCurrentAccount(name);
             };
+            console.log("AccountPage.ngOnInit() -> this.onDexCurrentAccountChange('"+name+"');");
             this.onDexCurrentAccountChange(name);
         }, 0);
     }

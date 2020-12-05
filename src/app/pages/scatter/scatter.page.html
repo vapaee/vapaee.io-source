@@ -1,0 +1,161 @@
+<div class="container">
+    <h1>Scatter Page</h1>
+
+    <div class="card margin-top padding">
+        <div>
+            <div>
+
+                <div>
+                    <button class="btn btn-sm btn-secondary" (click)="debug()">
+                        Debug
+                    </button>         
+                </div>
+        
+                <hr>
+        
+                <div>
+                    <button class="btn btn-sm btn-secondary" *ngIf="!scatter.connexion.telos?.logged" (click)="tryToConnect('telos')">
+                        Connect to Telos
+                    </button>
+                    <div *ngIf="scatter.connexion.telos?.logged">
+                        <span (click)="disconnectFrom('telos')" mat-elevation-z2>
+                            Connected to Telos as {{scatter.connexion.telos.account.name}}
+                        </span>
+                        
+                        <button class="btn btn-sm btn-danger" (click)="scatter.connexion.telos.logout()">
+                            logout
+                        </button>
+                        
+                        <button class="btn btn-sm btn-warning" (click)="scatter.connexion.telos.print()">
+                            print
+                        </button>
+        
+                        <button class="btn btn-sm btn-success" (click)="aux_transaction('telos')">
+                            transaction
+                        </button>
+                    </div>
+                    
+                </div>
+        
+                <hr>
+        
+                <div>
+                    <button class="btn btn-sm btn-secondary" *ngIf="!scatter.connexion.eos?.logged" (click)="tryToConnect('eos')">
+                        Connect to EOS
+                    </button>
+                    <div *ngIf="scatter.connexion.eos?.logged">
+                        <span (click)="disconnectFrom('eos')" mat-elevation-z2>
+                            Connected to EOS as {{scatter.connexion.eos.account.name}}
+                        </span>
+        
+                        <button class="btn btn-sm btn-danger" (click)="scatter.connexion.eos.logout()">
+                            logout
+                        </button>
+        
+                        <button class="btn btn-sm btn-warning" (click)="scatter.connexion.eos.print()">
+                            print
+                        </button>
+        
+                        <button class="btn btn-sm btn-success" (click)="aux_transaction('eos')">
+                            transaction
+                        </button>
+        
+                    </div>
+                </div>
+        
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card margin-top padding">
+
+        <div class="d-inline-block">
+            <div class="row" *ngIf="scatter.feed.loadings?.endpoints">
+                <div class="col-sm text-nowrap">
+                    <span class="ion-margin-left">Scatter Endponits </span>
+                </div>
+                <div class="col-sm">
+                    <span class="spinner-border spinner-border-sm"></span>
+                </div>
+            </div>
+            <div class="row" *ngIf="scatter.feed.loadings?.connexion">
+                <div class="col-sm text-nowrap">
+                    <span class="ion-margin-left">Scatter Connecting </span>
+                </div>
+                <div class="col-sm">
+                    <span class="spinner-border spinner-border-sm"></span>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="scatter.connexion.telos?.feed.loadings?.transaction">
+                <div class="col-sm text-nowrap">
+                    <span class="ion-margin-left">Telos Transaction </span>
+                </div>
+                <div class="col-sm">
+                    <span class="spinner-border spinner-border-sm"></span>
+                </div>
+            </div>
+            <div class="row" *ngIf="scatter.connexion.telos?.feed.loadings?.login">
+                <div class="col-sm text-nowrap">
+                    <span class="ion-margin-left">Telos Login </span>
+                </div>
+                <div class="col-sm">
+                    <span class="spinner-border spinner-border-sm"></span>
+                </div>
+            </div>
+            <div class="row" *ngIf="scatter.connexion.telos?.feed.loadings?.connecting">
+                <div class="col-sm text-nowrap">
+                    <span class="ion-margin-left">Telos Connecting </span>
+                </div>
+                <div class="col-sm">
+                    <span class="spinner-border spinner-border-sm"></span>
+                </div>
+            </div>
+            
+            <div class="row" *ngIf="scatter.connexion.eos?.feed.loadings?.transaction">
+                <div class="col-sm text-nowrap">
+                    <span class="ion-margin-left">EOS Transaction </span>
+                </div>
+                <div class="col-sm">
+                    <span class="spinner-border spinner-border-sm"></span>
+                </div>
+            </div>
+            <div class="row" *ngIf="scatter.connexion.eos?.feed.loadings?.login">
+                <div class="col-sm text-nowrap">
+                    <span class="ion-margin-left">EOS Login </span>
+                </div>
+                <div class="col-sm">
+                    <span class="spinner-border spinner-border-sm"></span>
+                </div>
+            </div>
+            <div class="row" *ngIf="scatter.connexion.eos?.feed.loadings?.connecting">
+                <div class="col-sm text-nowrap">
+                    <span class="ion-margin-left">EOS Connecting </span>
+                </div>
+                <div class="col-sm">
+                    <span class="spinner-border spinner-border-sm"></span>
+                </div>
+            </div>            
+        </div>
+
+    </div>
+
+    <div class="card margin-top padding">
+        <div>Loading flags</div>
+        <div >Scatter feed</div>
+        <div>
+            <pre>{{scatter.feed|json}}</pre>
+        </div>
+        <div *ngIf="scatter.connexion.telos">Telos feed</div>
+        <div *ngIf="scatter.connexion.telos">
+            <pre>{{scatter.connexion.telos.feed|json}}</pre>
+        </div>
+        <div *ngIf="scatter.connexion.eos">EOS feed</div>
+        <div *ngIf="scatter.connexion.eos">
+            <pre>{{scatter.connexion.eos.feed|json}}</pre>
+        </div>
+    </div>
+    
+    
+</div>

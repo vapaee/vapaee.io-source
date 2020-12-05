@@ -13,15 +13,15 @@
 
                         <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}">
                             <span class="btn btn-sm btn-primary" (click)="dex.login()">
-                                <span class="spinner-border spinner-border-xs" [hidden]="!dex.feed.loading('log-state') && !scatter.feed.loading('connect')"></span>
-                                {{local.string.retry | titlecase}}
+                                <span class="spinner-border spinner-border-xs" [hidden]="hide_login_spinner"></span>
+                                {{local.string.retry | titlecase}} 
                             </span><br>
                             <span class="text-sm">{{local.string.noWallet}} </span>
                         </div>
 
                         <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}">
                             <span class="btn btn-sm btn-primary" (click)="dex.login()">
-                                <span class="spinner-border spinner-border-xs" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
+                                <span class="spinner-border spinner-border-xs" [hidden]="hide_login_spinner"></span>
                                 {{local.string.login | titlecase}}
                             </span><br>
                             <span class="text-sm">{{local.string.NotLogged}} </span>
@@ -31,7 +31,7 @@
                     <div class="pull-right" style="margin-top: 8px;">
                         <span [ngClass]="{'d-none':!dex.logged}">
                             <span class="btn btn-xs btn-primary margin-left" (click)="dex.logout()">
-                                <span class="spinner-border spinner-border-xs" [hidden]="!dex.feed.loading('logout') && !dex.feed.loading('log-state')"></span> 
+                                <span class="spinner-border spinner-border-xs" [hidden]="hide_login_spinner"></span> 
                                 <span> {{local.string.logout}} </span>
                             </span>
                         </span>
@@ -64,7 +64,7 @@
                         <hr class="line" />
                         <span class="text-md">{{local.string.noWallet}} </span>
                         <span class="btn btn-xs btn-primary" (click)="dex.login()">
-                            <span class="spinner-border spinner-border-xs" [hidden]="!dex.feed.loading('log-state') && !scatter.feed.loading('connect')"></span>
+                            <span class="spinner-border spinner-border-xs" [hidden]="hide_login_spinner"></span>
                             {{local.string.retry | titlecase}}
                         </span>
                     </div>
@@ -72,7 +72,7 @@
                         <hr class="line" />
                         <span class="text-md">{{local.string.NotLogged}} </span>
                         <span class="btn btn-xs btn-primary" (click)="dex.login()">
-                            <span class="spinner-border spinner-border-xs" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
+                            <span class="spinner-border spinner-border-xs" [hidden]="hide_login_spinner"></span>
                             {{local.string.LoginWScOrSq}}
                         </span>
                     </div>
@@ -82,7 +82,12 @@
     
     
     
-    
+        <!--
+        <div class="card-header vpe-background-card-header margin-top">
+            <pre class="text-left">{{scatter.feed.loadings|json}}</pre>
+            <pre class="text-left">{{dex.feed.loadings|json}}</pre>
+        </div>
+        -->
 
 
         <!-- wide -->
@@ -91,12 +96,24 @@
                 <div class="col-sm-auto col-padding-right">
                     <vpe-identicon [value]="current.name"></vpe-identicon>
                 </div>
+
                 <div class="col col-padding-left">
+                    <!-- No Wallet detected -->
+                    <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}" [hidden]="total_balance">
+                        <div class="pull-right text-center">
+                            <span class="btn btn-sm btn-primary" (click)="dex.login()">
+                                <span class="spinner-border spinner-border-sm" [hidden]="hide_login_spinner"></span>
+                                {{local.string.retry | titlecase}}
+                            </span><br>
+                            <span>{{local.string.noWallet}}</span>
+                        </div>
+                    </div>
+
                     <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}">
                         <div class="pull-right text-center" [hidden]="!total_balance">
                             <span class="btn btn-sm btn-primary" (click)="dex.login()">
-                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('log-state')"></span>
-                                {{local.string.retry | titlecase}}
+                                <span class="spinner-border spinner-border-sm" [hidden]="hide_login_spinner"></span>
+                                {{local.string.retry | titlecase}} 1
                             </span><br>
                             <span>{{local.string.noWallet}}</span>
                             <br>
@@ -108,7 +125,7 @@
                     <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}">
                         <div class="pull-right text-right"  [hidden]="!total_balance">
                             <span class="btn btn-sm btn-success" (click)="dex.login()">
-                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
+                                <span class="spinner-border spinner-border-sm" [hidden]="hide_login_spinner"></span>
                                 {{local.string.LoginWScOrSq}}
                             </span>
                             <br>
@@ -122,28 +139,17 @@
                         {{current.name}}
                         <span [ngClass]="{'d-none':!dex.logged}">
                             <span class="btn btn-sm btn-primary margin-left" (click)="dex.logout()">
-                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('logout') && !dex.feed.loading('log-state')"></span> 
+                                <span class="spinner-border spinner-border-sm" [hidden]="hide_login_spinner"></span> 
                                 <span> {{local.string.logout}} </span>
                             </span>
                         </span>
-                    </div>
-
-                    <!-- No Wallet detected -->
-                    <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}" [hidden]="total_balance">
-                        <div class="pull-right text-center">
-                            <span class="btn btn-sm btn-primary" (click)="dex.login()">
-                                <span class="spinner-border spinner-border-sm" [hidden]="!scatter.feed.loading('connect')"></span>
-                                {{local.string.retry | titlecase}}
-                            </span>
-                        </div>
-                        <span>{{local.string.noWallet}}</span>
                     </div>
 
                     <!-- Wallet detected but not logged -->
                     <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}" [hidden]="total_balance">
                         <div class="pull-right text-center">
                             <span class="btn btn-sm btn-primary" (click)="dex.login()">
-                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
+                                <span class="spinner-border spinner-border-sm" [hidden]="hide_login_spinner"></span>
                                 {{local.string.LoginWScOrSq}}
                             </span>
                         </div>

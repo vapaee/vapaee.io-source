@@ -5,10 +5,10 @@ import { VpeComponentsService } from 'src/app/components/vpe-components.service'
 
 import { DropdownService } from 'src/app/services/dropdown.service';
 import { TimezoneService } from 'src/app/services/timezone.service';
-import { VapaeeREX } from 'projects/vapaee/rex/src/public_api';
-import { VapaeeScatter } from 'projects/vapaee/scatter/src';
-import { VapaeeDEX } from 'projects/vapaee/dex/src';
-import { VapaeeStyle } from 'projects/vapaee/style/src/public_api';
+import { VapaeeREX } from 'projects/vapaee/rex';
+import { VapaeeScatter2 } from 'projects/vapaee/scatter2';
+import { VapaeeDEX } from 'projects/vapaee/dex';
+import { VapaeeStyle } from 'projects/vapaee/style';
 
 declare var $:any;
 
@@ -23,7 +23,7 @@ export class RootPage implements OnInit {
         public app: AppService,
         public local: LocalStringsService,
         public elRef: ElementRef,
-        public scatter: VapaeeScatter,
+        public scatter: VapaeeScatter2,
         public dex: VapaeeDEX,
         public rex: VapaeeREX,
         public style: VapaeeStyle,

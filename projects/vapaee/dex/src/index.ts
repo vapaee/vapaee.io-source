@@ -1,3 +1,7 @@
+/*
+ * @vapaee/dex
+ */
+
 export * from './lib/dex.service';
 export * from './lib/dex.module';
 export * from './lib/types-dex';

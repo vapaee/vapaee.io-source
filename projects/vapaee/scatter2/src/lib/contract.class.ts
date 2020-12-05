@@ -1,5 +1,4 @@
 import { EOSNetworkConnexion } from './eos-connexion.class';
-import { VapaeeScatter2 } from "./scatter2.service";
 import { TableParams, TableResult, Action, Transaction } from './types-scatter2';
 
 // ------------------
@@ -58,7 +57,7 @@ export class SmartContract {
     
 
     getTable(table:string, params:TableParams = {}): Promise<TableResult> {
-        console.error("SmartContract.getTable() NOT IMPLEMENTED" );
+        console.log("SmartContract.getTable('"+table+"')" );
         // borro los campos que puedan estar en undefined
         for (let i in params) {
             if (typeof params[i] == "undefined") {
@@ -66,63 +65,60 @@ export class SmartContract {
             }
         }
 
-        //*/
+    
 
-        return this.connexion.waitEosjs.then(async _ => {
+        var _p = Object.assign({
+            contract: this.contract, 
+            scope: this.contract,
+            table: table, 
+            table_key: "0", 
+            lower_bound: "0", 
+            upper_bound: "-1", 
+            limit: 25, 
+            key_type: "i64", 
+            index_position: "1"
+        }, params);
 
-            var _p = Object.assign({
-                contract: this.contract, 
-                scope: this.contract,
-                table: table, 
-                table_key: "0", 
-                lower_bound: "0", 
-                upper_bound: "-1", 
-                limit: 25, 
-                key_type: "i64", 
-                index_position: "1"
-            }, params);
+        return this.connexion.getTableRows(
+            _p.contract,
+            _p.scope,
+            _p.table,
+            _p.table_key,
+            _p.lower_bound,
+            _p.upper_bound,
+            _p.limit,
+            _p.key_type,
+            _p.index_position
+        );
 
-            return this.connexion.getTableRows(
-                _p.contract,
-                _p.scope,
-                _p.table,
-                _p.table_key,
-                _p.lower_bound,
-                _p.upper_bound,
-                _p.limit,
-                _p.key_type,
-                _p.index_position
-            );
-
-        });
-        /*/
-        return null;
-        //*/
+    
 
     }
     
-    getTableAll(table:string, params:TableParams = {}): Promise<TableResult> {
+    async getTableAll(table:string, params:TableParams = {}): Promise<TableResult> {
+        console.log("SmartContract.getTableAll('"+table+"')" );
         let rows = [];
         params.limit = params.limit || 200;
         let result:TableResult = { more:true, rows: [] };
-
-        // return this.scatter.waitEosjs.then(async _ => {
-        //     while(result.more) {
-        //         if (result.rows.length > 0) {
-        //             let symbol = result.rows[result.rows.length-1].symbol;
-        //             params.lower_bound = symbol;
-        //             rows.splice(rows.length-1, 1);
-        //         }
-        //         result = await this.getTable(table, params);
-        //         rows = rows.concat(result.rows);
-        //     }
-    // 
-        //     return {
-        //         more: false,
-        //         rows: rows
-        //     };    
-        // }); 
-        return null;       
+        
+        return this.connexion.waitRPC.then(async _ => {
+            
+            while(result.more) {
+                if (result.rows.length > 0) {
+                    let symbol = result.rows[result.rows.length-1].symbol;
+                    params.lower_bound = symbol;
+                    rows.splice(rows.length-1, 1);
+                }
+                result = await this.getTable(table, params);
+                rows = rows.concat(result.rows);
+            }
+        
+            return {
+                more: false,
+                rows: rows
+            };    
+        }); 
+        // return null;       
     }
     
 }
