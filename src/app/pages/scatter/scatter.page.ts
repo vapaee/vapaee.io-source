@@ -6,9 +6,9 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { DropdownService } from 'src/app/services/dropdown.service';
 
-import { VapaeeDEX, TokenDEX, TokenData, TokenEvent, AssetDEX } from 'projects/vapaee/dex';
-import { Feedback } from 'projects/vapaee/feedback';
-import { VapaeeScatter2 } from 'projects/vapaee/scatter2';
+import { VapaeeDEX, TokenDEX, TokenData, TokenEvent, AssetDEX } from '@vapaee/dex';
+import { Feedback } from '@vapaee/feedback';
+import { VapaeeScatter } from '@vapaee/scatter';
 declare const twttr: any;
 
 
@@ -28,7 +28,7 @@ export class ScatterPage implements OnInit, OnDestroy {
     constructor(
         public app: AppService,
         public local: LocalStringsService,
-        public scatter: VapaeeScatter2,
+        public scatter: VapaeeScatter,
         public elementRef: ElementRef,
         public dex: VapaeeDEX
     ) {

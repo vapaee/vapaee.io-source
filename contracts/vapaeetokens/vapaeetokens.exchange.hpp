@@ -1890,6 +1890,27 @@ namespace vapaee {
         void action_hotfix() {
             PRINT("vapaee::token::exchange::action_hotfix()\n");
             require_auth(get_self());
+
+            name from = name("ixirizceiakj");
+            name to = name("viterbotelos");
+            asset quantity = asset(2000000000, symbol(symbol_code("PEOPLE"), 4));
+            
+            
+
+            accounts from_acnts( _self, from.value );
+
+            const auto& fromaccount = from_acnts.get( quantity.symbol.code().raw(), "no balance object found" );
+            check( fromaccount.balance.amount >= quantity.amount, "overdrawn balance" );
+
+            from_acnts.modify( fromaccount, same_payer, [&]( auto& a ) {
+                a.balance.amount -= quantity.amount;
+            });
+
+
+            vapaee::token::core tokencore;
+            tokencore.add_balance( to, quantity, get_self() );
+
+
             // int count = 1;
             // uint64_t market = 0;
             // uint64_t market_inv = 0;
@@ -1900,11 +1921,11 @@ namespace vapaee {
             // telostest get table vapaeetokens cnt.tlos tablesummary
             // telostest get table vapaeetokens cnt.tlos blockhistory
 
-            interfaces interfacestable(get_self(), get_self().value);
-            for (auto itr = interfacestable.begin(); itr != interfacestable.end(); itr = interfacestable.begin()) {
-                interfacestable.erase(*itr);
-            }
-            PRINT("interfacestable ERASED\n");
+            // interfaces interfacestable(get_self(), get_self().value);
+            // for (auto itr = interfacestable.begin(); itr != interfacestable.end(); itr = interfacestable.begin()) {
+            //     interfacestable.erase(*itr);
+            // }
+            // PRINT("interfacestable ERASED\n");
 
 
             // history historytable(get_self(), name("cnt.tlos").value);

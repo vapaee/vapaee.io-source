@@ -35,9 +35,9 @@ import { TokenEditPage } from './pages/tokenedit/tokenedit.page';
 import { FormsModule } from '@angular/forms';
 import { DirectivesModule } from './directives/directives.module';
 // @vapaee libs---------
-import { VapaeeScatter2Module } from 'projects/vapaee/scatter2';
-import { VapaeeDexModule } from 'projects/vapaee/dex';
-import { VapaeeRexModule } from 'projects/vapaee/rex';
+import { VapaeeScatterModule } from '@vapaee/scatter';
+import { VapaeeDexModule } from '@vapaee/dex';
+import { VapaeeRexModule } from '@vapaee/rex';
 import { VapaeeComponentsModule } from './components/vpe-components.module';
 import { ScatterPage } from './pages/scatter/scatter.page';
 
@@ -74,7 +74,7 @@ import { ScatterPage } from './pages/scatter/scatter.page';
         HttpClientJsonpModule,
         CommonServicesModule,
         VapaeeComponentsModule,
-        VapaeeScatter2Module,
+        VapaeeScatterModule,
         VapaeeDexModule,
         VapaeeRexModule,
         ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),

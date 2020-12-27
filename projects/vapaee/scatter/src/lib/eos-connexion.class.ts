@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import { Asset } from './asset.class';
-import { Account, AccountData, Endpoint, EndpointState, Eosconf, GetInfoResponse, Limit, Network, 
-        VapaeeScatterConnexion, EOS, ScatterIdentity, ScatterNetwork, Transaction } from './types-scatter2';
+import { Account, AccountData, Endpoint, EndpointState, Eosconf, GetInfoResponse, Scatter, Network, 
+        VapaeeScatterConnexion, EOS, Transaction } from './types-scatter';
 import { Token } from './token.class';
 import { ScatterUtils } from './utils.class';
 
@@ -9,12 +9,12 @@ import ScatterJS from '@scatterjs/core';
 import ScatterEOS from '@scatterjs/eosjs2';
 import { JsonRpc, Api } from 'eosjs';
 import { HttpClient } from '@angular/common/http';
-import { VapaeeScatterInterface } from './scatter2.service';
+import { VapaeeScatterInterface } from './scatter.service';
 import { SmartContract } from './contract.class';
 
 // @vapaee libs 
 import { Feedback } from './extern';
-import { Scatter } from '@vapaee/scatter2';
+
 
 
 
@@ -140,7 +140,7 @@ export class EOSNetworkConnexion implements VapaeeScatterConnexion {
     private async assertConnected(func:string) {
         console.debug("EOSNetworkConnexion.assertConnected()", typeof this.eos, [this.eos]);
         if (!this.connected) {
-            if (!this.appname) throw "ERROR: You have to connect to @vapaee/scatter2 before calling " + func + "()";
+            if (!this.appname) throw "ERROR: You have to connect to @vapaee/scatter before calling " + func + "()";
             await this.connectToScatter(this.appname);
         }
         return this.waitConnected;
@@ -266,7 +266,6 @@ export class EOSNetworkConnexion implements VapaeeScatterConnexion {
         let network:Network = this.scatter.getNetwork(this.slug);
         this.account = this.lib.identity.accounts.find(x => x.chainId === network.chainId);
         this.setLogged();
-        console.error("AAAAAAAAAAAAAAAAAAA");
         this.updateAccountData();
     }
 
@@ -274,7 +273,6 @@ export class EOSNetworkConnexion implements VapaeeScatterConnexion {
         console.log("EOSNetworkConnexion.resetIdentity()");
         delete this.account;
         console.log("this.onLogggedStateChange.next(true); EVENT");
-        console.error("AAAAAAAAAAAAAAAAAAA");
         this.onLogggedStateChange.next(true);
     }
     updateAccountData() {
@@ -282,12 +280,10 @@ export class EOSNetworkConnexion implements VapaeeScatterConnexion {
         this.queryAccountData(this.account.name).then(account => {
             this.account.data = account;
             console.log("this.onLogggedStateChange.next(true); EVENT");
-            console.error("AAAAAAAAAAAAAAAAAAA");
             this.onLogggedStateChange.next(true);
         }).catch(_ => {
             this.account.data = this.def_account.data;
             console.log("this.onLogggedStateChange.next(true); EVENT");
-            console.error("AAAAAAAAAAAAAAAAAAA");
             this.onLogggedStateChange.next(true);
         });        
     };

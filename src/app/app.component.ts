@@ -6,10 +6,10 @@ import { LocalStringsService, AnalyticsService } from './services/common/common.
 import { DropdownService } from './services/dropdown.service';
 import { HttpClient } from '@angular/common/http';
 
-import { VapaeeDEX, TokenDEX, Market } from 'projects/vapaee/dex';
-import { VapaeeStyle } from 'projects/vapaee/style';
-import { VapaeeScatter2 } from 'projects/vapaee/scatter2';
-import { VapaeeREX } from 'projects/vapaee/rex';
+import { VapaeeDEX, TokenDEX, Market } from '@vapaee/dex';
+import { VapaeeStyle } from '@vapaee/style';
+import { VapaeeScatter } from '@vapaee/scatter';
+import { VapaeeREX } from '@vapaee/rex';
 
 
 @Component({
@@ -124,14 +124,14 @@ export class AppComponent {
         public coingecko: CoingeckoService,
         public dex: VapaeeDEX,
         public rex: VapaeeREX,
-        public scatter: VapaeeScatter2,
+        public scatter: VapaeeScatter,
         public local: LocalStringsService,
         public style: VapaeeStyle,
         public dropdown: DropdownService,
         public http: HttpClient,
         public analytics: AnalyticsService
     ) {
-        this.app.init("v3.7.0", this.appname);
+        this.app.init("v3.7.1", this.appname);
 
         // Check if this is the last version. If not, reload site.
         this.http.get<any>("assets/app.json?_="+Math.random()).toPromise().then((appjson) => {

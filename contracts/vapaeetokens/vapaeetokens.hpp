@@ -119,7 +119,6 @@ CONTRACT vapaeetokens : public eosio::contract {
             vapaee::token::exchange e;
             e.action_update_ui(ui, admin, receiver, params, title, website, brief, banner, thumbnail);
         };
-        
         ACTION addtoken (name contract, const symbol_code & symbol, uint8_t precision, name admin, string title, string website, string brief, string banner, string icon, string iconlg, bool tradeable) {
             MAINTENANCE();
             PRINT("\nACTION vapaeetokens.addtoken()\n");

@@ -121,7 +121,7 @@
                         <div class="col-sm-10">
                             <i _ngcontent-c4="" class="material-icons input-icon danger" [hidden]="symbolIsGood">cancel</i>
                             <i _ngcontent-c4="" class="material-icons input-icon success" [hidden]="!symbolIsGood">done</i>
-                            <input class="form-control col-form-label" placeholder="symbol" [(uppercase)]="newtoken.symbol" (uppercaseChange)="onTokenChange($event)">
+                            <input class="form-control col-form-label" placeholder="symbol" [(uppercase)]="newtoken.editable_symbol" (uppercaseChange)="onTokenChange($event)">
                         </div>
                         <div class="col-sm-10 offset-sm-2 text-danger margin-top-xs" [hidden]="!showerrors || symbolIsGood" >
                             {{local.string.invalidsym}}
@@ -139,7 +139,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label nowrap">{{local.string.precision|titlecase}}:</label>
                         <div class="col-sm-10">
-                            <input class="form-control col-form-label" type="number" placeholder="precision" [(ngModel)]="newtoken.precision">
+                            <input class="form-control col-form-label" type="number" placeholder="precision" [(ngModel)]="newtoken.editable_precision">
                         </div>
                     </div>
     
@@ -163,7 +163,7 @@
                             <div class="col-sm-9" >
                                 <i _ngcontent-c4="" class="material-icons input-icon danger" [hidden]="symbolIsGood">cancel</i>
                                 <i _ngcontent-c4="" class="material-icons input-icon success" [hidden]="!symbolIsGood">done</i>
-                                <input class="form-control col-form-label" placeholder="symbol" [(uppercase)]="newtoken.symbol" (uppercaseChange)="onTokenChange($event)">
+                                <input class="form-control col-form-label" placeholder="symbol" [(uppercase)]="newtoken.editable_symbol" (uppercaseChange)="onTokenChange($event)">
                             </div>
                         </div>
         
@@ -171,7 +171,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label nowrap">{{local.string.contract|titlecase}}:</label>
                             <div class="col-sm-9">
-                                <input class="form-control col-form-label" placeholder="contract" [(ngModel)]="newtoken.contract" (ngModelChange)="onTokenChange($event)">
+                                <input class="form-control col-form-label" placeholder="contract" [(ngModel)]="newtoken.editable_contract" (ngModelChange)="onTokenChange($event)">
                             </div>
                         </div>    
                     </div>

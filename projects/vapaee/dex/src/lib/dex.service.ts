@@ -6,7 +6,7 @@ import { DatePipe } from '@angular/common';
 import { TokenDEX, TokenData, TokenEvent } from './token-dex.class';
 import { AssetDEX } from './asset-dex.class';
 import { MarketMap, UserOrdersMap, MarketSummary, EventLog, Market, HistoryTx, TokenOrders, Order, UserOrders, OrderRow, HistoryBlock, DEXdata, MarketDeclaration } from './types-dex';
-import { VapaeeScatter2, Account, AccountData, SmartContract, TableResult, TableParams, Asset, VapaeeScatterConnexion } from './extern';
+import { VapaeeScatter, Account, AccountData, SmartContract, TableResult, TableParams, Asset, VapaeeScatterConnexion } from './extern';
 import { Feedback } from './extern';
 
 
@@ -103,7 +103,7 @@ export class VapaeeDEX {
         this.setInit = resolve;
     });
     constructor(
-        private scatter: VapaeeScatter2,
+        private scatter: VapaeeScatter,
         private cookies: CookieService,
         private datePipe: DatePipe
     ) {
@@ -389,7 +389,6 @@ export class VapaeeDEX {
     }
 
     onLoggedChange() {
-        console.error("AAAAAAAAAAAAAAAAAAA");
         if (this.connexion.logged) {
             console.log("--- VapaeeDEX.onLoggedChange() ---", this.connexion.account.name);
             console.log("account: ", this.connexion.account);
@@ -512,7 +511,7 @@ export class VapaeeDEX {
         this.feed.setLoading("deposit-"+quantity.token.symbol.toLowerCase(), true);
         return contract.excecute("transfer", {
             from:  this.connexion.account.name,
-            to: this.vapaeetokens,
+            to: this.vapaeetokens.contract,
             quantity: quantity.toString(),
             memo: "deposit"
         }).then(async result => {

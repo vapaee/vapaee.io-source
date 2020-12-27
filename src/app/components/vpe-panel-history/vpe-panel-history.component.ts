@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, HostBinding } from '@angular/core'
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { HistoryTx, VapaeeDEX } from 'projects/vapaee/dex';
+import { HistoryTx, VapaeeDEX } from '@vapaee/dex';
 
 
 @Component({

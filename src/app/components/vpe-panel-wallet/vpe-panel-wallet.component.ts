@@ -3,8 +3,8 @@ import { EventEmitter } from '@angular/core';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 
-import { VapaeeDEX, AssetDEX } from 'projects/vapaee/dex';
-import { Feedback } from 'projects/vapaee/feedback';
+import { VapaeeDEX, AssetDEX } from '@vapaee/dex';
+import { Feedback } from '@vapaee/feedback';
 
 @Component({
     selector: 'vpe-panel-wallet',

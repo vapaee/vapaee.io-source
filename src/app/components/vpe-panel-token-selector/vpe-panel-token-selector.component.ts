@@ -3,7 +3,7 @@ import { EventEmitter } from '@angular/core';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { TokenDEX, VapaeeDEX } from 'projects/vapaee/dex';
+import { TokenDEX, VapaeeDEX } from '@vapaee/dex';
 
 
 

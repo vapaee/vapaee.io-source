@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Asset, SmartContract, VapaeeScatter2, VapaeeScatterConnexion } from './extern';
+import { Asset, SmartContract, VapaeeScatter, VapaeeScatterConnexion } from './extern';
 import { Feedback } from './extern';
 
 
@@ -64,7 +64,7 @@ export class VapaeeREX {
     });
     
     constructor(
-        private scatter: VapaeeScatter2
+        private scatter: VapaeeScatter
     ) {
         this.contract_name = "eosio";
         this.feed = new Feedback();

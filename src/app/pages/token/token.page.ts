@@ -6,8 +6,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { DropdownService } from 'src/app/services/dropdown.service';
 
-import { VapaeeDEX, TokenDEX, TokenData, TokenEvent, AssetDEX } from 'projects/vapaee/dex';
-import { Feedback } from 'projects/vapaee/feedback';
+import { VapaeeDEX, TokenDEX, TokenData, TokenEvent, AssetDEX } from '@vapaee/dex';
+import { Feedback } from '@vapaee/feedback';
 
 declare const twttr: any;
 

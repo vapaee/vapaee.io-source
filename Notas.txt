@@ -1,21 +1,12 @@
-withdraw deposits: 255000.0000 GEM
-withdraw deposits: 8900.0000 QBE +
-withdraw deposits: 4140.0000 TLOS +
-withdraw deposits: 9900.0000 TEACH +
-withdraw deposits: 3627.0000 DRIC +
-withdraw deposits: 200000.0000 PEOPLE +
+4,000 TLOS - https://telos.bloks.io/transaction/ff76fd34736d5e29f394674b3b2e768183cd4fe7536a518d87101fbe1fb2a190
+8,900 QBE  - https://telos.bloks.io/transaction/13455699b80b21137ea4aab70c0de47e6cf2828bf82d505a00023db89a61fdd2
+255,000 GEM - https://telos.bloks.io/transaction/a019b690a5582a54b371300351f78e992ebaf511bd3e5324cd3bdeaa86cd74ea
+9,900 TEACH - https://telos.bloks.io/transaction/b6927fe356b99c30e827a1a4ab35015a9a75a15afd3784b0a03914a1d471864c
+3,627 DRIC - https://telos.bloks.io/transaction/1f990a0cfb624b98bc8f5294f0363bacc1f7a387da63894a446fc225e3a956c9
+140 TLOS - https://telos.bloks.io/transaction/2377f56eec1745f60aca03791cd1c7a6f27ebc78e4d43dee03dad09057240403
+200,000 PEOPLE - https://telos.bloks.io/transaction/5b20b8b0834bcf270a6cb052b74ac5921e06e7b100f419a7117a36f7a9223cb5
 
 
-This is the list of token losses. The only one the I don't have enough (by far) is GEM. To buy them from newdex will cost arround 5K TLOS.
-
-255000.0000 GEM
-8900.0000 QBE (got)
-4140.0000 TLOS (got)
-9900.0000 TEACH (got)
-3627.0000 DRIC (got)
-200000.0000 PEOPLE (got)
-
-In total will be arround 12K TLOS total losses. I will cover that and publish about it when it's done.
 
 ixirizceiakj
 yzppz2xkok1l
@@ -27,7 +18,7 @@ https://iconmonstr.com/
 
 ----- TODO ------
 - verificar que se esté apuntando a producción
-- que levante bien el nuevo scatter2
+- que levante bien el nuevo scatter 2
 - correr la app
 - anotar todos los lugares donde está NOT IMPLEMENTED
 - copiar la implementación vieja a la nueva lib
@@ -221,7 +212,8 @@ npm i -D @babel/runtime
 
 
 -- publicar libraies --
-  npm adduser
+  npm login
+  npmrc vapaee
   
   cd /var/www/vapaee.io-source && ng build @vapaee/feedback --prod
   cd dist/vapaee/feedback && npm publish --access public
@@ -313,8 +305,6 @@ import ScatterLynx from 'scatterjs-plugin-lynx'
 
 
 
-
-telosmain push action vapaeetokens hotfix '[1, "cnt.tlos", "0.1000 CNT"]' -p vapaeetokens@active
 
 
 -- HOTFIX --

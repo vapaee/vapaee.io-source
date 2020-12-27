@@ -1,8 +1,9 @@
 {
   "name": "@vapaee/rex",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "peerDependencies": {
-    "@vapaee/scatter2": "1.0.0",
+    "@vapaee/scatter": "2.0.0",
+    "@vapaee/feedback": "1.1.0",
     "bignumber.js": "8.0.2"
   }
 }

@@ -3,9 +3,9 @@ import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 import { Subscriber } from 'rxjs';
 
-import { REXdata, VapaeeREX } from 'projects/vapaee/rex';
-import { DEXdata, VapaeeDEX } from 'projects/vapaee/dex';
-import { Asset, VapaeeScatter2, Account } from 'projects/vapaee/scatter2';
+import { REXdata, VapaeeREX } from '@vapaee/rex';
+import { DEXdata, VapaeeDEX } from '@vapaee/dex';
+import { Asset, VapaeeScatter, Account } from '@vapaee/scatter';
 
 
 
@@ -35,7 +35,7 @@ export class VpePanelAccountHeaderComponent implements OnInit, OnDestroy, OnChan
     constructor(
         public dex: VapaeeDEX,
         public rex: VapaeeREX,
-        public scatter: VapaeeScatter2,
+        public scatter: VapaeeScatter,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {

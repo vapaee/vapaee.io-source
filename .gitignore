@@ -38,12 +38,12 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-/contracts/_examples/eosio.contracts
-/contracts/**/*.wasm
-/contracts/**/*.abi
 
 # vapaee
 dist
 ./dist
 vapaee.io
 vapaee.io/*
+contracts/_examples/eosio.contracts
+contracts/**/*.wasm
+contracts/**/*.abi

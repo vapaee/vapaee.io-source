@@ -1,13 +1,13 @@
 #!/bin/bash
-./1_create_accounts.sh
-
-./2_deploy_vapaeetokens.sh
-
-./3_load_tokens.sh
-
-./4_register_interfaces.sh
-
-./5_deposits.sh
+# ./1_create_accounts.sh
+# 
+# ./2_deploy_vapaeetokens.sh
+# 
+# ./3_load_tokens.sh
+# 
+# ./4_register_interfaces.sh
+# 
+# ./5_deposits.sh
 
 
 echo "----------------------------------"

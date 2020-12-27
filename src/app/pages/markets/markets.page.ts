@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppService } from 'src/app/services/common/app.service';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { TokenDEX, Market, VapaeeDEX } from 'projects/vapaee/dex';
+import { TokenDEX, Market, VapaeeDEX } from '@vapaee/dex';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({

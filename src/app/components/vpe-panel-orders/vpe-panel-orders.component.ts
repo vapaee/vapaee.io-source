@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core'
 import { EventEmitter } from '@angular/core';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { TokenOrders, OrderRow, MarketHeader, VapaeeDEX } from 'projects/vapaee/dex';
+import { TokenOrders, OrderRow, MarketHeader, VapaeeDEX } from '@vapaee/dex';
 
 @Component({
     selector: 'vpe-panel-orders',

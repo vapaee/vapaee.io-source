@@ -3,17 +3,14 @@ import { HttpClient } from '@angular/common/http';
 
 // https://github.com/GetScatter/scatter-js#user-content-want-some-quick-code
 import ScatterJS from '@scatterjs/core';
-import ScatterEOS from '@scatterjs/eosjs2';
-import {JsonRpc, Api} from 'eosjs';
 
-// scatter2 lib
-import { ScatterUtils } from './utils.class';
+// scatter lib
 import { Subject } from 'rxjs';
 import { Asset } from './asset.class';
 import { Token } from './token.class';
 import { SmartContract } from './contract.class';
 import { EOSNetworkConnexion } from './eos-connexion.class';
-import { Account, AccountData, EndpointState, Limit, Network, NetworkMap, VapaeeScatterConnexion } from './types-scatter2';
+import { Account, AccountData, EndpointState, Network, NetworkMap, VapaeeScatterConnexion } from './types-scatter';
 
 // @vapaee libs 
 import { Feedback } from './extern';
@@ -33,7 +30,7 @@ export interface ConnexionMap {
 @Injectable({
     providedIn: "root"
 })
-export class VapaeeScatter2 implements VapaeeScatterInterface /*, VapaeeScatterConnexion */ {
+export class VapaeeScatter implements VapaeeScatterInterface /*, VapaeeScatterConnexion */ {
     
     // public appname: string;
     public connexion: ConnexionMap = {};
@@ -53,7 +50,7 @@ export class VapaeeScatter2 implements VapaeeScatterInterface /*, VapaeeScatterC
         private http: HttpClient,
     ) {
         this.feed = new Feedback();
-        console.log("VapaeeScatter2()");
+        console.log("VapaeeScatter()");
     }
 
     get networks(){
@@ -92,7 +89,7 @@ export class VapaeeScatter2 implements VapaeeScatterInterface /*, VapaeeScatterC
 
     async subscribeToEvents() {
         let style = 'background: #28a745; color: #FFF';
-        this.waitEndpoints.then(_ => console.log('%cVapaeeScatter2.waitEndpoints', style));
+        this.waitEndpoints.then(_ => console.log('%cVapaeeScatter.waitEndpoints', style));
     }    
 
     private async fetchEndpoints(url:string): Promise<NetworkMap> {

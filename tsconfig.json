@@ -52,12 +52,6 @@
       ],
       "@vapaee/rex/*": [
         "dist/vapaee/rex/*"
-      ],
-      "@vapaee/scatter2": [
-        "dist/vapaee/scatter2"
-      ],
-      "@vapaee/scatter2/*": [
-        "dist/vapaee/scatter2/*"
       ]
     }
   }

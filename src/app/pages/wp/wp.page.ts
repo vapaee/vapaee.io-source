@@ -4,9 +4,9 @@ import { LocalStringsService } from 'src/app/services/common/common.services';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscriber } from 'rxjs';
 
-import { SmartContract, VapaeeScatter2 } from 'projects/vapaee/scatter2';
-import { Feedback } from 'projects/vapaee/feedback';
-import { VapaeeDEX } from 'projects/vapaee/dex';
+import { SmartContract, VapaeeScatter } from '@vapaee/scatter';
+import { Feedback } from '@vapaee/feedback';
+import { VapaeeDEX } from '@vapaee/dex';
 
 @Component({
     selector: 'vpe-wp-page',
@@ -26,7 +26,7 @@ export class WPPage implements OnInit, OnDestroy {
     constructor(
         public app: AppService,
         public local: LocalStringsService,
-        public scatter: VapaeeScatter2,
+        public scatter: VapaeeScatter,
         public dex: VapaeeDEX,
         public cookie: CookieService
     ) {

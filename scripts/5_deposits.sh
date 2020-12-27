@@ -16,20 +16,10 @@ cleos push action qubicletoken transfer  '["alice","vapaeetokens","100.0000 QBE"
 cleos push action qubicletoken transfer  '["tom",  "vapaeetokens","100.0000 QBE","deposit"]' -p tom@active
 cleos push action qubicletoken transfer  '["kate", "vapaeetokens","100.0000 QBE","deposit"]' -p kate@active
 
-cleos push action stablecarbon transfer  '["bob",  "vapaeetokens","1000.0000 TLOSD","deposit"]' -p bob@active
-cleos push action stablecarbon transfer  '["alice","vapaeetokens","1000.0000 TLOSD","deposit"]' -p alice@active
-cleos push action stablecarbon transfer  '["tom",  "vapaeetokens","1000.0000 TLOSD","deposit"]' -p tom@active
-cleos push action stablecarbon transfer  '["kate", "vapaeetokens","1000.0000 TLOSD","deposit"]' -p kate@active
-
 cleos push action stablecoin.z transfer  '["bob",  "vapaeetokens","1000.00 EZAR","deposit"]' -p bob@active
 cleos push action stablecoin.z transfer  '["alice","vapaeetokens","1000.00 EZAR","deposit"]' -p alice@active
 cleos push action stablecoin.z transfer  '["tom",  "vapaeetokens","1000.00 EZAR","deposit"]' -p tom@active
 cleos push action stablecoin.z transfer  '["kate", "vapaeetokens","1000.00 EZAR","deposit"]' -p kate@active
-
-cleos push action ednazztokens transfer  '["bob",  "vapaeetokens","100.0000 EDNA","deposit"]' -p bob@active
-cleos push action ednazztokens transfer  '["alice","vapaeetokens","100.0000 EDNA","deposit"]' -p alice@active
-cleos push action ednazztokens transfer  '["tom",  "vapaeetokens","100.0000 EDNA","deposit"]' -p tom@active
-cleos push action ednazztokens transfer  '["kate", "vapaeetokens","100.0000 EDNA","deposit"]' -p kate@active
 
 cleos push action oliveaccount transfer  '["bob",  "vapaeetokens","100.0000 OLIVE","deposit"]' -p bob@active
 cleos push action oliveaccount transfer  '["alice","vapaeetokens","100.0000 OLIVE","deposit"]' -p alice@active

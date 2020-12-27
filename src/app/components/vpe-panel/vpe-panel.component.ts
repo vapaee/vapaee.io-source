@@ -3,7 +3,7 @@ import { LocalStringsService } from 'src/app/services/common/common.services';
 import { Subscriber, Subject } from 'rxjs';
 import { VpeComponentsService, Device, ResizeEvent } from '../vpe-components.service';
 
-import { VapaeeDEX } from 'projects/vapaee/dex';
+import { VapaeeDEX } from '@vapaee/dex';
 
 @Component({
     selector: 'vpe-panel',

@@ -1,28 +1,38 @@
 {
   "name": "vapaee.io-source",
-  "version": "v3.7.0",
+  "version": "v3.7.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --poll=2000 -o",
     "serve": "ng serve --poll=2000 -o",
-    "libs": "npm run lib-feedback && npm run lib-style && npm run lib-scatter2 && npm run lib-rex && npm run lib-dex",
+    "libs": "npm run lib-feedback && npm run lib-style && npm run lib-scatter && npm run lib-rex && npm run lib-dex",
     "lib-rex": "ng build @vapaee/rex --prod",
     "lib-dex": "ng build @vapaee/dex --prod",
     "lib-style": "ng build @vapaee/style --prod",
-    "lib-scatter2": "ng build @vapaee/scatter2 --prod",
+    "lib-scatter": "ng build @vapaee/scatter --prod",
     "lib-feedback": "ng build @vapaee/feedback --prod",
+
+
+    "publish-libs": "npm run publish-lib-feedback && npm run publish-lib-style && npm run publish-lib-scatter && npm run publish-lib-rex && npm run publish-lib-dex",
+    "publish-lib-rex": "cd dist/vapaee/rex && npm publish --access public",
+    "publish-lib-dex": "cd dist/vapaee/dex && npm publish --access public",
+    "publish-lib-style": "cd dist/vapaee/style && npm publish --access public",
+    "publish-lib-scatter": "cd dist/vapaee/scatter && npm publish --access public",
+    "publish-lib-feedback": "cd dist/vapaee/feedback && npm publish --access public",
+
+
     "buildprod": "ng build --aot --buildOptimizer --prod",
     "build": "ng build",
     "deploy": "npm run libs && npm run deploynow",
-    "deploynow": "ng build --aot --buildOptimizer --prod && npm run cpbasic && npm run copycert && cd /var/www/vapaee.io && npm run save && amazon_server_console",
-    "cpbasic": "cp .htaccess /var/www/vapaee.io/.htaccess",
-    "copycert": "cp cert/* /var/www/vapaee.io/",
+    "prepare-website": "if [ ! -d './vapaee.io' ]; then git clone https://github.com/vapaee/vapaee.io-website.git ./vapaee.io; fi; cd ./vapaee.io && git pull && cd ..;",
+    "deploynow": "npm run prepare-website; npm run buildprod && npm run cpbasic && npm run copycert && cd ./vapaee.io/www && npm run save && amazon_server_console",
+    "cpbasic": "cp .htaccess ./vapaee.io/www/.htaccess",
+    "copycert": "cp cert/* ./vapaee.io/www/",
     "postinstall": "node src/patch.js;",
     "full": "npm i; npm run libs; cd contracts/_examples; if [ ! -d 'eosio.contracts' ]; then git clone https://github.com/Telos-Foundation/eosio.contracts; fi; npm run serve",
     "save": "git add -A && git commit -m 'save' && git push",
     "pull": "git pull; cp ../airdrop-on-telos/* ./airdrop-on-telos/ -R;",
-    "prod": "git checkout prod && git merge master -m 'merge master' && ng build --aot --buildOptimizer --prod && git add -A && git commit -m 'update' && git push && amazon_server_console;",
-    "deprecated-lib-scatter": "ng build @vapaee/scatter --prod"
+    "prod": "git checkout prod && git merge master -m 'merge master' && npm run buildprod && git add -A && git commit -m 'update' && git push && amazon_server_console;"
   },
   "private": true,
   "dependencies": {

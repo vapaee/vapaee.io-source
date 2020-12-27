@@ -1,5 +1,5 @@
 import { EOSNetworkConnexion } from './eos-connexion.class';
-import { TableParams, TableResult, Action, Transaction } from './types-scatter2';
+import { TableParams, TableResult, Action, Transaction } from './types-scatter';
 
 // ------------------
 
@@ -43,10 +43,12 @@ export class SmartContract {
     }
 
     private async executeAction(action: Action) {
-        this.executeTransaction([action]);
+        console.log("SmartContract.executeAction()", [action]);
+        return this.executeTransaction([action]);
     }
 
     private async executeTransaction(trx: Transaction) {
+        console.log("SmartContract.executeTransaction()", [trx]);
         for (let i=0; i<trx.length; i++) {
             trx[i].contract = this.contract;
         }

@@ -102,6 +102,33 @@ export class ETokenDEX extends TokenDEX {
         super(obj);
     }
 
+    // symbol
+    set editable_symbol(value:string) {
+        this.setSymbol(value);
+    }
+
+    get editable_symbol() {
+        return this._symbol;
+    }
+
+    // precision
+    set editable_precision(value:number) {
+        this.setPrecision(value);
+    }
+
+    get editable_precision() {
+        return this._precision;
+    }
+
+    // contract
+    set editable_contract(value:string) {
+        this.setContract(value);
+    }
+
+    get editable_contract() {
+        return this._contract;
+    }
+
     setSymbol(value: string) {
         this._symbol = value;
     }
