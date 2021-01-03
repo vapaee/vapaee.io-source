@@ -11,7 +11,7 @@
                 <div class="col col-padding-left">
                     <div class="pull-right text-center" [hidden]="current.name != 'guest'">
 
-                        <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}">
+                        <div [ngClass]="{'d-none':dex.loginState != 'no-wallet'}">
                             <span class="btn btn-sm btn-primary" (click)="dex.login()">
                                 <span class="spinner-border spinner-border-xs" [hidden]="hide_login_spinner"></span>
                                 {{local.string.retry | titlecase}} 
@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="col-12 text-right" [hidden]="current.name == 'guest'">
-                    <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}">
+                    <div [ngClass]="{'d-none':dex.loginState != 'no-wallet'}">
                         <hr class="line" />
                         <span class="text-md">{{local.string.noWallet}} </span>
                         <span class="btn btn-xs btn-primary" (click)="dex.login()">
@@ -84,7 +84,7 @@
     
         <!--
         <div class="card-header vpe-background-card-header margin-top">
-            <pre class="text-left">{{scatter.feed.loadings|json}}</pre>
+            <pre class="text-left">{{wallet.feed.loadings|json}}</pre>
             <pre class="text-left">{{dex.feed.loadings|json}}</pre>
         </div>
         -->
@@ -99,7 +99,7 @@
 
                 <div class="col col-padding-left">
                     <!-- No Wallet detected -->
-                    <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}" [hidden]="total_balance">
+                    <div [ngClass]="{'d-none':dex.loginState != 'no-wallet'}" [hidden]="total_balance">
                         <div class="pull-right text-center">
                             <span class="btn btn-sm btn-primary" (click)="dex.login()">
                                 <span class="spinner-border spinner-border-sm" [hidden]="hide_login_spinner"></span>
@@ -109,7 +109,7 @@
                         </div>
                     </div>
 
-                    <div [ngClass]="{'d-none':dex.loginState != 'no-scatter'}">
+                    <div [ngClass]="{'d-none':dex.loginState != 'no-wallet'}">
                         <div class="pull-right text-center" [hidden]="!total_balance">
                             <span class="btn btn-sm btn-primary" (click)="dex.login()">
                                 <span class="spinner-border spinner-border-sm" [hidden]="hide_login_spinner"></span>
@@ -162,7 +162,7 @@
                         <span class="text-md"> {{total_balance}} </span>
                         <span class="text-sm total-balance calculated-in-currency d-none d-md-inline"> ({{service.getTelosInCurrentCurrency(total_balance)}}) </span>
 
-                        <div class="pull-right" [hidden]="!dex.logged || dex.loginState == 'no-scatter'">
+                        <div class="pull-right" [hidden]="!dex.logged || dex.loginState == 'no-wallet'">
                             <vpe-offchain-combobox></vpe-offchain-combobox>
                         </div>                    
                     </div>

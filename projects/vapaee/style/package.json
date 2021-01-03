@@ -1,8 +1,0 @@
-{
-    "name": "@vapaee/style",
-    "version": "0.0.1",
-    "peerDependencies": {
-        "@angular/platform-browser": "",
-        "ngx-cookie-service": ""
-    }
-}

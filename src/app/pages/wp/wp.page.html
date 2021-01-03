@@ -73,7 +73,7 @@
 
                             <div class="col-sm-12 text-center margin-top-lg" [hidden]="this.user_voted_us || !feed.loading('voting')">
                                 <div class="alert alert-info text-left text-md" role="alert">
-                                    <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}" [hidden]="dex.current.data.total_balance">
+                                    <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}" [hidden]="dex.current.data?.total_balance">
                                         <div class="pull-right text-center">
                                             <span class="btn btn-sm btn-primary" (click)="dex.login()">
                                                 <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>

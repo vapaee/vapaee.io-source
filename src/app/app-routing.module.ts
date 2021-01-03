@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
 import { RootPage } from './pages/root/root.page';
 import { WPPage } from './pages/wp/wp.page';
 import { HomePage } from './pages/home/home.page';
@@ -7,16 +8,15 @@ import { TradePage } from './pages/trade/trade.page';
 import { TokensPage } from './pages/tokens/tokens.page';
 import { AccountPage } from './pages/account/account.page';
 import { NotFoundPage } from './pages/not-found/not-found.page';
-import { ComingSoonPage } from './pages/coming-soon/coming-soon.page';
 import { MarketsPage } from './pages/markets/markets.page';
 import { TokenPage } from './pages/token/token.page';
 import { TokenEditPage } from './pages/tokenedit/tokenedit.page';
-import { ScatterPage } from './pages/scatter/scatter.page';
+import { WalletPage } from './pages/wallet/wallet.page';
 
 //*
 const routes: Routes = [
   { path: '',                            data: { state: "root" }, redirectTo: '/exchange/home', pathMatch: 'full' },
-  { path: 'scatter',                 data: { state: "scatter" }, component: ScatterPage }, // ---------------------------  
+  { path: 'wallet',                      data: { state: "wallet" }, component: WalletPage }, // ---------------------------  
   { path: 'exchange',                    data: { state: "root" }, component: RootPage,
     children: [
       { path: '',                        data: { state: "root" }, redirectTo: '/exchange/home', pathMatch: 'full' },

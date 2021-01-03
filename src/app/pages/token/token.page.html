@@ -1,8 +1,13 @@
 <div class="container" >
 
+    <div class="card text-white bg-dark margin-top-md overflow-visibl" *ngIf="!token">
+        <div class="card-header vpe-background-card-header text-xl">
+            <span class="spinner-border spinner-border-md" style="margin-bottom: 3px;"></span>
+            {{local.string.loading}}...
+        </div>
+    </div>
 
-
-    <div class="card text-white bg-dark margin-top-md overflow-visibl" [hidden]="token?.banner">
+    <div class="card text-white bg-dark margin-top-md overflow-visibl" [hidden]="token?.banner" *ngIf="token" (click)="debug()">
         <div class="card-header vpe-background-card-header text-xl" [hidden]="app.device.portrait">
             <img style="height:64px; width: 64px; margin-top:-0px" [src]="lgicon">&nbsp;
             {{token?.title}}
@@ -13,14 +18,11 @@
         </div>
     </div>
 
-
-
-
-    <div [hidden]="!token?.banner" class="card text-white margin-top-md overflow-hidden token-banner background-holder">
+    <div [hidden]="!token?.banner" class="card text-white margin-top-md overflow-hidden token-banner background-holder" *ngIf="token" (click)="debug()">
         <img [src]="token?.banner" style="width: 100%; height: auto">
     </div>
 
-    <div class="margin-top-md row">
+    <div class="margin-top-md row" *ngIf="token">
 
         <div class="col-12 d-lg-none">
             <div [hidden]="!token?.brief">
@@ -330,15 +332,30 @@
             <div class="margin-top-md card"
                 *ngFor="let info of token?.data"
             >
+                <!-- 
+                <div class="card-body vpe-background-card-body">
+                    <pre class="text-left">{{info|json}}</pre>
+                </div>
+                -->
+
                 <div class="card-body vpe-background-card-body">
                     <!-- hr class="line" -->
                     <div class="text-lg margin-top-md" [hidden]="!info.text">{{info.text}}</div>
 
                     <!-- YouTube video-->
                     <div class="margin-top embed-responsive embed-responsive-16by9"
-                        *ngIf="info.category == 'youtube' && info.link"
+                        *ngIf="info.category == 'youtube' && info.link && info.extras?.type == 'video'"
                     >
-                        <iframe class="embed-responsive-item" [src]="getEmbedLink(info)" allowfullscreen></iframe>
+                        <iframe class="embed-responsive-item" [src]="info.extras.safelink" allowfullscreen></iframe>
+                    </div>
+
+                    <!-- YouTube channel-->
+                    <div class="margin-top"
+                        *ngIf="info.category == 'youtube' && info.link && info.extras?.type == 'channel'"
+                    >
+                        <div id="youtube-channel-container" class="g-ytsubscribe" [attr.data-channelid]="info.extras.channelid"
+                            data-layout="full" data-theme="default" data-count="default"
+                        ></div>
                     </div>
 
                     <!-- Tweet -->

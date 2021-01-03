@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, ElementRef, Renderer } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { GoogleChartInterface, GoogleChartComponentInterface } from 'src/app/components/vpe-panel-chart/google-chart-service/google-charts-interfaces';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
@@ -39,8 +39,6 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
     constructor(
         public dex: VapaeeDEX,
         public local: LocalStringsService,
-        private _element:ElementRef,
-        private renderer:Renderer,
         private service: VpeComponentsService
     ) {
         this.zoom = 24*30; // one month of chart

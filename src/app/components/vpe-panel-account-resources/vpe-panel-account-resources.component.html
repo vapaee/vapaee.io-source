@@ -14,54 +14,54 @@
         </div>    
     </div>    
 
-    <div class="row" [ngClass]="{'d-none':!current_mode}">
+    <div class="row" [ngClass]="{'d-none':!current_mode}" *ngIf="account.data">
         <div class="col">
-            <div class="text-md margin-top">RAM <span class="text-xs color-grey">{{account.data.ram_limit.percentStr}} available</span></div>
+            <div class="text-md margin-top">RAM <span class="text-xs color-grey">{{account.data?.ram_limit?.percentStr}} available</span></div>
             <div class="progress">
                 <div class="progress-bar progress-bar-striped progress-bar-animated"
-                    role="progressbar" [ngStyle]="{'width': account.data.ram_limit.percentStr}"></div>
+                    role="progressbar" [ngStyle]="{'width': account.data?.ram_limit?.percentStr}"></div>
             </div>
-            <div class="text-sm text-center">RAM used - {{account.data.ram_limit.used}} Bytes / {{account.data.ram_limit.max}} Bytes</div>
-            <div class="text-md margin-top">NET <span class="text-xs color-grey">{{account.data.net_limit.percentStr}} available</span></div>
+            <div class="text-sm text-center">RAM used - {{account.data?.ram_limit?.used}} Bytes / {{account.data?.ram_limit?.max}} Bytes</div>
+            <div class="text-md margin-top">NET <span class="text-xs color-grey">{{account.data?.net_limit?.percentStr}} available</span></div>
             <div class="progress">
                 <div class="progress-bar progress-bar-striped progress-bar-animated"
-                    role="progressbar" [ngStyle]="{'width': account.data.net_limit.percentStr}"></div>
+                    role="progressbar" [ngStyle]="{'width': account.data?.net_limit?.percentStr}"></div>
             </div>
-            <div class="text-sm text-center">NET used - {{account.data.net_limit.used}} Bytes / {{account.data.net_limit.max}} Bytes</div>
-            <div class="text-md margin-top">CPU <span class="text-xs color-grey">{{account.data.cpu_limit.percentStr}} available</span></div>
+            <div class="text-sm text-center">NET used - {{account.data?.net_limit?.used}} Bytes / {{account.data?.net_limit?.max}} Bytes</div>
+            <div class="text-md margin-top">CPU <span class="text-xs color-grey">{{account.data?.cpu_limit?.percentStr}} available</span></div>
             <div class="progress">
                 <div class="progress-bar progress-bar-striped progress-bar-animated"
-                    role="progressbar" [ngStyle]="{'width': account.data.cpu_limit.percentStr}"></div>
+                    role="progressbar" [ngStyle]="{'width': account.data?.cpu_limit?.percentStr}"></div>
             </div>
-            <div class="text-sm text-center">CPU used - {{account.data.cpu_limit.used}} µs / {{account.data.cpu_limit.max}} µs</div>
+            <div class="text-sm text-center">CPU used - {{account.data?.cpu_limit?.used}} µs / {{account.data?.cpu_limit?.max}} µs</div>
         </div>
     </div>
 
 
-    <div class="row" [ngClass]="{'d-none':current_mode}">
+    <div class="row" [ngClass]="{'d-none':current_mode}" *ngIf="account.data">
         <div class="col col-padding-right">
-            <div class="text-md margin-top">RAM <span class="text-xs color-grey">{{account.data.ram_limit.percentStr}} available</span></div>
+            <div class="text-md margin-top">RAM <span class="text-xs color-grey">{{account.data?.ram_limit?.percentStr}} available</span></div>
             <div class="progress">
                 <div class="progress-bar progress-bar-striped progress-bar-animated"
-                    role="progressbar" [ngStyle]="{'width': account.data.ram_limit.percentStr}"></div>
+                    role="progressbar" [ngStyle]="{'width': account.data?.ram_limit?.percentStr}"></div>
             </div>
-            <div class="text-muted text-xs margin-top-xs text-center">{{account.data.ram_limit.max}} Bytes</div>
+            <div class="text-muted text-xs margin-top-xs text-center">{{account.data?.ram_limit?.max}} Bytes</div>
         </div>
         <div class="col col-padding-left col-padding-right">
-            <div class="text-md margin-top">NET <span class="text-xs color-grey">{{account.data.net_limit.percentStr}} available</span></div>
+            <div class="text-md margin-top">NET <span class="text-xs color-grey">{{account.data?.net_limit?.percentStr}} available</span></div>
             <div class="progress">
                 <div class="progress-bar progress-bar-striped progress-bar-animated"
-                    role="progressbar" [ngStyle]="{'width': account.data.net_limit.percentStr}"></div>
+                    role="progressbar" [ngStyle]="{'width': account.data?.net_limit?.percentStr}"></div>
             </div>
-            <div class="text-muted text-xs margin-top-xs text-center">{{account.data.net_limit.max}} Bytes</div>
+            <div class="text-muted text-xs margin-top-xs text-center">{{account.data?.net_limit?.max}} Bytes</div>
         </div>
         <div class="col col-padding-left">
-            <div class="text-md margin-top">CPU <span class="text-xs color-grey">{{account.data.cpu_limit.percentStr}} available</span></div>
+            <div class="text-md margin-top">CPU <span class="text-xs color-grey">{{account.data?.cpu_limit?.percentStr}} available</span></div>
             <div class="progress">
                 <div class="progress-bar progress-bar-striped progress-bar-animated"
-                    role="progressbar" [ngStyle]="{'width': account.data.cpu_limit.percentStr}"></div>
+                    role="progressbar" [ngStyle]="{'width': account.data?.cpu_limit?.percentStr}"></div>
             </div>
-            <div class="text-muted text-xs margin-top-xs text-center">{{account.data.cpu_limit.max}} µs</div>
+            <div class="text-muted text-xs margin-top-xs text-center">{{account.data?.cpu_limit?.max}} µs</div>
         </div>
     </div> 
 

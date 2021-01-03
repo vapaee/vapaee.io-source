@@ -1,28 +1,58 @@
 <div class="container" >
     <div class="card tokens margin-top-md">
         <div class="card-header vpe-background-card-header">
-            <span class="text-lg">
-                <img style="height:25px; width: 25px;" src="/assets/logos/telos.png" [hidden]="app.device.portrait">
-                <img style="height:32px; width: 32px;" src="/assets/logos/telos.png" [hidden]="!app.device.portrait">
-                {{local.string.tokenshowroom}}
-            </span>
-            <div class="pull-right">
-                <!-- New Token Btn -->
-                <a class="currency btn btn-primary btn-sm"
-                    [routerLink]="'/exchange/tokenedit/new-token'"
-                    [hidden]="!dex.logged"
-                >
-                    <i class="material-icons"> add_circle_outline </i>
-                    <span> {{local.string.newtoken|titlecase}} </span>
-                </a>
+            <div class="row">
+                <div class="col-6">
+             
+                    <span class="text-lg">
+                        <img style="height:25px; width: 25px;" src="/assets/logos/telos.png" [hidden]="app.device.portrait">
+                        <img style="height:32px; width: 32px;" src="/assets/logos/telos.png" [hidden]="!app.device.portrait">
+                        {{local.string.tokenshowroom}}
+                    </span>
 
-                <!-- Offchain currency selector -->
-                <vpe-offchain-combobox class="margin-left margin-top-xs" [btn]="'sm'" [hideprice]="app.device.portrait"></vpe-offchain-combobox>
+                </div>
+                <div class="col-6 text-right">
+
+
+                    <div class="input-group" style="margin-top: 5px; max-width: 150px; display: inline-flex;">
+                        <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            [(ngModel)]="filter"
+                        >
+                        <div class="input-group-append">
+                            <a class="btn btn-primary btn-sm">
+                                <i class="material-icons"> search </i>
+                            </a>                            
+                        </div>
+                    </div>
+       
+                    <div class="pull-right">
+                        <!-- New Token Btn -->
+                        <a class="currency btn btn-primary btn-sm margin-left"
+                            [routerLink]="'/exchange/tokenedit/new-token'"
+                            [hidden]="!dex.logged"
+                        >
+                            <i class="material-icons"> add_circle_outline </i>
+                            {{local.string.newtoken|titlecase}} 
+                        </a>
+
+                        <!-- Offchain currency selector -->
+                        <vpe-offchain-combobox class="margin-left margin-top-xs" [btn]="'sm'" [hideprice]="app.device.portrait"></vpe-offchain-combobox>
+
+                    </div>
+                    
+
+
+                </div>
             </div>
+
+
+            
         </div>
     </div>
 
-    <vpe-panel-tokens-card-deck  (tokenPage)="tokenPage($event)" (tradeToken)="tradeToken($event)" (editToken)="editToken($event)"  [hidebackground]="true" [hideheader]="true" [tokens]="tokens" [logged]="dex.logged"></vpe-panel-tokens-card-deck>
+    <vpe-panel-tokens-card-deck  (tokenPage)="tokenPage($event)" (tradeToken)="tradeToken($event)" (editToken)="editToken($event)" [filter]="filter"  [hidebackground]="true" [hideheader]="true" [tokens]="tokens" [logged]="dex.logged"></vpe-panel-tokens-card-deck>
 
 
 </div>

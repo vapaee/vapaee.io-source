@@ -32,7 +32,6 @@ import {
   ChartMouseWheelEvent
 } from './chart-mouse-event';
 import { ChartHTMLTooltip } from './chart-html-tooltip';
-import { e } from '@angular/core/src/render3';
 
 @Component({
   selector: 'google-chart',

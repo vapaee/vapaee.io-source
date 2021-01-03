@@ -5,7 +5,7 @@ import { Subscriber } from 'rxjs';
 
 import { REXdata, VapaeeREX } from '@vapaee/rex';
 import { DEXdata, VapaeeDEX } from '@vapaee/dex';
-import { Asset, VapaeeScatter, Account } from '@vapaee/scatter';
+import { Asset, VapaeeWallet, Account } from '@vapaee/wallet';
 
 
 
@@ -26,6 +26,7 @@ export class VpePanelAccountHeaderComponent implements OnInit, OnDestroy, OnChan
     @Input() public current: Account;
     @Input() public rexdata: REXdata;
     @Input() public dexdata: DEXdata;
+    @Input() public network: string;
 
     
     public total: Asset;
@@ -35,7 +36,7 @@ export class VpePanelAccountHeaderComponent implements OnInit, OnDestroy, OnChan
     constructor(
         public dex: VapaeeDEX,
         public rex: VapaeeREX,
-        public scatter: VapaeeScatter,
+        public wallet: VapaeeWallet,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
@@ -49,19 +50,26 @@ export class VpePanelAccountHeaderComponent implements OnInit, OnDestroy, OnChan
         this.total = null;
     }
 
+    private isNative(aux:any) {
+        var con = this.wallet.connexion[this.network];
+        return con.isNative(aux);
+    }
+
     get total_balance() {
+        if (!this.current) return "";
+        if (!this.current.data) return "";
         if (!this.current.data.total_balance) return "";
         if (!this.total) {
             this.total = new Asset(this.current.data.total_balance);
             console.log("total_balance() ------------", typeof this.current.data.total_balance_asset, this.current.data.total_balance_asset);
-            if (this.scatter.isNative(this.current.data.total_balance_asset)) {
+            if (this.isNative(this.current.data.total_balance_asset)) {
                 this.total = this.current.data.total_balance_asset;
 
-                if (this.scatter.isNative(this.rexdata.total)) {
+                if (this.isNative(this.rexdata.total)) {
                     this.total = this.total.plus(this.rexdata.total);
                 }
     
-                if (this.scatter.isNative(this.dexdata.total)) {
+                if (this.isNative(this.dexdata.total)) {
                     this.total = this.total.plus(this.dexdata.total);
                 }    
             } else {
@@ -72,8 +80,8 @@ export class VpePanelAccountHeaderComponent implements OnInit, OnDestroy, OnChan
     }
 
     get hide_login_spinner() {
-        if (this.scatter.feed.loading('endpoints')) return false;
-        if (this.scatter.feed.loading('connexion')) return false;
+        if (this.wallet.feed.loading('endpoints')) return false;
+        if (this.wallet.feed.loading('connexion')) return false;
         if (this.dex.feed.loading('log-state')) return false;
         if (this.dex.feed.loading('login')) return false;
         if (this.dex.connexion && this.dex.connexion.feed.loading('connecting')) return false;

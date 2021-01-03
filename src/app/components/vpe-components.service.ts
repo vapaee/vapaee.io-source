@@ -4,7 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { TimezoneService } from '../services/timezone.service';
 
 import { TokenDEX, VapaeeDEX, AssetDEX } from '@vapaee/dex';
-import { Asset } from '@vapaee/scatter';
+import { Asset } from '@vapaee/wallet';
 
 
 

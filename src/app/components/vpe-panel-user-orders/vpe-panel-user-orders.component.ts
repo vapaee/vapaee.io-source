@@ -3,6 +3,7 @@ import { EventEmitter } from '@angular/core';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 import { TokenOrders, MarketHeader, UserOrders, OrderRow, VapaeeDEX } from '@vapaee/dex';
+import { Feedback } from '@vapaee/feedback';
 
 
 @Component({
@@ -22,14 +23,14 @@ export class VpePanelUserOrdersComponent implements OnChanges {
     @Output() onClickRow: EventEmitter<{type:string, row:OrderRow}> = new EventEmitter();
     @Output() onClickPrice: EventEmitter<{type:string, row:OrderRow}> = new EventEmitter();
     @Output() onTableSelected: EventEmitter<string> = new EventEmitter();
-    c_loading: {[table_id:string]:boolean};
-    error:string;
+    feed: Feedback;
+
     constructor(
         public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
-        this.c_loading = {};
+        this.feed = new Feedback();
         this.hideheader = false;
         this.margintop = true;
         this.expanded = true; 
@@ -64,18 +65,19 @@ export class VpePanelUserOrdersComponent implements OnChanges {
     _user_orders: any;
     get user_orders() {
         if (this._user_orders) return this._user_orders;
-        var result = [];
-        var tables = {};
-        for (var i in this.userorders) {
-            var table = this.userorders[i];
-            var table = table.table;
-            var sell_table = table;
-            var buy_table = table.split(".")[1] + "." + table.split(".")[0];
+        let result = [];
+        let tables = {};
+        for (let i in this.userorders) {
+            // ---------------
+            let table = this.userorders[i].table;
+            let sell_table = table;
+            let buy_table = table.split(".")[1] + "." + table.split(".")[0];
             if (table.split(".")[0] == "tlos") {
                 sell_table = buy_table;
                 buy_table = table;
             }
             table = sell_table;
+            // ---------------
             tables[table] = tables[table] || {
                 table: table,
                 sell: {
@@ -87,12 +89,12 @@ export class VpePanelUserOrdersComponent implements OnChanges {
                     orders: []
                 }
             };
-
-            if (table.table == buy_table) {
-                tables[table].buy.orders = table.orders;
+            
+            if (table == buy_table) {
+                tables[table].buy.orders = this.userorders[i].orders;
             }
-            if (table.table == sell_table) {
-                tables[table].sell.orders = table.orders;
+            if (table == sell_table) {
+                tables[table].sell.orders = this.userorders[i].orders;
             }
         }
         for (var t in tables) {
@@ -113,33 +115,33 @@ export class VpePanelUserOrdersComponent implements OnChanges {
         var key = table + "-" + order.id;
         
         if (order.deposit.token.symbol != order.telos.token.symbol) {
-            this.c_loading[key] = true;
+            this.feed.setLoading(key);
             this.dex.cancelOrder("sell", order.deposit.token, order.telos.token, [order.id]).then(_ => {
                 // success
-                this.c_loading[key] = false;
+                this.feed.setLoading(key, false);
             }).catch(e => {
                 console.log(e);
                 if (typeof e == "string") {
-                    this.error = "ERROR: " + JSON.stringify(JSON.parse(e), null, 4);
+                    order.error = "ERROR: " + JSON.stringify(JSON.parse(e), null, 4);
                 } else {
-                    this.error = null;
+                    order.error = e.message;
                 }
-                this.c_loading[key] = false;
+                this.feed.setLoading(key, false);
             });;
         }
         if (order.deposit.token.symbol == order.telos.token.symbol) {
-            this.c_loading[key] = true;
+            this.feed.setLoading(key);
             this.dex.cancelOrder("buy", order.total.token, order.telos.token, [order.id]).then(_ => {
                 // success
-                this.c_loading[key] = false;
+                this.feed.setLoading(key, false);
             }).catch(e => {
                 console.log(e);
                 if (typeof e == "string") {
-                    this.error = "ERROR: " + JSON.stringify(JSON.parse(e), null, 4);
+                    order.error = "ERROR: " + JSON.stringify(JSON.parse(e), null, 4);
                 } else {
-                    this.error = null;
+                    order.error = e.message;
                 }
-                this.c_loading[key] = false;
+                this.feed.setLoading(key, false);
             });;
         }
         

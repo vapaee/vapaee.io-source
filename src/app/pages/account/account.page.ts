@@ -7,7 +7,7 @@ import { VpeComponentsService } from 'src/app/components/vpe-components.service'
 import { VpePanelWalletComponent } from 'src/app/components/vpe-panel-wallet/vpe-panel-wallet.component';
 import { VapaeeDEX, AssetDEX, UserOrdersMap, DEXdata } from '@vapaee/dex';
 import { VapaeeREX, REXdata } from '@vapaee/rex';
-import { Account } from '@vapaee/scatter';
+import { Account } from '@vapaee/wallet';
 
 @Component({
     selector: 'account-page',

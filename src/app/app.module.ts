@@ -32,14 +32,17 @@ import { environment } from '../environments/environment';
 import { TokenPage } from './pages/token/token.page';
 import { TimezoneService } from './services/timezone.service';
 import { TokenEditPage } from './pages/tokenedit/tokenedit.page';
+import { WalletPage } from './pages/wallet/wallet.page';
+
 import { FormsModule } from '@angular/forms';
 import { DirectivesModule } from './directives/directives.module';
+
 // @vapaee libs---------
-import { VapaeeScatterModule } from '@vapaee/scatter';
+import { VapaeeWalletModule } from '@vapaee/wallet';
 import { VapaeeDexModule } from '@vapaee/dex';
-import { VapaeeRexModule } from '@vapaee/rex';
+import { VapaeeREX, VapaeeRexModule } from '@vapaee/rex';
 import { VapaeeComponentsModule } from './components/vpe-components.module';
-import { ScatterPage } from './pages/scatter/scatter.page';
+
 
 
 
@@ -59,7 +62,7 @@ import { ScatterPage } from './pages/scatter/scatter.page';
         AccountPage,
         NotFoundPage,
         ComingSoonPage,
-        ScatterPage,
+        WalletPage,
         AppComponent,
         LoadingOverall
     ],
@@ -74,11 +77,12 @@ import { ScatterPage } from './pages/scatter/scatter.page';
         HttpClientJsonpModule,
         CommonServicesModule,
         VapaeeComponentsModule,
-        VapaeeScatterModule,
+        VapaeeWalletModule,
         VapaeeDexModule,
         VapaeeRexModule,
         ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
         SidebarModule.forRoot(),
+
         FormsModule,
         MarkdownModule.forRoot(),
         DirectivesModule
@@ -89,7 +93,9 @@ import { ScatterPage } from './pages/scatter/scatter.page';
         HttpClient,
         CoingeckoService,
         DropdownService,
-        TimezoneService
+        TimezoneService,
+        VapaeeREX
+        
     ],
     bootstrap: [AppComponent]
 })

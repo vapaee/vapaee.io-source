@@ -9,8 +9,6 @@ declare var $:any;
     styleUrls: ['./vpe-identicon.component.scss']
 })
 export class VpeIdenticonComponent implements OnChanges {
-
-    @ViewChild('svg') private svg;
     @Input() value: string;
     
     constructor() {
@@ -19,7 +17,7 @@ export class VpeIdenticonComponent implements OnChanges {
 
     ngOnChanges() {
         if (typeof this.value == "string") {
-            $(this.svg.nativeElement).attr("data-jdenticon-value", this.value);
+            $("svg.jdenticon").attr("data-jdenticon-value", this.value);
             jdenticon();
         }
     }

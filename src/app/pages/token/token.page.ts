@@ -10,6 +10,7 @@ import { VapaeeDEX, TokenDEX, TokenData, TokenEvent, AssetDEX } from '@vapaee/de
 import { Feedback } from '@vapaee/feedback';
 
 declare const twttr: any;
+declare const gapi: any;
 
 
 @Component({
@@ -55,6 +56,12 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
             if (this.token.brief == "") {
                 this.token.brief = null;
             }
+            for (let i in this.token.data) {
+                if (this.token.data[i].category == "youtube") {
+                    this.tryToExtractVideoLink(this.token.data[i]);
+                    this.tryToExtractChannelId(this.token.data[i]);
+                }
+            }
             console.log("TokenPage() token: ", [this.token]);
             this.params.quantity = new AssetDEX(0, this.token);
             this.renderEntries();
@@ -67,18 +74,313 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     fetchTwitter(info: TokenData) {
-        var url = "https://publish.twitter.com/oembed?&url="+info.link;
-        this.http.jsonp<any>(url, 'callback').toPromise().then(result => {
-            info.html = result.html;
-            this.renderTweets(1000);
-            this.renderTweets(2000);
-            this.renderTweets(5000);
-            this.renderTweets(10000);
-            this.renderTweets(15000);
-            this.renderTweets(20000);
-        });
+        let clean_link = info.link.match(/^(https:\/\/twitter.com\/[^\/]*\/status\/\d*)/i);
+        if (!clean_link) {
+            clean_link = info.link.match(/^(https:\/\/twitter.com\/[^\/]*)/i);
+        }
+
+        if (clean_link) {
+            var url = "https://publish.twitter.com/oembed?url="+clean_link[1];
+            this.http.jsonp<any>(url, 'callback').toPromise().then(result => {
+                info.html = result.html;
+
+                info.extras = result.html.match(/https:\/\/twitter.com\/([^\?]*)/i);
+                if (info.extras) {
+                    info.extras = info.extras[1];
+                }
+
+                this.renderTweets(info, 1000);
+                this.renderTweets(info, 2000);
+                this.renderTweets(info, 5000);
+            });
+        } else {
+            console.error("ERROR: No se pudo extraer un link linpio para twitter", info.link);
+        }
     }
 
+
+    renderTweets(info: TokenData, delay:number) {
+        setTimeout(_ => {
+            console.log("renderTweets("+delay+")", typeof twttr, [twttr, document.querySelector("a.twitter-timeline")]);
+            
+            if (twttr) {
+                console.log(info.extras);
+                twttr.widgets.createTimeline(
+                    {
+                      sourceType: "profile",
+                      screenName: info?info.extras:""
+                    },
+                    document.querySelector("a.twitter-timeline")
+                )
+
+                twttr.widgets.load();
+            }
+
+        }, delay);
+    }
+
+    renderYoutube(info: TokenData, delay:number) {
+        setTimeout(_ => {
+            
+            if (gapi) {                
+                // Este código lo encontré en el final del archivo https://apis.google.com/js/platform.js
+                // Es lo que hace que se renderice el widget
+                gapi.load("", {
+                    callback: window["gapi_onload"],
+                    _c: {
+                        "jsl": {
+                            "ci": {
+                                "deviceType": "desktop",
+                                "oauth-flow": {
+                                    "authUrl": "https://accounts.google.com/o/oauth2/auth",
+                                    "proxyUrl": "https://accounts.google.com/o/oauth2/postmessageRelay",
+                                    "disableOpt": true,
+                                    "idpIframeUrl": "https://accounts.google.com/o/oauth2/iframe",
+                                    "usegapi": false
+                                },
+                                "debug": {
+                                    "reportExceptionRate": 0.05,
+                                    "forceIm": false,
+                                    "rethrowException": false,
+                                    "host": "https://apis.google.com"
+                                },
+                                "enableMultilogin": true,
+                                "googleapis.config": {
+                                    "auth": {
+                                        "useFirstPartyAuthV2": true
+                                    }
+                                },
+                                "isPlusUser": false,
+                                "inline": {
+                                    "css": 1
+                                },
+                                "disableRealtimeCallback": false,
+                                "drive_share": {
+                                    "skipInitCommand": true
+                                },
+                                "csi": {
+                                    "rate": 0.01
+                                },
+                                "client": {
+                                    "cors": false
+                                },
+                                "isLoggedIn": true,
+                                "signInDeprecation": {
+                                    "rate": 0.0
+                                },
+                                "include_granted_scopes": true,
+                                "llang": "es",
+                                "iframes": {
+                                    "youtube": {
+                                        "params": {
+                                            "location": ["search", "hash"]
+                                        },
+                                        "url": ":socialhost:/:session_prefix:_/widget/render/youtube?usegapi\u003d1",
+                                        "methods": ["scroll", "openwindow"]
+                                    },
+                                    "ytsubscribe": {
+                                        "url": "https://www.youtube.com/subscribe_embed?usegapi\u003d1"
+                                    },
+                                    "plus_circle": {
+                                        "params": {
+                                            "url": ""
+                                        },
+                                        "url": ":socialhost:/:session_prefix::se:_/widget/plus/circle?usegapi\u003d1"
+                                    },
+                                    "plus_share": {
+                                        "params": {
+                                            "url": ""
+                                        },
+                                        "url": ":socialhost:/:session_prefix::se:_/+1/sharebutton?plusShare\u003dtrue\u0026usegapi\u003d1"
+                                    },
+                                    "rbr_s": {
+                                        "params": {
+                                            "url": ""
+                                        },
+                                        "url": ":socialhost:/:session_prefix::se:_/widget/render/recobarsimplescroller"
+                                    },
+                                    ":source:": "3p",
+                                    "playemm": {
+                                        "url": "https://play.google.com/work/embedded/search?usegapi\u003d1\u0026usegapi\u003d1"
+                                    },
+                                    "savetoandroidpay": {
+                                        "url": "https://pay.google.com/gp/v/widget/save"
+                                    },
+                                    "blogger": {
+                                        "params": {
+                                            "location": ["search", "hash"]
+                                        },
+                                        "url": ":socialhost:/:session_prefix:_/widget/render/blogger?usegapi\u003d1",
+                                        "methods": ["scroll", "openwindow"]
+                                    },
+                                    "evwidget": {
+                                        "params": {
+                                            "url": ""
+                                        },
+                                        "url": ":socialhost:/:session_prefix:_/events/widget?usegapi\u003d1"
+                                    },
+                                    "partnersbadge": {
+                                        "url": "https://www.gstatic.com/partners/badge/templates/badge.html?usegapi\u003d1"
+                                    },
+                                    "dataconnector": {
+                                        "url": "https://dataconnector.corp.google.com/:session_prefix:ui/widgetview?usegapi\u003d1"
+                                    },
+                                    "surveyoptin": {
+                                        "url": "https://www.google.com/shopping/customerreviews/optin?usegapi\u003d1"
+                                    },
+                                    ":socialhost:": "https://apis.google.com",
+                                    "shortlists": {
+                                        "url": ""
+                                    },
+                                    "hangout": {
+                                        "url": "https://talkgadget.google.com/:session_prefix:talkgadget/_/widget"
+                                    },
+                                    "plus_followers": {
+                                        "params": {
+                                            "url": ""
+                                        },
+                                        "url": ":socialhost:/_/im/_/widget/render/plus/followers?usegapi\u003d1"
+                                    },
+                                    "post": {
+                                        "params": {
+                                            "url": ""
+                                        },
+                                        "url": ":socialhost:/:session_prefix::im_prefix:_/widget/render/post?usegapi\u003d1"
+                                    },
+                                    ":gplus_url:": "https://plus.google.com",
+                                    "signin": {
+                                        "params": {
+                                            "url": ""
+                                        },
+                                        "url": ":socialhost:/:session_prefix:_/widget/render/signin?usegapi\u003d1",
+                                        "methods": ["onauth"]
+                                    },
+                                    "rbr_i": {
+                                        "params": {
+                                            "url": ""
+                                        },
+                                        "url": ":socialhost:/:session_prefix::se:_/widget/render/recobarinvitation"
+                                    },
+                                    "share": {
+                                        "url": ":socialhost:/:session_prefix::im_prefix:_/widget/render/share?usegapi\u003d1"
+                                    },
+                                    "plusone": {
+                                        "params": {
+                                            "count": "",
+                                            "size": "",
+                                            "url": ""
+                                        },
+                                        "url": ":socialhost:/:session_prefix::se:_/+1/fastbutton?usegapi\u003d1"
+                                    },
+                                    "comments": {
+                                        "params": {
+                                            "location": ["search", "hash"]
+                                        },
+                                        "url": ":socialhost:/:session_prefix:_/widget/render/comments?usegapi\u003d1",
+                                        "methods": ["scroll", "openwindow"]
+                                    },
+                                    ":im_socialhost:": "https://plus.googleapis.com",
+                                    "backdrop": {
+                                        "url": "https://clients3.google.com/cast/chromecast/home/widget/backdrop?usegapi\u003d1"
+                                    },
+                                    "visibility": {
+                                        "params": {
+                                            "url": ""
+                                        },
+                                        "url": ":socialhost:/:session_prefix:_/widget/render/visibility?usegapi\u003d1"
+                                    },
+                                    "autocomplete": {
+                                        "params": {
+                                            "url": ""
+                                        },
+                                        "url": ":socialhost:/:session_prefix:_/widget/render/autocomplete"
+                                    },
+                                    "additnow": {
+                                        "url": "https://apis.google.com/marketplace/button?usegapi\u003d1",
+                                        "methods": ["launchurl"]
+                                    },
+                                    ":signuphost:": "https://plus.google.com",
+                                    "ratingbadge": {
+                                        "url": "https://www.google.com/shopping/customerreviews/badge?usegapi\u003d1"
+                                    },
+                                    "appcirclepicker": {
+                                        "url": ":socialhost:/:session_prefix:_/widget/render/appcirclepicker"
+                                    },
+                                    "follow": {
+                                        "url": ":socialhost:/:session_prefix:_/widget/render/follow?usegapi\u003d1"
+                                    },
+                                    "community": {
+                                        "url": ":ctx_socialhost:/:session_prefix::im_prefix:_/widget/render/community?usegapi\u003d1"
+                                    },
+                                    "sharetoclassroom": {
+                                        "url": "https://classroom.google.com/sharewidget?usegapi\u003d1"
+                                    },
+                                    "ytshare": {
+                                        "params": {
+                                            "url": ""
+                                        },
+                                        "url": ":socialhost:/:session_prefix:_/widget/render/ytshare?usegapi\u003d1"
+                                    },
+                                    "plus": {
+                                        "url": ":socialhost:/:session_prefix:_/widget/render/badge?usegapi\u003d1"
+                                    },
+                                    "family_creation": {
+                                        "params": {
+                                            "url": ""
+                                        },
+                                        "url": "https://families.google.com/webcreation?usegapi\u003d1\u0026usegapi\u003d1"
+                                    },
+                                    "commentcount": {
+                                        "url": ":socialhost:/:session_prefix:_/widget/render/commentcount?usegapi\u003d1"
+                                    },
+                                    "configurator": {
+                                        "url": ":socialhost:/:session_prefix:_/plusbuttonconfigurator?usegapi\u003d1"
+                                    },
+                                    "zoomableimage": {
+                                        "url": "https://ssl.gstatic.com/microscope/embed/"
+                                    },
+                                    "appfinder": {
+                                        "url": "https://workspace.google.com/:session_prefix:marketplace/appfinder?usegapi\u003d1"
+                                    },
+                                    "savetowallet": {
+                                        "url": "https://pay.google.com/gp/v/widget/save"
+                                    },
+                                    "person": {
+                                        "url": ":socialhost:/:session_prefix:_/widget/render/person?usegapi\u003d1"
+                                    },
+                                    "savetodrive": {
+                                        "url": "https://drive.google.com/savetodrivebutton?usegapi\u003d1",
+                                        "methods": ["save"]
+                                    },
+                                    "page": {
+                                        "url": ":socialhost:/:session_prefix:_/widget/render/page?usegapi\u003d1"
+                                    },
+                                    "card": {
+                                        "url": ":socialhost:/:session_prefix:_/hovercard/card"
+                                    }
+                                }
+                            },
+                            "h": "m;/_/scs/apps-static/_/js/k\u003doz.gapi.es_419.MiJ6lPKnD-A.O/am\u003dwQE/d\u003d1/ct\u003dzgms/rs\u003dAGLTcCOA_u-Z8ez-QGrMiteP91CNWaWPiw/m\u003d__features__",
+                            "u": "https://apis.google.com/js/platform.js",
+                            "hee": true,
+                            "fp": "821a251b140e4add32f87f4a7a08f044a59aa0e9",
+                            "dpo": false
+                        },
+                        "platform": ["additnow", "backdrop", "blogger", "comments", "commentcount", "community", "donation", "family_creation", "follow", "hangout", "health", "page", "partnersbadge", "person", "playemm", "playreview", "plus", "plusone", "post", "ratingbadge", "savetoandroidpay", "savetodrive", "savetowallet", "sharetoclassroom", "shortlists", "signin2", "surveyoptin", "visibility", "youtube", "ytsubscribe", "zoomableimage"],
+                        "fp": "821a251b140e4add32f87f4a7a08f044a59aa0e9",
+                        "annotation": ["interactivepost", "recobar", "signin2", "autocomplete", "profile"],
+                        "bimodal": ["signin", "share"]
+                    }
+                });
+
+            }
+
+        }, delay);
+    }
+
+    ngAfterViewInit () {
+        this.renderTweets(null, 1000);
+    }
 
     tradeToken(token:TokenDEX) {
         this.app.navigate('/exchange/trade/'+token.symbol.toLowerCase()+'.tlos');
@@ -96,19 +398,15 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
             if (info.category == "twitter") {
                 this.fetchTwitter(info);
             }
+            if (info.category == "youtube") {
+                this.renderYoutube(info, 1000);
+                this.renderYoutube(info, 2000);
+                this.renderYoutube(info, 3000);  
+                this.renderYoutube(info, 5000);
+            }
         }        
     }
 
-    renderTweets(delay) {
-        setTimeout(_ => {
-            console.log("renderTweets("+delay+")", typeof twttr);
-            twttr?twttr.widgets.load():null;
-        }, delay);
-    }
-
-    ngAfterViewInit () {
-        this.renderTweets(1000);
-    }
 
     tradeMarket(table:string) {
         this.app.navigate('/exchange/trade/'+table);
@@ -138,9 +436,25 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         this.feed.clearError("perform");
     }
 
-    getEmbedLink(info:TokenData) {
+    tryToExtractChannelId(info:TokenData) {
+        console.error(" ------------------> getChannelId()", info);
+        var channel_id = null;
+        var finalsrc:SafeResourceUrl = null;
+        if(info.category == "youtube") {            
+            // ----- https://www.youtube.com/channel/UCLGRZ0xSaBMIUmtn8wkPP3w
+            var result = info.link.match(/channel\/(.*)$/);
+            if (result) {
+                channel_id = result[1];
+                console.log( channel_id);
+                info.extras = {type: "channel", channelid:channel_id};
+            }
+        }
+    }
+
+    tryToExtractVideoLink(info:TokenData) {
         this._safe_url_cache = this._safe_url_cache || {};
         var info_id = "id-"+info.id;
+        
         if (this._safe_url_cache[info_id]) {
             return this._safe_url_cache[info_id];
         }
@@ -148,30 +462,40 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
             var finalsrc:SafeResourceUrl = null;
             var link = "https://www.youtube.com/embed/";
             var video_id = null;
+            var result = null;
+            
+            
             // ----- https://youtu.be/YSVJgKsSobA ------
-            var result = info.link.match(/https:\/\/youtu.be\/(.+)/);
-            if (result) {
+            result = info.link.match(/https:\/\/youtu.be\/(.+)/);
+            if (result && !finalsrc) {
                 video_id = result[1];
                 finalsrc = this.sanitizer.bypassSecurityTrustResourceUrl(link + video_id);
                 this._safe_url_cache[info_id] = finalsrc;
-                return finalsrc;
+                
             }
             // ----- https://www.youtube.com/watch?v=jhL1KyifGEs ------
-            var result = info.link.match(/\?v=([^&]+)$/);
-            if (result) {
+            result = info.link.match(/\?v=([^&]+)$/);
+            if (result && !finalsrc) {
+                info.extras = "video";
                 video_id = result[1];
                 finalsrc = this.sanitizer.bypassSecurityTrustResourceUrl(link + video_id);
                 this._safe_url_cache[info_id] = finalsrc;
-                return finalsrc;
+               
             }
             // ----- https://www.youtube.com/watch?v=jhL1KyifGEs&list=PLIv5p7BTy5wxqwqs0fGyjtOahoO3YWX0x&index=1 ------
-            var result = info.link.match(/\?v=([^&]+)&.*/);
-            if (result) {
+            result = info.link.match(/\?v=([^&]+)&.*/);
+            if (result && !finalsrc) {
+                info.extras = "video";
                 video_id = result[1];
                 finalsrc = this.sanitizer.bypassSecurityTrustResourceUrl(link + video_id);
                 this._safe_url_cache[info_id] = finalsrc;
-                return finalsrc;
+                
             }
+
+            if (finalsrc) {
+                info.extras = {type: "video", safelink:finalsrc};
+            }
+
         }
     }
 
@@ -430,5 +754,9 @@ export class TokenPage implements OnInit, OnDestroy, AfterViewInit {
         }, 100);
     }
 
+    debug() {
+        console.log(this.token);
+        this.renderEntries();
+    }
 
 }

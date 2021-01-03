@@ -8,11 +8,11 @@
 -->
 <div class="container" [hidden]="!app.device.portrait">
 
-    <vpe-panel-account-header [current]="dex.current" [rexdata]="rexdata" [dexdata]="dexdata"></vpe-panel-account-header>
+    <vpe-panel-account-header [current]="dex.current" [rexdata]="rexdata" [dexdata]="dexdata" [network]="'telos'"></vpe-panel-account-header>
 
-    <div class="row" [hidden]="dex.current.name == dex.default.name">
+    <div class="row" *ngIf="dex.current.name != dex.default.name">
         <div class="col-12">
-
+        
             <vpe-panel-wallet #wallet1 (confirmWithdraw)="onWalletConfirmWithdraw($event, wallet1)" (confirmDeposit)="onWalletConfirmDeposit($event, wallet1)"  [deposit_error]="deposit_error" [withdraw_error]="withdraw_error" [loading]="loading" [actions]="true" [hideuser]="true" [hideheader]="true" [title]="local.string.wallet" [deposits]="deposits" [balances]="balances"></vpe-panel-wallet>
 
             <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [account]="dex.current"> </vpe-panel-account-resources>
@@ -22,7 +22,8 @@
             <vpe-panel-deposits-breakdown [title]="local.string.dexbreak" [hideheader]="true" [dexdata]="dexdata"></vpe-panel-deposits-breakdown>
             
             <vpe-panel-rex-breakdown [title]="local.string.rexbreak" [hideheader]="true" [data]="rexdata"></vpe-panel-rex-breakdown>
-            <!--vpe-panel-user-orders [userorders]="userorders" [hideheader]="true" [title]="local.string.orders"></vpe-panel-user-orders-->
+        
+            <vpe-panel-user-orders (onTableSelected)="navigateToTable($event)" [userorders]="userorders" [hideheader]="true" [title]="local.string.orders"></vpe-panel-user-orders>
         </div>
     </div>
     
@@ -34,9 +35,9 @@
 
 <div class="container" [hidden]="app.device.portrait">
 
-    <vpe-panel-account-header [current]="dex.current" [rexdata]="rexdata" [dexdata]="dexdata"></vpe-panel-account-header>
+    <vpe-panel-account-header [current]="dex.current" [rexdata]="rexdata" [dexdata]="dexdata" [network]="'telos'"></vpe-panel-account-header>
 
-    <div class="row" [hidden]="dex.current.name == dex.default.name">
+    <div class="row" *ngIf="dex.current.name != dex.default.name">
         <div class="col-6 col-padding-right">
             <vpe-panel-account-resources  [title]="local.string.resources" [hideheader]="true" [account]="dex.current"> </vpe-panel-account-resources>
             <vpe-panel-balance-breakdown [title]="local.string.balbreak" [hideheader]="true" [account]="dex.current"></vpe-panel-balance-breakdown>

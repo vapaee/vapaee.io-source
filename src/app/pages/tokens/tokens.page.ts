@@ -11,6 +11,7 @@ import { VapaeeDEX, TokenDEX } from '@vapaee/dex';
 })
 export class TokensPage implements OnInit, OnDestroy {
 
+    public filter:string;
     constructor(
         public app: AppService,
         public local: LocalStringsService,

@@ -7,9 +7,11 @@ import { DropdownService } from './services/dropdown.service';
 import { HttpClient } from '@angular/common/http';
 
 import { VapaeeDEX, TokenDEX, Market } from '@vapaee/dex';
-import { VapaeeStyle } from '@vapaee/style';
-import { VapaeeScatter } from '@vapaee/scatter';
+import { IStorage, Skin, VapaeeStyle } from '@vapaee/style';
 import { VapaeeREX } from '@vapaee/rex';
+import { VapaeeWallet } from '@vapaee/wallet';
+import { ScatterIdProvider } from '@vapaee/idp-scatter';
+import { CookieService } from 'ngx-cookie-service';
 
 
 @Component({
@@ -124,14 +126,15 @@ export class AppComponent {
         public coingecko: CoingeckoService,
         public dex: VapaeeDEX,
         public rex: VapaeeREX,
-        public scatter: VapaeeScatter,
+        public wallet: VapaeeWallet,
         public local: LocalStringsService,
         public style: VapaeeStyle,
         public dropdown: DropdownService,
         public http: HttpClient,
-        public analytics: AnalyticsService
+        public analytics: AnalyticsService,
+        public cookies: CookieService
     ) {
-        this.app.init("v3.7.1", this.appname);
+        this.app.init("v3.8.0", this.appname);
 
         // Check if this is the last version. If not, reload site.
         this.http.get<any>("assets/app.json?_="+Math.random()).toPromise().then((appjson) => {
@@ -148,27 +151,6 @@ export class AppComponent {
     
     async ngOnInit() {
 
-        /*
-        this.http.get<NetworkMap>("assets/endpoints.json").toPromise().then((endpoints) => {
-            this.scatter.setEndpoints(endpoints);
-
-            var network = "telos-testnet";
-            network = "telos";
-            // network = "local";
-            if (window.location.hostname == "vapaee.io") {
-                network = "telos";
-            }
-            if (window.location.hostname == "test.vapaee.io") {
-                network = "telos-testnet";
-            }
-            if ( this.scatter.network.slug != network || !this.scatter.connected ) {
-                this.scatter.setNetwork(network);
-                this.scatter.connectApp("Vapaée - Telos DEX").catch(err => console.error(err));
-            }
-    
-        });
-        */
-
         this.dex.onLoggedAccountChange.subscribe(logged => {
             this.analytics.setUserId(logged ? logged : 0);
         });
@@ -180,10 +162,38 @@ export class AppComponent {
 
         this.addOffChainToken();
 
-        await this.scatter.init("assets/endpoints.json");
-        await this.dex.init(this.appname, {telosbookdex:"vapaeetokens", vapaeetokens:"vapaeetokens"});
+        await this.style.init(this.getSkins(), this.getStorage());
+        await this.wallet.init("assets/endpoints.json");
+        await this.dex.init(this.appname, {telosbookdex:"vapaeetokens", vapaeetokens:"vapaeetokens"}, ScatterIdProvider);
         await this.rex.init();
      
+    }
+
+    getStorage(): IStorage {
+        return {
+            get: (key: string) => this.cookies.get(key),
+            set: (key: string, value: any) => this.cookies.set(key, value),
+        }
+    }
+
+    getSkins(): Skin[] {
+        return [
+            {
+                "id": "skin-rain",
+                "name": "Gray Rain",
+                "url": "/assets/skins/skin-rain.css"
+            },
+            {
+                "id": "skin-jungle",
+                "name": "Jungle",
+                "url": "/assets/skins/skin-jungle.css"
+            },
+            {
+                "id": "skin-sky",
+                "name": "Sky",
+                "url": "/assets/skins/skin-sky.css"
+            },
+        ]
     }
 
     async addOffChainToken() {

@@ -15,44 +15,6 @@
     "lib": [
       "es2017",
       "dom"
-    ],
-    "paths": {
-      "@vapaee/feedback": [
-        "dist/vapaee/feedback"
-      ],
-      "@vapaee/feedback/*": [
-        "dist/vapaee/feedback/*"
-      ],
-      "@vapaee/scatter": [
-        "dist/vapaee/scatter"
-      ],
-      "@vapaee/scatter/*": [
-        "dist/vapaee/scatter/*"
-      ],
-      "@vapaee/dex": [
-        "dist/vapaee/dex"
-      ],
-      "@vapaee/dex/*": [
-        "dist/vapaee/dex/*"
-      ],
-      "@vapaee/aux": [
-        "dist/vapaee/aux"
-      ],
-      "@vapaee/aux/*": [
-        "dist/vapaee/aux/*"
-      ],
-      "@vapaee/style": [
-        "dist/vapaee/style"
-      ],
-      "@vapaee/style/*": [
-        "dist/vapaee/style/*"
-      ],
-      "@vapaee/rex": [
-        "dist/vapaee/rex"
-      ],
-      "@vapaee/rex/*": [
-        "dist/vapaee/rex/*"
-      ]
-    }
+    ]
   }
 }

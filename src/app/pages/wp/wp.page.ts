@@ -4,7 +4,7 @@ import { LocalStringsService } from 'src/app/services/common/common.services';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscriber } from 'rxjs';
 
-import { SmartContract, VapaeeScatter } from '@vapaee/scatter';
+import { SmartContract, VapaeeWallet } from '@vapaee/wallet';
 import { Feedback } from '@vapaee/feedback';
 import { VapaeeDEX } from '@vapaee/dex';
 
@@ -26,7 +26,7 @@ export class WPPage implements OnInit, OnDestroy {
     constructor(
         public app: AppService,
         public local: LocalStringsService,
-        public scatter: VapaeeScatter,
+        public scatter: VapaeeWallet,
         public dex: VapaeeDEX,
         public cookie: CookieService
     ) {
@@ -41,7 +41,7 @@ export class WPPage implements OnInit, OnDestroy {
     }
 
     async ngOnInit() {
-        this.contract = await this.scatter.getContractWrapper("eosio.trail");
+        this.contract = this.scatter.connexion.telos.getContract("eosio.trail");
         this.onAccountChange(null);
         this.dex.onCurrentAccountChange.subscribe(this.subscriber);
     }

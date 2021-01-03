@@ -22,6 +22,7 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
     @Input() public hidebackground: boolean;
     @Input() public limit: number;
     @Input() public logged: string;
+    @Input() public filter: string;
 
 
     @Output() confirmDeposit: EventEmitter<any> = new EventEmitter();
@@ -55,7 +56,19 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
         for (var i in this.tokens) {
             var token = this.tokens[i];
             if (!token.offchain) {
-                tokens.push(token);
+                if (this.filter) {
+                    let filter = this.filter.toLowerCase();
+                    if (
+                        token.symbol.toLowerCase().indexOf(filter) != -1 ||
+                        token.table.toLowerCase().indexOf(filter) != -1 ||
+                        token.title.toLowerCase().indexOf(filter) != -1 ||
+                        token.contract.toLowerCase().indexOf(filter) != -1
+                    ) {
+                        tokens.push(token);    
+                    }
+                } else {
+                    tokens.push(token);
+                }                
             }
         }
         return tokens

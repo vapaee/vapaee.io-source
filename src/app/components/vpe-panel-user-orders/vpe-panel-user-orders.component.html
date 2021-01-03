@@ -6,6 +6,18 @@
                 <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('userorders')"></span>
             </div>
         </div>
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
         <div class="col-sm-12" *ngFor="let orders of user_orders">
             <label class="cursor-pointer" (click)="selectTable(orders.table)">
                 {{local.string.table | titlecase}} {{getSymbols(orders.table)}}
@@ -15,71 +27,75 @@
                 <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left">{{local.string.total}}</div>
             </div>
             <perfect-scrollbar style="max-height: 300px; max-width: 100%">
-                <div class="row margin-bottom active-on-hover cursor-pointer" 
-                    *ngFor="let order of orders.buy.orders"
-                    (click)="cancel(orders.buy.table, order)"
-                >
-                    <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg"
-                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
-                        >
-                        {{order.price.toString(8)}}
+                <div *ngFor="let order of orders.buy.orders">
+                    <div class="row margin-bottom active-on-hover cursor-pointer" 
+                        (click)="cancel(orders.buy.table, order)"
+                    >
+                        <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg"
+                            [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                            >
+                            {{order.price.toString(8)}}
+                        </div>
+                        <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left"
+                            [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                            >
+                            {{order.deposit.toString(8)}}
+                        </div>
+                        
+                        <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
+                            <i class="material-icons" style="font-size: 100%;" [hidden]="feed.loading(orders.buy.table + '-' + order.id)">cancel</i>
+                            <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading(orders.buy.table + '-' + order.id)"></span>
+                        </div>
                     </div>
-                    <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left"
-                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
-                        >
-                        {{order.deposit.toString(8)}}
-                    </div>
-                    
-                    <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
-                        <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[orders.buy.table + '-' + order.id]">cancel</i>
-                        <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[orders.buy.table + '-' + order.id]"></span>
-                    </div>
-                
-                    <div class="col-sm-12" [hidden]="!error">
+
+
+                    <div class="col-sm-12 margin-top" [hidden]="!order.error">
                         <div class="alert alert-danger">
                             <div class="pull-right">
-                                <button type="button" class="close text-white" (click)="error = null">
+                                <button type="button" class="close text-white" (click)="order.error = null">
                                     <i class="material-icons" style="font-size: 100%;">cancel</i>
                                 </button>                
                             </div>
-                            {{error}}
+                            {{order.error}}
+                        </div>
+                    </div>                    
+                </div>
+
+                <div *ngFor="let order of orders.sell.orders">
+                    <div class="row margin-bottom active-on-hover cursor-pointer" 
+                        (click)="cancel(orders.sell.table, order)"
+                    >
+                        <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg"
+                            [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                            >
+                            {{order.price.toString(8)}}
+                        </div>
+                        <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left"
+                            [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                            >
+                            {{order.deposit.toString(8)}}
+                        </div>
+                        
+                        <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
+                            <i class="material-icons" style="font-size: 100%;" [hidden]="feed.loading(orders.sell.table + '-' + order.id)">cancel</i>
+                            <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading(orders.sell.table + '-' + order.id)"></span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="col-sm-12 margin-top" [hidden]="!order.error">
+                        <div class="alert alert-danger">
+                            <div class="pull-right">
+                                <button type="button" class="close text-white" (click)="order.error = null">
+                                    <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                </button>                
+                            </div>
+                            {{order.error}}
                         </div>
                     </div>
 
                 </div>
-
-                <div class="row margin-bottom active-on-hover cursor-pointer" 
-                    *ngFor="let order of orders.sell.orders"
-                    (click)="cancel(orders.sell.table, order)"
-                >
-                    <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg"
-                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
-                        >
-                        {{order.price.toString(8)}}
-                    </div>
-                    <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left"
-                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
-                        >
-                        {{order.deposit.toString(8)}}
-                    </div>
-                    
-                    <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
-                        <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading[orders.sell.table + '-' + order.id]">cancel</i>
-                        <span class="spinner-border spinner-border-sm" [hidden]="!c_loading[orders.sell.table + '-' + order.id]"></span>
-                    </div>
                 
-                    <div class="col-sm-12" [hidden]="!error">
-                        <div class="alert alert-danger">
-                            <div class="pull-right">
-                                <button type="button" class="close text-white" (click)="error = null">
-                                    <i class="material-icons" style="font-size: 100%;">cancel</i>
-                                </button>                
-                            </div>
-                            {{error}}
-                        </div>
-                    </div>
-
-                </div>
             </perfect-scrollbar>
         </div>        
     </div>

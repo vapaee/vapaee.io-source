@@ -16,17 +16,10 @@ https://iconmonstr.com/
 
 
 
------ TODO ------
-- verificar que se esté apuntando a producción
-- que levante bien el nuevo scatter 2
-- correr la app
-- anotar todos los lugares donde está NOT IMPLEMENTED
-- copiar la implementación vieja a la nueva lib
-
-
-
-
-
+----- TODO NUEVO ------
+- Hay que soportar channels de youtube en la lista de links que se pueden poner en los tokens.
+  ej: BVC https://www.youtube.com/channel/UCLGRZ0xSaBMIUmtn8wkPP3w
+- en la página de la lista de lista de tokens poner un filtro
 
 
 
@@ -202,12 +195,20 @@ cleos --url https://api.eos.miami get info
 
 
 
+npm i --save ngx-cookie-service@2.1.0 @angular/platform-browser rxjs-compat@^6.3.3 bignumber.js@8.0.2
+npm i --save scatterjs-core@^2.3.8 @scatterjs/eosjs2@^1.5.36 eosjs@^20.0.0
+npm i --save @vapaee/feedback @vapaee/style @vapaee/wallet @vapaee/idp-scatter @vapaee/dex @vapaee/rex
+npm i -D @babel/runtime
 
 
 // Instalar las bibliotecas de vapaee
+
 npm i --save ngx-cookie-service@2.1.0 rxjs-compat@^6.3.3 bignumber.js@8.0.2 scatterjs-core@2.3.8 scatterjs-plugin-eosjs@1.3.10 eosjs@16.0.9
-npm i --save @vapaee/feedback @vapaee/scatter @vapaee/dex
+npm i --save @vapaee/feedback @vapaee/wallet @vapaee/idp-scatter @vapaee/dex
 npm i -D @babel/runtime
+
+
+
 
 
 
@@ -218,8 +219,8 @@ npm i -D @babel/runtime
   cd /var/www/vapaee.io-source && ng build @vapaee/feedback --prod
   cd dist/vapaee/feedback && npm publish --access public
   
-  cd /var/www/vapaee.io-source && ng build @vapaee/scatter --prod
-  cd dist/vapaee/scatter && npm publish --access public
+  cd /var/www/vapaee.io-source && ng build @vapaee/wallet --prod
+  cd dist/vapaee/wallet && npm publish --access public
 
   cd /var/www/vapaee.io-source && ng build @vapaee/dex --prod
   cd dist/vapaee/dex && npm publish --access public
