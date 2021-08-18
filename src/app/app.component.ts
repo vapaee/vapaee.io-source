@@ -134,7 +134,7 @@ export class AppComponent {
         public analytics: AnalyticsService,
         public cookies: CookieService
     ) {
-        this.app.init("v3.8.0", this.appname);
+        this.app.init("v3.8.1", this.appname);
 
         // Check if this is the last version. If not, reload site.
         this.http.get<any>("assets/app.json?_="+Math.random()).toPromise().then((appjson) => {

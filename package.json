@@ -1,6 +1,6 @@
 {
   "name": "vapaee.io-source",
-  "version": "v3.8.0",
+  "version": "v3.8.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --poll=2000 -o",
@@ -43,10 +43,10 @@
     "@scatterjs/eosjs2": "^1.5.36",
     "@vapaee/dex": "^2.4.3",
     "@vapaee/feedback": "^1.1.1",
-    "@vapaee/idp-scatter": "^1.0.1",
+    "@vapaee/idp-scatter": "^1.0.2",
     "@vapaee/rex": "^0.2.1",
-    "@vapaee/style": "0.1.1",
-    "@vapaee/wallet": "^1.0.5",
+    "@vapaee/style": "^0.1.1",
+    "@vapaee/wallet": "^1.0.6",
     "bignumber.js": "^8.0.2",
     "bootstrap": "^4.3.1",
     "bytebuffer": "^5.0.1",
