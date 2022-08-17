@@ -7,13 +7,13 @@
         <div class="col-12 margin-top orders">
             <perfect-scrollbar style="max-height: 300px; max-width: 100%">
                 <div class="row margin-bottom danger active-on-hover cursor-pointer" 
-                    [ngClass]="{'owner':row.owners[dex.account.name]}"
+                    [ngClass]="{'owner':row.owners[dex.account.name], 'swap':row.str=='SWAP'}"
                     *ngFor="let row of orders_sell_inverted"
                 >
                     <div class="nowrap col-3 col-padding-right text-danger padding-left-lgprice " (click)="clickPrice('sell', row)">{{row.price.valueToString(digits.price, true)}}</div>
                     <div class="nowrap col-3 text-right col-padding-right col-padding-left total" (click)="clickRow('sell', row)">{{row.total.valueToString(digits.total, true)}}</div>
-                    <div class="nowrap col-3 text-right col-padding-right col-padding-left telos" (click)="clickRow('sell', row)">{{row.telos.valueToString(digits.telos, true)}}</div>
-                    <div class="nowrap col-3 text-right padding-right-lg sumtelos" (click)="clickRow('sell', row)">{{row.sumtelos.valueToString(digits.sumtelos, true)}}</div>
+                    <div class="nowrap col-3 text-right col-padding-right col-padding-left telos" (click)="clickRow('sell', row)">{{row.currency.valueToString(digits.telos, true)}}</div>
+                    <div class="nowrap col-3 text-right padding-right-lg sumtelos" (click)="clickRow('sell', row)">{{row.sumcurrency.valueToString(digits.sumtelos, true)}}</div>
                 </div>
 
                 <div class="row margin-bottom">
@@ -23,13 +23,13 @@
                 </div>                    
 
                 <div class="row margin-bottom success active-on-hover cursor-pointer"
-                    [ngClass]="{'owner':row.owners[dex.account.name]}"
+                    [ngClass]="{'owner':row.owners[dex.account.name], 'swap':row.str=='SWAP'}"
                     *ngFor="let row of orders.buy"
                 >
                     <div class="nowrap col-3 col-padding-right text-success padding-left-lg price" (click)="clickPrice('buy', row)">{{row.price.valueToString(digits.price, true)}}</div>    
                     <div class="nowrap col-3 text-right col-padding-right col-padding-left total" (click)="clickRow('buy', row)">{{row.total.valueToString(digits.total, true)}}</div>
-                    <div class="nowrap col-3 text-right col-padding-right col-padding-left telos" (click)="clickRow('buy', row)">{{row.telos.valueToString(digits.telos, true)}}</div>
-                    <div class="nowrap col-3 text-right padding-right-lg sumtelos" (click)="clickRow('buy', row)">{{row.sumtelos.valueToString(digits.sumtelos, true)}}</div>
+                    <div class="nowrap col-3 text-right col-padding-right col-padding-left telos" (click)="clickRow('buy', row)">{{row.currency.valueToString(digits.telos, true)}}</div>
+                    <div class="nowrap col-3 text-right padding-right-lg sumtelos" (click)="clickRow('buy', row)">{{row.sumcurrency.valueToString(digits.sumtelos, true)}}</div>
                 </div>                    
             </perfect-scrollbar>
         </div>        
@@ -57,15 +57,15 @@
             <div class="row margin-top">
                 <div class="nowrap text-bold text-sm col-3 col-padding-right padding-left-lg">
                     {{local.string.price | titlecase}}
-                    <img _ngcontent-c6="" style="width: 16px; height: 16px; margin-top:-1px; margin-left:1px" [src]="headers.buy?.total?.token.icon">
+                    <img _ngcontent-c6="" style="width: 16px; height: 16px; margin-top:-1px; margin-left:1px" [src]="headers.buy.total.tokenDex.icon || headers.buy.total.tokenDex.iconlg">
                 </div>
                 <div class="nowrap text-bold text-sm-right col-3 col-padding-right col-padding-left">{{local.string.amount | titlecase}}</div>
                 <div class="nowrap text-bold text-sm-right col-3 col-padding-right col-padding-left">
-                    <div class="pull-left"><img _ngcontent-c6="" style="width: 16px; height: 16px; margin-top:-1px; margin-left:-6px" [src]="headers.sell?.total?.token.icon" ></div>
+                    <div class="pull-left"><img _ngcontent-c6="" style="width: 16px; height: 16px; margin-top:-1px; margin-left:-6px" [src]="headers.sell.total.tokenDex.icon || headers.sell.total.tokenDex.iconlg" ></div>
                     {{local.string.total | titlecase}}
                 </div>
                 <div class="nowrap text-bold text-sm-right col-3 col-padding-left padding-right-lg">
-                    <div class="pull-left"><img _ngcontent-c6="" style="width: 16px; height: 16px; margin-top:-1px; margin-left:-6px" [src]="headers.buy?.total?.token.icon" ></div>
+                    <div class="pull-left"><img _ngcontent-c6="" style="width: 16px; height: 16px; margin-top:-1px; margin-left:-6px" [src]="headers.buy.total.tokenDex.icon || headers.buy.total.tokenDex.iconlg" ></div>
                     {{local.string.sum | titlecase}}
                 </div>
             </div>
@@ -73,13 +73,13 @@
                 <div class="col-12 orders">
                     <perfect-scrollbar style="max-height: 300px; max-width: 100%">
                         <div class="row margin-bottom danger active-on-hover cursor-pointer" 
-                            [ngClass]="{'owner':row.owners[dex.account.name]}"
+                            [ngClass]="{'owner':row.owners[dex.account.name], 'swap':row.str=='SWAP'}"
                             *ngFor="let row of orders.sell"
                         >
                             <div class="nowrap col-3 col-padding-right text-danger padding-left-lg price" (click)="clickPrice('sell', row)">{{row.price.valueToString(digits.price, true)}}</div>
                             <div class="nowrap col-3 text-right col-padding-right col-padding-left total" (click)="clickRow('sell', row)">{{row.total.valueToString(digits.total, true)}}</div>
-                            <div class="nowrap col-3 text-right col-padding-right col-padding-left telos" (click)="clickRow('sell', row)">{{row.telos.valueToString(digits.telos, true)}}</div>
-                            <div class="nowrap col-3 text-right padding-right-lg sumtelos" (click)="clickRow('sell', row)">{{row.sumtelos.valueToString(digits.sumtelos, true)}}</div>
+                            <div class="nowrap col-3 text-right col-padding-right col-padding-left telos" (click)="clickRow('sell', row)">{{row.currency.valueToString(digits.telos, true)}}</div>
+                            <div class="nowrap col-3 text-right padding-right-lg sumtelos" (click)="clickRow('sell', row)">{{row.sumcurrency.valueToString(digits.sumtelos, true)}}</div>
                         </div>
                     </perfect-scrollbar>
                 </div>
@@ -90,10 +90,10 @@
                 <div class="col-12">
                     <div class="pull-right">
                         <span class="text-muted">
-                            {{headers.buy ? headers.buy.orders : 0}} {{local.string.orders}}
+                            {{headers.buy.orders}} {{local.string.orders}}
                             <span [hidden]="split"> - </span>
                             <span [hidden]="!split"><br></span>
-                            {{headers.buy.total ? headers.buy.total.toString() : ""}}
+                            {{headers.buy.total.ok ? headers.buy.total.toString() : ""}}
                         </span>
                     </div>
                     <span class="text-bold text-sm">{{local.string.buy_orders | titlecase}} </span>
@@ -103,15 +103,15 @@
             <div class="row margin-top">
                 <div class="nowrap text-bold text-sm col-3 col-padding-right padding-left-lg">
                     {{local.string.price | titlecase}}
-                    <img _ngcontent-c6="" style="width: 16px; height: 16px; margin-top:-1px; margin-left:1px" [src]="headers.buy?.total?.token.icon">
+                    <img _ngcontent-c6="" style="width: 16px; height: 16px; margin-top:-1px; margin-left:1px" [src]="headers.buy.total.tokenDex.icon || headers.buy.total.tokenDex.iconlg">
                 </div>
                 <div class="nowrap text-bold text-sm-right col-3 col-padding-right col-padding-left">{{local.string.amount | titlecase}}</div>
                 <div class="nowrap text-bold text-sm-right col-3 col-padding-right col-padding-left">
-                    <div class="pull-left"><img _ngcontent-c6="" style="width: 16px; height: 16px; margin-top:-1px; margin-left:-6px" [src]="headers.sell?.total?.token.icon" ></div>
+                    <div class="pull-left"><img _ngcontent-c6="" style="width: 16px; height: 16px; margin-top:-1px; margin-left:-6px" [src]="headers.sell.total.tokenDex.icon || headers.sell.total.tokenDex.iconlg" ></div>
                     {{local.string.total | titlecase}}
                 </div>
                 <div class="nowrap text-bold text-sm-right col-3 col-padding-left padding-right-lg">
-                    <div class="pull-left"><img _ngcontent-c6="" style="width: 16px; height: 16px; margin-top:-1px; margin-left:-6px" [src]="headers.buy?.total?.token.icon" ></div>
+                    <div class="pull-left"><img _ngcontent-c6="" style="width: 16px; height: 16px; margin-top:-1px; margin-left:-6px" [src]="headers.buy.total.tokenDex.icon || headers.buy.total.tokenDex.iconlg" ></div>
                     {{local.string.sum | titlecase}}
                 </div>
             </div>
@@ -119,13 +119,13 @@
                 <div class="col-12 orders">
                     <perfect-scrollbar style="max-height: 300px; max-width: 100%">
                         <div class="row margin-bottom success active-on-hover cursor-pointer"
-                            [ngClass]="{'owner':row.owners[dex.account.name]}"
+                            [ngClass]="{'owner':row.owners[dex.account.name], 'swap':row.str=='SWAP'}"
                             *ngFor="let row of orders.buy"
                         >
                             <div class="nowrap col-3 col-padding-right text-success padding-left-lg price" (click)="clickPrice('buy', row)">{{row.price.valueToString(digits.price, true)}}</div>    
                             <div class="nowrap col-3 text-right col-padding-right col-padding-left total" (click)="clickRow('buy', row)">{{row.total.valueToString(digits.total, true)}}</div>
-                            <div class="nowrap col-3 text-right col-padding-right col-padding-left telos" (click)="clickRow('buy', row)">{{row.telos.valueToString(digits.telos, true)}}</div>
-                            <div class="nowrap col-3 text-right padding-right-lg sumtelos" (click)="clickRow('buy', row)">{{row.sumtelos.valueToString(digits.sumtelos, true)}}</div>
+                            <div class="nowrap col-3 text-right col-padding-right col-padding-left telos" (click)="clickRow('buy', row)">{{row.currency.valueToString(digits.telos, true)}}</div>
+                            <div class="nowrap col-3 text-right padding-right-lg sumtelos" (click)="clickRow('buy', row)">{{row.sumcurrency.valueToString(digits.sumtelos, true)}}</div>
                         </div>
                     </perfect-scrollbar>
                 </div>

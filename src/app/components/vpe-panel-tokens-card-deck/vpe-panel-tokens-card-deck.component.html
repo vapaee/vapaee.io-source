@@ -15,6 +15,7 @@
                             [logged]="logged"
                             *ngIf="i<limit"
                             (tradeToken)="goToTradeToken(token)"
+                            (swapToken)="goToSwapToken(token)"
                             (tokenPage)="goToTokenPage(token)"
                             (editToken)="goToEditTokenPage(token)"
                         ></vpe-panel-tokens-card>

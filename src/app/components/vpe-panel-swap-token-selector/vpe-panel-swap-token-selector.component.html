@@ -1,0 +1,24 @@
+<div class="container-box" (click)="open(content)">
+    <img class="token-icon" [src]="current?.icon || current?.iconlg">
+    <span class="symbol">{{current?.symbol}}</span>
+    <i class="material-icons" [ngClass]="{'rotated-180': false}" > expand_more </i> 
+</div>
+
+
+<!--
+<vpe-panel (click)="open(content)" class="cursor-pointer active-on-hover" [id]="'vpe-panel-tokens'" (onResize)="onResize($event)" [margintop]="false" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.Tokenlist">
+    <div class="row">
+        <div class="nowrap col-sm-12">
+            <div class="pull-right">
+               <i class="material-icons cursor-pointer" style="line-height: 0px; margin-top: 12px;"> expand_more </i> 
+            </div>
+            <img style="height:16px; width: 16px; margin-top:-2px" [src]="current?.icon || current?.iconlg">
+            {{current?.title}} ({{current?.symbol}})
+        </div>
+    </div>
+</vpe-panel>
+-->
+
+<ng-template #content let-modal>
+    <vpe-panel-tokens [search]="'no-search'" [complete]="false" [margintop]="false" [tokens]="tokens" [hideheader]='true' (selectToken)="onTokenSelected($event)"></vpe-panel-tokens>
+</ng-template>

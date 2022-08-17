@@ -3,15 +3,16 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class TimezoneService {
 
-    private offset: number;
-    private map: {[key:string]: Date};
+    private offset: number = 0;
+    private map: {[key:string]: Date} = {};
 
     constructor(
         
     ) {
         this.map = {};
         try {
-            var aux = new Date().toString().match(/([-\+][0-9]+)\s/)[1];
+            var result: string[] = new Date().toString().match(/([-\+][0-9]+)\s/) || ["", "0"];
+            var aux = result[1];
             var hh = parseInt(aux.substr(0, aux.length-2));
             var mm = parseInt(aux.substr(-2));
             var mult = 1;

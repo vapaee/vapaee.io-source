@@ -7,3 +7,17 @@
 button.btn.action {
     border-color: #CCC;
 }
+
+div.input-group {
+    background-color: white;
+    border-radius: 0.2rem;
+    align-items: center;
+    input.form-control {
+        background-color: transparent;
+        border-color: transparent;
+        &:focus {
+            box-shadow: none;
+        }
+    }
+    
+}

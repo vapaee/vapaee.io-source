@@ -5,25 +5,31 @@ declare var fb_id: string;
 
 @Injectable()
 export class FacebookService {
-    pageviewTimer: number;
-    waitReady: Promise<any>;
+    
+    waitReady: Promise<void> = Promise.reject();
     constructor() {
         console.log("Facebook()");
         this.init();
     }   
 
-    init(local:string = null) {
-        this.waitReady = new Promise((resolve)=> {
+    init(local:string|null = null) {
+        this.waitReady = new Promise<void>((resolve)=> {
             var userLang = local || (<any>navigator).language || (<any>navigator).userLanguage; 
             (function(d, s, id) {
-                var js, fjs = d.getElementsByTagName(s)[0];
+                var js:any, fjs:Element | null = d.getElementsByTagName(s)[0];
+                if (!fjs) return;
                 if (d.getElementById(id)) return;
                 js = d.createElement(s); js.id = id;
                 js.src = "//connect.facebook.net/"+userLang+"/sdk.js#xfbml=1&version=v2.5&appId="+fb_id;
-                fjs.parentNode.insertBefore(js, fjs);
+                if(fjs.parentNode) {
+                    fjs.parentNode.insertBefore(js, fjs);
+                } else {
+                    throw new Error("Facebook: fjs.parentNode is null");
+                }
+                
             }(document, 'script', 'facebook-jssdk'));
         
-            (function(_f,b,e,v,n,t,s)
+            (function(_f:any,b:any,e:any,v:any,n:any=null,t:any=null,s:any=null)
             {var f:any=<any>_f;if(f.fbq)return;n=f.fbq=function(){n.callMethod?
             n.callMethod.apply(n,arguments):n.queue.push(arguments)};
             if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';

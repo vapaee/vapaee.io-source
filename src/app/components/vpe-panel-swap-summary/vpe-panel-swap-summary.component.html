@@ -1,0 +1,60 @@
+<vpe-panel [id]="'vpe-panel-order-editor'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.summary" (click)="debug()">
+
+
+    <div class="row">
+
+        <div class="col-sm-12 d-flex flex-column summary">
+
+            <div class="d-flex flex-row summary-row">
+                <div class="row-label">{{local.string.min_received}}:</div>
+                <div class="row-value flex-grow-1 text-end" *ngIf="summary">
+                    <span class="outcome ml-1">{{summary.outcome.str}}</span>
+                </div>
+            </div>
+
+            <div class="d-flex flex-row summary-row">
+                <div class="row-label">{{local.string.slippage}}:</div>
+                <div class="row-value flex-grow-1 text-end"
+                    [ngClass]="{'text-warning': warning, 'text-danger': danger, 'fw-bold': warning || danger}"
+                    *ngIf="summary"
+                > {{summary.slippage}}%</div>
+            </div>
+
+
+            <div class="d-flex flex-row summary-row cursor-pointer" *ngIf="!show_details" (click)="toggleDetails()">
+                <div class="row-label">{{local.string.fees}}<span *ngIf="summary && summary.fees.length > 1"> ({{summary.fees.length}})</span>:</div>
+                <div class="row-value flex-grow-1 text-end" *ngIf="summary">
+                    <span class="fee ml-1">{{summary.fee.str}}</span>
+                </div>
+            </div>
+
+            <div class="d-flex flex-row summary-row cursor-pointer" *ngIf="show_details" (click)="toggleDetails()">
+                <div class="row-label">{{local.string.fees_detail}}:</div>
+                <div class="row-value flex-grow-1 text-end"
+                    *ngIf="summary"
+                >
+                    <span class="fee"
+                        *ngFor="let fee of summary.fees"
+                    > {{fee.str}} </span>
+                </div>
+            </div>
+
+            <!-- create new row for path details. Only visible if show_details. Iterate over the summary.path and for each step show the converter.state.currency.symbol -->
+            <div class="d-flex flex-row summary-row cursor-pointer" (click)="toggleDetails()">
+                <div class="row-label">{{local.string.path}}:</div>
+                <div class="row-value flex-grow-1 text-end" *ngIf="summary" >
+                    <span class="step"> {{summary.path[0].from.symbol}} </span>
+                    <span class="step"
+                        *ngFor="let step of summary.path"
+                    > {{step.to.symbol}} </span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</vpe-panel>
+
+

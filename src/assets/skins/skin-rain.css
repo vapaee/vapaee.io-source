@@ -3,7 +3,7 @@ body {
 }
 
 body ng-sidebar-container {
-    background-image: url(/assets/uploads/drip-2806027_640.jpg);
+    background-image: url(/assets/uploads/background.png);
     background-size: cover;
 }
 
@@ -44,6 +44,7 @@ div.token-banner.background-holder {
 
 div div.jumbotron.vpe-background-jumbotron {
     background: linear-gradient(to bottom, rgba(71,83,102,0.9) 0%, rgba(45,48,51,0.9) 100%);
+    background-image: linear-gradient(to bottom, #000000a0 0%, #000000a0 100%);
 }
 
 div.card {

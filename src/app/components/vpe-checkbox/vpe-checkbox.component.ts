@@ -7,7 +7,7 @@ import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core
 })
 export class VpeCheckboxComponent implements OnChanges {
 
-    @Input() public value: boolean;
+    @Input() public value: boolean = false;
     @Output() onChange: EventEmitter<any> = new EventEmitter();
 
     constructor(

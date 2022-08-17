@@ -1,56 +1,145 @@
 import { Injectable, Component } from '@angular/core';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd, Routes, Route } from '@angular/router';
 import { AnalyticsService } from './analytics.service';
 import { DomService } from './dom.service';
 import { Subject } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
+import { filter } from 'rxjs/operators';
+import { Location } from '@angular/common';
 
 export interface Device {
-    fullhd?:boolean, // >= 1600px
-    full?:boolean,   // >= 1200px
-    big?:boolean,    // < 1200px
-    normal?:boolean, // < 992px
-    medium?:boolean, // < 768px
-    small?:boolean,  // < 576px
-    tiny?:boolean,   // < 420px
-    portrait?:boolean,
-    wide?:boolean,
-    height?:number,
-    width?: number,
-    class?: string
+    fullhd: boolean, // >= 1600px
+    full: boolean,   // >= 1200px
+    big: boolean,    // < 1200px
+    normal: boolean, // < 992px
+    medium: boolean, // < 768px
+    small: boolean,  // < 576px
+    tiny: boolean,   // < 420px
+    portrait: boolean,
+    wide: boolean,
+    height: number,
+    width: number,
+    class: string
 }
 
 @Injectable({
     providedIn: 'root'
 })
 export class AppService {
-    public path: string;
+    public path: string = "";
     public onStateChange:Subject<string> = new Subject();
     public onWindowResize:Subject<Device> = new Subject();
+    public onGlobalEvent:Subject<any> = new Subject();
     // router : Router;
     // route : ActivatedRoute;
-    private global: {[key:string]:any};
-    state : string;
+    private global: {[key:string]:any} = {};
+    state : string = "";
     prev_state : string = "none";
-    device: Device = {};
-    loading: boolean;
-    countdown: number;
-    private _verison: string;
-    private _name:string;
+    node: Route | null = null;
+    
+    // empty device object
+    device: Device = {
+        fullhd: false,
+        full: false,
+        big: false,
+        normal: false,
+        medium: false,
+        small: false,
+        tiny: false,
+        portrait: false,
+        wide: false,
+        height: 0,
+        width: 0,
+        class: ""
+    }
+
+    loading: boolean = false;
+    countdown: number = 0;
+    private _verison: string = "";
+    private _name:string = "";
+    _routes: Routes = [];
+    
+    
+    getNodeForUrl(url:string, nodes: Routes = this._routes): Route {
+        console.log("AppService.getNodeForUrl()", url, nodes.length);
+        
+        // take off the first character if it is "/"
+        if (url[0] == "/") url = url.substring(1);
+
+        let parts:string[] = url.split("/");
+        let node:Route = nodes[0];
+
+        for (let i=0; i<nodes.length; i++) {
+            if (!nodes[i]) continue;
+            let path = nodes[i].path;
+            if (typeof path != "string") continue;
+            let new_parts = path.split("/");
+            if (new_parts.length == 0) continue;
+            console.log( new_parts[0], parts[0]);
+
+            if (path == "**") {
+                node = nodes[i]; break;
+            }
+
+            if (new_parts[0] === parts[0]) {
+                node = nodes[i]; break;
+            }
+        }
+
+        if (node.children) {
+            node = this.getNodeForUrl(url.substring(parts[0].length+1), node.children);
+        }
+
+        console.log("AppService.getNodeForUrl()", url, nodes.length, "------>", node.data? node.data.state : "no-data");
+
+        return node;
+    }
+
+    handleUrlChange(url:string) {
+        this.prev_state = this.state || "loading";
+        this.path = url;
+        this.node = this.getNodeForUrl(url);
+        this.state = this.node ? (this.node.data ? this.node.data.state : "") : "";
+        try {
+            console.log("AppService.state: ", this.state);
+            this.analytics.sendPageView(window.location.href);
+            this.onStateChange.next(this.state);
+            if (this.state != this.prev_state) {
+                window.document.body.classList.remove(this.prev_state);
+                window.document.body.classList.add(this.state);
+            }
+        } catch(e) {
+            console.error("error:", e);
+        }        
+    }
 
     constructor(
         private router: Router, 
         private route: ActivatedRoute, 
         private analytics: AnalyticsService,
         private dom: DomService,
-        public cookie: CookieService
+        public cookie: CookieService,
+        private location: Location
     ) {
+
+        this.router.events.pipe(filter(event=>event instanceof NavigationEnd)).subscribe(event=>{
+            let url = (event as NavigationEnd).url;
+            
+            if (event instanceof NavigationEnd) {
+                this.handleUrlChange(url);
+            }
+            
+        });
+        /*
         this.router.events.subscribe((event) => {
+
+            console.error(" --- this.router.events.subscribe", event, "-----");
+
             if (event instanceof NavigationEnd) {
                 this.prev_state = this.state;
-                this.path = this.router.url;
+                this.path = (event as NavigationEnd).url;
                 this.state = this.getDeepestChild(this.route.root).snapshot.data.state;
-                console.log("AppService. onRoute()", this.state, [this]);
+                console.error(" ----> AppService. onRoute()", this.state, [this]);
                 this.analytics.sendPageView(window.location.href);
                 this.onStateChange.next(this.state);
                 if (this.state != this.prev_state) {
@@ -59,6 +148,7 @@ export class AppService {
                 }
             }
         });
+        */
         window.document.body.removeAttribute("loading");
         // console.error('window.document.body.removeAttribute("loading");');
     }
@@ -71,13 +161,13 @@ export class AppService {
         return this._name;
     }
 
-    isOpera:boolean;
-    isFirefox:boolean;
-    isSafari:boolean;
-    isIE:boolean;
-    isEdge:boolean;
-    isChrome:boolean;
-    isBlink:boolean;
+    isOpera:   boolean = false;
+    isFirefox: boolean = false;
+    isSafari:  boolean = false;
+    isIE:      boolean = false;
+    isEdge:    boolean = false;
+    isChrome:  boolean = false;
+    isBlink:   boolean = false;
 
     detectBrowser() {
         var _window:any = <any>window;
@@ -111,8 +201,8 @@ export class AppService {
         console.log("isBlink", this.isBlink);
     }
 
-    private triggerOnInit: Function;
-    public onInit: Promise<any> = new Promise((resolve) => {
+    private triggerOnInit: () => void = ()=>{};
+    public onInit: Promise<void> = new Promise((resolve) => {
         this.triggerOnInit = resolve;
     });
 
@@ -121,7 +211,7 @@ export class AppService {
     private skipSideMenu() {
         var skip = this.sidemenu.skip;
         this.sidemenu.skip = true;
-        setTimeout(_ => { this.sidemenu.skip = false; }, 500);
+        setTimeout(() => { this.sidemenu.skip = false; }, 500);
         return skip;
     }
     toggleSideMenu() {
@@ -139,8 +229,8 @@ export class AppService {
     }
 
     // global variables ---------
-    getGlobal(key, defautl:any = undefined): any {
-        if (!this.global) this.global = {};
+    getGlobal(key: string, defautl:any = undefined): any {
+        // if (!this.global) this.global = {};
         if (!this.global[key]) {
             var cached = this.cookie.get(key);
             if (cached) {
@@ -154,7 +244,7 @@ export class AppService {
     }
 
     setGlobal(key:string, value:any, persist:boolean = false) {
-        if (!this.global) this.global = {};
+        // if (!this.global) this.global = {};
         this.global[key] = value;
         if (persist) {
             this.cookie.set(key, value);
@@ -162,20 +252,21 @@ export class AppService {
     }
 
     toggleGlobal(key:string) {
-        if (!this.global) this.global = {};
+        // if (!this.global) this.global = {};
         this.global[key] = !this.global[key];
     }
 
     consumeGlobal(key:string) {
-        if (!this.global) this.global = {};
+        // if (!this.global) this.global = {};
         let aux = this.global[key];
         delete this.global[key];
         return aux;
     }
-
-    init(version:string, name:string) {
+    
+    init(version:string, name:string, routes: Routes) {
         this._verison = version;
         this._name = name;
+        this._routes = routes;
         this.detectBrowser();
         this.dom.appendComponentToBody(LoadingOverall);
         this.triggerOnInit();
@@ -190,16 +281,16 @@ export class AppService {
     }
 
     onWindowsResize() {
-        this.device.fullhd = false;
-        this.device.full = false;
-        this.device.big = false;
-        this.device.normal = false;
-        this.device.medium = false;
-        this.device.small = false;
-        this.device.tiny = false;
-        this.device.height = window.innerHeight;
-        this.device.width = window.innerWidth;
-        this.device.class = "";
+        this.device.fullhd  = false;
+        this.device.full    = false;
+        this.device.big     = false;
+        this.device.normal  = false;
+        this.device.medium  = false;
+        this.device.small   = false;
+        this.device.tiny    = false;
+        this.device.height  = window.innerHeight;
+        this.device.width   = window.innerWidth;
+        this.device.class   = "";
         var w = this.device.width;
         var h = this.device.height;
 
@@ -254,23 +345,54 @@ export class AppService {
     }
 
     navigatePrefix(prefix:string){
-        var words = this.path.split("/");
+        let words = this.path.split("/");
         for (var i in words){
             if (words[i])  {
                 words[i] = prefix;
                 break;
             }
         }
-        var path = words.join("/");
+        let path: string = words.join("/");
         this.navigate(path);
     }
 
-    navigate(path) {
+    navigate(path: string) {
+        
+        if (path.indexOf("/") == 0) path = path.substring(1);
+        
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        this.router.onSameUrlNavigation = 'reload';
+
         if (path != this.path) {
-            console.log("AppService.navigate()", path);
-            this.router.navigate([path]);
+            // if (path.indexOf("/") == -1) {
+            //     console.log("AppService.navigate() -> ", [path]);
+            //     this.router.navigate([path]);
+            // } else {
+            // }
+            console.log("AppService.navigate() -> ", path.split("/"));
+            this.router.navigate(path.split("/"));
+        } else {
+            console.error("AppService.navigate() -> ", path.split("/"), "path repetido");
+            this.router.navigate(path.split("/"));
         }
+
         return path;
+    }
+
+    go(path: string) {
+        if (path.indexOf("/") == 0) path = path.substring(1);
+        
+        if (path != this.path) {
+            this.location.go(path);
+        } else {
+            console.error("AppService.go() -> ", path, "path repetido");
+            this.location.go(path);
+        }
+        
+        this.handleUrlChange(path);
+        return path;
+
+        
     }
 
     onCardClose() {
@@ -323,8 +445,8 @@ export class AppService {
     }
 
     getStateData(name?:string) {
-        name = name || this.getDeepestChild(this.route.root).snapshot.data.state;
-        var data = this.getRouteData(name, this.router.config);
+        let _name:string = name || this.getDeepestChild(this.route.root).snapshot.data.state || "guest";
+        var data = this.getRouteData(_name, this.router.config);
         return data;
     }
 

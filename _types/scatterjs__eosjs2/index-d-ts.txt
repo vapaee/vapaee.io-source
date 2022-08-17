@@ -1,0 +1,8 @@
+/**
+ * @module EOSJS2
+ */
+
+export class ScatterEOS {
+    constructor();
+}
+

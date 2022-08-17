@@ -1,0 +1,38 @@
+<nav class="navbar navbar-fixed-top vpe-background-navbar drop-shadow navbar-expand-lg bg-primary" (click)="collapseMenu()" [ngClass]="app.device.class">
+    <div class="container">
+        
+        <div class="navbar-brand brand">
+            &nbsp;
+            <div class="image-container">
+                <div>
+                    <a [routerLink]="'/exchange/home'">
+                        <img src="/assets/img/Logo.png" alt="" class="vpe image-logo">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <span class="d-lg-none btn btn-sm btn-primary ng-sidemenu-toggler" [ngClass]="{'active':app.sidemenu.opened}" (click)="app.toggleSideMenu()">
+            <i class="material-icons"> menu </i>
+        </span>
+
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav ml-auto">
+
+                <li class="nav-item language dropdown" >
+                    <a  class="nav-link dropdown-toggle cursor-pointer" (click)="dropdown.drop('language')">
+                        <i class="material-icons"> language </i>
+                        <!-- {{local.string.Language | titlecase}} -->
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" [ngClass]="{show: dropdown.isOpen('language')}" >
+                        <span class="cursor-pointer dropdown-item" (click)="local.setLocal('en_US'); dropdown.close(); debug();">English</span>
+                        <span class="cursor-pointer dropdown-item" (click)="local.setLocal('es_ES'); dropdown.close(); debug();">Español</span>
+                        <span class="cursor-pointer dropdown-item" (click)="local.setLocal('pt_BR'); dropdown.close(); debug();">Português</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<router-outlet></router-outlet>

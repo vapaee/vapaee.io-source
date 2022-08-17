@@ -10,7 +10,7 @@ import { Directive, OnInit, Output, Input, EventEmitter } from "@angular/core";
 })
 export class UppercaseDirective implements OnInit {
 
-    @Input() uppercase: string;
+    @Input() uppercase: string = "";
     @Output() uppercaseChange: EventEmitter<string> = new EventEmitter<string>();
 
     constructor() {
@@ -21,7 +21,7 @@ export class UppercaseDirective implements OnInit {
         this.format(this.uppercase);
     }
 
-    format(value) {
+    format(value: string) {
         value = value.toUpperCase();
         this.uppercaseChange.next(value);
     }

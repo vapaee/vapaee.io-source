@@ -12,26 +12,30 @@ import { VapaeeDEX } from '@vapaee/dex';
 })
 export class VpePanelComponent implements OnChanges, OnDestroy, AfterViewInit {
 
-    @ViewChild('body') body:ElementRef;
-    @Input() public id: string;
-    @Input() public title: string;
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public hidebackground: boolean;
-    @Input() public initclosed: boolean;
-    @Input() public expanded: boolean;
-    resizeEvent:ResizeEvent;
+    @ViewChild('body') body:ElementRef =<ElementRef>{};
+
+    @Input() public id: string                 = "";
+    @Input() public title: string              = "";
+    @Input() public hideheader: boolean        = false;
+    @Input() public margintop: boolean         = false;
+    @Input() public hidebackground: boolean    = false;
+    @Input() public initclosed: boolean        = false;
+    @Input() public expanded: boolean          = false;
+    @Input() public btnclose: boolean          = false;
+    
 
     private onResizeSubscriber: Subscriber<any>;
     @Output() public onResize:Subject<ResizeEvent> = new Subject();
-    @Output() public onClose:Subject<ResizeEvent> = new Subject();
+    @Output() public onClose:Subject<VpePanelComponent>  = new Subject();
+    @Output() public onShrink:Subject<ResizeEvent>  = new Subject();
     @Output() public onExpand:Subject<ResizeEvent> = new Subject();
 
-    private bodyw: number;
-    private bodyh: number;
-    private bodyp: number;
+    private bodyw: number = 0;
+    private bodyh: number = 0;
+    private bodyp: number = 0;
     
     private element: ElementRef;
+    resizeEvent:ResizeEvent;
 
     constructor(
         public dex: VapaeeDEX,
@@ -39,26 +43,18 @@ export class VpePanelComponent implements OnChanges, OnDestroy, AfterViewInit {
         public service: VpeComponentsService,
         private el: ElementRef
     ) {
-        this.element = el;
+        
         this.expanded = !this.initclosed;
         this.hideheader = false;
         this.margintop = true;
         this.hidebackground = false;
-        this.onResizeSubscriber = new Subscriber<string>(this.triggerResize.bind(this));
+        this.onResizeSubscriber = new Subscriber<Device>(this.triggerResize.bind(this));
+
+        this.element = el;
+        this.resizeEvent = VpeComponentsService.Utils.emptyResizeEvent(this.element);
     }
 
-    triggerResize(device:Device) {        
-        this.resizeEvent = {
-            device: device,
-            width: this.element.nativeElement.offsetWidth,
-            height: this.element.nativeElement.offsetHeight,
-            id: this.id,
-            el: this.element
-        };
-        // console.assert(this.resizeEvent.width > 0, JSON.stringify(this.resizeEvent));
-        this.onResize.next(this.resizeEvent);
-        this.updateBodyMesurements();
-    }
+    
 
     ngOnChanges() {
         this.updateBodyMesurements();
@@ -80,12 +76,29 @@ export class VpePanelComponent implements OnChanges, OnDestroy, AfterViewInit {
         this.triggerResize(this.service.device);
     }  
 
-    turn(offon:boolean) {
+
+    triggerResize(device:Device) {        
+        this.resizeEvent = {
+            device: device,
+            width: this.element.nativeElement.offsetWidth,
+            height: this.element.nativeElement.offsetHeight,
+            id: this.id,
+            el: this.element
+        };
+        // console.assert(this.resizeEvent.width > 0, JSON.stringify(this.resizeEvent));
+        this.onResize.next(this.resizeEvent);
+        this.updateBodyMesurements();
+    }
+
+    turn(event:MouseEvent, offon:boolean) {
         // console.log("this.expanded", this.expanded, " -- > ", offon);
+
+        if (this.btnclose) return this.close(event);
+
         this.expanded = offon;       
         if (this.expanded) {
             this.onExpand.next(this.resizeEvent);
-            setTimeout(_ => {
+            setTimeout(() => {
                 this.body.nativeElement.style.height = "unset";
                 // this.body.nativeElement.style.padding = "unset";
                 this.onResize.next(this.resizeEvent);
@@ -98,8 +111,8 @@ export class VpePanelComponent implements OnChanges, OnDestroy, AfterViewInit {
             this.bodyp = parseInt(window.getComputedStyle(this.body.nativeElement, null).getPropertyValue('padding'));
             console.log(this.bodyh, this.bodyp, window.getComputedStyle(this.body.nativeElement, null).getPropertyValue('padding'));
 
-            this.onClose.next(this.resizeEvent);
-            setTimeout(_ => {
+            this.onShrink.next(this.resizeEvent);
+            setTimeout(() => {
                 this.body.nativeElement.style.height = "0px";
                 this.body.nativeElement.style.paddingTop = "0px";
                 this.body.nativeElement.style.paddingBottom = "0px";
@@ -111,5 +124,10 @@ export class VpePanelComponent implements OnChanges, OnDestroy, AfterViewInit {
         this.body.nativeElement.style.height = this.bodyh + "px";
         this.body.nativeElement.style.paddingTop = this.bodyp + "px";
         this.body.nativeElement.style.paddingBottom = this.bodyp + "px";
+    }
+
+    close(event:MouseEvent) {
+        event.stopPropagation();
+        this.onClose.next(this);
     }
 }

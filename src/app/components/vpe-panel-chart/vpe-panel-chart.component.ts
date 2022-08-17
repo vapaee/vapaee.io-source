@@ -3,6 +3,8 @@ import { LocalStringsService } from 'src/app/services/common/common.services';
 import { GoogleChartInterface, GoogleChartComponentInterface } from 'src/app/components/vpe-panel-chart/google-chart-service/google-charts-interfaces';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 import { VapaeeDEX } from '@vapaee/dex';
+import { ChartErrorEvent, ChartMouseOutEvent, ChartMouseOverEvent, ChartReadyEvent, ChartSelectEvent, GoogleChartComponent } from './google-chart-service';
+import { ChartMouseWheelEvent } from './google-chart-service/google-chart/chart-mouse-event';
 
 
 
@@ -19,19 +21,19 @@ import { VapaeeDEX } from '@vapaee/dex';
 })
 export class VpePanelChartComponent implements OnChanges, OnDestroy {
 
-    @Input() data:any[];
+    @Input() data:any[]                                = [];
     
-    closed:boolean;
-    component:GoogleChartComponentInterface;
-    zoom_min: number = 5;
-    bgStyle: any;
-    limit: number;
+    closed: boolean                                    = false;
+    component: GoogleChartComponentInterface | null    = null;
+    zoom_min: number                                   = 5;
+    bgStyle: {[key:string]:string}                     = {};
+    limit: number                                      = 0;
 
-    @Input() public height: number;
-    @Input() public zoom: number;
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public expanded: boolean;
+    @Input() public height: number                     = 0;
+    @Input() public zoom: number                       = 0;
+    @Input() public hideheader: boolean                = false;
+    @Input() public margintop: boolean                 = true;
+    @Input() public expanded: boolean                  = true;
 
 
     // @ViewContainerRef('vpe-panel-chart', {read: ElementRef}) elref: ElementRef;
@@ -42,10 +44,6 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         private service: VpeComponentsService
     ) {
         this.zoom = 24*30; // one month of chart
-        this.closed = false;
-        this.hideheader = false;
-        this.margintop = true;
-        this.expanded = true; 
         this.bgStyle = {"height": this.height + "px"};
         if (this.service.device.width >= 1200) {
             this.height = 298;
@@ -60,11 +58,11 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         }        
     }
     
-    public _chartData:GoogleChartInterface;
+    public _chartData:GoogleChartInterface | null = null;
     
     // counter = 0;
     get chartData(): GoogleChartInterface {
-        return this._chartData;
+        return this._chartData ? this._chartData : GoogleChartComponent.getEmptyChartData();
     }
 
     onResize(event:ResizeEvent) {
@@ -82,7 +80,7 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         }
         // console.log("event.width", event.width, "event.device.width",  event.device.width);
         var data = this.recreateDataTable();
-        setTimeout(_ => {
+        setTimeout(() => {
             if (this._chartData && this._chartData.options && this._chartData.options.height != this.height) {
                 this.ngOnChanges();
             } else {
@@ -94,35 +92,35 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         // console.log(this._element.nativeElement.offsetHeight);
     }  
 
-    onClose(device) {
+    onShrink(event: ResizeEvent) {
         if (this.component) this.component.destroy();
         this.closed = true;
         // console.log(this._element.nativeElement.offsetHeight);
     }  
 
-    ready(event) {
-        this.component = event.component;
-        // console.assert(!!this.component, "ERROR: ", event);
+    ready(event: ChartReadyEvent) {
+        this.component = <GoogleChartComponentInterface>event.component;
+        console.assert(!!this.component, "ERROR: ", event);
     }
 
-    error(event) {
+    error(event:ChartErrorEvent) {
         //console.log("error", event);
     }
 
-    select(event) {
+    select(event:ChartSelectEvent) {
         //console.log("select", event);
     }
 
-    mouseOver(event) {
+    mouseOver(event:ChartMouseOverEvent) {
         //console.log("mouseOver", event);
     }
 
-    mouseOut(event) {
+    mouseOut(event:ChartMouseOutEvent) {
         //console.log("mouseOut", event);
     }
 
     
-    level: number;
+    level: number = 0;
     private updateLevel() {
         var lev;
         var zoom = this.zoom;
@@ -151,7 +149,7 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         return data;
     }
 
-    mouseWheel(event) {
+    mouseWheel(event: ChartMouseWheelEvent) {
         this.zoom -= Math.floor(event.delta * (this.zoom / 10));
         if (this.zoom > this.data[0].length) this.zoom = this.data[0].length;
         if (this.zoom < this.zoom_min) this.zoom = this.zoom_min;
@@ -162,8 +160,8 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         if (this.component) this.component.destroy();
     }
 
-    timer;
-    cache: any;
+    timer: NodeJS.Timer = setTimeout(() => {} , 0);
+    cache: any | null = null;
     ngOnChanges() {
         this.bgStyle = {"height": this.height + "px"};
         // if (this.data && this.data.length > 0) {
@@ -179,7 +177,7 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
                         break;
                     }
                 }
-                if (this._chartData.options.height != this.height) {
+                if (this.chartData && this.chartData.options && this.chartData.options.height != this.height) {
                     equals = false;
                 }
                 if (equals) {
@@ -192,7 +190,7 @@ export class VpePanelChartComponent implements OnChanges, OnDestroy {
         
             this._chartData = null;
             clearTimeout(this.timer);
-            this.timer = setTimeout(_ => {
+            this.timer = setTimeout(() => {
                 /*
                 if (this.data.length > 0 && this.data[0].length > 0 && this.data[0][0].length == 5 ){
                     this.prepareChartDataStyles();

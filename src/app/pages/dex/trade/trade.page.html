@@ -1,0 +1,143 @@
+<div *ngIf="app.device.portrait">
+    <div class="margin-top">
+        <vpe-panel-token-selector [tokens]="tokens" [current]="commodity" (tokenChange)="selectMarket($event.table)"></vpe-panel-token-selector>
+    </div>
+    
+    
+    <vpe-panel-chart [hideheader]="true" [zoom]="500" [height]="chartHeight" [margintop]="true" [data]="chartData"></vpe-panel-chart>
+
+    <div class="col-12 margin-top text-center">
+        <!--INVERSE -->
+        <!-- span class="btn btn-info" (click)="switchTokens()">Switch to {{dex.inversename(name)}}</span -->
+    </div>
+
+
+    <div class="margin-top text-center" [ngClass]="{'d-none':dex.loginState != 'no-logged'}">
+        <span class="btn btn-sm btn-primary" (click)="dex.login()">
+            <span class="spinner-border spinner-border-xs" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
+            {{local.string.login | titlecase}}
+        </span><br>
+        <span class="text-sm">{{local.string.NotLogged}} </span>
+    </div>
+
+    <vpe-panel-order-editor
+        [hidden]="!dex.logged"
+        #orderform_min
+        [deposits]="deposits"
+        [commodity]="commodity"
+        [currency]="currency"
+        [buyorders]="buyorders"
+        [sellorders]="sellorders"
+        [owner]="dex.account_name"
+        [clientid]="clientid"
+        (makeOrder)="makeOrder($event)"
+        (makeCancel)="makeCancel($event)"
+        (amountChange)="onAmountChange($event)"
+        (priceChange)="onPriceChange($event)"
+    ></vpe-panel-order-editor>
+
+    <vpe-panel-orders [expanded]='false' (onClickRow)="onClickRow($event)" (onClickPrice)="onClickPrice($event)" [headers]="headers" [orders]="orders"></vpe-panel-orders>
+
+    <vpe-panel-history [expanded]='true' [table]="commodity.table" [history]="history"></vpe-panel-history>
+</div>
+
+
+<!-- widescreen -->
+<div class="container-fluid margin-top" *ngIf="!app.device.portrait">
+    <div class="container-xl">
+    
+        <div class="card page-header">
+            <div class="card-header vpe-background-card-header padding">
+                <div class="row">
+                    <div class="col-sm-4 col-md-3 col-padding-right text-center">
+                        <!--INVERSE -->
+                        <span class="btn btn-primary btn-sm margin-top-sm switch-tokens-btn" (click)="switchTokens()">
+                            <i class="material-icons" [ngClass]="{'rotated': !dex.isCanonical(market_name)}">autorenew</i>
+                            {{local.string.invert | titlecase}}
+                        </span>                    
+                    </div>
+                    <div class="col-sm-5 col-md-6 col-padding-left col-padding-right">
+                        <span class="text-xl">
+                            <img style="height:40px; width: 40px; margin-top:-6px" [src]="commodity.icon || commodity.iconlg || '#'">
+                            <span> {{commodity.ok ? commodity.title : local.string.loading}} </span>
+                            <small class="text-muted currency-title"> / <span> {{currency.ok ? currency.symbol : local.string.loading}} </span> </small>
+                        </span>
+                    </div>
+                    
+                    <div class="col-sm-3 col-padding-left text-right">
+                        <div class="text-lg margin-top" *ngIf="market">
+                            {{market.summary.price.str}}
+                        </div>                    
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4 col-md-3  col-padding-right">
+                <vpe-panel-message
+                    class="success"
+                    [ngClass]="{'hide': message.length == 0 || message_title == local.string.closing}"
+                    [title]="message_title"
+                    [messages]="message"
+                    [btnclose]="!0"
+                    (onClose)="closeSuccess()"
+                ></vpe-panel-message>
+
+                <vpe-panel-markets
+                    [markets]="markets"
+                    (selectMarket)="selectMarket($event)"
+                ></vpe-panel-markets>
+
+                <vpe-panel-history [table]="market_name" [history]="history"></vpe-panel-history>
+
+                <vpe-panel-wallet
+                    #wallet
+                    [deposits]="[]"
+                    [balances]="balances"
+                    (confirmWithdraw)="onWalletConfirmWithdraw($event, wallet)"
+                    (confirmDeposit)="onWalletConfirmDeposit($event, wallet)"
+                    (gotoAccount)="gotoAccount()"
+                    [deposit_error]="deposit_error"
+                    [withdraw_error]="withdraw_error"
+                    [loading]="loading"
+                    [actions]="true"
+                ></vpe-panel-wallet>
+
+            </div>
+            <div class="col-sm-8 col-md-9 col-padding-left">
+                <vpe-panel-chart
+                    [data]="chartData"
+                ></vpe-panel-chart>
+
+                <vpe-panel-order-editor
+                    [hidden]="!dex.logged"
+                    #orderform_full
+                    [deposits]="deposits"
+                    [commodity]="commodity"
+                    [currency]="currency"
+                    [buyorders]="buyorders"
+                    [sellorders]="sellorders"
+                    [owner]="dex.account_name"
+                    [clientid]="clientid"
+                    (makeOrder)="makeOrder($event)"
+                    (makeCancel)="makeCancel($event)"
+                    (makeSwap)="makeSwap($event)"
+                    (amountChange)="onAmountChange($event)"
+                    (priceChange)="onPriceChange($event)"
+                ></vpe-panel-order-editor>
+
+                
+                <vpe-panel-orders
+                    [headers]="headers"
+                    [orders]="orders"
+                    (onClickRow)="onClickRow($event)"
+                    (onClickPrice)="onClickPrice($event)"
+                ></vpe-panel-orders>
+            </div>
+        </div>
+
+    </div>
+    
+</div>

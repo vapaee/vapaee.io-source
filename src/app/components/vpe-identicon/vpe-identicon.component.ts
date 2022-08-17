@@ -9,7 +9,7 @@ declare var $:any;
     styleUrls: ['./vpe-identicon.component.scss']
 })
 export class VpeIdenticonComponent implements OnChanges {
-    @Input() value: string;
+    @Input() value: string = "";
     
     constructor() {
         

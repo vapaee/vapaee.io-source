@@ -11,25 +11,22 @@ import { HistoryTx, VapaeeDEX } from '@vapaee/dex';
 })
 export class VpePanelHistoryComponent implements OnChanges {
 
-    @Input() public history: HistoryTx[];
-    @Input() public table: string;
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public expanded: boolean;
+    @Input() public history: HistoryTx[]  = [];
+    @Input() public table: string         = "history";
+    @Input() public hideheader: boolean   = false;
+    @Input() public margintop: boolean    = true;
+    @Input() public expanded: boolean     = true;
+    @Input() public max_height: string    = "250px";
 
-    @HostBinding('class') display;
-    public digits: number;
-    public timeformat: string;
+    @HostBinding('class') display: string = "full";
+    public digits: number                 = 8;
+    public timeformat: string             = "HH:mm:ss";
     constructor(
         public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
-        this.digits = 8;
-        this.display = "full";
-        this.hideheader = false;
-        this.margintop = true;
-        this.expanded = true; 
+
     }
 
     ngOnChanges() {
@@ -75,7 +72,7 @@ export class VpePanelHistoryComponent implements OnChanges {
     }
 
     onResize(event:ResizeEvent) {
-        setTimeout(_ => {
+        setTimeout(() => {
             this.updateSize(event);
         });
     }

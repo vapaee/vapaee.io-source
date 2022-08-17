@@ -12,22 +12,22 @@ import { Market, AssetDEX, VapaeeDEX } from '@vapaee/dex';
 })
 export class VpePanelMarketsCardDeckComponent implements OnChanges {
 
-    @Input() public markets: Market[];
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public expanded: boolean;
-    @Input() public title: string;
-    @Input() public loading: boolean;
-    @Input() public error: string;
-    @Input() public hidebackground: boolean;
-    @Input() public limit: number;
+    @Input() public markets: Market[]           = [];
+    @Input() public hideheader: boolean         = false;
+    @Input() public margintop: boolean          = true;
+    @Input() public expanded: boolean           = true;
+    @Input() public loading: boolean            = false;
+    @Input() public title: string               = "";
+    @Input() public error: string               = "";
+    @Input() public hidebackground: boolean     = false;
+    @Input() public limit: number               = 0;
 
     @Output() tradeMarket: EventEmitter<string> = new EventEmitter();
     
-    public deposit: AssetDEX;
-    public withdraw: AssetDEX;
-    public marketClass;
-    private _max;
+    // public deposit: AssetDEX                    = new AssetDEX();
+    // public withdraw: AssetDEX                   = new AssetDEX();
+    public marketClass: string                  = "col-4";
+    private _max: number                        = 0;
     constructor(
         public dex: VapaeeDEX,
         public local: LocalStringsService,
@@ -40,7 +40,7 @@ export class VpePanelMarketsCardDeckComponent implements OnChanges {
         this.hidebackground = false;
         this.limit = 0;
         this.dex.waitTokensLoaded.then(_ => {
-            setTimeout(_ => {
+            setTimeout(() => {
                 if (this.limit == 0) {
                     this.limit = this.dex.tokens.length;
                 }    
@@ -52,7 +52,7 @@ export class VpePanelMarketsCardDeckComponent implements OnChanges {
         return this.markets;
     }
 
-    get max() {
+    get max(): number {
         return this._max;
     }
 
@@ -74,7 +74,7 @@ export class VpePanelMarketsCardDeckComponent implements OnChanges {
     }
 
     onResize(event:ResizeEvent) {
-        setTimeout(_ => {
+        setTimeout(() => {
             this.updateSize(event);
         });
     }
@@ -88,8 +88,7 @@ export class VpePanelMarketsCardDeckComponent implements OnChanges {
     }
 
     goToTradeMarket(market:Market) {
-        
-        this.tradeMarket.next(market.table);
+        this.tradeMarket.next(market.name);
     }
 
 }

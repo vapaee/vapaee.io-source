@@ -1,0 +1,148 @@
+:host {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+span.form-control {
+    i.material-icons {
+        display: none;
+    }
+    &.active {
+        i.material-icons {
+            font-size: 15px;
+            display: inline-block;
+            vertical-align: middle;
+        }        
+    }    
+}
+
+.alert.alert-danger {
+    padding: 0.75rem;
+}
+
+// swap fields 
+
+@mixin bordient($radius, $width, $bg, $color1, $color2, $color3: $color2, $color4: $color1) {
+    
+    background-image:
+        radial-gradient(circle at 100% 100%, transparent #{$radius - $width}, $color1 #{$radius - $width}, $color1 #{$radius}, transparent #{$radius}),
+        linear-gradient(to right, $color1, $color2),
+        radial-gradient(circle at 0% 100%, transparent #{$radius - $width}, $color2 #{$radius - $width}, $color2 #{$radius}, transparent #{$radius}),
+        linear-gradient(to bottom, $color2, $color3),
+        radial-gradient(circle at 0% 0%, transparent #{$radius - $width}, $color3 #{$radius - $width}, $color3 #{$radius}, transparent #{$radius}),
+        linear-gradient(to left, $color3, $color4),
+        radial-gradient(circle at 100% 0%, transparent #{$radius - $width}, $color4 #{$radius - $width}, $color4 #{$radius}, transparent #{$radius}),
+        linear-gradient(to top, $color4, $color1),
+        $bg
+        ;
+    
+    background-position:
+        top left,
+        top center,
+        top right,
+        center right,
+        bottom right,
+        bottom center,
+        bottom left,
+        center left,
+        center center;
+    
+    background-size:
+        #{$radius} #{$radius},
+        calc(100% - (2 * #{$radius})) #{$width},
+        #{$radius} #{$radius},
+        #{$width} calc(100% - (2 * #{$radius})),
+        #{$radius} #{$radius},
+        calc(100% - (2 * #{$radius})) #{$width},
+        #{$radius} #{$radius},
+        #{$width} calc(100% - (2 * #{$radius})),
+        calc(100% - #{$width} / 2) calc(100% - #{$width} / 2);
+    
+    background-repeat: no-repeat;
+
+    border-radius: #{$radius};
+}
+
+
+div.field-container {
+    // make round corners
+    // background-color: rgb(35, 35, 116);
+    
+    // border: 3px solid rgb(21, 22, 88);
+
+    @include bordient(10px, 2px, 
+        linear-gradient(321deg, rgba(9,10,12,1) 0%, rgba(45,48,51,1) 100%)
+    , #027ebb, #090a0c, #027ebb, #000);
+        
+    padding: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+
+
+    div.field-row {
+        display: flex;
+        flex-direction: row;
+        &.top {
+        }
+        &.bottom {
+        }
+        div.field-col {
+            padding: 0px;
+            display: flex;
+            flex-direction: row;
+            
+            flex-grow: 1;
+            &.top-right    { text-align: right; font-size: small; } // Balance
+            &.top-left     { text-align: left;  font-size: small; font-weight: bold; } // from & to
+            &.bottom-right { text-align: right; }
+            &.bottom-left  { text-align: left;  padding: 5px 15px 5px 0px; }
+            & > span { flex-grow: 1; }
+            div.field-max span {
+                border-radius: 10px;
+                margin-right: 10px;
+                background-color: brown;
+                color: white;
+                padding: 4px 8px;
+                cursor: pointer;
+            }
+            div.field-max, .field-token {
+                flex-grow: 1;
+                display: flex;
+                align-items: center;
+            }
+
+            span.field-max span {
+                border-radius: 10px;
+                margin-right: 10px;
+                background-color: brown;
+                color: white;
+                padding: 1px 8px;
+                cursor: pointer;
+                margin-top: -1px;
+            }
+            span.field-max {
+                flex-grow: 1;
+                display: flex;
+                justify-content: flex-end;
+                & + span {
+                    flex-grow: 0
+                }
+            }
+        }
+    }
+
+    .token-icon {
+        max-height: 20px;
+        margin-right: 10px;
+    }
+}
+
+.calculated-in-currency {
+    margin-bottom: -15px;
+}
+
+.switch-inverse {
+    transition: transform 0.3s;
+}

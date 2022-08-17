@@ -12,26 +12,29 @@ import { VapaeeDEX, TokenDEX, AssetDEX } from '@vapaee/dex';
 })
 export class VpePanelTokensCardDeckComponent implements OnChanges {
 
-    @Input() public tokens: TokenDEX[];
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public expanded: boolean;
-    @Input() public title: string;
-    @Input() public loading: boolean;
-    @Input() public error: string;
-    @Input() public hidebackground: boolean;
-    @Input() public limit: number;
-    @Input() public logged: string;
-    @Input() public filter: string;
+    @Input() public tokens: TokenDEX[]           = [];
+    @Input() public hideheader: boolean          = false;
+    @Input() public margintop: boolean           = true;
+    @Input() public expanded: boolean            = true;
+    @Input() public loading: boolean             = false;
+    @Input() public title: string                = "";
+    @Input() public error: string                = "";
+    @Input() public hidebackground: boolean      = false;
+    @Input() public limit: number                = 0;
+    @Input() public logged: string               = "";
+    @Input() public filter: string               = "";
 
 
-    @Output() confirmDeposit: EventEmitter<any> = new EventEmitter();
+    @Output() confirmDeposit: EventEmitter<any>  = new EventEmitter();
     @Output() confirmWithdraw: EventEmitter<any> = new EventEmitter();
     @Output() tradeToken: EventEmitter<TokenDEX> = new EventEmitter();
-    @Output() editToken: EventEmitter<TokenDEX> = new EventEmitter();
-    @Output() tokenPage: EventEmitter<TokenDEX> = new EventEmitter();
-    public deposit: AssetDEX;
-    public withdraw: AssetDEX;
+    @Output() swapToken:  EventEmitter<TokenDEX> = new EventEmitter();
+    @Output() editToken: EventEmitter<TokenDEX>  = new EventEmitter();
+    @Output() tokenPage: EventEmitter<TokenDEX>  = new EventEmitter();
+
+    public deposit: AssetDEX                     = new AssetDEX();
+    public withdraw: AssetDEX                    = new AssetDEX();
+
     constructor(
         public dex: VapaeeDEX,
         public local: LocalStringsService,
@@ -43,7 +46,7 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
         this.hidebackground = false;
         this.limit = 0;
         this.dex.waitTokensLoaded.then(_ => {
-            setTimeout(_ => {
+            setTimeout(() => {
                 if (this.limit == 0) {
                     this.limit = this.dex.tokens.length;
                 }    
@@ -79,7 +82,7 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
     }
 
     onResize(event:ResizeEvent) {
-        setTimeout(_ => {
+        setTimeout(() => {
             this.updateSize(event);
         });
     }
@@ -92,15 +95,15 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
         
     }
 
-    summary(_table) {
+    summary(_table:string) {
         return this.tokenSummary(_table);
     }
 
-    tokenSummary(_table) {
+    tokenSummary(_table:string) {
         return this.marketSummary(_table);
     }
 
-    marketSummary(_table) {
+    marketSummary(_table:string) {
         var market = this.dex.market(_table);
         var _summary = Object.assign({
             percent: 0,
@@ -139,6 +142,11 @@ export class VpePanelTokensCardDeckComponent implements OnChanges {
     goToTradeToken(token:TokenDEX) {
         console.log("VpePanelTokensCardDeckComponent.goToTradeToken()", token);
         this.tradeToken.next(token);
+    }
+
+    goToSwapToken(token:TokenDEX) {
+        console.log("VpePanelTokensCardDeckComponent.goToSwapToken()", token);
+        this.swapToken.next(token);
     }
 
     goToTokenPage(token:TokenDEX) {

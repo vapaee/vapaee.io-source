@@ -1,16 +1,16 @@
-<vpe-panel [id]="'vpe-panel-order-editor'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.OrderForm">
+<vpe-panel [id]="'vpe-panel-order-editor'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.OrderForm" (click)="debug()">
 
     <!-- ----------- portrait screen ------------- -->
     <div class="row" *ngIf="portrait">
         <div class="col-6 text-right nowrap">
             <span class="cursor-pointer" (click)="sellAll()">
-                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_commodity.token.icon ? deposits_commodity.token.icon : '#'">
+                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_commodity.tokenDex.icon || deposits_commodity.tokenDex.iconlg || '#'">
                 <span [ngClass]="{'text-danger': !can_sell && wants=='sell'}"> {{deposits_commodity.toString()}} </span>
             </span>
         </div>
         <div class="col-6 text-right nowrap">
             <span class="cursor-pointer" (click)="buyAll()">
-                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_currency.token.icon ? deposits_currency.token.icon : '#'">
+                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_currency.tokenDex.icon || deposits_currency.tokenDex.iconlg || '#'">
                 <span [ngClass]="{'text-danger': !can_buy && wants=='buy'}"> {{deposits_currency.toString()}} </span>
             </span>
         </div>
@@ -31,18 +31,18 @@
             <div class="row">
                 <div class="col-2 text-sm margin-top"> <label [ngClass]="{'text-danger':!can_sell && wants=='sell'}">{{local.string.Amount | titlecase}}</label> </div>
                 <div class="col-10">
-                    <vpe-token-input [(asset)]="amount" (valueChange)="onChange($event)" precision="8" placeholder="{{local.string.Amount}}"></vpe-token-input>
+                    <vpe-token-input [asset]="amount" (valueChange)="onAmountChange($event)" [precision]="8" placeholder="{{local.string.Amount}}"></vpe-token-input>
                 </div>
             </div>
             <div class="row">
                 <div class="col-2 text-sm margin-top"> <label>{{local.string.Price | titlecase}}</label> </div>
                 <div class="col-10">
-                    <vpe-token-input [(asset)]="price" (valueChange)="onChange($event)" precision="8" placeholder="{{local.string.Price}}"></vpe-token-input>
+                    <vpe-token-input [asset]="price" (valueChange)="onPriceChange($event)" [precision]="8" placeholder="{{local.string.Price}}"></vpe-token-input>
                 </div>
             </div>
         </div>
 
-        <div class="col-12 margin-top" [hidden]="!feed.error('form')">
+        <!--div class="col-12 margin-top" [hidden]="!feed.error('form')">
             <div class="alert alert-danger">
                 <div class="pull-right">
                     <button type="button" class="close text-white" (click)="feed.clearError('form')">
@@ -51,23 +51,23 @@
                 </div>
                 {{feed.error('form')}}
             </div>
-        </div>       
+        </div-->       
 
         <div class="col-12 margin-top text-right">
             <div class="row">
                 <div class="col text-right nowrap" [hidden]="wants=='buy'">
-                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_amount.token.icon ? get_amount.token.icon : '#'">
-                    <span [ngClass]="{'text-danger': !can_sell}"> {{get_amount.str}} </span>
+                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="amount.tokenDex.icon || amount.tokenDex.iconlg || '#'">
+                    <span [ngClass]="{'text-danger': !can_sell}"> {{amount.str}} </span>
                     &nbsp; <i style="vertical-align: bottom;" class="material-icons"> trending_flat </i> &nbsp;
-                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_payment.token.icon ? get_payment.token.icon : '#'">
-                    {{get_payment.str}}
+                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="payment.tokenDex.icon || payment.tokenDex.iconlg || '#'">
+                    {{payment.str}}
                 </div>
                 <div class="col text-right nowrap" [hidden]="wants=='sell'">
-                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_payment.token.icon ? get_payment.token.icon : '#'">
-                    <span [ngClass]="{'text-danger': !can_buy}"> {{get_payment.str}} </span>
+                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="payment.tokenDex.icon || payment.tokenDex.iconlg || '#'">
+                    <span [ngClass]="{'text-danger': !can_buy}"> {{payment.str}} </span>
                     &nbsp; <i style="vertical-align: bottom;" class="material-icons"> trending_flat </i> &nbsp;
-                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_amount.token.icon ? get_amount.token.icon : '#'">
-                    {{get_amount.str}}
+                    <img style="height:16px; width: 16px; margin-top:-2px" [src]="amount.tokenDex.icon || amount.tokenDex.iconlg || '#'">
+                    {{amount.str}}
                 </div>                        
             </div>
         </div>
@@ -85,27 +85,27 @@
             <!-- Buy -->
             <div [hidden]="wants=='sell' || !can_buy">
                 <span type="text" class="form-control form-control-sm btn btn-sm btn-success" [ngClass]="{disabled: cant_operate}" (click)="buy()" >
-                    <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
+                    <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('order-buy')"></span>
                     {{local.string.Buy}}
                 </span>
             </div>
             <div class="text-right" [hidden]="!(wants=='buy' && !can_buy)">
                 <label> {{local.string.needtodep}} &nbsp; </label>
-                <img style="height:16px; width: 16px; margin-top:-2px" [src]="money?.token?.icon || '#'">
-                <label> &nbsp; {{money?.token?.symbol}}</label>
+                <img style="height:16px; width: 16px; margin-top:-2px" [src]="money.tokenDex.icon || money.tokenDex.iconlg || '#'">
+                <label> &nbsp; {{money.token.symbol}}</label>
             </div>
 
             <!-- Sell -->
             <div [hidden]="wants=='buy' || !can_sell">
                 <span type="text" class="form-control form-control-sm btn btn-sm btn-danger" [ngClass]="{disabled: cant_operate}" (click)="sell()" >
-                    <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
+                    <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('order-sell')"></span>
                     {{local.string.Sell}}
                 </span>
             </div>
             <div class="text-right" [hidden]="!(wants=='sell' && !can_sell)">
                 <label> {{local.string.needtodep}} &nbsp; </label>
-                <img style="height:16px; width: 16px; margin-top:-2px" [src]="amount?.token?.icon || '#'">
-                <label> &nbsp; {{amount?.token?.symbol}}</label>
+                <img style="height:16px; width: 16px; margin-top:-2px" [src]="amount.tokenDex.icon || amount.tokenDex.iconlg || '#'">
+                <label> &nbsp; {{amount.token.symbol}}</label>
             </div>                 
 
         </div>
@@ -118,7 +118,7 @@
                     <hr class="line">
                 </div>                
 
-                <div class="col-12 margin-top" [hidden]="!feed.error('orders')">
+                <!--div class="col-12 margin-top" [hidden]="!feed.error('orders')">
                     <div class="alert alert-danger">
                         <div class="pull-right">
                             <button type="button" class="close text-white" (click)="feed.clearError('orders')">
@@ -127,7 +127,7 @@
                         </div>
                         {{feed.error('orders')}}
                     </div>
-                </div>        
+                </div-->        
 
                 <div class="col-12 margin-top">
                     <label>{{local.string.orders | titlecase}}</label>
@@ -142,12 +142,12 @@
                             (click)="cancel(order)"
                         >
                             <div class="nowrap col-5 text-right col-padding-right padding-left-lg"
-                                [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                                [ngClass]="{'text-danger':order.deposit.token.symbol != order.currency.token.symbol, 'text-success':order.deposit.token.symbol == order.currency.token.symbol}"
                                 >
                                 {{order.price.toString(orders_decimals)}}
                             </div>
                             <div class="nowrap col-5 text-right col-padding-right col-padding-left"
-                                [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                                [ngClass]="{'text-danger':order.deposit.token.symbol != order.currency.token.symbol, 'text-success':order.deposit.token.symbol == order.currency.token.symbol}"
                                 >
                                 {{order.total.toString(orders_decimals)}}
                             </div>
@@ -164,12 +164,12 @@
                             (click)="cancel(order)"
                         >
                             <div class="nowrap col-5 text-right col-padding-right padding-left-lg"
-                                [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                                [ngClass]="{'text-danger':order.deposit.token.symbol != order.currency.token.symbol, 'text-success':order.deposit.token.symbol == order.currency.token.symbol}"
                                 >
                                 {{order.price.toString(orders_decimals)}}
                             </div>
                             <div class="nowrap col-5 text-right col-padding-right col-padding-left"
-                                [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                                [ngClass]="{'text-danger':order.deposit.token.symbol != order.currency.token.symbol, 'text-success':order.deposit.token.symbol == order.currency.token.symbol}"
                                 >
                                 {{order.total.toString(orders_decimals)}}
                             </div>
@@ -221,7 +221,7 @@
                         </div>
                         <div class="col text-right nowrap col-padding-right">
                             <span class="cursor-pointer" (click)="sellAll()">
-                                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_commodity.token.icon ? deposits_commodity.token.icon : '#'">
+                                <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_commodity.tokenDex.icon || deposits_commodity.tokenDex.icon || '#'">
                                 <span [ngClass]="{'text-danger': !can_sell && wants=='sell'}"> {{deposits_commodity.toString()}} </span>
                             </span>
                         </div>
@@ -229,7 +229,7 @@
                 </div>
                 <div class="col-sm-4 text-right nowrap">
                     <span class="cursor-pointer" (click)="buyAll()">
-                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_currency.token.icon ? deposits_currency.token.icon : '#'">
+                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="deposits_currency.tokenDex.icon || deposits_currency.tokenDex.icon || '#'">
                         <span [ngClass]="{'text-danger': !can_buy && wants=='buy'}"> {{deposits_currency.toString()}} </span>
                     </span>
                 </div>
@@ -237,49 +237,59 @@
         
             <div class="form-row margin-top">
                 <div class="col-sm-4">
-                    <vpe-token-input [(asset)]="price" (valueChange)="onChange($event)" precision="8" placeholder="{{local.string.Price}}"></vpe-token-input>
+                    <vpe-token-input [asset]="price" (valueChange)="onPriceChange($event)" [precision]="8" placeholder="{{local.string.Price}}"></vpe-token-input>
                 </div>
                 <div class="col-sm-4">
-                    <vpe-token-input [(asset)]="amount" (valueChange)="onChange($event)" precision="8" placeholder="{{local.string.Amount}}"></vpe-token-input>
+                    <vpe-token-input [asset]="amount" (valueChange)="onAmountChange($event)" [precision]="8" placeholder="{{local.string.Amount}}"></vpe-token-input>
                 </div>
                 
                 <!-- Too low amounts -->
-                <div class="col-4 margin-top" [hidden]="!toolow">
+                <div class="col-4 margin-top" [hidden]="!toolow || showswap">
                     <div class="text-right">
                         <label> {{local.string.toolow}} &nbsp; </label>
                     </div>
                 </div>
                 
                 <!-- Buy & Sell buttons -->
-                <div class="col-4" [hidden]="toolow">
+                <div class="col-4" [hidden]="toolow || showswap">
 
                     <!-- Buy -->
                     <div [hidden]="wants=='sell' || !can_buy">
                         <span type="text" class="form-control form-control-sm btn btn-sm btn-success" [ngClass]="{disabled: cant_operate}" (click)="buy()" >
-                            <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
+                            <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('order-buy')"></span>
                             {{local.string.Buy}}
                         </span>
                     </div>
                     <div class="text-right text-xs" [hidden]="!(wants=='buy' && !can_buy)">
                         <label> {{local.string.needtodep}} &nbsp; </label>
-                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="money?.token?.icon || '#'">
-                        <label> &nbsp; {{money?.token?.symbol}}</label>
+                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="money.tokenDex.icon || money.tokenDex.iconlg || '#'">
+                        <label> &nbsp; {{money.token.symbol}}</label>
                     </div>
     
                     <!-- Sell -->
                     <div [hidden]="wants=='buy' || !can_sell">
                         <span type="text" class="form-control form-control-sm btn btn-sm btn-danger" [ngClass]="{disabled: cant_operate}" (click)="sell()" >
-                            <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
+                            <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('order-sell')"></span>
                             {{local.string.Sell}}
                         </span>
                     </div>
                     <div class="text-right text-xs" [hidden]="!(wants=='sell' && !can_sell)">
                         <label> {{local.string.needtodep}} &nbsp; </label>
-                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="amount?.token?.icon || '#'">
-                        <label> &nbsp; {{amount?.token?.symbol}}</label>
+                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="amount.tokenDex.icon || amount.tokenDex.iconlg || '#'">
+                        <label> &nbsp; {{amount.token.symbol}}</label>
                     </div>                 
 
                 </div>
+
+                <!-- swap button -->
+                <div class="col-4 text-right" [hidden]="!showswap">
+                    <div>
+                        <span type="text" class="form-control form-control-sm btn btn-sm btn-fancy" [ngClass]="{disabled: cant_operate}" (click)="swap()" >
+                            {{local.string.swap | uppercase}}
+                        </span>
+                    </div>
+                </div>
+
             </div>
             <div class="form-row margin-top text-sm">
                 <div class="col-sm-2 col-padding-left">
@@ -297,24 +307,24 @@
                 <div class="col-sm-8 text-right">
                     <div class="row">
                         <div class="col text-right nowrap" [hidden]="wants=='buy'">
-                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_amount.token.icon ? get_amount.token.icon : '#'">
-                            <span [ngClass]="{'text-danger': !can_sell}"> {{get_amount.str}} </span>
+                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="amount.tokenDex.icon || amount.tokenDex.iconlg || '#'">
+                            <span [ngClass]="{'text-danger': !can_sell}"> {{amount.str}} </span>
                             &nbsp; <i style="vertical-align: bottom;" class="material-icons"> trending_flat </i> &nbsp;
-                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_payment.token.icon ? get_payment.token.icon : '#'">
-                            {{get_payment.str}}
+                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="payment.tokenDex.icon || payment.tokenDex.icon || '#'">
+                            {{payment.str}}
                         </div>
                         <div class="col text-right nowrap" [hidden]="wants=='sell'">
-                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_payment.token.icon ? get_payment.token.icon : '#'">
-                            <span [ngClass]="{'text-danger': !can_buy}"> {{get_payment.str}} </span>
+                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="payment.tokenDex.icon || payment.tokenDex.icon || '#'">
+                            <span [ngClass]="{'text-danger': !can_buy}"> {{payment.str}} </span>
                             &nbsp; <i style="vertical-align: bottom;" class="material-icons"> trending_flat </i> &nbsp;
-                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="get_amount.token.icon ? get_amount.token.icon : '#'">
-                            {{get_amount.str}}
+                            <img style="height:16px; width: 16px; margin-top:-2px" [src]="amount.tokenDex.icon || amount.tokenDex.iconlg || '#'">
+                            {{amount.str}}
                         </div>                        
                     </div>
                 </div>
             </div>
 
-            <div class="col-12 margin-top" [hidden]="!feed.error('form')">
+            <div class="col-12 margin-top" *ngIf="feed.error('form')">
                 <div class="alert alert-danger">
                     <div class="pull-right">
                         <button type="button" class="close text-white" (click)="feed.clearError('form')">
@@ -325,7 +335,6 @@
                 </div>
             </div>            
         </div>
-
 
         <!-- ------------------ orders ------------------- -->
         
@@ -357,19 +366,19 @@
                     (click)="cancel(order)"
                 >
                     <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg"
-                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.currency.token.symbol, 'text-success':order.deposit.token.symbol == order.currency.token.symbol}"
                         >
                         {{order.price.toString(8)}}
                     </div>
                     <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left"
-                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.currency.token.symbol, 'text-success':order.deposit.token.symbol == order.currency.token.symbol}"
                         >
                         {{order.total.toString(8)}}
                     </div>
                 
                     <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
-                        <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading['sell-' + order.id]">cancel</i>
-                        <span class="spinner-border spinner-border-sm" [hidden]="!c_loading['sell-' + order.id]"></span>
+                        <i class="material-icons" style="vertical-align: -2px; font-size: 100%;" [hidden]="dex.feed.loading('cancel-sell-' + order.id)">cancel</i>
+                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('cancel-sell-' + order.id)"></span>
                     </div>
     
                 </div>
@@ -379,19 +388,19 @@
                     (click)="cancel(order)"
                 >
                     <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg"
-                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.currency.token.symbol, 'text-success':order.deposit.token.symbol == order.currency.token.symbol}"
                         >
                         {{order.price.toString(8)}}
                     </div>
                     <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left"
-                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                        [ngClass]="{'text-danger':order.deposit.token.symbol != order.currency.token.symbol, 'text-success':order.deposit.token.symbol == order.currency.token.symbol}"
                         >
                         {{order.total.toString(8)}}
                     </div>
                 
                     <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
-                        <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading['buy-' + order.id]">cancel</i>
-                        <span class="spinner-border spinner-border-sm" [hidden]="!c_loading['buy-' + order.id]"></span>
+                        <i class="material-icons" style="vertical-align: -2px; font-size: 100%;" [hidden]="dex.feed.loading('cancel-buy-' + order.id)">cancel</i>
+                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('cancel-buy-' + order.id)"></span>
                     </div>
 
                 </div>
@@ -409,15 +418,15 @@
                     </div>
                     <perfect-scrollbar style="max-height: 200px; max-width: 100%">
                         <div class="row margin-bottom active-on-hover cursor-pointer" 
-                            [ngClass]="{'d-none':order.deposit.token.symbol != get_commodity.symbol}"
+                            [ngClass]="{'d-none':order.deposit.token.symbol != commodity.symbol}"
                             *ngFor="let order of own.sell"
                             (click)="cancel(order)"
                         >
                             <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg text-danger">{{order.price.toString(8)}}</div>
                             <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left text-danger">{{order.total.toString(8)}}</div>
                             <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg">
-                                <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading['sell-' + order.id]">cancel</i>
-                                <span class="spinner-border spinner-border-sm" [hidden]="!c_loading['sell-' + order.id]"></span>
+                                <i class="material-icons" style="vertical-align: -2px; font-size: 100%;" [hidden]="dex.feed.loading('cancel-sell-' + order.id)">cancel</i>
+                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('cancel-sell-' + order.id)"></span>
                             </div>
                         </div>
                     </perfect-scrollbar>
@@ -430,15 +439,15 @@
                     </div>
                     <perfect-scrollbar style="max-height: 200px; max-width: 100%">
                         <div class="row margin-bottom danger active-on-hover cursor-pointer" 
-                            [ngClass]="{'d-none':order.deposit.token.symbol != get_currency.symbol}"
+                            [ngClass]="{'d-none':order.deposit.token.symbol != currency.symbol}"
                             *ngFor="let order of own.buy"
                             (click)="cancel(order)"
                         >
                             <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg text-success">{{order.price.toString(8)}}</div>
                             <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left text-success">{{order.total.toString(8)}}</div>
                             <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg">
-                                <i class="material-icons" style="font-size: 100%;" [hidden]="c_loading['buy-' + order.id]">cancel</i>
-                                <span class="spinner-border spinner-border-sm" [hidden]="!c_loading['buy-' + order.id]"></span>
+                                <i class="material-icons" style="vertical-align: -2px; font-size: 100%;" [hidden]="dex.feed.loading('cancel-buy-' + order.id)">cancel</i>
+                                <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('cancel-buy-' + order.id)"></span>
                             </div>
                         </div>
                     </perfect-scrollbar>

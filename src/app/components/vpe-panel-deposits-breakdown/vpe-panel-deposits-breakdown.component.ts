@@ -13,20 +13,21 @@ import { DEXdata, AssetDEX, VapaeeDEX } from '@vapaee/dex';
 })
 export class VpePanelDepositsBreakdawnComponent implements OnChanges {
 
-    @Input() public hideuser: boolean;
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public expanded: boolean;
-    @Input() public title: string;
-    @Input() public loading: boolean;
-    @Input() public error: string;
-    @Input() public dexdata: DEXdata;
+    @Input() public hideuser: boolean                    = false;
+    @Input() public hidefiat: boolean                    = false;
+    @Input() public hideheader: boolean                  = false;
+    @Input() public margintop: boolean                   = true;
+    @Input() public expanded: boolean                    = true;
+    @Input() public loading: boolean                     = false;
+    @Input() public title: string                        = "";
+    @Input() public error: string                        = "";
+    @Input() public dexdata: DEXdata                     = VpeComponentsService.Utils.emptyDEXdata();
 
-    @Output() confirmDeposit: EventEmitter<any> = new EventEmitter();
-    @Output() confirmWithdraw: EventEmitter<any> = new EventEmitter();
-    public deposit: AssetDEX;
-    public withdraw: AssetDEX;
-    public detail: boolean;
+    // @Output() confirmDeposit: EventEmitter<any>          = new EventEmitter();
+    // @Output() confirmWithdraw: EventEmitter<any>         = new EventEmitter();
+    // public deposit:  AssetDEX                            = new AssetDEX();
+    // public withdraw: AssetDEX                            = new AssetDEX();
+    public detail: boolean                               = false;
     constructor(
         public dex: VapaeeDEX,
         public local: LocalStringsService,
@@ -35,16 +36,7 @@ export class VpePanelDepositsBreakdawnComponent implements OnChanges {
         this.hideuser = false;
         this.hideheader = false;
         this.margintop = true;
-        this.expanded = true; 
-        this.dexdata = {
-            balances:[],
-            deposits:[],
-            inorders:[],
-            userorders:null,
-            total:null,
-            total_inorders: null,
-            total_deposits: null,
-        };
+        this.expanded = true;
     }
 
     async updateSize(event:ResizeEvent) {
@@ -52,7 +44,7 @@ export class VpePanelDepositsBreakdawnComponent implements OnChanges {
     }
 
     onResize(event:ResizeEvent) {
-        setTimeout(_ => {
+        setTimeout(() => {
             this.updateSize(event);
         });
     }

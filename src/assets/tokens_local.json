@@ -1,0 +1,64 @@
+[
+    {
+        "name": "Koinonos",
+        "symbol": "KOINE",
+        "account": "vapaeetokens",
+        "precision": 6,
+        "logo": "/assets/logos/koine.png",
+        "chain": "telos",
+        "swap": true
+    },
+    {
+        "name": "EuroT",
+        "symbol": "EUROT",
+        "account": "vapaeetokens",
+        "precision": 4,
+        "logo": "/assets/logos/eurot.png",
+        "chain": "telos",
+        "swap": true
+    },
+    {
+        "name": "Tips",
+        "symbol": "TIPS",
+        "account": "vapaeetokens",
+        "precision": 6,
+        "logo": "/assets/logos/tips.png",
+        "chain": "telos",
+        "swap": true
+    },
+    {
+        "name": "DiversE",
+        "symbol": "DIVERSE",
+        "account": "vapaeetokens",
+        "precision": 4,
+        "logo": "/assets/logos/diverse.png",
+        "chain": "telos",
+        "swap": true
+    },
+    {
+        "name": "Crypto Mulita",
+        "symbol": "MULITA",
+        "account": "vapaeetokens",
+        "precision": 4,
+        "logo": "/assets/logos/mulita.png",
+        "chain": "telos",
+        "swap": true
+    },
+    {
+        "name": "Vapaée",
+        "symbol": "VPE",
+        "account": "vapaeetokens",
+        "precision": 6,
+        "logo": "/assets/logos/vapaee.png",
+        "chain": "telos",
+        "swap": true
+    },
+    {
+        "name": "Telos",
+        "symbol": "TLOS",
+        "account": "eosio.token",
+        "precision": 4,
+        "logo": "/assets/logos/telos.png",
+        "chain": "telos"
+    }
+]

@@ -4,14 +4,13 @@
                             <div class="card-body vpe-background-card-body">
                                 
                                 <div class="text-left">
-                                    <img style="height:16px; width: 16px; margin-top:-8px" [src]="market.commodity?.icon">
+                                    <img style="height:16px; width: 16px; margin-top:-8px" [src]="market.commodity.icon || market.commodity.iconlg">
                                     <span class="card-title text-md">
                                         {{market.commodity.symbol}}
                                     </span>
 
                                     <span class="text-muted"> / </span>
 
-                                    <!-- img style="height:16px; width: 16px; margin-top:-8px" [src]="market.currency.icon" -->
                                     <span class="card-title text-sm text-muted">
                                         {{market.currency.symbol}}
                                     </span>
@@ -19,9 +18,9 @@
                                     <div style="position: absolute; right: 20px; top: 12px;" class="text-lg">
                                         <div
                                             class="nowrap text-right"
-                                            [ngClass]="{'text-success': market.summary?.percent > 0, 'text-danger': market.summary?.percent < 0, 'text-muted': market.summary?.percent  == 0}"
+                                            [ngClass]="{'text-success': market.summary.percent > 0, 'text-danger': market.summary.percent < 0, 'text-muted': market.summary.percent  == 0}"
                                         >
-                                            <small><b>{{market.summary?.percent_str}}</b></small>
+                                            <small><b>{{market.summary.percent_str}}</b></small>
                                         </div>
                                     </div>                                       
                                 </div>
@@ -37,8 +36,8 @@
                                     <div class="col-9 text-right">
 
                                         <div class="text-right">
-                                            <div><small class="nowrap text-muted">max: {{market.summary?.max_price}}</small></div>
-                                            <div><small class="nowrap text-muted">min: {{market.summary?.min_price}}</small></div>
+                                            <div><small class="nowrap text-muted">max: {{market.summary.max_price}}</small></div>
+                                            <div><small class="nowrap text-muted">min: {{market.summary.min_price}}</small></div>
                                         </div>
 
                                     </div>
@@ -47,10 +46,10 @@
 
                                 <div class="row margin-top">
                                     <div class="col-6 text-left col-padding-right">
-                                        <small class="text-muted">{{local.string.vol}}: {{market.summary?.volume.valueToString(4)}}  {{market.summary?.volume.token.symbol}}</small>
+                                        <small class="text-muted">{{local.string.vol}}: {{market.summary.volume.valueToString(4)}}  {{market.summary.volume.token.symbol}}</small>
                                     </div>
                                     <div class="col-6 text-right col-padding-left">
-                                        <small class="calculated-in-currency"> {{service.getTokenInCurrentCurrency(market.summary?.price || "0.0000 TLOS").toString()}} </small>
+                                        <small class="calculated-in-currency"> {{service.getTokenInCurrentCurrency(market.summary.price || "0.0000 TLOS").toString()}} </small>
                                     </div>
                                 </div>                                
                             </div>

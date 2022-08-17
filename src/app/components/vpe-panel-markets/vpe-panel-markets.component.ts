@@ -15,20 +15,20 @@ import { Market, VapaeeDEX } from '@vapaee/dex';
 })
 export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
 
-    @Input() public markets: Market[];
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public expanded: boolean;
-    @Input() public complete: boolean;
-    @Input() public search: string;
-    @Output() selectMarket: EventEmitter<string> = new EventEmitter();
-    token_filter:string;
+    @Input() public markets: Market[]             = [];
+    @Input() public hideheader: boolean           = false;
+    @Input() public margintop: boolean            = true;
+    @Input() public expanded: boolean             = true; 
+    @Input() public complete: boolean             = true;
+    @Input() public search: string                = "";
+    @Output() selectMarket: EventEmitter<string>  = new EventEmitter();
+    token_filter:string                           = "";
     
-    @HostBinding('class') display;
-    volume_digits: number;
-    price_digits: number;
-    hide_symbol: boolean;
-    hide_maxmin: boolean;
+    @HostBinding('class') display: string         = "full";
+    volume_digits: number                         = 8;
+    price_digits: number                          = 8;
+    hide_symbol: boolean                          = false;
+    hide_maxmin: boolean                          = false;
     private onTokensChangeSubscriber: Subscriber<any>;
 
     constructor(
@@ -36,11 +36,6 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
-        this.token_filter = "";
-        this.hideheader = false;
-        this.margintop = true;
-        this.expanded = true; 
-        this.complete = true;
         this.onTokensChangeSubscriber = new Subscriber<string>(_ => {
 
         });
@@ -102,25 +97,25 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     onResize(event:ResizeEvent) {
-        setTimeout(_ => {
+        setTimeout(() => {
             this.updateSize(event);
         });
     }
 
-    summary(_table) {
-        var table = this.dex.market(_table);
+    summary(market_name: string) {
+        var name = this.dex.market(market_name);
         var _summary = Object.assign({
             percent: 0,
             percent_str: "0%",
             price: this.dex.zero_telos.clone(),
             records: [],
             volume: this.dex.zero_telos.clone()
-        }, table ? table.summary : {});
+        }, name ? name.summary : {});
         return _summary;
     }
 
-    clickOnMarket(table:string) {
-        this.selectMarket.next(table);
+    clickOnMarket(name:string) {
+        this.selectMarket.next(name);
     }
     
 
@@ -138,5 +133,10 @@ export class VpePanelMarketsComponent implements OnChanges, OnInit, OnDestroy {
 
     onStateChange() {
 
+    }
+
+    debug() {
+        console.log("this", this);
+        console.log("this.markets", this.markets);
     }
 }

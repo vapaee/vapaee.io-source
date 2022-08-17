@@ -39,9 +39,18 @@ import { ChartHTMLTooltip } from './chart-html-tooltip';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoogleChartComponent implements OnChanges, OnDestroy, GoogleChartComponentInterface {
+  
+  static getEmptyChartData(): GoogleChartInterface {
+      return {
+          dataTable: "",
+          chartType: "",
+          opt_firstRowIsData: false
+      };
+  }
 
-  @Input() public data: GoogleChartInterface;
-  private innerdata: GoogleChartInterface;
+
+  @Input() public data: GoogleChartInterface = GoogleChartComponent.getEmptyChartData();
+  private innerdata: GoogleChartInterface = GoogleChartComponent.getEmptyChartData();
 
   @Output() public chartReady: EventEmitter<ChartReadyEvent>;
   @Output() public chartReadyOneTime: EventEmitter<ChartReadyEvent>;
@@ -70,10 +79,10 @@ export class GoogleChartComponent implements OnChanges, OnDestroy, GoogleChartCo
 
   private instance_id:number;
 
-  public constructor(el: ElementRef,
+  public constructor(_el: ElementRef,
                      loaderService: GoogleChartsLoaderService) {
     this.instance_id = Math.floor(Math.random() * 1000);
-    this.el = el;
+    this.el = _el;
     this.loaderService = loaderService;
     this.chartSelect = new EventEmitter();
     this.chartSelectOneTime = new EventEmitter();
@@ -121,7 +130,7 @@ export class GoogleChartComponent implements OnChanges, OnDestroy, GoogleChartCo
           this.options = {};
         }
   
-        this.innerdata.component = this;
+        this.innerdata.component = <GoogleChartComponentInterface>this;
   
         this.loaderService.load().then(() => {
           if(this.wrapper === undefined || this.wrapper.getChartType() !== this.data.chartType) {
@@ -143,7 +152,7 @@ export class GoogleChartComponent implements OnChanges, OnDestroy, GoogleChartCo
     }    
   }
 
-  public redraw(dataTable:any[] = null, options:any = null): void {
+  public redraw(dataTable:any[]|null = null, options:any = null): void {
     // console.log("GoogleChartComponent.redraw()", dataTable);
     this.innerdata.options = options || this.innerdata.options;
     this.innerdata.dataTable = dataTable || this.innerdata.dataTable;
@@ -176,13 +185,15 @@ export class GoogleChartComponent implements OnChanges, OnDestroy, GoogleChartCo
         const formatterOptions = formatterConfig.options;
         const formatter = new formatterConstructor(formatterOptions);
         if(formatterConfig.type === 'ColorFormat' && formatterOptions) {
-          for(const range of formatterOptions.ranges) {
-            if (typeof(range.fromBgColor) !== 'undefined' && typeof(range.toBgColor) !== 'undefined') {
-              formatter.addGradientRange(range.from, range.to,
-                                         range.color, range.fromBgColor, range.toBgColor);
-            } else {
-              formatter.addRange(range.from, range.to, range.color, range.bgcolor);
-            }
+          if(formatterOptions.ranges) {
+            for(const range of formatterOptions.ranges) {
+              if (typeof(range.fromBgColor) !== 'undefined' && typeof(range.toBgColor) !== 'undefined') {
+                formatter.addGradientRange(range.from, range.to,
+                                           range.color, range.fromBgColor, range.toBgColor);
+              } else {
+                formatter.addRange(range.from, range.to, range.color, range.bgcolor);
+              }
+            }  
           }
         }
         const dt = this.wrapper.getDataTable();
@@ -428,11 +439,11 @@ export class GoogleChartComponent implements OnChanges, OnDestroy, GoogleChartCo
 
   private registerChartWrapperEvents(): void {
     google.visualization.events.addListener(this.wrapper, 'ready', () => {
-      this.chartReady.emit({message: 'Chart ready', component:this});
+      this.chartReady.emit({message: 'Chart ready', component:<GoogleChartComponentInterface>this});
     });
 
     google.visualization.events.addOneTimeListener(this.wrapper, 'ready', () => {
-      this.chartReadyOneTime.emit({message: 'Chart ready (one time)', component:this});
+      this.chartReadyOneTime.emit({message: 'Chart ready (one time)', component:<GoogleChartComponentInterface>this});
       this.registerChartEvents();
     });
 

@@ -1,0 +1,491 @@
+
+
+/* ------ Botonera principal ------ */
+
+
+$hover_top: -26px;
+$hover_height: 60px;
+$hover_2_top: -88px;
+$hover_2_height: 121px;
+$margen_negativo: -46%;
+
+
+@media (min-width: 576px) {
+}
+
+@media (min-width: 768px) {
+   .line-2 { margin-top: 4px; }
+}
+
+@media (min-width: 992px) {
+    .line-2 { margin-top: 3px; }
+}
+
+@media (min-width: 1200px) {
+    .line-2 { margin-top: 0px; }
+}
+
+
+.etapa-btn {
+    transition: text-shadow 0.4s, opacity 0.8s;
+    position: relative;
+    text-align: center;
+    margin-top: 10px;
+    // border: 1px solid black;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 5px 30px 5px 5px;
+    // background: linear-gradient(45deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+    
+
+    &::before {
+        transition: opacity 0.5s;
+        opacity: 0;
+        content: " ";
+        top: $hover_top;
+        left: 50%; right: $margen_negativo;
+        margin-left: auto;
+        margin-right: auto;
+
+        position: absolute;
+        display: block;
+        width: 5px;
+        height: 16px;
+        background-color: white;
+
+        .line-2 & {
+            top: $hover_2_top;
+        }
+
+        
+    }
+
+    &::after {
+        transition: opacity 0.5s;
+        opacity: 0;
+        content: " ";
+        
+        top: $hover_top;
+        left: 50%; right: $margen_negativo;
+        margin-left: auto;
+        margin-right: auto;
+
+        position: absolute;
+        
+        display: block;
+        width: 1px;
+        height: $hover_height;
+        background-color: white;
+
+        .line-2 & {
+            top: $hover_2_top;
+            height: $hover_2_height;
+        }
+    }    
+
+    &.floating {
+        opacity: 1 !important;
+        margin-top: 0px;
+        $time: 0.8s;
+        transition: text-shadow 0.4s, opacity 0.8s, top $time, left $time;
+        position: absolute;
+        z-index: 1;
+
+        &.red {
+            text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #ff1818, 0 0 30px #ff1818, 0 0 40px #ff1818, 0 0 55px #ff1818, 0 0 75px #ff1818;    
+        }
+        &.green {
+            text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #49ff18, 0 0 30px #49FF18, 0 0 40px #49FF18, 0 0 55px #49FF18, 0 0 75px #49ff18;    
+        }
+        &.blue {
+            text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #1827ff, 0 0 30px #1827ff, 0 0 40px #1827ff, 0 0 55px #1827ff, 0 0 75px #1827ff;    
+        }
+
+        &::before, &::after {
+            opacity: 0 !important;
+        }
+    }
+
+    &:hover:not(.floating) {
+        color: #FFFFFF;
+        
+        &.red {
+            text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #ff1818, 0 0 30px #ff1818, 0 0 40px #ff1818, 0 0 55px #ff1818, 0 0 75px #ff1818;    
+        }
+        &.green {
+            text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #49ff18, 0 0 30px #49FF18, 0 0 40px #49FF18, 0 0 55px #49FF18, 0 0 75px #49ff18;    
+        }
+        &.blue {
+            text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #1827ff, 0 0 30px #1827ff, 0 0 40px #1827ff, 0 0 55px #1827ff, 0 0 75px #1827ff;    
+        }
+        
+
+        opacity: 1;
+        
+        cursor: pointer;
+        &::before, &::after {
+            opacity: 1 !important;
+        }
+    }    
+}
+
+
+.btn-lines {
+    cursor: pointer;
+
+    .line-1, .line-2 {
+        .col-3, .col-4 {
+            position: static;
+        }        
+    }
+    
+    // efecto de oscurecer las demás
+    &:hover {
+        .etapa-btn:not(.hide) {
+            opacity: 0.25;
+            &:hover {
+                opacity: 1 !important;
+            }
+        }
+    }
+}
+
+// efecto de apagar el título y la progress
+div.progress, div.progress-title, div.vapaee-logo, div.etapa-btn {
+    &.hide {
+        pointer-events: none;
+        opacity: 0;
+        text-shadow: none;
+        &.etapa-btn { transition: opacity 0.4s; }
+        &.progress { transition: opacity 0.6s; }
+        &.progress-title { transition: opacity 0.8s; }
+        &.vapaee-logo { transition: opacity 1.0s; }
+    }
+}
+
+// progress bar animada
+body.landing-home div.progress-bar.animada {
+    transition: width 1.0s;
+
+    // move fast at the beginning and slow at the end
+    transition-timing-function: cubic-bezier(0.070, 1.055, 0.855, 0.985);
+}
+
+
+// sections --------------------------------------------------
+div.separator {
+    height: 160px;
+}
+div.section {
+    pointer-events: none;
+    opacity: 0;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
+div.deploy.dex {
+    div.section.dex {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+div.deploy.wd {
+    div.section.wd {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+div.deploy.q2 {
+    div.section.q2 {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+div.deploy.kw {
+    div.section.kw {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+div.deploy.wp {
+    div.section.wp {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+// section dex --------------------------------------------------
+div.sub-deploy.dex {
+    div.sub-section.dex {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+div.sub-deploy.wd {
+    div.sub-section.wd {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+div.sub-deploy.q2 {
+    div.sub-section.q2 {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+div.sub-deploy.kw {
+    div.sub-section.kw {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+div.sub-deploy.wp {
+    div.sub-section.wp {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+div.sub-section {
+    div.title {
+        margin-top: 50px;
+        font-size: 2.5em;
+        font-weight: bold;
+        color: #FFF;
+        // text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #ff1818, 0 0 30px #ff1818, 0 0 40px #ff1818, 0 0 55px #ff1818, 0 0 75px #ff1818;
+    }
+    div.desc {
+        margin-top: 15px;
+        font-size: 1.5em;
+        color: rgb(223, 223, 223);
+        // text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #ff1818, 0 0 30px #ff1818, 0 0 40px #ff1818, 0 0 55px #ff1818, 0 0 75px #ff1818;
+    }
+
+    div.image {
+        margin-top: 20px;
+        // refrect black whadow to the right
+        padding: 5px;
+        background: rgb(71,83,102);
+        background: linear-gradient(36deg, rgba(71,83,102,1) 0%, rgba(45,48,51,1) 100%);    
+        img {
+            filter: drop-shadow(5px 5px 15px #000);
+        }
+    }
+}
+
+
+div.section.kw {
+    div.sub-section.swap {
+        div.image {
+            margin-top: 0px;;
+            background: transparent !important;
+        }
+    }    
+}
+
+
+// Sub Botoneras --
+
+// div.deploy.dex {
+//     div.section.dex {
+//         opacity: 1;
+//         pointer-events: auto;
+//     }
+// }
+
+div.sub-btn {
+    transition: margin-left 0.4s, opacity 0.5s;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-left: 20px;
+    font-size: 25px;
+
+    // this is  while no subsectio is selected
+    animation-duration: 0.8s;
+    
+    &:hover {
+        margin-left: 30px;
+        text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #49FF18, 0 0 20px #49ff18, 0 0 30px #49FF18;
+    }
+}
+div.sub-section-conatiner {
+    position: relative;
+}
+
+// Sub sections ----
+div.sub-btn {
+    div.deploy.dex &.book { animation-name: fade_in_4; }
+    div.deploy.dex &.swap { animation-name: fade_in_3; }
+    div.deploy.dex &.wrap { animation-name: fade_in_2; }
+    div.deploy.kw  &.home { animation-name: fade_in_2; }
+    div.deploy.kw  &.swap { animation-name: fade_in_1; }
+    div.deploy.wd  &.tokens { animation-name: fade_in_1; }
+    div.deploy.wd  &.funds { animation-name: fade_in_2; }
+
+    div.sub-deploy.tokens & ,
+    div.sub-deploy.funds & ,
+    div.sub-deploy.home & ,
+    div.sub-deploy.book & ,
+    div.sub-deploy.swap & ,
+    div.sub-deploy.wrap & {
+        // we are inside some sub section
+        animation-name: none;
+        opacity: 1;
+        cursor: pointer;
+        margin-top: 5px;
+        margin-left: 20px;
+        font-size: 25px;
+    }
+
+    div.sub-deploy.tokens &.tokens,
+    div.sub-deploy.funds &.funds,
+    div.sub-deploy.home &.home,
+    div.sub-deploy.book &.book,
+    div.sub-deploy.swap &.swap,
+    div.sub-deploy.wrap &.wrap
+    {
+        margin-left: 30px;
+        text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #ff1818, 0 0 20px #ff1818, 0 0 30px #ff1818;
+    }
+
+}
+
+// DEX - sections ----
+
+div.sub-section {
+    --animate-delay: 0.5s;
+    --animate-duration: 0.5s;
+    // opacity: 0;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    div.sub-deploy.tokens &.tokens,
+    div.sub-deploy.funds &.funds,
+    div.sub-deploy.home &.home,
+    div.sub-deploy.book &.book,
+    div.sub-deploy.swap &.swap,
+    div.sub-deploy.wrap &.wrap {
+        pointer-events: auto;
+        & div.sub-comp {
+            pointer-events: all;
+            opacity: 1;
+            animation-duration: var(--animate-duration); 
+        }
+        & div.title { animation-name: fade_in_right_1; }
+        & div.desc  { animation-name: fade_in_right_2; }
+        & div.image { animation-name: fade_in_right_3; }
+    }
+
+    div.sub-comp {
+        animation-name: fadeOutRight;
+        // animation-duration: var(--animate-duration);
+        // animation-fill-mode: forwards;
+        // animation-timing-function: ease-in-out;
+        // animation-duration: 0s;
+        // animation-delay: 0s;
+        opacity: 0;
+        transition: opacity 0.5s;
+    }
+}
+// Animation of content
+
+
+
+// Animations --------------------------------------------------
+@keyframes fade_in_1 {
+    0%   { opacity: 0; }
+    60%  { opacity: 0; }
+    70%  { opacity: 0.5; }
+    100% { opacity: 0.5; }
+}
+@keyframes fade_in_2 {
+    0%   { opacity: 0; }
+    70%  { opacity: 0; }
+    80%  { opacity: 0.5; }
+    100% { opacity: 0.5; }
+}
+@keyframes fade_in_3 {
+    0%   { opacity: 0; }
+    80%  { opacity: 0; }
+    90%  { opacity: 0.5; }
+    100% { opacity: 0.5; }
+}
+@keyframes fade_in_4 {
+    0%   { opacity: 0; }
+    90%  { opacity: 0; }
+    100% { opacity: 0.5; }
+}
+@keyframes from_left_1 {
+    0%   { -webkit-transform: translate3d(-100%, 0, 0); transform: translate3d(-100%, 0, 0); }
+    40%  { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+    100% { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+}
+@keyframes from_left_2 {
+    0%   { -webkit-transform: translate3d(-100%, 0, 0); transform: translate3d(-100%, 0, 0); }
+    20%  { -webkit-transform: translate3d(-100%, 0, 0); transform: translate3d(-100%, 0, 0); }
+    60%  { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+    100% { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+}
+@keyframes from_left_3 {
+    0%   { -webkit-transform: translate3d(-100%, 0, 0); transform: translate3d(-100%, 0, 0); }
+    40%  { -webkit-transform: translate3d(-100%, 0, 0); transform: translate3d(-100%, 0, 0); }
+    80%  { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+    100% { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+}
+@keyframes from_left_4 {
+    0%   { -webkit-transform: translate3d(-100%, 0, 0); transform: translate3d(-100%, 0, 0); }
+    60%  { -webkit-transform: translate3d(-100%, 0, 0); transform: translate3d(-100%, 0, 0); }
+    100% { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+}
+@keyframes fade_in_right_1 {
+    0%    { opacity: 0; -webkit-transform: translate3d(10%, 0, 0); transform: translate3d(10%, 0, 0); }
+    40%   { opacity: 1; -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+    100%  { opacity: 1; -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+}
+@keyframes fade_in_right_1 {
+    0%    { opacity: 0; -webkit-transform: translate3d(10%, 0, 0); transform: translate3d(10%, 0, 0); }
+    40%   { opacity: 1; -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+    100%  { opacity: 1; -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+}
+@keyframes fade_in_right_2 {
+    0%    { opacity: 0; -webkit-transform: translate3d(10%, 0, 0); transform: translate3d(10%, 0, 0); }
+    20%   { opacity: 0; -webkit-transform: translate3d(10%, 0, 0); transform: translate3d(10%, 0, 0); }
+    60%   { opacity: 1; -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+    100%  { opacity: 1; -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+}
+
+@keyframes fade_in_right_3 {
+    0%    { opacity: 0; -webkit-transform: translate3d(10%, 0, 0); transform: translate3d(10%, 0, 0); }
+    40%   { opacity: 0; -webkit-transform: translate3d(10%, 0, 0); transform: translate3d(10%, 0, 0); }
+    80%   { opacity: 1; -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+    100%  { opacity: 1; -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+}
+@keyframes fade_in_right_4 {
+    0%    { opacity: 0; -webkit-transform: translate3d(10%, 0, 0); transform: translate3d(10%, 0, 0); }
+    80%   { opacity: 1; -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+    100%  { opacity: 1; -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+}
+// Textos --------------------------------------------------
+
+.special {
+    color: #FFF;
+    text-shadow: 0 0 2px #FFF, 0 0 4px #FFF, 0 0 6px #FFF, 0 0 8px #FFF;
+
+    &.red {
+        text-shadow: 0 0 2px #ff1818, 0 0 4px #ff1818, 0 0 6px #FFF, 0 0 8px #FFF;
+    }
+    &.green {
+        text-shadow: 0 0 2px #49FF18, 0 0 4px #49FF18, 0 0 6px #FFF, 0 0 8px #FFF;
+    }
+    &.blue {
+        text-shadow: 0 0 2px #1827ff, 0 0 4px #1827ff, 0 0 6px #FFF, 0 0 8px #FFF;
+    }
+
+
+    &.hover-red:hover {
+        text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #ff1818, 0 0 20px #ff1818, 0 0 30px #ff1818;
+    }
+    &.hover-blue:hover {
+        text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #ff1818, 0 0 20px #ff1818, 0 0 30px #ff1818;
+    }
+}

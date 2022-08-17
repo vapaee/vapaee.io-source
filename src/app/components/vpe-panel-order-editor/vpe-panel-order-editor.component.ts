@@ -1,8 +1,10 @@
 import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
-import { AssetDEX, TokenDEX, OrderRow, Order, VapaeeDEX } from '@vapaee/dex';
+import { AssetDEX, TokenDEX, OrderRow, Order, CreateOrder, VapaeeDEX, SellOrBuy, CancelOrder } from '@vapaee/dex';
 import { Feedback } from '@vapaee/feedback';
+import { TransactionResult } from '@vapaee/wallet';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -12,69 +14,53 @@ import { Feedback } from '@vapaee/feedback';
 })
 export class VpePanelOrderEditorComponent implements OnChanges {
 
-    payment: AssetDEX;
-    fee: AssetDEX;
-    money: AssetDEX;
-    asset: AssetDEX;
-    can_sell: boolean;
-    can_buy: boolean;
-    feed: Feedback;
-    loading: boolean;
-    cant_operate: boolean;
-    toolow: boolean;
-    portrait: boolean;
-    c_loading: {[id:string]:boolean};
-    wants: string;
+    payment: AssetDEX                                = new AssetDEX();
+    fee: AssetDEX                                    = new AssetDEX();
+    money: AssetDEX                                  = new AssetDEX();
+    asset: AssetDEX                                  = new AssetDEX();
+    can_sell: boolean                                = false;
+    can_buy: boolean                                 = false;
+    feed: Feedback                                   = new Feedback();
+    loading: boolean                                 = false;
+    cant_operate: boolean                            = false;
+    toolow: boolean                                  = false;
+    portrait: boolean                                = false;
+    c_loading: {[id:string]:boolean}                 = {};
+    wants: SellOrBuy                                 = "sell";
 
-    deposits_commodity: AssetDEX;
-    deposits_currency: AssetDEX;
+    deposits_commodity: AssetDEX                     = new AssetDEX();
+    deposits_currency: AssetDEX                      = new AssetDEX();
+    public own: {sell:Order[], buy:Order[]}          = {sell:[], buy:[]};
 
-    @Input() public clientid: number;
-    @Input() public owner: string;
-    @Input() public commodity: TokenDEX;
-    @Input() public currency: TokenDEX;
-    @Input() public deposits: AssetDEX[];
-    @Input() public buyorders: OrderRow[];
-    @Input() public sellorders: OrderRow[];
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public expanded: boolean;
+    @Input() public clientid: number                 = 0;
+    @Input() public owner: string                    = "";
+    @Input() public commodity: TokenDEX              = new TokenDEX();
+    @Input() public currency: TokenDEX               = new TokenDEX();
+    @Input() public deposits: AssetDEX[]             = [];
+    @Input() public buyorders: OrderRow[]            = [];
+    @Input() public sellorders: OrderRow[]           = [];
+    @Input() public hideheader: boolean              = false;
+    @Input() public margintop: boolean               = true;
+    @Input() public expanded: boolean                = true;
 
-    public own: {sell:Order[], buy:Order[]};
-    price: AssetDEX;
-    amount: AssetDEX;
+    amount: AssetDEX                                 = new AssetDEX();
+    price: AssetDEX                                  = new AssetDEX();
 
-    @HostBinding('class') display;
+    @HostBinding('class') display: string            = "full";
     
+    @Output() public makeSwap: Subject<CreateOrder> = new Subject();
+    @Output() public makeOrder: Subject<CreateOrder> = new Subject();
+    @Output() public makeCancel: Subject<CancelOrder> = new Subject();
+    @Output() public priceChange: Subject<AssetDEX> = new Subject();
+    @Output() public amountChange: Subject<AssetDEX> = new Subject();
     constructor(
         public dex: VapaeeDEX,
         public local: LocalStringsService,
         public service: VpeComponentsService
     ) {
-        this.hideheader = false;
-        this.margintop = true;
-        this.expanded = true; 
-        this.feed = new Feedback();
-        this.loading = false;
-        this.c_loading = {};
-        this.deposits_commodity = new AssetDEX();
-        this.deposits_currency = new AssetDEX();
     }
 
-    get get_currency() {
-        return this.currency || {};
-    }
-    get get_commodity() {
-        return this.commodity || {};
-    }
-    get get_amount() {
-        return this.amount || new AssetDEX();
-    }
-    get get_payment() {
-        return this.payment || new AssetDEX();
-    }
-
-    orders_decimals: number
+    orders_decimals: number = 8;
     async updateSize(event:ResizeEvent) {
         this.display = "normal";
         this.portrait = false;
@@ -111,23 +97,26 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     }
 
     onResize(event:ResizeEvent) {
-        setTimeout(_ => {
+        setTimeout(() => {
             this.updateSize(event);
         });
     }
 
     calculate() {
-        setTimeout(_ => {
-            if (!this.price) this.restaure();
-            if (!this.price) return;
+        setTimeout(() => {
+            if (!this.price.ok || !this.commodity.ok || !this.currency.ok || !this.payment.ok || !this.amount.ok) this.restaure();
+            if (!this.price.ok || !this.commodity.ok || !this.currency.ok || !this.payment.ok || !this.amount.ok) return;
+
             
             this.cant_operate = true;
             this.toolow = false;
-            // console.log("calculate");
+            // console.error("------------------------------");
 
             this.deposits_commodity = new AssetDEX("0 " + this.commodity.symbol, this.dex);
             this.deposits_currency = new AssetDEX("0 " + this.currency.symbol, this.dex);
 
+            // console.error("this.deposits_commodity:", this.deposits_currency);
+            // console.error("this.deposits_currency:", this.deposits_currency);
 
             var a = this.price.amount;
             this.payment.amount = this.price.amount.multipliedBy(this.amount.amount);
@@ -136,14 +125,17 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             this.asset = new AssetDEX("0.0 " + this.commodity.symbol, this.dex);
             this.can_sell = false;
             for (var i in this.deposits) {
-                if (this.deposits[i].token == this.commodity) {
+                // console.error("this.deposits[i].token.id:", this.deposits[i].token.id);
+                if (this.deposits[i].token.id == this.commodity.id) {
                     this.deposits_commodity = this.deposits[i].clone();
+
                     if (this.deposits[i].amount.toNumber() > 0) {
                         this.can_sell = true;
                         this.asset = this.deposits[i];
                     }
                 }
             }
+            // console.error("------------------------------");
             // Does he/she have enough commodity?
             if (this.can_sell) {
                 if (this.asset.amount.isLessThan(this.amount.amount)) {
@@ -195,19 +187,19 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         });
     }
 
-    wantsTo(what, takeprice:boolean = false) {
+    wantsTo(what:SellOrBuy, takeprice:boolean = false) {
         console.assert(what == "sell" || what == "buy", "ERROR: wantsTo what??", what);
         // if (what == "sell" && !this.can_sell) return;
         // if (what == "buy" && !this.can_buy) return;
         this.wants = what;
+        this.showswap = false;
 
         // set price only when is 0
-        if (this.price.amount.isEqualTo(0)) {
+        if (!this.price || this.price.amount.isEqualTo(0)) {
             if (what == "sell" && this.buyorders && takeprice) {
                 console.log("wantsTo",what, this.buyorders);
                 if (this.buyorders.length > 0) {
                     var order = this.buyorders[0];
-                    console.log("******* order", order);
                     this.price = order.price;
                 }
             }
@@ -216,7 +208,6 @@ export class VpePanelOrderEditorComponent implements OnChanges {
                 console.log("wantsTo",what, this.sellorders);
                 if (this.sellorders.length > 0) {
                     var order = this.sellorders[0];
-                    console.log("******* order", order);
                     this.price = order.price;
                 }
             }    
@@ -225,14 +216,21 @@ export class VpePanelOrderEditorComponent implements OnChanges {
         this.calculate();
     }
 
+    showswap: boolean = false;
+    setSwap(swap:boolean) {
+        this.showswap = swap;
+    }
+
     setPrice(a:AssetDEX) {
         this.price = a;
+        this.priceChange.next(this.price);
         this.ngOnChanges();
     }
     
     setAmount(a:AssetDEX) {
         this.feed.clearError("form");
         this.amount = a;
+        this.amountChange.next(this.amount);
         this.ngOnChanges();
     }
 
@@ -244,6 +242,11 @@ export class VpePanelOrderEditorComponent implements OnChanges {
     
     buyAll() {
         this.feed.clearError("form");
+        
+        // Check if the Assets and Tokens are initialized
+        if (!this.payment.ok || !this.price.ok) this.restaure();
+        if (!this.payment.ok || !this.price.ok) return;
+
         console.log("buyAll()", this.payment);
         this.wantsTo("buy");
         if (this.price.amount.toNumber() == 0) {
@@ -254,35 +257,53 @@ export class VpePanelOrderEditorComponent implements OnChanges {
             this.setAmount(new AssetDEX(amount, this.deposits_commodity.token));    
         }
     }
+
+    onAmountChange(a:AssetDEX) {
+        this.amount = a;
+        this.onAnyValueChange();
+        this.amountChange.next(this.amount);
+    }
     
-    onChange(event:any) {
+    onPriceChange(a:AssetDEX) {
+        this.price = a;
+        this.onAnyValueChange();
+        this.priceChange.next(this.price);
+    }
+
+    onAnyValueChange() {
         this.feed.clearError("form");
         this.calculate();
     }
 
+
+
     reset() {
-        this.amount = null;
-        this.payment = null;
-        this.commodity = null;
-        this.currency = null;
-        this.price = null;
+        this.amount    = new AssetDEX();
+        this.payment   = new AssetDEX();
+        this.commodity = new TokenDEX();
+        this.currency  = new TokenDEX();
+        this.price     = new AssetDEX();
+        this.amountChange.next(this.amount);
+        this.priceChange.next(this.price);
         this.ngOnChanges();
     }
 
     private restaure() {
-        if (this.commodity && !this.amount) {
+        if (this.commodity.ok && !this.amount.ok) {
             this.amount = new AssetDEX("0.0000 " + this.commodity.symbol, this.dex);
+            this.amountChange.next(this.amount);
         }
 
-        if (this.currency && !this.payment) {
+        if (this.currency.ok && !this.payment.ok) {
             this.payment = new AssetDEX("0.0000 " + this.currency.symbol, this.dex);
         }
 
-        if (this.currency && !this.price) {
+        if (this.currency.ok && !this.price.ok) {
             this.price = new AssetDEX("0.0000 " + this.currency.symbol, this.dex);
+            this.priceChange.next(this.price);
         }
 
-        if (this.price && this.amount && this.deposits && this.deposits.length > 0) {
+        if (this.price.ok && this.amount.ok && this.deposits && this.deposits.length > 0) {
             this.calculate();
         }
 
@@ -330,52 +351,62 @@ export class VpePanelOrderEditorComponent implements OnChanges {
 
     buy() {
         if (!this.can_buy) return;
+
+        // Check if the Assets and Tokens are initialized
+        if (!this.payment.ok || !this.price.ok || !this.amount.ok) this.restaure();
+        if (!this.payment.ok || !this.price.ok || !this.amount.ok) return;
+
         if (this.payment.amount.toNumber() == 0) return;
-        console.log("BUY");
-        this.loading = true;
-        this.feed.clearError("form");
-        this.dex.createOrder("buy", this.amount, this.price, this.clientid).then(_ => {
-            // success
-            this.loading = false;
-        }).catch(e => {
-            console.log(e);
-            if (typeof e == "string") {
-                this.feed.setError("form", "ERROR: " + JSON.stringify(JSON.parse(e), null, 4));
-            } else {
-                this.feed.setError("form", "ERROR: " + JSON.stringify(e, null, 4));
-            }
-            this.loading = false;
+
+        this.makeOrder.next({
+            type: "buy",
+            price: this.price,
+            quantity: this.amount
         });
     }
 
     sell() {
         if (!this.can_sell) return;
         // if (this.payment.amount.toNumber() == 0) return;
-        console.log("SELL");
-        this.loading = true;
-        this.feed.clearError("form");
-        this.dex.createOrder("sell", this.amount, this.price, this.clientid).then(_ => {
-            // success
-            this.loading = false;
-        }).catch(e => {
-            console.log(e);
-            if (typeof e == "string") {
-                this.feed.setError("form", "ERROR: " + JSON.stringify(JSON.parse(e), null, 4));
-            } else {
-                this.feed.setError("form", "ERROR: " + JSON.stringify(e, null, 4));
-            }
-            this.loading = false;
+
+        // Check if the Assets and Tokens are initialized
+        if (!this.payment.ok || !this.price.ok || !this.amount.ok) this.restaure();
+        if (!this.payment.ok || !this.price.ok || !this.amount.ok) return;
+
+        this.makeOrder.next({
+            type: "sell",
+            price: this.price,
+            quantity: this.amount
         });
     }
 
-    cancel(order) {
-        var key = order.id;
+    swap() {
+        let type: SellOrBuy = "buy";
+        if (this.wants == "sell") type = "sell";
+        this.makeSwap.next({
+            type: type,
+            price: this.price,
+            quantity: this.amount
+        });
+    }
+
+    cancel(order: Order) {
+        let key = "sell-" + order.id;
         this.feed.clearError("orders");
-        if (order.deposit.token.symbol != order.telos.token.symbol) {
+        if (order.deposit.token.symbol != order.currency.token.symbol) {
             key = "sell-" + order.id;
             this.c_loading[key] = true;
             console.log(key, this.c_loading);
-            this.dex.cancelOrder("sell", order.deposit.token, order.telos.token, [order.id]).then(_ => {
+
+            this.makeCancel.next({
+                type: "sell",
+                commodity: <TokenDEX>order.deposit.token,
+                currency: <TokenDEX>order.currency.token,
+                numbers: [order.id]
+            });
+
+            /*
+            this.dex.cancelOrder("sell", <TokenDEX>order.deposit.token, <TokenDEX>order.currency.token, [order.id]).then(_ => {
                 // success
                 this.c_loading[key] = false;
             }).catch(e => {
@@ -386,13 +417,15 @@ export class VpePanelOrderEditorComponent implements OnChanges {
                     this.feed.clearError("orders");
                 }
                 this.c_loading[key] = false;
-            });;
+            });
+            */
         }
-        if (order.deposit.token.symbol == order.telos.token.symbol) {
+        if (order.deposit.token.symbol == order.currency.token.symbol) {
             key = "buy-" + order.id;
             this.c_loading[key] = true;
             console.log(key, this.c_loading);
-            this.dex.cancelOrder("buy", order.total.token, order.telos.token, [order.id]).then(_ => {
+            /*
+            this.dex.cancelOrder("buy", <TokenDEX>order.total.token, <TokenDEX>order.currency.token, [order.id]).then(_ => {
                 // success
                 this.c_loading[key] = false;
             }).catch(e => {
@@ -404,8 +437,18 @@ export class VpePanelOrderEditorComponent implements OnChanges {
                 }
                 this.c_loading[key] = false;
             });;
+            */
+
+            this.makeCancel.next({
+                type: "buy",
+                commodity: <TokenDEX>order.total.token,
+                currency: <TokenDEX>order.currency.token,
+                numbers: [order.id]
+            });
+
         }        
     }
+
 
 }
 

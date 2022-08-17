@@ -4,7 +4,7 @@
             <div class="pull-right">
                <i class="material-icons cursor-pointer" style="line-height: 0px; margin-top: 12px;"> expand_more </i> 
             </div>
-            <img style="height:16px; width: 16px; margin-top:-2px" [src]="current?.icon">
+            <img style="height:16px; width: 16px; margin-top:-2px" [src]="current?.icon || current?.iconlg">
             {{current?.title}} ({{current?.symbol}})
         </div>
     </div>

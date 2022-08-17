@@ -1,12 +1,30 @@
-<div class="nav-item dropdown" ngbDropdown>
-    <a class="btn btn-primary dropdown-toggle" [ngClass]="{'btn-xs':btn=='xs', 'btn-sm':btn=='sm', 'btn-md':btn=='md'}" data-toggle="dropdown" id="language">
+<div class="nav-item dropdown">
+    <a class="btn btn-primary dropdown-toggle" [ngClass]="{'btn-xs':btn=='xs', 'btn-sm':btn=='sm', 'btn-md':btn=='md'}"
+        data-toggle="dropdown" id="offchain"
+        (click)="dropdown.drop('offchain')"
+        >
         {{service.currency.title}} <span [hidden]="hideprice">({{service.getTelosInCurrentCurrency("1.0000 TLOS")}})</span>
         <span class="caret"></span>
     </a>
-    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="language">
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="offchain" [ngClass]="{show: dropdown.isOpen('offchain')}">
         <span *ngFor="let currency of service.currencies"
-            class="cursor-pointer dropdown-item" (click)="service.setCurrentCurrency(currency.symbol ? currency.symbol.toLowerCase() : '');">
+            class="cursor-pointer dropdown-item" (click)="service.setCurrentCurrency(currency.symbol ? currency.symbol.toLowerCase() : ''); dropdown.close();">
             {{currency.title}} ({{currency.symbol}})
         </span>
     </div>
 </div>
+
+<!-- 
+<li class="nav-item language dropdown" >
+    <a  class="nav-link dropdown-toggle cursor-pointer" (click)="dropdown.drop('language')">
+        <i class="material-icons"> language </i>
+        
+        <span class="caret"></span>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right" [ngClass]="{show: dropdown.isOpen('language')}" >
+        <span class="cursor-pointer dropdown-item" (click)="local.setLocal('en_US'); dropdown.close(); debug();">English</span>
+        <span class="cursor-pointer dropdown-item" (click)="local.setLocal('es_ES'); dropdown.close(); debug();">Español</span>
+        <span class="cursor-pointer dropdown-item" (click)="local.setLocal('pt_BR'); dropdown.close(); debug();">Português</span>
+    </div>
+</li>
+-->

@@ -1,16 +1,17 @@
 
     
 
-        <div class="card token-card text-white margin-top">
+        <div class="card token-card text-white margin-top" (click)="debug()">
             <div class="card-body vpe-background-card-body">
                 <div class="text-center">
-                    <img style="height:64px; width: 64px; margin-top:-3px" [src]="token.iconlg">
-                    <div style="position: absolute; right: 20px; top: 12px;" class="text-lg" [hidden]="token.symbol == 'TLOS'">
+                    <img style="height:64px; width: 64px; margin-top:-3px" [src]="token.iconlg || token.icon || '#'">
+                    <div style="position: absolute; right: 20px; top: 12px;" class="text-lg" [hidden]="token.symbol == dex.currency.symbol">
                         <div
+                            *ngIf="token.summary"
                             class="nowrap text-right"
-                            [ngClass]="{'text-success': token.summary?.percent > 0, 'text-danger': token.summary?.percent < 0, 'text-muted': token.summary?.percent  == 0}"
+                            [ngClass]="{'text-success': token.summary.percent > 0, 'text-danger': token.summary.percent < 0, 'text-muted': token.summary.percent  == 0}"
                         >
-                            <small><b>{{token.summary?.percent_str}}</b></small>
+                            <small><b>{{token.summary.percent_str}}</b></small>
                         </div>
                     </div>                                       
                 </div>
@@ -24,26 +25,36 @@
                 </div>
                 <div class="card-text margin-top">
                     <div>
-                        <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('token-stat-'+token.symbol) && !dex.feed.loading('summary.'+token.table)"></span>
-                        <small><span class="label">max:</span><span class="nowrap"> {{token.stat ? token.stat.max_supply : ('0 ' + token.symbol)}} </span></small><br>
-                        <small><span class="label">total:</span><span class="nowrap"> {{token.stat ? token.stat.supply : ('0 ' + token.symbol)}} </span></small><br>
-                        <small><a [href]="'https://telos.eosx.io/account/' + token.contract " target="_blank"><span class="nowrap"> {{token.contract}} - {{token.symbol}} </span></a></small>
+                        <!--span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('token-stat-'+token.symbol) && !dex.feed.loading('summary.'+token.table)"></span-->
+
+                        <ng-template [ngIf]="dex.feed.loading('token-stat-'+token.symbol)">
+                            <span class="spinner-border spinner-border-sm"></span>
+                        </ng-template>
+
+                        <ng-template [ngIf]="!dex.feed.loading('token-stat-'+token.symbol)">
+                            <small><span class="label">max:</span><span class="nowrap"> {{token.stat ? token.stat.max_supply : ('0 ' + token.symbol)}} </span></small><br>
+                            <small><span class="label">total:</span><span class="nowrap"> {{token.stat ? token.stat.supply : ('0 ' + token.symbol)}} </span></small><br>
+                            <small><a [href]="'https://telos.eosx.io/account/' + token.contract " target="_blank"><span class="nowrap"> {{token.contract}} - {{token.symbol}} </span></a></small>    
+                        </ng-template>
+                        
                     </div>
                 </div>
                 <div>
                     <div class="row margin-top">
-                        <div class="text-left col-padding-right col-6">
-                            <span [hidden]="token.symbol != 'TLOS' && token.tradeable"
-                                class="btn disabled btn-primary btn-sm margin-top">{{local.string.trade|titlecase}}</span>                            
-                            <span [hidden]="token.symbol == 'TLOS' || !token.tradeable"
+                        <div class="text-left col-padding-right col-4">
+                            <span
                                 class="btn btn-primary btn-sm margin-top"
                                 (click)="goToTradeToken(token)"
                                 >{{local.string.trade}}</span>
                         </div>
-                        <div class="col-4 text-center col-padding-left col-padding-right" [hidden]="true">                            
+                        <div class="text-center col-padding-right col-padding-left col-4">
+                            <span
+                                class="btn btn-primary btn-sm margin-top"
+                                (click)="goToSwapToken(token)"
+                                >{{local.string.swap}}</span>
                         </div>
-                        <div class="text-right col-padding-left col-6">
-                            <span [hidden]="token.symbol == 'TLOS' || token.admin == logged"
+                        <div class="text-right col-padding-left col-4">
+                            <span [hidden]="token.admin == logged"
                                 (click)="goToTokenPage(token)"
                                 class="btn btn-primary btn-sm margin-top">{{local.string.info|titlecase}}</span>
                             <span [hidden]="token.admin != logged"
@@ -51,45 +62,74 @@
                                 class="btn btn-success btn-sm margin-top">{{local.string.edit|titlecase}}</span>                                
                         </div>
                     </div>
-                    <!--
-                    <div class="row margin-top">
-                        <div class="text-left col-padding-right"
-                            [ngClass]="{'col-6': token.admin != logged, 'col-4': token.admin == logged}"
-                        >
-                            <span [hidden]="token.symbol != 'TLOS' && token.tradeable"
+
+                    <!-- Vieja versión de código que muestra los botones de forma not-disabled para todo token diferente de DEX -->
+                    <!-- div class="row margin-top">
+                        <div class="text-left col-padding-right col-4">
+                            <span [hidden]="token.symbol != dex.currency.symbol && token.tradeable"
                                 class="btn disabled btn-primary btn-sm margin-top">{{local.string.trade|titlecase}}</span>                            
-                            <span [hidden]="token.symbol == 'TLOS' || !token.tradeable"
+                            <span [hidden]="token.symbol == dex.currency.symbol || !token.tradeable"
                                 class="btn btn-primary btn-sm margin-top"
                                 (click)="goToTradeToken(token)"
                                 >{{local.string.trade}}</span>
                         </div>
-                        <div class="col-4 text-center col-padding-left col-padding-right" [hidden]="token.admin != logged">
-                            <span
-                                (click)="goToEditTokenPage(token)"
-                                class="btn btn-success btn-sm margin-top">{{local.string.edit|titlecase}}</span>                            
+                        <div class="text-center col-padding-right col-padding-left col-4">
+                            <span [hidden]="token.symbol != dex.currency.symbol && token.tradeable"
+                                class="btn disabled btn-primary btn-sm margin-top">{{local.string.swap|titlecase}}</span>                            
+                            <span [hidden]="token.symbol == dex.currency.symbol || !token.tradeable"
+                                class="btn btn-primary btn-sm margin-top"
+                                (click)="goToSwapToken(token)"
+                                >{{local.string.swap}}</span>
                         </div>
-                        <div class="text-right col-padding-left"
-                            [ngClass]="{'col-6': token.admin != logged, 'col-4': token.admin == logged}"
-                            >
-                            <span [hidden]="token.symbol == 'TLOS' || !token.tradeable"
+                        <div class="text-right col-padding-left col-4">
+                            <span [hidden]="token.symbol == dex.currency.symbol || token.admin == logged"
                                 (click)="goToTokenPage(token)"
                                 class="btn btn-primary btn-sm margin-top">{{local.string.info|titlecase}}</span>
+                            <span [hidden]="token.admin != logged"
+                                (click)="goToEditTokenPage(token)"
+                                class="btn btn-success btn-sm margin-top">{{local.string.edit|titlecase}}</span>                                
                         </div>
-                    </div>
-                    -->
+                    </div-->
                 </div>
 
                 <div class="col-xs-12 margin-top">
-                    <div class="row" style="flex-grow: 1">
-                        <div class="col-6 text-left col-padding-right" *ngIf="token.symbol != 'TLOS' && token.tradeable">
-                            <small class="text-muted">{{local.string.vol}}: {{token.summary?.volume.valueToString(4)}}  {{token.summary?.volume.token.symbol}}</small>
+                    <div class="d-flex flex-row flex-grow-1" *ngIf="token.symbol != dex.currency.symbol && token.tradeable">
+                        <div class="flex-grow-1">
+                            <ng-template [ngIf]="token.summary && !dex.feed.loading('summary.'+token.table)">
+                                <small class="text-muted">{{local.string.vol}}: {{token.summary.volume.valueToString(4)}}  {{token.summary.volume.token.symbol}}</small>
+                            </ng-template>    
+                            <ng-template [ngIf]="!token.summary || dex.feed.loading('summary.'+token.table)">
+                                &nbsp; <span class="spinner-border spinner-border-sm"></span>
+                            </ng-template>                                                    
                         </div>
-                        <div class="col-6 text-right col-padding-left" *ngIf="token.symbol != 'TLOS' && token.tradeable">
-                            <small class="calculated-in-currency"> {{service.getTokenInCurrentCurrency(token.summary?.price || "0.0000 TLOS").toString()}} </small>
+                        <div>
+                            <small class="calculated-in-currency"> {{service.getTokenInCurrentCurrency(token.summary ? token.summary.price : "0.0000 DEX").toString()}} </small>
                         </div>
-                        <div class="col-12 text-right" *ngIf="token.symbol == 'TLOS'"> &nbsp; </div>
-                        <div class="col-12 text-right" *ngIf="!token.tradeable"> {{local.string.cantbtraded}} </div>
                     </div>
+
+                    <div class="row" style="flex-grow: 1">
+                        <div class="col-12 text-right" *ngIf="token.symbol == dex.currency.symbol"> &nbsp; </div>
+                        <div class="col-12 text-right" *ngIf="!token.tradeable"> {{local.string.cantbtraded}} </div>                        
+                    </div>
+
+
+
+
+                    <!--div class="row" style="flex-grow: 1">
+                        <div class="col-6 text-left col-padding-right" *ngIf="token.symbol != dex.currency.symbol && token.tradeable">
+                            <ng-template [ngIf]="token.summary && !dex.feed.loading('summary.'+token.table)">
+                                <small class="text-muted">{{local.string.vol}}: {{token.summary.volume.valueToString(4)}}  {{token.summary.volume.token.symbol}}</small>
+                            </ng-template>
+                            <ng-template [ngIf]="!token.summary || dex.feed.loading('summary.'+token.table)">
+                                &nbsp; <span class="spinner-border spinner-border-sm"></span>
+                            </ng-template>
+                        </div>
+                        <div class="col-6 text-right col-padding-left" *ngIf="token.symbol != dex.currency.symbol && token.tradeable">
+                            <small class="calculated-in-currency"> {{service.getTokenInCurrentCurrency(token.summary ? token.summary.price : "0.0000 DEX").toString()}} </small>
+                        </div>
+                        <div class="col-12 text-right" *ngIf="token.symbol == dex.currency.symbol"> &nbsp; </div>
+                        <div class="col-12 text-right" *ngIf="!token.tradeable"> {{local.string.cantbtraded}} </div>
+                    </div-->
                 </div>
             </div>
         </div>

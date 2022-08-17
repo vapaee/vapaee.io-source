@@ -1,0 +1,81 @@
+:host {
+    display: block;
+    height: 100%;
+}
+.image-logo {
+    margin-top: 1px;
+    margin-left: 10px;
+    height: 37px;
+    &.vpe {
+        margin-left: 25px;
+    }
+}
+
+// some minor fixes
+.fb-like-container {
+    margin-top: 5px;
+}
+.navbar-brand {
+    border-right-width: 0px;
+}
+.navbar-brand.brand {
+    padding: 5px 20px 5px 10px;
+    overflow: hidden;
+    position: relative;
+    min-width: 150px;
+    .image-container {
+        position: absolute; top:0; left:0; right:0; bottom:0; 
+        transition: margin-top 0.3s ease-out;
+        &.switch {            
+            margin-top: -38px;
+        }
+    }
+}
+@media (min-width: 576px) {
+    .image-logo {
+        margin-top: 3px;
+        margin-left: 10px;
+        height: 45px;
+    }    
+    .navbar-brand.brand {
+        padding: 5px 20px 5px 10px;
+        min-width: 180px;
+        font-size: 1.7rem;
+        .image-container {
+            &.switch {
+                margin-top: -47px;
+            }
+        }
+    }
+}
+
+.navbar {
+    z-index: 10;
+    background: rgb(58,58,58);
+    background: -moz-linear-gradient(top, rgba(58,58,58,1) 0%, rgba(84,84,84,1) 100%);
+    background: -webkit-linear-gradient(top, rgba(58,58,58,1) 0%,rgba(84,84,84,1) 100%);
+    background: linear-gradient(to bottom, rgba(58,58,58,1) 0%,rgba(84,84,84,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3a3a3a', endColorstr='#545454',GradientType=0 );
+
+    &.wide.normal, &.portrait  {
+        #navbar {
+            display: none;
+        }
+    }
+
+    .btn.ng-sidemenu-toggler {
+        background-image: none;
+        background-color: transparent;
+        &.active {
+            background-image: linear-gradient(#101112, #17191b 40%, #1b1e20);
+            background-color: #3A3F44;
+        }
+    }
+
+}
+
+
+a.nav-link i.material-icons {
+    vertical-align: middle;
+    margin-top: -3px;
+}

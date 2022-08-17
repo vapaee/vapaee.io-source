@@ -1,0 +1,32 @@
+:host {
+    display: block;
+    .summary-row {
+        .row-label {
+    
+        }
+        .row-value {
+            font-weight: bold;    
+            .fee {
+                padding-left: 5px;
+            }
+            .fee + .fee {
+                &::before {
+                    content: "-";
+                    padding-right: 5px;
+                }
+            }
+    
+            .step {
+                padding-left: 5px;
+            }
+            .step + .step {
+                &::before {
+                    content: ">";
+                    padding-right: 5px;
+                }
+            }
+           
+        }
+    }
+}
+

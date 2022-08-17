@@ -5,7 +5,7 @@ import { Injectable, EventEmitter, LOCALE_ID, Inject, Optional } from '@angular/
 @Injectable()
 export class GoogleChartsLoaderService {
 
-  private googleScriptLoadingNotifier: EventEmitter<boolean>;
+  private googleScriptLoadingNotifier: EventEmitter<boolean> ;
   private googleScriptIsLoading: boolean;
   private localeId: string;
 

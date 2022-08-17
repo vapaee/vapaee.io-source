@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
+import { Component, Input, OnChanges, Output, HostBinding, TemplateRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
@@ -14,18 +14,18 @@ import { TokenDEX, VapaeeDEX } from '@vapaee/dex';
 })
 export class VpePanelTokenSelectorComponent implements OnChanges {
 
-    @Input() public tokens: TokenDEX[];
-    @Input() public current: TokenDEX;
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public expanded: boolean;
+    @Input() public tokens: TokenDEX[]            = [];
+    @Input() public current: TokenDEX             = new TokenDEX();
+    @Input() public hideheader: boolean           = false;
+    @Input() public margintop: boolean            = true;
+    @Input() public expanded: boolean             = true;
 
     @Output() tokenChange: EventEmitter<TokenDEX> = new EventEmitter();
-    token_filter:string;
+    token_filter:string = "";
     
-    @HostBinding('class') display;
-    volume_digits: number;
-    price_digits: number;
+    @HostBinding('class') display: string = "full";
+    volume_digits: number = 4;
+    price_digits: number  = 8;
     
     constructor(
         public dex: VapaeeDEX,
@@ -55,20 +55,20 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
     }
 
     onResize(event:ResizeEvent) {
-        setTimeout(_ => {
+        setTimeout(() => {
             this.updateSize(event);
         });
     }
 
-    summary(_table) {
-        var table = this.dex.market(_table);
+    summary(market_name:string) {
+        var name = this.dex.market(market_name);
         var _summary = Object.assign({
             percent: 0,
             percent_str: "0%",
             price: this.dex.zero_telos.clone(),
             records: [],
             volume: this.dex.zero_telos.clone()
-        }, table ? table.summary : {});
+        }, name ? name.summary : {});
         return _summary;
     }
 
@@ -79,7 +79,7 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
     
 
     ngOnChanges() {
-        if (!this.current && this.tokens && this.tokens.length > 0) {
+        if (!this.current.ok && this.tokens && this.tokens.length > 0) {
             this.current = this.tokens[0];
         }
     }
@@ -89,8 +89,8 @@ export class VpePanelTokenSelectorComponent implements OnChanges {
     }
 
     // modal -------------
-    closeResult: string;
-    open(content) {
+    closeResult: string = "";
+    open(content: TemplateRef<any>) {
         this.modalService.open(content, {centered: true}).result.then((result) => {
             this.closeResult = `Closed with: ${result}`;
         }, (reason) => {

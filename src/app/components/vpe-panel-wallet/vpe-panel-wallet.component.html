@@ -1,4 +1,4 @@
-<vpe-panel [id]="'vpe-panel-wallet'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.wallet">
+<vpe-panel [id]="'vpe-panel-wallet'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.wallet" (click)="debug()">
     <div class="row">
 
         <!-- title if used -->
@@ -7,11 +7,11 @@
         </div>
 
         <!-- login header -->
-        <div class="col-sm-12" [hidden]="dex.logged || hideuser">
-            <div class="pull-right margin-top">
-                <span class="btn btn-sm btn-primary" (click)="dex.login()">
+        <div class="col-sm-12 mb-2" [hidden]="dex.logged || hideuser">
+            <div class="margin-top d-flex flex-column">
+                <span class="flex-gorw-1 btn btn-sm btn-fancy text-sm" (click)="dex.login()">
                     <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
-                    {{local.string.LoginWScOrSq}}
+                    {{local.string.LoginWScatter}}
                 </span>
             </div>
         </div>
@@ -19,19 +19,19 @@
         <div class="col-sm-12">
             <!-- account header -->
             <div>
-                <div class="pull-right" [hidden]="hideuser || !dex.logged">
+                <div class="pull-right mb-2" [hidden]="hideuser || !dex.logged">
                     <small class="text-muted cursor-pointer" (click)="clickOnAccount()">
-                        {{local.string.LoggedAs}} '{{dex.logged}}'
+                        {{local.string.LoggedAs}} '{{dex.account_name}}'
                     </small>
                 </div>
             </div>
             <!-- deposits header -->
-            <div class="text-md margin-top-xl">
+            <div class="text-md margin-top-xl" [hidden]="!deposits || deposits.length == 0">
                 {{local.string.deposits | titlecase}}
                 <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('deposits')"></span>
 
                 <!-- withdraw toggle buttons -->
-                <div class="pull-right" [hidden]="!hideuser || !deposits || deposits.length == 0">
+                <div *ngIf="false" class="pull-right mb-2" [hidden]="!hideuser || !deposits || deposits.length == 0">
                     <span class="btn btn-sm btn-primary" [hidden]="!show_prices_top || (hideuser && !dex.logged)" (click)="show_prices_top=false">
                         {{local.string.withdraw | titlecase}}
                         <i class="material-icons">arrow_downward</i>
@@ -42,10 +42,12 @@
                     </span>
                 </div>                
             </div>
+
+            <!-- deposits -->
             <table class="table complete margin-top">
                 <tbody>
                     <!-- "no deposits" message -->
-                    <tr [hidden]="!deposits || deposits.length > 0"><td>
+                    <tr *ngIf="false" [hidden]="!deposits || deposits.length > 0"><td>
                         <div class="col-sm-12 margin-top text-center text-danger">
                             <label>{{local.string.thesnodeps}}</label>
                         </div>
@@ -71,10 +73,10 @@
                         <td>
                             <div (click)="withdrawForm(deposit)" [ngClass]="{'cursor-pointer': actions}">
                                 <div class="pull-right" style="line-height: 1.5;">
-                                    <span class="calculated-in-currency" [hidden]="!show_prices_top" [ngClass]="{'text-xs':!portrait, 'text-sm':portrait}"> {{service.getTokenInCurrentCurrency(deposit).toString(digits.offchain)}} </span>
+                                    <span class="calculated-in-currency" *ngIf="!hidefiat" [hidden]="!show_prices_top" [ngClass]="{'text-xs':!portrait, 'text-sm':portrait}"> {{service.getTokenInCurrentCurrency(deposit).toString(digits.offchain)}} </span>
                                     <span class="btn btn-xs btn-primary" [hidden]="withdraw.token.symbol != 'AUX' || show_prices_top || !hideuser">{{local.string.withdraw | titlecase}}</span>
                                 </div>                                 
-                                <img class="token-icon" [src]="deposit.token.icon">
+                                <img class="token-icon" [src]="deposit.tokenDex.icon || deposit.tokenDex.iconlg || '#'">
                                 {{deposit.toString(digits.amount)}}
                                 <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('deposits')"></span>
                             </div>
@@ -82,8 +84,8 @@
                                 <div class="col-sm-12 margin-top">
                                     <label>{{local.string.withdraw | titlecase}}</label>
                                     <vpe-token-input
-                                        [(asset)]="withdraw"
-                                        (valueChange)="onChange($event)"
+                                        [asset]="withdraw"
+                                        (valueChange)="withdraw = $event"
                                         (valueEnter)="onConfirmWithdraw($event)"
                                         [precision]="deposit.token.precision"
                                         [button]="local.string.withdraw"
@@ -97,16 +99,18 @@
                     </tr>
                 </tbody>
             </table>
+            
         </div>
 
+        <!-- balances -->
         <div class="col-sm-12">
             <!-- withdraw header -->
-            <div class="text-md">
+            <div class="text-md" [hidden]="!dex.logged">
                 {{local.string.balances | titlecase}}
                 <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('balances')"></span>
 
                 <!-- deposit toggle buttons -->
-                <div class="pull-right" [hidden]="!deposits || deposits.length == 0">
+                <!--div *ngIf="false" class="pull-right" [hidden]="!deposits || deposits.length == 0">
                     <span class="btn btn-sm btn-primary" [hidden]="!show_prices_bottom || hideuser || dex.logged" (click)="clickOnAccount()">
                         {{local.string.deposit | titlecase}}
                         <i class="material-icons">call_made</i>
@@ -119,11 +123,11 @@
                         {{local.string.hidebtns}}
                         <i class="material-icons">replay</i>
                     </span>
-                </div>
+                </div-->
             </div>
             <div class="alert alert-info margin-top" [hidden]="!alert_msg">
                 <div class="pull-right">
-                    <button type="button" class="close text-white" (click)="alert_msg = null">
+                    <button type="button" class="close text-white" (click)="alert_msg = ''">
                         <i class="material-icons" style="font-size: 100%;">cancel</i>
                     </button>                
                 </div>
@@ -139,29 +143,16 @@
 
                         <!-- Balance -->
                         <td>
-                            <div (click)="depositForm(balance)" [ngClass]="{'cursor-pointer': actions}">
+                            <div  [ngClass]="{'cursor-pointer': actions}">
                                 <div class="pull-right" style="line-height: 1.5;">
-                                    <span class="text-xs calculated-in-currency" [hidden]="!show_prices_bottom" [ngClass]="{'text-xs':!portrait, 'text-sm':portrait}"> {{service.getTokenInCurrentCurrency(balance).toString(digits.offchain)}} </span>
-                                    <span class="btn btn-xs btn-primary" [hidden]="deposit.token.symbol != 'AUX' || show_prices_bottom || !balance.token.tradeable">{{local.string.deposit | titlecase}}</span>
+                                    <span class="text-xs calculated-in-currency" *ngIf="!hidefiat" [hidden]="!show_prices_bottom" [ngClass]="{'text-xs':!portrait, 'text-sm':portrait}"> {{service.getTokenInCurrentCurrency(balance).toString(digits.offchain)}} </span>
+                                    <span class="btn btn-xs btn-primary" [hidden]="deposit.token.symbol != 'AUX' || show_prices_bottom || !balance.tokenDex.tradeable">{{local.string.deposit | titlecase}}</span>
                                 </div>
-                                <img [src]="balance.token.icon" style="width: 20px; height: 20px; margin-top:-1px">
+                                <img [src]="balance.tokenDex.icon || balance.tokenDex.iconlg" style="width: 20px; height: 20px; margin-top:-1px">
                                 {{balance.toString()}}
                                 <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('balances-'+balance.token.contract) && !dex.feed.loading('token-stat-'+balance.token.symbol)"></span>
                             </div>
-                            <div class="row" [hidden]="balance.token.symbol != deposit.token.symbol">
-                                <div class="col-sm-12 margin-top">
-                                    <label>{{local.string.deposit | titlecase}}</label>
-                                    <vpe-token-input
-                                        [(asset)]="deposit"
-                                        (valueChange)="onChange($event)"
-                                        (valueEnter)="onConfirmDeposit($event)"
-                                        [precision]="balance.token.precision"
-                                        [button]="local.string.deposit"
-                                        [loading]="loading"
-                                        [error]="deposit_error"
-                                        placeholder="{{local.string.deposit | titlecase}}"></vpe-token-input>
-                                </div>
-                            </div>
+                            
                         </td>
                     </tr>
                 </tbody>

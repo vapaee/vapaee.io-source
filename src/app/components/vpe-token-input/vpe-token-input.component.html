@@ -1,36 +1,50 @@
 
+<ng-template class="input-group" [ngIf]="button == 'just-input'">
+    <input
+        type="text"
+        [ngClass]="input_class_obj"
+        (ngModelChange)="onChange(ctrl,$event)"
+        (blur)="onBlur(ctrl,$event)"
+        #ctrl="ngModel"
+        [(ngModel)]="text"
+        (onkeypress)="onKeyPressHandler($event)"
+        placeholder="{{placeholder}}"
+        (click)="onClick(content)"
+    >
+</ng-template>
+
 <div class="input-group" [hidden]="button" (click)="onClick(content)">
     <input
         type="text"
         class="form-control form-control-sm"
-        [ngClass]="{'disabled': disabled, 'pointer-events-none': service.device.portrait}"
+        [ngClass]="input_class_obj"
         (ngModelChange)="onChange(ctrl,$event)"
         (blur)="onBlur(ctrl,$event)"
         #ctrl="ngModel"
         [(ngModel)]="text"
-        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46"
+        (onkeypress)="onKeyPressHandler($event)"
         placeholder="{{placeholder}}"
     >
     <div class="input-group-append">
-        <span class="input-group-text form-control-sm padding-xs">{{asset ? asset.token ? asset.token.symbol: ' ' : ' '}}</span>
+        <span class="input-group-text form-control-sm padding-xs">{{asset.token.symbol}}</span>
     </div>
 </div>
 
-<div class="input-group" [hidden]="!button" (click)="onClick(content)">
+<div class="input-group" [hidden]="!button || button == 'just-input'" (click)="onClick(content)">
     <input
         type="text"
         class="form-control form-control-sm"
-        [ngClass]="{'disabled': disabled, 'pointer-events-none': service.device.portrait}"
+        [ngClass]="input_class_obj"
         (ngModelChange)="onChange(ctrl,$event)"
         (blur)="onBlur(ctrl,$event)"
         #ctrl="ngModel"
         [(ngModel)]="text"
-        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46"
+        (onkeypress)="onKeyPressHandler($event)"
         placeholder="{{placeholder}}"
         (keyup.enter)="onEnter($event)"
     >
     <div class="input-group-append">
-        <span class="input-group-text form-control-sm padding-xs">{{asset ? asset.token ? asset.token.symbol: ' ' : ' '}}</span>
+        <span class="input-group-text form-control-sm padding-xs">{{asset.token.symbol}}</span>
         <button [hidden]="!button" class="action btn btn-sm btn-primary" type="button" (click)="onEnter($event)">
             <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
             {{button | titlecase}}
@@ -40,7 +54,7 @@
     <div class="input-group margin-top" [hidden]="!error">
         <div class="alert alert-danger" role="alert">
             <div class="pull-right">
-                <button type="button" class="close text-white" data-dismiss="alert" aria-label="Close" (click)="error = null">
+                <button type="button" class="close text-white" data-dismiss="alert" aria-label="Close" (click)="error = ''">
                     <i class="material-icons" style="font-size: 100%;">cancel</i>
                 </button>                
             </div>
@@ -65,7 +79,7 @@
             </div>
 
             <div class="d-flex flex-row margin-top">
-                <div class="text-lg text-center flex-grow">{{newtext}} {{asset?.token?.symbol}}</div>
+                <div class="text-lg text-center flex-grow">{{newtext}} {{asset.token.symbol}}</div>
             </div>
 
             <div class="d-flex flex-row margin-top">
@@ -86,7 +100,7 @@
                 <div class="d-flex flex-row bg-color-blue">
                     <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('.')">.</span></div>
                     <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('0')">0</span></div>
-                    <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type(null,true)">&lt;</span></div>
+                    <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('',true)">&lt;</span></div>
                 </div>
                 <div class="d-flex flex-row bg-color-blue">
                     <div class="flex-grow align-self-center"><span class="col-12 btn btn-primary text-monospace" (click)="type('1')">1</span></div>

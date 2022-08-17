@@ -14,19 +14,19 @@ import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
 })
 export class VpePanelTokensComponent implements OnChanges, OnInit, OnDestroy {
 
-    @Input() public tokens: TokenDEX[];
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public expanded: boolean;
-    @Input() public complete: boolean;
-    @Input() public search: string;
-    @Output() selectToken: EventEmitter<TokenDEX> = new EventEmitter();
-    token_filter:string;
+    @Input() public tokens: TokenDEX[]             = [];
+    @Input() public hideheader: boolean            = false;
+    @Input() public margintop: boolean             = false;
+    @Input() public expanded: boolean              = true;
+    @Input() public complete: boolean              = true;
+    @Input() public search: string                 = "";
+    @Output() selectToken: EventEmitter<TokenDEX>  = new EventEmitter();
+    token_filter:string                            = "";
     
-    @HostBinding('class') display;
-    volume_digits: number;
-    price_digits: number;
-    public tradeable_tokens: TokenDEX[];
+    @HostBinding('class') display: string          = "full";
+    volume_digits: number                          = 4;
+    price_digits: number                           = 8;
+    public tradeable_tokens: TokenDEX[] | null     = null;
     private onTokensChangeSubscriber: Subscriber<any>;
 
     constructor(
@@ -45,16 +45,17 @@ export class VpePanelTokensComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     get get_tokens() {
-        if (!this.tradeable_tokens) {
-            this.tradeable_tokens = []
-            for (var i in this.tokens) {
-                var token = this.tokens[i];
-                if (token.tradeable) {
-                    this.tradeable_tokens.push(token);
-                }
-            }    
-        }
-        return this.tradeable_tokens;
+        return this.tokens;
+        // if (!this.tradeable_tokens) {
+        //     this.tradeable_tokens = []
+        //     for (var i in this.tokens) {
+        //         var token = this.tokens[i];
+        //         if (token.tradeable) {
+        //             this.tradeable_tokens.push(token);
+        //         }
+        //     }    
+        // }
+        // return this.tradeable_tokens;
     }
 
     get local_string_change () {
@@ -104,20 +105,20 @@ export class VpePanelTokensComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     onResize(event:ResizeEvent) {
-        setTimeout(_ => {
+        setTimeout(() => {
             this.updateSize(event);
         });
     }
 
-    summary(_table) {
-        var table = this.dex.market(_table);
+    summary(market_name:string) {
+        var name = this.dex.market(market_name);
         var _summary = Object.assign({
             percent: 0,
             percent_str: "0%",
             price: this.dex.zero_telos.clone(),
             records: [],
             volume: this.dex.zero_telos.clone()
-        }, table ? table.summary : {});
+        }, name ? name.summary : {});
         return _summary;
     }
 
@@ -139,6 +140,13 @@ export class VpePanelTokensComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     onStateChange() {
+        console.error("VpePanelSwapSummaryComponent.onStateChange() NOT IMPLEMENTED");
+    }
 
+
+
+    aaaaaaaaaaaaaaaaaaaaaaaa(a:any) {
+        // token_filter = $event.target.value
+        console.error("VpePanelSwapSummaryComponent.aaaa() checkate esto !!!!!!", [a]);
     }
 }

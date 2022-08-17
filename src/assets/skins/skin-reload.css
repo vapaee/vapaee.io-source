@@ -1,0 +1,162 @@
+body {
+    background-color: rgb(196, 202, 204);
+}
+
+body ng-sidebar-container {
+    background-image: url(/assets/uploads/background.png);
+    background-size: cover;
+}
+
+nav.navbar.vpe-background-navbar {
+    background: linear-gradient(to bottom, rgba(71,83,102,1) 0%, rgba(45,48,51,1) 100%);
+}
+
+nav.navbar.vpe-background-navbar div.navbar-collapse a {
+    color: white !important;
+}
+
+li.nav-item .nav-link {
+    color: white !important;
+}
+
+.nav-item.highlight {
+    -webkit-box-shadow: inset 0px 0px 17px 0px rgba(255,255,255,1);
+    -moz-box-shadow: inset 0px 0px 17px 0px rgba(255,255,255,1);
+    box-shadow: inset 0px 0px 17px 0px rgba(255,255,255,1);
+}
+
+ng-sidebar div.sidebar-content {
+    background: linear-gradient(to bottom, rgba(71,83,102,1) 0%, rgba(45,48,51,1) 100%); 
+}
+
+/* ---- Token ---- */
+div.token-description, div.token-markets {
+    padding: 15px;
+    border-radius: 8px;
+    background: #000000ad;
+}
+
+div.token-markets {
+    padding-top: 26px;
+}
+
+div.token-banner.background-holder {
+    background-color: black;
+}
+
+/* ---- HOME ---- */
+
+div div.jumbotron.vpe-background-jumbotron {
+    background: linear-gradient(to bottom, rgba(71,83,102,0.9) 0%, rgba(45,48,51,0.9) 100%);
+    background-image: linear-gradient(to bottom, #000000a0 0%, #000000a0 100%);
+}
+
+div.card {
+    -webkit-box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.75);
+}
+
+div.card div.card-body {
+    background: linear-gradient(to bottom, rgba(59,63,66,1) 0%, rgba(45,48,51,1) 100%);
+}
+
+
+div.card div.card-body.vpe-background-card-body {
+    background: linear-gradient(to bottom, rgba(94,97,102,1) 0%, rgba(45,48,51,1) 100%);
+}
+
+div.card div.card-header.vpe-background-card-header {
+    background: linear-gradient(to bottom, rgba(71,83,102,1) 0%, rgba(45,48,51,1) 100%);
+}
+
+div.title.vpe-background-panel-title {
+    background: linear-gradient(to bottom, rgba(71,83,102,1) 0%, rgba(40,51,59,1) 100%);
+    margin-bottom: 0px !important;
+}
+
+.calculated-in-currency {
+    color: yellow !important;
+    font-weight: bold;
+}
+
+vpe-panel table {
+    color: white !important;
+}
+
+/* ---- SWAP ---- */
+.vpe-panel-swap-field div.field-container[field-container] {
+    /*
+    background: rgb(131,58,180);
+    background: linear-gradient(331deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
+    border-width: 0px;
+    
+    border-radius: 10px;
+    
+    background-image: 
+        radial-gradient(circle at 100% 100%, transparent 5px, #F5FfFf 5px, #F5FfFf 10px, transparent 10px), 
+        linear-gradient(to right, #F5FfFf, #2d3033), 
+        radial-gradient(circle at 0% 100%, transparent 5px, #2d3033 5px, #2d3033 10px, transparent 10px), 
+        linear-gradient(to bottom, #2d3033, #2d3033), 
+        radial-gradient(circle at 0% 0%, transparent 5px, #2d3033 5px, #2d3033 10px, transparent 10px),
+        linear-gradient(to left, #2d3033, #858f9f), 
+        radial-gradient(circle at 100% 0%, transparent 5px, #858f9f 5px, #858f9f 10px, transparent 10px),
+        linear-gradient(to top, #858f9f, #F5FfFf);
+
+    background-position: top left, top center, top right, center right, bottom right, bottom center, bottom left, center left;
+    background-size: 10px 10px, calc(100% - (2 * 10px)) 5px, 10px 10px, 5px calc(100% - (2 * 10px));
+    background-repeat: no-repeat;
+    */
+    margin-top: 20px;
+    padding: 20px;
+    margin-bottom: 20px;   
+}
+
+.vpe-panel-swap-field div.field-container[field-container] .token-icon {
+    max-height: 42px;
+    margin-right: 10px;
+    margin-bottom: -14px;
+}
+
+
+.vpe-panel-swap-field div.field-container[field-container] .symbol {
+    width: 60px;
+    text-align: center;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.vpe-panel-swap-field div.field-container[field-container] div.field-col .field-max span {
+    border-radius: 10px;
+    margin-right: 10px;
+    background-color: brown;
+    color: white;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+/* Botones en general */
+.btn.btn-fancy {
+    background-color: #184ea0;
+    background-image: linear-gradient(#16396d, #0c4d6d 60%, #134186);
+    border-color: #0b2f53;
+    color: white;
+}
+
+/* Material icons */
+i.material-icons:not(.tiny) {
+    vertical-align: -6px;
+}
+
+.btn-sm > i.material-icons {
+    vertical-align: baseline;
+}
+
+.text-lg > i.material-icons {
+    font-size: 32px;
+}
+
+.switch-tokens-btn > i.material-icons {
+    font-size: 20px;
+    vertical-align: bottom;
+}

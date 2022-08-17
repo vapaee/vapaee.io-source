@@ -12,16 +12,18 @@ import { VapaeeREX, REXdata } from '@vapaee/rex';
 })
 export class VpePanelREXBreakdawnComponent implements OnChanges {
 
-    @Input() public hideuser: boolean;
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public expanded: boolean;
-    @Input() public title: string;
-    @Input() public loading: boolean;
-    @Input() public error: string;
-    @Input() public data: REXdata;
+    @Input() public hideuser: boolean     = false;
+    @Input() public hidefiat: boolean     = false;
+    @Input() public hideheader: boolean   = false;
+    @Input() public margintop: boolean    = true;
+    @Input() public expanded: boolean     = true;
+    @Input() public loading: boolean      = false;
+    @Input() public title: string         = "";
+    @Input() public error: string         = "";
+    @Input() public data: REXdata         = VpeComponentsService.Utils.emptyREXdata();
     
-    public detail: boolean;
+    public detail: boolean                = false;
+    
     constructor(
         public rex: VapaeeREX,
         public local: LocalStringsService,
@@ -39,7 +41,7 @@ export class VpePanelREXBreakdawnComponent implements OnChanges {
     }
 
     onResize(event:ResizeEvent) {
-        setTimeout(_ => {
+        setTimeout(() => {
             this.updateSize(event);
         });
     }
@@ -52,5 +54,8 @@ export class VpePanelREXBreakdawnComponent implements OnChanges {
         
     }
 
+    debug() {
+        console.log(this);
+    }
 
 }

@@ -63,7 +63,7 @@
                     <div [ngClass]="{'d-none':dex.loginState != 'no-wallet'}">
                         <hr class="line" />
                         <span class="text-md">{{local.string.noWallet}} </span>
-                        <span class="btn btn-xs btn-primary" (click)="dex.login()">
+                        <span class="btn btn-xs btn-fancy" (click)="dex.login()">
                             <span class="spinner-border spinner-border-xs" [hidden]="hide_login_spinner"></span>
                             {{local.string.retry | titlecase}}
                         </span>
@@ -71,7 +71,7 @@
                     <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}">
                         <hr class="line" />
                         <span class="text-md">{{local.string.NotLogged}} </span>
-                        <span class="btn btn-xs btn-primary" (click)="dex.login()">
+                        <span class="btn btn-xs btn-fancy" (click)="dex.login()">
                             <span class="spinner-border spinner-border-xs" [hidden]="hide_login_spinner"></span>
                             {{local.string.LoginWScOrSq}}
                         </span>
@@ -101,7 +101,7 @@
                     <!-- No Wallet detected -->
                     <div [ngClass]="{'d-none':dex.loginState != 'no-wallet'}" [hidden]="total_balance">
                         <div class="pull-right text-center">
-                            <span class="btn btn-sm btn-primary" (click)="dex.login()">
+                            <span class="btn btn-sm btn-fancy" (click)="dex.login()">
                                 <span class="spinner-border spinner-border-sm" [hidden]="hide_login_spinner"></span>
                                 {{local.string.retry | titlecase}}
                             </span><br>
@@ -111,7 +111,7 @@
 
                     <div [ngClass]="{'d-none':dex.loginState != 'no-wallet'}">
                         <div class="pull-right text-center" [hidden]="!total_balance">
-                            <span class="btn btn-sm btn-primary" (click)="dex.login()">
+                            <span class="btn btn-sm btn-fancy" (click)="dex.login()">
                                 <span class="spinner-border spinner-border-sm" [hidden]="hide_login_spinner"></span>
                                 {{local.string.retry | titlecase}}
                             </span><br>
@@ -124,7 +124,7 @@
                     <!-- current != guest - Wallet detected but not logged -->
                     <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}">
                         <div class="pull-right text-right"  [hidden]="!total_balance">
-                            <span class="btn btn-sm btn-success" (click)="dex.login()">
+                            <span class="btn btn-sm btn-fancy" (click)="dex.login()">
                                 <span class="spinner-border spinner-border-sm" [hidden]="hide_login_spinner"></span>
                                 {{local.string.LoginWScOrSq}}
                             </span>
@@ -138,7 +138,7 @@
                     <div class="text-xl">
                         {{current.name}}
                         <span [ngClass]="{'d-none':!dex.logged}">
-                            <span class="btn btn-sm btn-primary margin-left" (click)="dex.logout()">
+                            <span class="btn btn-sm btn-danger margin-left" (click)="dex.logout()">
                                 <span class="spinner-border spinner-border-sm" [hidden]="hide_login_spinner"></span> 
                                 <span> {{local.string.logout}} </span>
                             </span>
@@ -148,7 +148,7 @@
                     <!-- Wallet detected but not logged -->
                     <div [ngClass]="{'d-none':dex.loginState != 'no-logged'}" [hidden]="total_balance">
                         <div class="pull-right text-center">
-                            <span class="btn btn-sm btn-primary" (click)="dex.login()">
+                            <span class="btn btn-sm btn-fancy" (click)="dex.login()">
                                 <span class="spinner-border spinner-border-sm" [hidden]="hide_login_spinner"></span>
                                 {{local.string.LoginWScOrSq}}
                             </span>

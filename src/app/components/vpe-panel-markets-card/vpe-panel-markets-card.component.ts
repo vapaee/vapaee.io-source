@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { LocalStringsService } from 'src/app/services/common/common.services';
 import { VpeComponentsService } from '../vpe-components.service';
-import { Market, AssetDEX, VapaeeDEX } from '@vapaee/dex';
+import { Market, AssetDEX, VapaeeDEX, MarketSummary } from '@vapaee/dex';
 
 
 
@@ -13,11 +13,11 @@ import { Market, AssetDEX, VapaeeDEX } from '@vapaee/dex';
 })
 export class VpePanelMarketsCardComponent implements OnChanges {
 
-    @Input() public market: Market;
+    @Input() public market: Market = VpeComponentsService.Utils.emptyMarket();
     @Output() tradeMarket: EventEmitter<string> = new EventEmitter();
     
-    public deposit: AssetDEX;
-    public withdraw: AssetDEX;
+    // public deposit:  AssetDEX = new AssetDEX();
+    // public withdraw: AssetDEX = new AssetDEX();
     constructor(
         public dex: VapaeeDEX,
         public local: LocalStringsService,
@@ -33,17 +33,17 @@ export class VpePanelMarketsCardComponent implements OnChanges {
         
     }
 
-    summary(_table) {
-        return this.tokenSummary(_table);
+    summary(market_name: string) {
+        return this.tokenSummary(market_name);
     }
 
-    tokenSummary(_table) {
-        return this.marketSummary(_table);
+    tokenSummary(market_name: string) {
+        return this.marketSummary(market_name);
     }
 
-    marketSummary(_table) {
-        var market = this.dex.market(_table);
-        var _summary = Object.assign({
+    marketSummary(market_name: string) {
+        let market: Market | null = this.dex.market(market_name);
+        let _summary = Object.assign({
             percent: 0,
             percent_str: "0%",
             price: this.dex.zero_telos.clone(),
@@ -65,7 +65,7 @@ export class VpePanelMarketsCardComponent implements OnChanges {
     }
 
     goToTradeMarket(market:Market) {
-        this.tradeMarket.next(market.table);
+        this.tradeMarket.next(market.name);
     }
 
 }

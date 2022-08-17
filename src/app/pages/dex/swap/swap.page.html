@@ -1,0 +1,87 @@
+<div class="container-fluid margin-top" *ngIf="!app.device.portrait">
+    <div class="container-xl">
+
+        <div class="card header margin-top-md">
+            <div class="card-header vpe-background-card-header">
+
+                <div class="row">
+                    <div class="col-6">
+                        <span class="text-lg">
+                            <i class="material-icons"> sync </i> {{local.string.swap | titlecase}}
+                        </span>
+                    </div>
+                    <div class="col-6 text-right">
+                        <div class="pull-right">
+                            <vpe-offchain-combobox class="margin-left margin-top-xs" [btn]="'sm'" [hideprice]="app.device.portrait"></vpe-offchain-combobox>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-lg-7 col-xl-8 col-padding-right">
+                <vpe-panel-chart [data]="chartData"></vpe-panel-chart>
+
+                <vpe-panel-message
+                    class="error"
+                    [ngClass]="{'hide': message.length == 0 || message_title != local.string.error}"
+                    [title]="message_title"
+                    [messages]="message"
+                    [btnclose]="!0"
+                    (onClose)="message = []"
+                ></vpe-panel-message>                                
+            </div>
+            <div class="col-md-6 col-lg-5 col-xl-4 col-padding-left">
+                <vpe-panel-message
+                    class="success"
+                    [ngClass]="{'hide': message.length == 0 || message_title != local.string.success}"
+                    [title]="message_title"
+                    [messages]="message"
+                    [btnclose]="!0"
+                    (onClose)="closeSuccess()"
+                ></vpe-panel-message>
+
+                <vpe-panel-swap
+                    #orderform
+                    [commodity]="commodity"
+                    [currency]="currency"
+                    [owner]="dex.account_name"
+                    [clientid]="clientid"
+                    [balance_from]="balance_from"
+                    [balance_to]="balance_to"
+                    [summary]="summary"
+                    [from]="from"
+                    [to]="to"
+                    (fromChanged)="onFromChanged($event)"
+                    (toChanged)="onToChanged($event)"
+                    (valueChanged)="onValueChanged($event)"
+                    (makeSwap)="makeSwap()"
+                ></vpe-panel-swap>
+
+                <vpe-panel-swap-summary
+                    [hideheader]="false"
+                    [ngClass]="{'hide': !summary}"
+                    [summary]="summary"
+                ></vpe-panel-swap-summary>
+
+            </div>
+        </div>
+
+  
+    </div>
+</div>  
+
+<ngx-smart-modal #swapWarning identifier="swapWarning" customClass="nsm-centered">
+    <vpe-panel-message
+        [ngClass]="{'hide': message.length == 0}"
+        [title]="message_title"
+        [messages]="message"
+        [margintop]="!!0"
+        [btnclose]="!0"
+        (onClose)="message = []; swapWarning.close()"
+        [buttons]="warning_buttons"
+        (onBtn)="onWarningBtn($event)"
+    ></vpe-panel-message>
+</ngx-smart-modal>

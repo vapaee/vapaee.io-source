@@ -49,3 +49,10 @@ div.token-markets {
 div.token-banner.background-holder {
     background-color: black;
 }
+
+.btn.btn-fancy {
+    background-color: #184ea0;
+    background-image: linear-gradient(#16396d, #0c4d6d 60%, #134186);
+    border-color: #0b2f53;
+    color: white;
+}

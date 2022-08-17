@@ -1,0 +1,9 @@
+.token-card {
+    min-width: 220px;
+}
+.card.header {
+    overflow: visible;
+    .card-header {
+        border-radius: 8px;
+    }
+}

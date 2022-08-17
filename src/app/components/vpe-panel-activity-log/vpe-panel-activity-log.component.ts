@@ -16,16 +16,17 @@ import { EventLog, VapaeeDEX } from '@vapaee/dex';
 export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestroy {
 
     @Output() gotoAccount: EventEmitter<string> = new EventEmitter();
-    @Output() gotoTable: EventEmitter<string> = new EventEmitter();
-    @Input() lines: number;
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public expanded: boolean;
-    detail: StringMap;
-    data: {[key:string]:StringMap};
-    list: EventLog[];
+    @Output() gotoTable: EventEmitter<string>   = new EventEmitter();
+    @Input() lines: number                      = 1;
+    @Input() public hideheader: boolean         = false;
+    @Input() public margintop:  boolean         = true;
+    @Input() public expanded:   boolean         = true;
+    detail: StringMap                           = {};
+    data: {[key:string]:StringMap}              = {};
+    list: EventLog[]                            = [];
+    obj: {[key:string]:string}                  = {"max-height": "250px", "max-width": "100%"};
 
-    @ViewChild('sp') sp: PerfectScrollbarComponent;
+    @ViewChild('sp') sp: PerfectScrollbarComponent = <PerfectScrollbarComponent>{};
     
     private onLocalChangeSubscriber: Subscriber<string>;
     constructor(
@@ -34,17 +35,10 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
         public service: VpeComponentsService,
         private cdr: ChangeDetectorRef
     ) {
-        this.hideheader = false;
-        this.margintop = true;
-        this.expanded = true; 
-        this.detail = {};
-        this.data = {};
-        this.obj = {"max-height": "250px", "max-width": "100%"};
-        this.lines = 1;
         this.onLocalChangeSubscriber = new Subscriber<string>(this.onLocalChange.bind(this));
     }
-    obj: any;
-    _ps_height: number;
+    
+    _ps_height: number = 0;
     get ps_style() {
         this.obj = {"max-height": "250px", "max-width": "100%"};
         if (this.lines == 1) {
@@ -64,7 +58,7 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
     }
 
     onResize(event:ResizeEvent) {
-        setTimeout(_ => {
+        setTimeout(() => {
             this.updateSize(event);
         });
     }
@@ -85,11 +79,11 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
         this.local.onLocalChange.subscribe(this.onLocalChangeSubscriber);
     }
 
-    getCanonicalTable(table) {
-        var parts:string[] = table.split(".");
-        if (parts[1] == "tlos") return table;
+    getCanonicalTable(name: string): string {
+        var parts:string[] = name.split(".");
+        if (parts[1] == "tlos") return name;
         if (parts[0] == "tlos") return parts[1] + "." + parts[0];
-        if (parts[0] < parts[1]) return table;
+        if (parts[0] < parts[1]) return name;
         return parts[1] + "." + parts[0];
     }
 
@@ -130,7 +124,7 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
                     data.amount = parts[0];
                     data.price = parts[1];
                     break;
-                case "transaction":
+                case "deal":
                     // user: kate
                     // compra: cnt.tlos|kate|alice|10.00000000 CNT|4.00000000 TLOS|0.40000000 TLOS
                     // venta:  cnt.tlos|alice|kate|10.00000000 CNT|2.90000000 TLOS|0.29000000 TLOS
@@ -140,7 +134,7 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
                     data.amount = parts[3];
                     data.payment = parts[4];
                     data.price = parts[5];
-                    if (data.table == this.dex.canonicalTable(data.table)) {
+                    if (data.table == this.dex.canonicalName(data.table)) {
                         data.ordertype = (e.user == data.seller) ? "sell" : "buy";
                     } else {
                         data.ordertype = (e.user != data.seller) ? "sell" : "buy";
@@ -197,7 +191,7 @@ export class VpePanelActivityLogComponent implements OnChanges, OnInit, OnDestro
                 case "buy.order":
                     str = this.local.string.logOrder;
                     break;
-                case "transaction":
+                case "deal":
                     if (data.ordertype == "sell") {
                         str = this.local.string.logTrxSell;
                     } else {

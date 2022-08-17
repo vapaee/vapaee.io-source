@@ -15,20 +15,23 @@ import { AssetDEX, VapaeeDEX } from '@vapaee/dex';
 })
 export class VpePanelAccountResourcesComponent implements OnChanges {
 
-    @Input() public hideuser: boolean;
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public expanded: boolean;
-    @Input() public title: string;
-    @Input() public loading: boolean;
-    @Input() public error: string;
-    @Input() public account: Account;
+    @Input() public hideuser: boolean   = false;
+    @Input() public hidefiat: boolean   = false;
+    @Input() public hideheader: boolean = false;
+    @Input() public margintop: boolean  = false;
+    @Input() public expanded: boolean   = false;
+    @Input() public loading: boolean    = false;
+    @Input() public title: string       = "";
+    @Input() public error: string       = "";
+    @Input() public account: Account    = VpeComponentsService.Utils.emptyAccount();
 
-    @Output() confirmDeposit: EventEmitter<any> = new EventEmitter();
-    @Output() confirmWithdraw: EventEmitter<any> = new EventEmitter();
-    public current_mode: boolean;
-    public deposit: AssetDEX;
-    public withdraw: AssetDEX;
+    // @Output() confirmDeposit: EventEmitter<any>  = new EventEmitter();
+    // @Output() confirmWithdraw: EventEmitter<any> = new EventEmitter();
+
+    public current_mode: boolean = false;
+    // public deposit: AssetDEX  = new AssetDEX();
+    // public withdraw: AssetDEX = new AssetDEX();
+
     constructor(
         public dex: VapaeeDEX,
         public local: LocalStringsService,
@@ -46,7 +49,7 @@ export class VpePanelAccountResourcesComponent implements OnChanges {
     }
 
     onResize(event:ResizeEvent) {
-        setTimeout(_ => {
+        setTimeout(() => {
             this.updateSize(event);
         });
     }

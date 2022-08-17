@@ -7,12 +7,12 @@ import { SimplePriceMap } from '../components/vpe-components.service';
 @Injectable()
 export class CoingeckoService {
 
-    public onUpdate:Subject<SimplePriceMap> = new Subject();
-    prices: SimplePriceMap;
-    currency_list: string[];
+    public onUpdate:Subject<SimplePriceMap> = new Subject<SimplePriceMap>();
+    prices: SimplePriceMap = {};
+    currency_list: string[] = [];
 
-    private setReady: Function;
-    public waitReady: Promise<any> = new Promise((resolve) => {
+    private setReady: () => void = () => {};
+    public waitReady: Promise<void> = new Promise<void>((resolve) => {
         this.setReady = resolve;
     });
 

@@ -6,7 +6,7 @@
                 class="form-control form-control-sm"
                 placeholder="{{local.string.searchtk}}"
                 [value]="token_filter"
-                (input)="token_filter = $event.target.value"
+                (input)="aaaaaaaaaaaaaaaaaaaaaaaa($event)"
                 >
             <div class="input-group-append">
                 <span class="input-group-text form-control-sm padding-xs">
@@ -15,7 +15,7 @@
             </div>
         </div>            
     </div>
-    <hr class="line">
+    <hr class="line" *ngIf="search != 'no-search'">
     
     <div class="row margin-top" [hidden]="!complete">
         <div class="nowrap text-bold text-sm col-sm-3 col-padding-right">{{local.string.token | titlecase}}</div>
@@ -33,21 +33,21 @@
                     (tap)="clickOnToken(token.table)"
                 >
                     <div class="nowrap col-sm-3 col-padding-right">
-                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="token.icon">
+                        <img style="height:16px; width: 16px; margin-top:-2px" [src]="token.icon || token.iconlg">
                         {{token.symbol}}
                         <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('token-stat-'+token.symbol) && !dex.feed.loading('summary.'+token.table)"></span>
                     </div>
                     <div class="nowrap col-sm-3 text-right col-padding-right col-padding-left">
-                        {{token.summary?.volume.valueToString(volume_digits, true)}}
+                        {{token.summary.volume.valueToString(volume_digits, true)}}
                     </div>
                     <div class="nowrap col-sm-3 text-right col-padding-right col-padding-left">
-                        {{token.summary?.price.valueToString(price_digits, true)}}
+                        {{token.summary.price.valueToString(price_digits, true)}}
                     </div>
                     <div
                         class="nowrap col-sm-3 text-right padding-right-lg"
-                        [ngClass]="{'text-success': token.summary?.percent > 0, 'text-danger': token.summary?.percent < 0, 'text-muted': token.summary?.percent  == 0}"
+                        [ngClass]="{'text-success': token.summary.percent > 0, 'text-danger': token.summary.percent < 0, 'text-muted': token.summary.percent  == 0}"
                     >
-                        {{token.summary?.percent_str}}
+                        {{token.summary.percent_str}}
                     </div>
                 </div>
             </perfect-scrollbar>
@@ -58,7 +58,7 @@
                     (tap)="clickOnToken(token)"
                 >
                     <div class="nowrap text-md col-sm-12 margin-top margin-bottom">
-                        <img style="height:20px; width: 20px; margin-top:-2px" [src]="token.icon">
+                        <img style="height:20px; width: 20px; margin-top:-2px" [src]="token.icon || token.iconlg">
                         {{token.title}} ({{token.symbol}})
                     </div>
                 </div>

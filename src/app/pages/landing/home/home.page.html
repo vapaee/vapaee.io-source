@@ -1,0 +1,198 @@
+<div class="deploy {{deploy}}">
+
+    <div [hidden]="app.device.portrait" >
+
+        <div class="jumbotron vpe-background-jumbotron margin-top-xxl">
+            <div class="vapaee-logo ontainer text-center">
+                <img class="img-fluid vapaee-home-logo" src="/assets/img/Logo.png">
+            </div>    
+            <div class="container margin-top text-md text-center">
+                <div class="progress-title">{{local.string.roadmap|titlecase}} - 2022 Q1</div>
+            </div> 
+            <div class="container margin-top text-center">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" style="width: 12%" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar progress-bar-striped bg-danger progress-bar-animated animada" role="progressbar" [style]="'width: '+percent+'%'" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div> 
+            <div class="container text-center btn-lines" (mouseout)='setPercent(0)'>
+                <div class="row line-1">
+                    <div class="col-4"><div #dex id="dex" (click)="gotoSection(dex,'dex')" (mouseover)="setPercent(13)" class="text-lg etapa-btn green">DEX</div></div>
+                    <div class="col-4"><div #wd id="wd" (click)="gotoSection(wd,'wd')" (mouseover)="setPercent(53)" class="text-lg etapa-btn blue">{{local.string.withdrawals|titlecase}} </div></div>
+                    <div class="col-4"><div #q2 id="q2" (click)="gotoSection(q2,'q2')" (mouseover)="setPercent(85)" class="text-lg etapa-btn red" >Q2 & Q3</div></div>
+                </div>
+                <div class="row line-2">
+                    <div class="col-4 offset-2"><div #kw id="kw" (click)="gotoSection(kw,'kw')" (mouseover)="setPercent(33)" class="text-lg etapa-btn red">KWallet</div></div>
+                    <div class="col-4"><div #wp id="wp" (click)="gotoSection(wp,'wp')" (mouseover)="setPercent(65)" class="text-lg etapa-btn green">WP</div></div>
+                </div>
+            </div> 
+        </div>
+        
+    
+        <div class="section dex">
+            <div class="sub-deploy container {{sub_section}}">
+                <div class="row">
+                    <div class="col-lg-2 col-md-3">
+                        <div class="separator"></div>
+                        <div class="sub-btn book" (click)="gotoSubSection('book')">book</div>
+                        <div class="sub-btn swap" (click)="gotoSubSection('swap')">swap</div>
+                        <div class="sub-btn wrap" (click)="gotoSubSection('wrap')">wrap</div>
+                    </div>
+                    <div class="col-lg-10 col-md-9 mt-3 sub-section-conatiner">
+                        <div class="sub-section book">
+                            <div class="sub-comp title">Order Book</div>
+                            <div class="sub-comp desc">
+                                <p>
+                                    <b>Vapaée DEX</b> is a decentralized exchange that allows you <span class="special">specify the price and amount</span> of the token you want to buy or sell and create an order for the ledger.
+                                </p>
+                                <p>
+                                    The main currency is <span class="special">DEX</span> and can be obtained by Staking TLOS in the <span (click)="gotoSubSection('wrap')" class="special cursor-pointer hover-red">Telos Wrapper</span>
+                                </p>                                
+                            </div>
+                            <div class="sub-comp image">
+                                <img src="assets/img/preview-dex.png" class="img-fluid">
+                            </div>
+                        </div>
+
+                        <div class="sub-section swap">
+                            <div class="sub-comp title">Swap Tokens</div>
+                            <div class="sub-comp desc">
+                                <p>
+                                    <b>Vapaée DEX</b> also offers <span class="special">instant token-swap convertion</span> pools of token pairs, using <span (click)="gotoSubSection('wrap')" class="special">DEX</span> token as main currency. 
+                                </p>
+                                <p>
+                                    The Swap is sync with its corresponding market's order book and it is smart enough to <span (click)="gotoSubSection('book')" class="special">automatically take an order</span> when the price is better than the swapping price.
+                                </p>
+                            </div>
+                            <div class="sub-comp image">
+                                <img src="assets/img/preview-swap.png" class="img-fluid">
+                            </div>
+                        </div>
+
+                        <div class="sub-section wrap">
+                            <div class="sub-comp title">Telos Wrapper</div>
+                            <div class="sub-comp desc">
+                                <p>
+                                    <b>Vapaée DEX</b> offers several ways for <span class="special">TLOS farming</span>. You can use your TLOS as collateral to take a loan in <span class="special">DEX</span> for the same amount, one DEX for each TLOS you deposit. But when you come back to cancel your loan, you will get back more than the initial amount of TLOS because we will put the in the <span class="special">REX system for you</span>.
+                                </p>
+                                <p>
+                                    The <span class="special">DEX</span> token is the <span class="special">main currency</span> of the DEX.
+                                </p>                                
+                            </div>
+                            <div class="sub-comp image">
+                                <img src="assets/img/preview-wrap.png" class="img-fluid">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="section wd"> 
+            <div class="sub-deploy container {{sub_section}}">
+                <div class="row">
+                    <div class="col-lg-2 col-md-3">
+                        <div class="separator"></div>
+                        <div class="sub-btn funds" (click)="gotoSubSection('funds')">funds</div>
+                        <div class="sub-btn tokens" (click)="gotoSubSection('tokens')">tokens</div>
+                    </div>
+                    <div class="col-lg-10 col-md-9 mt-3 sub-section-conatiner">
+                        <div class="sub-section funds">
+                            <div class="sub-comp title">Withdrawals</div>
+                            <div class="sub-comp desc">
+                                <p>
+                                   The old version of <span class="special green">Vapaée DEX</span> will be shut down on Q1 2022 and with that, all user <span class="special blue">orders will be canceled</span> and the funds, along with the remaining <span class="special blue">deposits will be returned to the owners</span> using an auto-withdrawal process.
+                                </p>
+                                <p>
+                                    join the <a href="https://t.me/" target="_blank" class="special red cursor-pointer hover-blue">telegram group</a> to stay updated with the latest news about this auto-withdrawal.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="sub-section tokens">
+                            <div class="sub-comp title">Tokens contract</div>
+                            <div class="sub-comp desc">
+                                <p>
+                                   The <span class="special blue">vapaeetokens</span> contract will drop all DEX functionality and keep only standard token functionality. That means all tokens will keep working as normal.
+                                </p>
+                                <p>
+                                    Later in the road map new great features will be added to the <span class="special blue">vapaeetokens</span> contract and all tokens will be able to use them.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section q2"> Q2 & Q3 section </div>
+
+        <div class="section kw">
+            <div class="sub-deploy container {{sub_section}}">
+                <div class="row">
+                    <div class="col-lg-2 col-md-3">
+                        <div class="separator"></div>
+                        <div class="sub-btn home" (click)="gotoSubSection('home')">home</div>
+                        <div class="sub-btn swap" (click)="gotoSubSection('swap')">swap</div>
+                    </div>
+                    <div class="col-lg-10 col-md-9 mt-3 sub-section-conatiner">
+                        <div class="sub-section home">
+                            <div class="sub-comp title">Koinonos Wallet</div>
+                            <div class="sub-comp desc">
+                                <p>
+                                    <b>Kwallet App</b> is the best <span class="special blue">wallet for Telos</span> blockchain (and any other EOS.IO compatible network). It has its own <span class="special blue">stable coin EuroT</span> and is completely integrated with <span class="special green">Vapaée DEX</span>.
+                                </p>
+                                <p>This product is a <span class="special red">Koinonos</span> and <span class="special green">Vapaée</span> collaboration work.</p>
+                                <p>
+                                    Check the website <a href="https://koinonos.io/" target="_blank" class="special red cursor-pointer hover-blue">https://koinonos.io/</a>
+                                </p>                              
+                            </div>
+                            <div class="sub-comp image">
+                                <img src="assets/img/koinonos-promo.png" class="img-fluid">
+                            </div>
+                        </div>
+                        <div class="sub-section swap">
+                            <div class="row">
+                                <div class="col-5">
+                                    <div class="sub-comp title">Swap Tokens</div>
+                                    <div class="sub-comp desc">
+                                        <p>
+                                            <b>Kwallet App</b> integrates the <span class="special red">instant token-swap convertion</span> feature of <span class="special green">Vapaée DEX</span> for every token on Telos blockchain.
+                                        </p>                            
+                                    </div>
+                                </div>
+                                <div class="col-5">
+                                    <div class="sub-comp image">
+                                        <img src="assets/img/koinonos-movil1.png" class="img-fluid">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section wp"> WP section </div>
+
+    
+    </div>
+    
+    <div [hidden]="!app.device.portrait" >
+    
+            <div class="jumbotron vpe-background-jumbotron margin-top-xl">
+                <div class="container text-center">
+                    <img class="img-fluid vapaee-home-logo" src="/assets/img/Logo.png">
+                </div>    
+                <div class="container margin-top text-lg text-center">
+                    <div>Tokens Exchange</div>
+                    <div>Telos DEX</div>
+                </div>  
+            </div>
+            <br>
+            <br>
+            <br>
+    </div>
+
+</div>

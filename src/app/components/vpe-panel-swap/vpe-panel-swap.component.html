@@ -1,0 +1,129 @@
+<vpe-panel [id]="'vpe-panel-order-editor'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.swap" (click)="debug()">
+
+    <!-- ----------- portrait screen ------------- -->
+    <div class="row" *ngIf="portrait">
+        <div class="container">
+            <h1>Portrait version is under construction</h1>
+            <h3>You can turn your device 90 degrees for a wide screen version</h3>
+        </div>
+    </div>
+
+
+
+    <!-- ----------- wide screen ------------- -->
+    <div class="row" >
+
+        <div class="col-sm-12 d-flex flex-column">
+            <div class="vpe-panel-swap-field">
+
+                <!-- from field -->
+                <div class="field-container field-from" field-container field-from>
+                    <div class="field-row top">
+                        <div class="field-col top-left"><span>from:</span></div>
+                        <div class="field-col top-right" *ngIf="balance_from.ok">
+
+                            <span class="field-max cursor-pointer" (click)="putPercentCommodity(1, $event)"
+                                *ngIf="balance_from.amount.toNumber() > 0"
+                            ><span>max</span></span>
+
+                            <span>Balance: {{balance_from.toString()}}</span>
+                        </div>
+                    </div>
+                    <div class="field-row bottom">
+                        <div class="field-col bottom-left flex-column">
+                            <vpe-token-input 
+                                [asset]="from"
+                                [input_class]="{'text-danger': balance_from.toNumber() < from.toNumber()}"
+                                (valueChange)="onChange($event, 'from')"
+                                [precision]="commodity.precision"
+                                button="just-input"
+                                placeholder="{{local.string.Amount}}"></vpe-token-input>
+                            <small
+                                [ngClass]="{'opacity-0': from.toNumber() == 0}"
+                                class="calculated-in-currency"> ({{service.getTokenInCurrentCurrency(from).toString()}}) </small>
+                        </div>
+                        <div class="field-col bottom-right">
+                            <vpe-panel-swap-token-selector [tokens]="from_list" [current]="commodity" (tokenChange)="handleFromChanged($event)"></vpe-panel-swap-token-selector> 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column align-items-center swap-vert-container">
+                    <span class="btn btn-sm btn-fancy text-sm swap-vert-icon" (click)="performSwitch($event)">
+                        <i class="material-icons"> swap_vert </i>
+                    </span>
+                </div>
+
+                <!-- to field -->
+                <div class="field-container field-to" field-container field-to>
+                    <div class="field-row top">
+                        <div class="field-col top-left"><span>to:</span></div>
+                        <div class="field-col top-right" *ngIf="balance_to.ok"><span>Balance: {{balance_to.toString()}}</span></div>
+                    </div>
+                    <div class="field-row bottom">
+                        <div class="field-col bottom-left flex-column">
+                            <vpe-token-input [asset]="to" (valueChange)="onChange($event, 'to')" [precision]="currency.precision" button="just-input" placeholder="{{local.string.Amount}}"></vpe-token-input>
+                            <small
+                                [ngClass]="{'opacity-0': to.toNumber() == 0}"
+                                class="calculated-in-currency"> ({{service.getTokenInCurrentCurrency(to).toString()}}) </small>
+                        </div>
+                        <div class="field-col bottom-right">
+                            <vpe-panel-swap-token-selector [tokens]="to_list" [current]="currency" (tokenChange)="handleToChanged($event)"></vpe-panel-swap-token-selector> 
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- resulting price -->
+                <div ></div>
+
+
+            </div>
+        </div>
+
+        <div class="col-sm-12 price-container">
+            <div class="d-flex flex-row price-row cursor-pointer" (click)="togglePrice()">
+                <div class="row-label text-bold d-flex flex-row align-items-center">
+                    <span *ngIf="summary">{{local.string.price}}:</span>
+                    <i *ngIf="!summary" class="material-icons opacity-0"> sync </i>
+                </div>
+                <div class="row-value flex-grow-1 d-flex flex-row align-items-center">
+                    <span class="price-value flex-grow-1">&nbsp;</span>
+                    <span class="price-value" *ngIf="show_inverse && summary" >
+                        {{summary.inverse.toString()}} {{local.string.per}} {{summary.price.token.symbol}}
+                    </span>
+                    <span class="price-value" *ngIf="!show_inverse && summary" >
+                        {{summary.price.toString()}} {{local.string.per}} {{summary.inverse.token.symbol}}
+                    </span>
+                    <i *ngIf="summary" class="material-icons switch-inverse ml-1"
+                        [ngClass]="{'rotated': show_inverse}"
+                    > sync </i>
+                </div>
+            </div>            
+        </div>
+
+        <div class="col-sm-12" *ngIf="!dex.logged">
+            <div class="margin-top d-flex flex-column">
+                <span class="flex-gorw-1 btn btn-sm btn-fancy text-sm" (click)="dex.login()">
+                    <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('login') && !dex.feed.loading('log-state')"></span>
+                    {{local.string.connect_wallet | titlecase}}
+                </span>
+            </div>
+        </div>
+
+        <div class="col-sm-12 mt-2" *ngIf="dex.logged">
+            <div class="margin-top d-flex flex-column">
+                <span class="flex-gorw-1 disabled btn btn-sm btn-fancy text-sm" *ngIf="!summary">
+                    <b>{{local.string.swap | uppercase}}</b>
+                </span>
+                <span class="flex-gorw-1 btn btn-sm btn-fancy text-sm" *ngIf="summary" (click)="doSwap()">
+                    <span class="spinner-border spinner-border-sm mr-1" [hidden]="!swap.feed.loading('swap')"></span>
+                    <b>{{local.string.swap | uppercase}}</b>
+                </span>
+            </div>
+        </div>          
+
+    </div>
+</vpe-panel>
+
+

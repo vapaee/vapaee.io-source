@@ -1,0 +1,9 @@
+vpe-panel-message.success {
+    max-height: 200px;
+    transition: max-height 1.0s cubic-bezier(0.070, 1.055, 0.855, 0.985),
+                opacity   1.0s cubic-bezier(0.070, 1.055, 0.855, 0.985) 0.1s;
+    &.hide {
+        max-height: 0;
+        opacity: 0;
+    }
+}

@@ -1,6 +1,6 @@
 <vpe-panel [id]="'vpe-panel-user-orders'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.orders">
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-12" (click)="debug()">
             <div class="text-lg text-center">
                 {{title | titlecase}}
                 <span class="spinner-border spinner-border-sm" [hidden]="!dex.feed.loading('userorders')"></span>
@@ -18,9 +18,10 @@
 
 
 
-        <div class="col-sm-12" *ngFor="let orders of user_orders">
+        <div class="col-sm-12 mt-3" *ngFor="let orders of user_orders">
             <label class="cursor-pointer" (click)="selectTable(orders.table)">
-                {{local.string.table | titlecase}} {{getSymbols(orders.table)}}
+                <img style="height:16px; width: 16px; margin-top:-2px" [src]="orders.token?.icon || orders.token?.iconlg">
+                {{local.string.market | titlecase}} {{orders.table}}
             </label>
             <div class="row">
                 <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg">{{local.string.price}}</div>
@@ -32,14 +33,14 @@
                         (click)="cancel(orders.buy.table, order)"
                     >
                         <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg"
-                            [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                            [ngClass]="{'text-danger':order.deposit.token.symbol != order.currency.token.symbol, 'text-success':order.deposit.token.symbol == order.currency.token.symbol}"
                             >
                             {{order.price.toString(8)}}
                         </div>
                         <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left"
-                            [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                            [ngClass]="{'text-danger':order.deposit.token.symbol != order.currency.token.symbol, 'text-success':order.deposit.token.symbol == order.currency.token.symbol}"
                             >
-                            {{order.deposit.toString(8)}}
+                            {{order.total.toString(8)}}
                         </div>
                         
                         <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
@@ -49,14 +50,14 @@
                     </div>
 
 
-                    <div class="col-sm-12 margin-top" [hidden]="!order.error">
+                    <div class="col-sm-12 margin-top" *ngIf="feed.error(orders.buy.table + '-' + order.id)">
                         <div class="alert alert-danger">
                             <div class="pull-right">
-                                <button type="button" class="close text-white" (click)="order.error = null">
+                                <button type="button" class="close text-white" (click)="feed.clearError(orders.buy.table + '-' + order.id)">
                                     <i class="material-icons" style="font-size: 100%;">cancel</i>
                                 </button>                
                             </div>
-                            {{order.error}}
+                            {{feed.error(orders.buy.table + '-' + order.id)}}
                         </div>
                     </div>                    
                 </div>
@@ -66,14 +67,14 @@
                         (click)="cancel(orders.sell.table, order)"
                     >
                         <div class="nowrap col-sm-5 text-right col-padding-right padding-left-lg"
-                            [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                            [ngClass]="{'text-danger':order.deposit.token.symbol != order.currency.token.symbol, 'text-success':order.deposit.token.symbol == order.currency.token.symbol}"
                             >
                             {{order.price.toString(8)}}
                         </div>
                         <div class="nowrap col-sm-5 text-right col-padding-right col-padding-left"
-                            [ngClass]="{'text-danger':order.deposit.token.symbol != order.telos.token.symbol, 'text-success':order.deposit.token.symbol == order.telos.token.symbol}"
+                            [ngClass]="{'text-danger':order.deposit.token.symbol != order.currency.token.symbol, 'text-success':order.deposit.token.symbol == order.currency.token.symbol}"
                             >
-                            {{order.deposit.toString(8)}}
+                            {{order.total.toString(8)}}
                         </div>
                         
                         <div class="nowrap col-sm-1 text-right col-padding-left padding-right-lg" [hidden]="!dex.logged">
@@ -83,14 +84,14 @@
                     </div>
 
                     
-                    <div class="col-sm-12 margin-top" [hidden]="!order.error">
+                    <div class="col-sm-12 margin-top" *ngIf="feed.error(orders.sell.table + '-' + order.id)">
                         <div class="alert alert-danger">
                             <div class="pull-right">
-                                <button type="button" class="close text-white" (click)="order.error = null">
+                                <button type="button" class="close text-white" (click)="feed.clearError(orders.sell.table + '-' + order.id)">
                                     <i class="material-icons" style="font-size: 100%;">cancel</i>
                                 </button>                
                             </div>
-                            {{order.error}}
+                            {{feed.error(orders.sell.table + '-' + order.id)}}
                         </div>
                     </div>
 

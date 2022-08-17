@@ -1,0 +1,696 @@
+<div class="container" >
+
+    <div class="card text-white bg-dark margin-top-md overflow-visibl" *ngIf="!token">
+        <div class="card-header vpe-background-card-header text-xl">
+            <span class="spinner-border spinner-border-md" style="margin-bottom: 3px;"></span>
+            {{local.string.loading}}...
+        </div>
+    </div>
+
+    <div class="card text-white bg-dark margin-top-md overflow-visibl" [hidden]="token.banner" *ngIf="token" (click)="debug()">
+        <div class="card-header vpe-background-card-header text-xl" [hidden]="app.device.portrait">
+            <img style="height:64px; width: 64px; margin-top:-0px" [src]="lgicon">&nbsp;
+            {{token.title}}
+        </div>
+        <div class="card-header vpe-background-card-header text-xl" [hidden]="!app.device.portrait">
+            <img style="height:40px; width: 40px; margin-top:-10px" [src]="lgicon">&nbsp;
+            {{token.title}}
+        </div>
+    </div>
+
+    <div [hidden]="!token.banner" class="card text-white margin-top-md overflow-hidden token-banner background-holder" *ngIf="token" (click)="debug()">
+        <img [src]="token.banner" style="width: 100%; height: auto">
+    </div>
+
+    <div class="margin-top-md row" *ngIf="token">
+
+        <div class="col-12 d-lg-none">
+            <div [hidden]="!token.brief">
+                <div class="text-xl token-description">
+                    <div>
+                        <span class="text-lg margin-top token-title">{{token.title}}</span>&nbsp;
+                    </div>
+                    <div class="text-md margin-top token-brief">
+                        <markdown [data]="token.brief"></markdown>
+                    </div>
+                    <div class="text-md margin-top">
+                        <a class="btn btn-sm btn-primary margin-right-sm margin-top-xs" target="_blank" [href]="token.website" [hidden]="!token.website">
+                            <i class="material-icons"> web </i>
+                            {{local.string.visitwebsite}} 
+                            
+                        </a>
+                        <a class="btn btn-sm btn-primary margin-right-sm margin-top-xs" target="_blank" [href]="exploreUrl" [hidden]="!exploreUrl">
+                            <i class="material-icons"> search </i> 
+                            {{local.string.explore}} {{token.contract}} 
+                            
+                        </a>
+                        <a class="btn btn-sm btn-primary margin-right-sm margin-top-xs" target="_blank" [href]="actionsUrl" [hidden]="!actionsUrl">
+                            <img style="height: 16px; width: 16px; margin-top: -2px;" [src]="token.icon || token.iconlg" [hidden]="!(token.icon || token.iconlg)">
+                            {{local.string.tokenactions}}
+                            <!--
+                            <i class="material-icons" [hidden]="showactions"> keyboard_arrow_down </i> 
+                            <i class="material-icons" [hidden]="!showactions"> keyboard_arrow_up </i> 
+                            -->
+                        </a>
+                    </div>
+                </div>            
+            </div>
+            <div class="margin-top-md" [hidden]="hide_edit_btn">
+                <a class="btn btn-lg btn-success" (click)="editToken()">
+                    <i class="material-icons">edit</i>
+                    {{local.string.edittokinf}}
+                </a>             
+            </div>
+        </div>
+
+        <div class="col-12 d-lg-none" [hidden]="showactions">
+            <div class="text-lg-center margin-top-md token-markets" [hidden]="editing">
+                <img style="height:64px; width: 64px; margin-top:-12px" [src]="lgicon">&nbsp;
+                {{local.merge(local.string.tknMarkets, {'symbol': token.symbol})}}
+            </div>
+
+            <vpe-panel-markets-card-deck
+                [hidden]="editing"
+                (tradeMarket)="tradeMarket($event)"
+                [hidebackground]="true"
+                [hideheader]="true"
+                [markets]="token.markets">
+            </vpe-panel-markets-card-deck>
+
+            <div class="row">
+                <div class="col-6">
+                    <div class="text-center token-markets expand" [hidden]="!editing">
+                        <div>
+                            {{local.string.icon}}
+                        </div>
+                        <img style="height:24px; width: 24px; margin-top: 10px;" [src]="token.icon || token.iconlg">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="text-center token-markets" [hidden]="!editing">
+                        <div>
+                            {{local.string.bigicon}}
+                        </div>
+                        <img style="height:64px; width: 64px; margin-top: 15px;" [src]="lgicon">
+                    </div>
+                </div>
+            </div>       
+        </div>
+
+        <div class="col-lg-8 col-xl-9">
+            <div>
+                <div class="col-12 token-description text-xl d-none d-lg-inline-block margin-top-md">
+                    <div>
+                        <span class="text-lg margin-top token-title">{{token.title}}</span>&nbsp;
+                    </div>
+                    <div class="text-md margin-top token-brief" [hidden]="!token.brief">
+                        <markdown [data]="token.brief"></markdown>
+                    </div>
+                    <div class="text-md margin-top">
+                        <a class="btn btn-sm btn-primary margin-right-sm margin-top-xs" target="_blank" [href]="token.website" [hidden]="!token.website">
+                            <i class="material-icons"> web </i>
+                            {{local.string.visitwebsite}} 
+                            
+                        </a>
+                        <a class="btn btn-sm btn-primary margin-right-sm margin-top-xs" target="_blank" [href]="exploreUrl" [hidden]="!exploreUrl">
+                            <i class="material-icons"> search </i> 
+                            {{local.string.explore}} {{token.contract}} 
+                            
+                        </a>
+                        <a class="btn btn-sm btn-primary margin-right-sm margin-top-xs" target="_blank" [href]="actionsUrl" [hidden]="!actionsUrl">
+                            <img style="height: 16px; width: 16px; margin-top: -2px;" [src]="token.icon || token.iconlg" [hidden]="!(token.icon || token.iconlg)">
+                            {{local.string.tokenactions}}
+                            <!--
+                            <i class="material-icons" [hidden]="showactions"> keyboard_arrow_down </i> 
+                            <i class="material-icons" [hidden]="!showactions"> keyboard_arrow_up </i> 
+                            -->
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-none d-lg-inline-block">
+                <a class="btn btn-lg btn-success margin-top-md" [hidden]="hide_edit_btn" (click)="editToken()">
+                    <i class="material-icons">edit</i>
+                    {{local.string.edittokinf}}
+                </a>                
+                <a class="btn btn-lg btn-danger margin-top-md" [hidden]="!editing" (click)="quitEditing()">
+                    <i class="material-icons">cancel</i>
+                    Quit Editing
+                </a>
+            </div>
+
+            <!-- TOKEN EDITION (init) -->
+            <div class="margin-top-md" [hidden]="!editing">
+                <div class="card text-white bg-dark">
+                    <div class="card-header vpe-background-card-header">
+                        <span class="text-lg">{{local.string.tknedition | titlecase}}</span><br>
+                        <span class="text-md">{{local.string.tkneditiontxt}}</span>
+                    </div>
+                </div>
+
+
+                <div class="margin-top-md" *ngIf="token">
+                    <div class="card text-white bg-dark">
+                        <div class="card-body">
+                            <!-- title -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.title|titlecase}}:</label>
+                                <div class="col-sm-9" >
+                                    <input class="form-control col-form-label" placeholder="title" [(ngModel)]="token.title" (ngModelChange)="onTokenInfoChange()">
+                                </div>
+                                <div class="col-sm-9 offset-sm-3 text-danger margin-top-xs" [hidden]="!showerrors || token.title" >
+                                    {{local.string.neededfield}}
+                                </div>                                
+                            </div>
+        
+                            <!-- brief -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.about|titlecase}}:</label>
+                                <div class="col-sm-9" >
+                                    <textarea class="form-control col-form-label" placeholder="brief" [(ngModel)]="token.brief" (ngModelChange)="onTokenInfoChange()"></textarea>
+                                </div>
+                                <div class="col-sm-9 offset-sm-3 text-danger margin-top-xs" [hidden]="!showerrors || token.brief" >
+                                    {{local.string.neededfield}}
+                                </div>                                
+                            </div>
+        
+                            <!-- website -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.website|titlecase}}:</label>
+                                <div class="col-sm-9" >
+                                    <input class="form-control col-form-label" placeholder="website" [(ngModel)]="token.website" (ngModelChange)="onTokenInfoChange()">
+                                </div>
+                            </div>
+        
+                            <!-- icon -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.icon|titlecase}}:</label>
+                                <div [ngClass]="{'col-sm-9': !token.icon, 'col-sm-8': token.icon}">
+                                    <input class="form-control col-form-label" placeholder="icon" [(ngModel)]="token.icon" (ngModelChange)="onTokenInfoChange()">
+                                </div>
+                                <div *ngIf="token.icon" class="col-sm-1">
+                                    <img class="expand" [src]="token.icon">
+                                </div>
+                            </div>
+        
+                            <!-- iconlg -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.bigicon|titlecase}}:</label>
+                                <div [ngClass]="{'col-sm-9': !token.iconlg, 'col-sm-7': token.iconlg}">
+                                    <input class="form-control col-form-label" placeholder="iconlg" [(ngModel)]="token.iconlg" (ngModelChange)="onTokenInfoChange()">
+                                </div>
+                                <div *ngIf="token.iconlg" class="col-sm-2">
+                                    <img class="expand" [src]="token.iconlg">
+                                </div>
+                            </div>
+
+                            <!-- banner -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.banner|titlecase}}:</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control col-form-label" placeholder="banner" [(ngModel)]="token.banner" (ngModelChange)="onTokenInfoChange()">
+                                </div>
+                                <div *ngIf="token.banner" class="col-sm-9 offset-sm-3 margin-top-sm">
+                                    <img class="expand" [src]="token.banner">
+                                </div>
+                            </div>
+        
+                            <!-- tradeable -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.tradeable|titlecase}}:</label>
+                                <div class="col-sm-9">
+                                    <vpe-checkbox class="as-block" [value]="token.tradeable" (onChange)="token.tradeable = $event ? !0 : !1"></vpe-checkbox>
+                                </div>
+                            </div>
+            
+                            <!-- Error -->
+                            <div class="form-group row">
+                                <div class="col-12 margin-top" [hidden]="!error">
+                                    <div class="alert alert-danger">
+                                        <div class="pull-right">
+                                            <button type="button" class="close text-white" (click)="clearError()">
+                                                <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                            </button>                
+                                        </div>
+                                        {{error}}
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- confirm -->
+                            <!--div class="form-group row margin-top" [hidden]="editable">
+                                <label class="col-sm-2 col-form-label nowrap"></label>
+                                <div class="col-sm-10 text-right">
+                                    <span class="btn btn-lg btn-danger"
+                                        (click)="quitEditing()">
+                                        <i class="material-icons" [hidden]="loading">cancel</i>
+                                        {{local.string.cancel|titlecase}}
+                                    </span>                                    
+                                    <span class="btn btn-lg btn-success margin-left"
+                                        (click)="confirm()">
+                                        <span class="spinner-border spinner-border-sm" [hidden]="!loading"></span>
+                                        <i class="material-icons" [hidden]="loading">done</i>
+                                        {{local.string.confirm|titlecase}}
+                                    </span>
+                                </div>
+                            </div-->
+                            <div class="form-group row margin-top">
+                                <label class="col-sm-2 col-form-label nowrap"></label>
+                                <div class="col-sm-10 text-right">
+                                    <span class="btn btn-lg btn-danger"
+                                        (click)="quitEditing()">
+                                        <i class="material-icons">cancel</i>
+                                        {{local.string.cancel|titlecase}}
+                                    </span>                                    
+                                    <span class="btn btn-lg btn-success margin-left"
+                                        (click)="confirm()">
+                                        <span class="spinner-border spinner-border-sm"></span>
+                                        <i class="material-icons">done</i>
+                                        {{local.string.confirm|titlecase}}
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--
+            <div class="token-actions" [hidden]="!showactions">
+                <div class="margin-top-md token-description">
+                    <div class="row">
+                        <div class="col-12 text-md margin-top token-actions-header">
+                            <div class="row">
+                                <div class="btn btn-sm btn-secondary margin-left-sm"
+                                    [ngClass]="{'btn-success':action=='transfer'}"
+                                    (click)="setAction('transfer')">{{local.string.transfer|titlecase}}</div>
+                                <div class="btn btn-sm btn-secondary margin-left-sm"
+                                    [ngClass]="{'btn-success':action=='issue'}"
+                                    (click)="setAction('issue')">{{local.string.issue|titlecase}}</div>
+                                <div class="btn btn-sm btn-secondary margin-left-sm"
+                                    [ngClass]="{'btn-success':action=='open'}"
+                                    (click)="setAction('open')">{{local.string.open|titlecase}}</div>
+                            </div>
+                        </div>
+                        <div class="col-12 card-body text-md" [hidden]="action!='transfer'">
+                            < !-- memo -- >
+                            <div class="form-group row">
+                                <label class="col-sm-2 form-control-sm  nowrap">from:</label>
+                                <div class="col-sm-10" >
+                                    <input class="form-control form-control-sm" placeholder="from" [(ngModel)]="params.from">
+                                </div>
+                            </div>
+                            < !-- to -- >
+                            <div class="form-group row">
+                                <label class="col-sm-2 form-control-sm nowrap">to:</label>
+                                <div class="col-sm-10" >
+                                    <input class="form-control form-control-sm" placeholder="to" [(ngModel)]="params.to">
+                                </div>
+                            </div>
+                            < !-- quantity -- >
+                            <div class="form-group row">
+                                <label class="col-sm-2 form-control-sm nowrap">quantity:</label>
+                                <div class="col-sm-10" >
+                                    <vpe-token-input
+                                        class="form-control form-control-sm"
+                                        [asset]="params.quantity"
+                                        (valueChange)="params.quantity = $event"
+                                        [precision]="token.precision"
+                                        placeholder="{{local.string.quantity}}"></vpe-token-input>
+                                </div>
+                            </div>
+                            < !-- memo -- >
+                            <div class="form-group row">
+                                <label class="col-sm-2 form-control-sm nowrap">memo:</label>
+                                <div class="col-sm-10" >
+                                    <input class="form-control form-control-sm" placeholder="memo" [(ngModel)]="params.memo">
+                                </div>
+                            </div>
+                            < !-- confirm -- >
+                            <div class="form-group row">
+                                <div class="offset-10 col-sm-2">
+                                    <div class="btn btn-sm btn-success form-control-sm col-12" (click)="perform()">
+                                        <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('perform')"></span>
+                                        <i class="material-icons" [hidden]="feed.loading('perform')">done</i>
+                                        {{local.string.confirm|titlecase}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                    
+                    </div>
+                    
+                </div>
+            </div>
+            -->
+
+
+            <!-- Token Data Entry -->
+            <div class="margin-top-md card"
+                *ngFor="let info of token.data"
+            >
+                <!-- 
+                <div class="card-body vpe-background-card-body">
+                    <pre class="text-left">{{info|json}}</pre>
+                </div>
+                -->
+
+                <div class="card-body vpe-background-card-body">
+                    <!-- hr class="line" -->
+                    <div class="text-lg margin-top-md" [hidden]="!info.text">{{info.text}}</div>
+
+                    <!-- YouTube video-->
+                    <div class="margin-top embed-responsive embed-responsive-16by9"
+                        *ngIf="info.category == 'youtube' && info.link && info.extras?.type == 'video'"
+                    >
+                        <iframe class="embed-responsive-item" [src]="info.extras.safelink" allowfullscreen></iframe>
+                    </div>
+
+                    <!-- YouTube channel-->
+                    <div class="margin-top"
+                        *ngIf="info.category == 'youtube' && info.link && info.extras?.type == 'channel'"
+                    >
+                        <div id="youtube-channel-container" class="g-ytsubscribe" [attr.data-channelid]="info.extras.channelid"
+                            data-layout="full" data-theme="default" data-count="default"
+                        ></div>
+                    </div>
+
+                    <!-- Tweet -->
+                    <div class="text-center twitter-container" [innerHTML]="info.html" *ngIf="info.category == 'twitter'"></div>
+
+                    <!-- Image -->
+                    <div class="margin-top" *ngIf="info.category == 'image'">
+                        <img [src]="info?.link" style="width: 100%; height: auto">
+                    </div>
+
+                    <div [hidden]="hide_edit_btn && !editing">
+                        
+
+                        <hr class="line">
+
+                        <!-- Info Error -->
+                        <div class="form-group row">
+                            <div class="col-12 margin-top" [hidden]="!feed.error('info-' + info.id)">
+                                <div class="alert alert-danger">
+                                    <div class="pull-right">
+                                        <button type="button" class="close text-white" (click)="feed.setError('info-' + info.id, null)">
+                                            <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                        </button>                
+                                    </div>
+                                    {{feed.error('info-' + info.id)}}
+                                </div>
+                            </div>
+                        </div>                      
+    
+                        <div class="margin-top-md" [hidden]="info.editing">
+                            <span class="btn btn-sm btn-success" (click)="info.editing = true; feed.clearError('info-' + info.id)">
+                                <i class="material-icons">edit</i>
+                                Edit this entry
+                            </span>
+                            <span class="btn btn-sm btn-danger margin-left" (click)="removeData(info)">
+                                <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('info-' + info.id)"></span>
+                                <i class="material-icons" [hidden]="feed.loading('info-' + info.id)">save_alt</i>
+                                {{local.string.delete|titlecase}}
+                            </span>                           
+                        </div>
+                        
+                        <div class="margin-top-md" [hidden]="!info.editing">
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">{{local.string.category | titlecase}}:</label>
+                                <div class="col-sm-9">
+                                    
+                                    <div class="dropdown" placement="bottom-right" ngbDropdown>
+                                        <a  class="btn btn-primary dropdown-toggle" data-toggle="dropdown" id="category">
+                                            {{info.category | titlecase}}
+                                            <span class="caret"></span>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right" placement="bottom-right" aria-labelledby="category">
+                                            <!--span class="cursor-pointer dropdown-item" (click)="info.category = 'link';">
+                                                <i class="color-white material-icons vertical-align-bottom"> link </i>
+                                                &nbsp; link
+                                            </span-->
+                                            <span class="cursor-pointer dropdown-item" (click)="info.category = 'image';">
+                                                <i class="color-white material-icons vertical-align-bottom"> image </i>
+                                                &nbsp; image
+                                            </span>
+                                            <span class="cursor-pointer dropdown-item" (click)="info.category = 'twitter';">
+                                                <img style="width: 24px; height: 24px; " src="/assets/img/twitter.png">
+                                                &nbsp; twitter
+                                            </span>
+                                            <span class="cursor-pointer dropdown-item" (click)="info.category = 'youtube';">
+                                                <img style="width: 24px; height: 24px; " src="/assets/img/youtube.png">
+                                                &nbsp; youtube
+                                            </span>
+                                        </div>
+                                    </div>
+    
+                                </div>
+                            </div>
+    
+                            <a id="{{'entry'+info.id}}"></a>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">Text:</label>
+                                <div class="col-sm-9" >
+                                    <input id="{{'input'+info.id}}" class="form-control col-form-label" placeholder="text" [(ngModel)]="info.text">
+                                </div>
+                            </div>
+    
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label nowrap">Link:</label>
+                                <div class="col-sm-9" >
+                                    <input class="form-control col-form-label" placeholder="link" [(ngModel)]="info.link">
+                                </div>
+                            </div>
+    
+                            <!-- Info Error -->
+                            <div class="form-group row">
+                                <div class="col-12 margin-top" [hidden]="!feed.error('info-' + info.id)">
+                                    <div class="alert alert-danger">
+                                        <div class="pull-right">
+                                            <button type="button" class="close text-white" (click)="feed.setError('info-' + info.id, null)">
+                                                <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                            </button>                
+                                        </div>
+                                        {{feed.error('info-' + info.id)}}
+                                    </div>
+                                </div>
+                            </div>  
+        
+                            <!-- Info Save btn -->
+                            <div class="form-group row">
+                                <div class="col-12 margin-top text-right">
+                                    <span class="btn btn-sm btn-danger" (click)="info.editing = false">
+                                        <i class="material-icons" [hidden]="feed.loading('info-' + info.id)">cancel</i>
+                                        {{local.string.cancel|titlecase}}
+                                    </span>
+                                    <span class="btn btn-sm btn-success margin-left" (click)="confirmData(info)">
+                                        <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('info-' + info.id)"></span>
+                                        <i class="material-icons" [hidden]="feed.loading('info-' + info.id)">save_alt</i>
+                                        {{local.string.save|titlecase}}
+                                    </span>
+                                </div>
+                            </div>
+    
+                        </div>
+                        
+                        <!-- editing -->
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="margin-top-xxl"></div>
+
+        </div>
+
+        <div class="col-lg-4 col-xl-3 d-none d-lg-inline-block margin-top-md">
+            <div class="text-center token-markets" [hidden]="editing">
+                <img style="height:64px; width: 64px; margin-top:-12px" [src]="lgicon">&nbsp;
+                {{local.merge(local.string.tknMarkets, {'symbol': token.symbol})}}
+            </div>            
+
+            <vpe-panel-markets-card-deck
+                [hidden]="editing"
+                (tradeMarket)="tradeMarket($event)"
+                [hidebackground]="true"
+                [hideheader]="true"
+                [markets]="token.markets">
+            </vpe-panel-markets-card-deck>
+
+            <div class="text-center token-markets" [hidden]="!editing">
+                <div>
+                    {{local.string.icon}}
+                </div>
+                <img style="height:20px; width: 20px; margin-top: 10px;" [src]="token.icon">
+            </div>
+
+            <div class="margin-top-md text-center token-markets" [hidden]="!editing">
+                <div>
+                    {{local.string.bigicon}}
+                </div>
+                <img style="height:64px; width: 64px; margin-top: 15px;" [src]="lgicon">
+            </div>
+
+
+            <!-- Token Admin -->
+            <div class="margin-top-md token-markets" [hidden]="!editing">
+                <div class="row" [hidden]="newadmin">
+                    <div class="col-12">
+                        <span class="text-md">Admin: {{token.admin}}</span>
+                    </div>
+                    <div class="col-12 margin-top-sm">
+                        <span class="btn btn-sm btn-primary" (click)="feed.clearErrors(); newadmin = true">
+                            <i class="material-icons">edit</i>
+                            change
+                        </span>
+                    </div>
+                </div>
+                <div class="row" [hidden]="!newadmin">
+                    <div class="col-12">
+                        <span class="text-md">new admin account</span>
+                    </div>
+                    <div class="col-12 margin-top-sm">
+                        <input id="new-admin" class="form-control col-form-label" placeholder="admin name" [(ngModel)]="adminname">
+                    </div>
+                    <div class="col-12 margin-top" [hidden]="!feed.error('new-admin')">
+                        <div class="alert alert-danger">
+                            <div class="pull-right">
+                                <button type="button" class="close text-white" (click)="feed.clearError('new-admin')">
+                                    <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                </button>
+                            </div>
+                            {{feed.error('new-admin')}}
+                        </div>
+                    </div>                    
+                    <div class="col-12 margin-top-sm">
+                        <span class="btn btn-sm btn-primary" (click)="feed.clearErrors(); changeAdmin()">
+                            <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('new-admin')"></span>
+                            <i class="material-icons" [hidden]="feed.loading('new-admin')">save_alt</i>
+                            {{local.string.confirm}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Token Data Entries -->
+            <div class="margin-top-md token-markets" [hidden]="!editing">
+                <div class="text-md">
+                    Extra Data: {{token.data.length}}
+                </div>
+                <div>
+                    <span class="btn btn-sm btn-primary margin-top" (click)="createDataEntry()">
+                        <i class="material-icons">edit</i>
+                        New Data Entry
+                    </span>
+                </div>
+            </div>
+
+            <!-- Token Events -->
+            <div class="margin-top-md token-markets" [hidden]="!editing">
+                <div class="row">
+                    <div class="col-8">
+                        <span class="text-md">Events: {{token.events.length}}</span>
+                    </div>
+                    <div class="col-4">
+                        <span class="btn btn-sm btn-primary" (click)="createTokenEvent()">
+                            <i class="material-icons">playlist_add</i>
+                            add
+                        </span>            
+                    </div>
+                </div>
+
+                <hr class="line" />
+
+                <div class="row margin-top" *ngFor="let evt of token.events" [hidden]="evt.editing">
+                    <div class="col-8">
+                        <span class="text-bold">event: {{evt.event}}</span><br>
+                        <span class="text-xs">handler: {{evt.receptor}}</span>        
+                    </div>
+                    <div class="col-4">
+                        <span class="btn btn-sm btn-primary margin-top" (click)="editTokenEvent(evt)">
+                            <i class="material-icons">edit</i>
+                            {{local.string.edit}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Editting Token Events -->
+            <div class="margin-top-md token-markets" *ngIf="editing && editevent">
+                <div class="row form-group">
+                    <label class="col-4 col-form-label nowrap text-bold"> event: </label>
+                    <label class="col-8 col-form-label nowrap text-bold" [hidden]="editevent.new"> {{editevent.event}} </label>
+                    <div [hidden]="!editevent.new" class="col-8 text-right">
+                        <div class="dropdown" placement="bottom-right" ngbDropdown>
+                            <a  class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" id="event">
+                                {{editevent.event}}
+                                <span class="caret"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" placement="bottom-right" aria-labelledby="event">
+                                <span class="cursor-pointer dropdown-item"
+                                    *ngFor="let event of events"
+                                    (click)="editevent.event = event;">
+                                    {{event}}
+                                </span>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-4 col-form-label nowrap"> receptor: </label>
+                    <div class="col-8">
+                        <input id="new-event" class="form-control col-form-label" placeholder="text" [(ngModel)]="editevent.receptor">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <span class="btn btn-sm btn-danger margin-top" (click)="cancelTokenEvent()">
+                            <i class="material-icons">cancel</i>
+                            {{local.string.cancel}}
+                        </span>
+                    </div>
+                    <div class="col-4">
+                        <span [hidden]="editevent.new" class="btn btn-sm btn-danger margin-top" (click)="removeEvent(editevent)">
+                                <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('event-remove')"></span>
+                                <i class="material-icons" [hidden]="feed.loading('event-remove')">remove_circle</i>
+                            {{local.string.delete}}
+                        </span>                        
+                    </div>
+                    <div class="col-4">
+                        <span class="btn btn-sm btn-success margin-top" (click)="confirmEvent(editevent)">
+                            <span class="spinner-border spinner-border-sm" [hidden]="!feed.loading('event-save')"></span>
+                            <i class="material-icons" [hidden]="feed.loading('event-save')">save_alt</i>
+                            {{local.string.save}}
+                        </span>
+                    </div>
+                </div>
+                <!-- Error -->
+                <div class="form-group row">
+                    <div class="col-12 margin-top" [hidden]="!feed.error('event')">
+                        <div class="alert alert-danger">
+                            <div class="pull-right">
+                                <button type="button" class="close text-white" (click)="feed.clearError('event')">
+                                    <i class="material-icons" style="font-size: 100%;">cancel</i>
+                                </button>                
+                            </div>
+                            {{feed.error('event')}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!--
+            <div class="margin-top-md token-markets">
+                <pre>{{token.events|json}}</pre>
+            </div>
+-->
+
+
+        </div>
+    </div>
+
+</div>

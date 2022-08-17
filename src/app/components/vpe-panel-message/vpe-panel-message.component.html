@@ -1,0 +1,20 @@
+<vpe-panel [id]="'vpe-panel-message'" (onResize)="onResize($event)"  (onClose)="onPanelClose($event)" [btnclose]="btnclose" [margintop]="margintop" [expanded]="expanded" [title]="title" (click)="debug()">
+    <div class="row">
+        <div class="col-12"
+            *ngFor="let msg of messages"
+            [ngClass]="msg.class"
+            
+        >
+            {{msg.text}}
+        </div>
+    </div>
+    <div class="row" *ngIf="buttons.length > 0">
+        <div class="col-12 d-flex flex-row pt-4 p-2 justify-content-around">
+            <span class="btn"
+                *ngFor="let btn of buttons"
+                [ngClass]="btn.class"
+                (click)="onClick(btn)"
+            > {{btn.text}} </span>
+        </div>
+    </div>
+</vpe-panel>

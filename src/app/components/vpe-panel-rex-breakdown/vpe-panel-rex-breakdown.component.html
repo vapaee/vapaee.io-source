@@ -1,4 +1,4 @@
-<vpe-panel [id]="'vpe-panel-balance-breakdown'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.balbreak">
+<vpe-panel [id]="'vpe-panel-balance-breakdown'" (onResize)="onResize($event)" [margintop]="margintop" [hideheader]="hideheader" [expanded]="expanded" [title]="local.string.balbreak" (click)="debug()">
     <div class="row">
         <div class="col-sm-12" [hidden]="!title">
             <div class="text-lg text-center">
@@ -14,19 +14,19 @@
                             <span class="btn btn-xs btn-primary" [hidden]="detail" (click)="detail=true">+</span>
                             <span class="btn btn-xs btn-primary" [hidden]="!detail"  (click)="detail=false">-</span>
                         </td><td>{{data.balance.toString()}}</td>
-                        <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(data.balance)}} </span></td>
+                        <td><span *ngIf="!hidefiat" class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(data.balance)}} </span></td>
                     </tr>
                     <tr [hidden]="!detail">
                         <td>- Vote Stake:</td><td>{{data.tables.rexbal.vote_stake.toString()}}</td>
-                        <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(data.tables.rexbal.vote_stake)}} </span></td>
+                        <td><span *ngIf="!hidefiat" class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(data.tables.rexbal.vote_stake)}} </span></td>
                     </tr>
                     <tr [hidden]="!detail">
                         <td>- Profit:</td><td>{{data.profits.toString()}}</td>
-                        <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(data.profits)}} </span></td>
+                        <td><span *ngIf="!hidefiat" class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(data.profits)}} </span></td>
                     </tr>
                     <tr>
                         <td>Liquid Deposits:</td><td>{{data.deposits.toString()}}</td>
-                        <td><span class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(data.deposits)}} </span></td>
+                        <td><span *ngIf="!hidefiat" class="text-xs calculated-in-currency"> {{service.getTokenInCurrentCurrency(data.deposits)}} </span></td>
                     </tr>
                 </tbody>
             </table>

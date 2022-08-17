@@ -44,6 +44,10 @@ import { VpePanelTokenSelectorComponent } from './vpe-panel-token-selector/vpe-p
 import { VpePanelTokensCardComponent } from './vpe-panel-tokens-card/vpe-panel-tokens-card.component';
 import { VpePanelMarketsCardComponent } from './vpe-panel-markets-card/vpe-panel-markets-card.component';
 import { VpeCheckboxComponent } from './vpe-checkbox/vpe-checkbox.component';
+import { VpePanelSwapComponent } from './vpe-panel-swap/vpe-panel-swap.component';
+import { VpePanelSwapTokenSelectorComponent } from './vpe-panel-swap-token-selector/vpe-panel-swap-token-selector.component';
+import { VpePanelSwapSummaryComponent } from './vpe-panel-swap-summary/vpe-panel-swap-summary.component';
+import { VpePanelMessageComponent } from './vpe-panel-message/vpe-panel-message.component';
 
 
 
@@ -72,7 +76,11 @@ import { VpeCheckboxComponent } from './vpe-checkbox/vpe-checkbox.component';
         VpeTokenInputComponent,
         VpePanelActivityLogComponent,
         VpePanelTokenSelectorComponent,
-        VpeCheckboxComponent
+        VpePanelSwapTokenSelectorComponent,
+        VpeCheckboxComponent,
+        VpePanelSwapComponent,
+        VpePanelSwapSummaryComponent,
+        VpePanelMessageComponent
     ],
     imports: [
         BrowserModule,
@@ -111,7 +119,11 @@ import { VpeCheckboxComponent } from './vpe-checkbox/vpe-checkbox.component';
         VpeTokenInputComponent,
         VpePanelActivityLogComponent,
         VpePanelTokenSelectorComponent,
-        VpeCheckboxComponent
+        VpePanelSwapTokenSelectorComponent,
+        VpeCheckboxComponent,
+        VpePanelSwapComponent,
+        VpePanelSwapSummaryComponent,
+        VpePanelMessageComponent
     ]
 })
 export class VapaeeComponentsModule { }

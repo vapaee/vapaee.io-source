@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, Output, HostBinding } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { LocalStringsService } from 'src/app/services/common/common.services';
-import { VpeComponentsService, ResizeEvent } from '../vpe-components.service';
+import { VpeComponentsService, ResizeEvent, OrderRowclickEvent } from '../vpe-components.service';
 import { TokenOrders, OrderRow, MarketHeader, VapaeeDEX } from '@vapaee/dex';
 
 @Component({
@@ -11,21 +11,22 @@ import { TokenOrders, OrderRow, MarketHeader, VapaeeDEX } from '@vapaee/dex';
 })
 export class VpePanelOrdersComponent implements OnChanges {
 
-    @Input() public orders: TokenOrders;
-    @Input() public inverted: OrderRow[];
-    @Input() public headers: MarketHeader;
-    @Input() public hideheader: boolean;
-    @Input() public margintop: boolean;
-    @Input() public expanded: boolean;
+    @Input() public orders: TokenOrders         = VpeComponentsService.Utils.emptyTokenOrders();
+    @Input() public headers: MarketHeader       = VpeComponentsService.Utils.emptyMarketHeader();
+    @Input() public inverted: OrderRow[] | null = null;
+    @Input() public hideheader: boolean         = false;
+    @Input() public margintop: boolean          = true;
+    @Input() public expanded: boolean           = true;
 
     
-    @Output() onClickRow: EventEmitter<{type:string, row:OrderRow}> = new EventEmitter();
-    @Output() onClickPrice: EventEmitter<{type:string, row:OrderRow}> = new EventEmitter();
+    @Output() onClickRow: EventEmitter<OrderRowclickEvent>   = new EventEmitter();
+    @Output() onClickPrice: EventEmitter<OrderRowclickEvent> = new EventEmitter();
+
+    split: boolean                              = false;
+    portrait: boolean                           = false;
+    @HostBinding('class') display: string       = "full";
 
     digits: {[key:string]:number};
-    split: boolean;
-    portrait: boolean;
-    @HostBinding('class') display;
     constructor(
         public dex: VapaeeDEX,
         public local: LocalStringsService,
@@ -117,20 +118,21 @@ export class VpePanelOrdersComponent implements OnChanges {
     }
 
     onResize(event:ResizeEvent) {
-        setTimeout(_ => {
+        setTimeout(() => {
             this.updateSize(event);
         });
     }
 
     ngOnChanges() {
-        delete this.inverted;
+        this.inverted = null;
     }
 
     clickRow(type:string, row:OrderRow) {
-        this.onClickRow.next({type: type, row: row});
+        this.onClickRow.next({type, row});
     }
 
     clickPrice(type:string, row:OrderRow) {
-        this.onClickPrice.next({type: type, row: row});
+        this.onClickPrice.next({type, row});
     }
 }
+

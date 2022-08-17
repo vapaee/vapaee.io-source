@@ -1,0 +1,181 @@
+/**
+ * @module CORE
+ */
+
+import { Api, JsonRpc as  RealJsonRpc} from 'eosjs';
+
+
+declare namespace ScatterJS {
+
+    interface Class {
+        Network: Network,
+        scatter: Scatter;
+        // functions
+        forgetIdentity(): void;
+        login(params:any): Promise<any>;
+        connect(appname: string, connectionOptions: ConnectionOptions): Promise<boolean>;
+        plugins(plugin?: Plugin): void;
+        eos(network:Network, api:ApiClass, rpc: JsonRpc): EOS;
+    }
+
+    interface JsonRpc {
+        rpc: RealJsonRpc | null;
+    }
+    
+    interface Eosconf {
+        blockchain: string;
+        protocol: string;
+        host: string;
+        port: number;
+        chainId: string;
+    }
+    
+    interface Plugin {
+    
+    }
+    
+    interface ConnectionOptions {
+        initTimeout:number,
+        network:Network
+    }
+    
+    interface ResourceLimit {
+        percent?: number;
+        percentStr?: string;
+        used?: number;
+        available?: number;
+        max?: number;
+    }
+    
+    interface AccountData {
+        total_balance: string;
+        total_staked: string;
+        ram_limit?: ResourceLimit;
+        net_limit?: ResourceLimit;
+        cpu_limit?: ResourceLimit;
+        ram_usage?: number;
+        permissions?: {
+            perm_name?: string;
+            parent?: string;
+            required_auth?: {
+                threshold?: 1;
+                keys?: {
+                    key?: string;
+                    weight?: 1;
+                }[];
+                accounts?: any[];
+                waits?: any[];
+            };
+        }[];
+        total_resources?: {
+            owner?: string;
+            net_weight?: string;
+            cpu_weight?: string;
+            ram_bytes?: number;
+        };
+        self_delegated_bandwidth?: {
+            from?: string;
+            to?: string;
+            total?: string;
+            net_weight?: string;
+            cpu_weight?: string;
+        };
+        refund_request?: {
+            owner?: string;
+            request_time?: string;
+            total?: string;
+            net_amount?: string;
+            cpu_amount?: string;
+        };
+        voter_info?: {
+            owner?: string;
+            proxy?: string;
+            producers?: string[];
+            staked?: number;
+            last_vote_weight?: string;
+            proxied_vote_weight?: string;
+            is_proxy?: number;
+        };
+        returnedFields?: null;
+    }
+    
+    interface Account {
+        authority?: string;
+        blockchain?: string;
+        chainId?: string;
+        slug?: string;
+        name: string;
+        publicKey?: string;
+        data?: AccountData;
+        id?: string;
+    }
+
+    interface  ScatterIdentity {
+        accounts: Account[],
+        hash: string,
+        name: string,
+        publicKey: string,
+    }
+    
+    interface EOS {
+        contracts: Function;
+        cachedAbis: Function;
+        rpc: Function;
+        authorityProvider: Function;
+        abiProvider: Function;
+        signatureProvider: Function;
+        chainId: Function;
+        textEncoder: Function;
+        textDecoder: Function;
+        abiTypes: Function;
+        transactionTypes: Function;
+        rawAbiToJson: Function;
+        getCachedAbi: Function;
+        getAbi: Function;
+        getTransactionAbis: Function;
+        getContract: Function;
+        serialize: Function;
+        deserialize: Function;
+        serializeTransaction: Function;
+        deserializeTransaction: Function;
+        serializeActions: Function;
+        deserializeActions: Function;
+        deserializeTransactionWithActions: Function;
+        transact: Function;
+        pushSignedTransaction: Function;
+        hasRequiredTaposFields: Function;
+    }
+    
+    interface Network {
+        fromJson: (conf?: Eosconf) => ScatterJS.Network;
+        fullhost: () => string;
+    }
+    
+    interface Identity {
+        accounts: Account[];
+        name?: string;
+    }
+    
+    interface Scatter {
+        identity: Identity,
+        network: Eosconf,
+        forgotten: boolean
+    }
+
+    export interface ApiClass {
+        new (args: any): Api;
+    }
+
+    var Network: Network;
+    var scatter: Scatter;
+    // functions
+    function forgetIdentity(): void;
+    function login(params:any): Promise<any>;
+    function connect(appname: string, connectionOptions: ConnectionOptions): Promise<boolean>;
+    function plugins(plugin?: Plugin): void;
+    function eos(network:Network, api:ApiClass, rpc: JsonRpc): EOS;
+
+}
+
+export as namespace ScatterJS;
+
